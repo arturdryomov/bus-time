@@ -128,4 +128,26 @@ public class Routes
 
 		return queryBuilder.toString();
 	}
+
+	public void deleteRoute(Route route) {
+		database.beginTransaction();
+
+		try {
+			tryDeleteRoute(route);
+			database.setTransactionSuccessful();
+		}
+		finally {
+			database.endTransaction();
+		}
+	}
+
+	private void tryDeleteRoute(Route route) {
+		database.delete(DbTableNames.TRIPS,
+			String.format("%s = %d", DbFieldNames.ROUTE_ID, route.getId()), null);
+		database.delete(DbTableNames.ROUTES_AND_STATIONS,
+			String.format("%s = %d", DbFieldNames.ROUTE_ID, route.getId()), null);
+
+		database.delete(DbTableNames.ROUTES, String.format("%s = %d", DbFieldNames.ID, route.getId()),
+			null);
+	}
 }
