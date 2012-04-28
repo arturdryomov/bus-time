@@ -15,6 +15,7 @@ public class DbProvider
 
 	private final DbOpenHelper databaseOpenHelper;
 	private Routes routes;
+	private Stations stations;
 
 	public static DbProvider getInstance() {
 		return instance;
@@ -49,5 +50,13 @@ public class DbProvider
 		}
 
 		return routes;
+	}
+
+	public Stations getStations() {
+		if (stations == null) {
+			stations = new Stations();
+		}
+
+		return stations;
 	}
 }
