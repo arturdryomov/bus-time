@@ -148,4 +148,36 @@ public class Stations
 		database.delete(DbTableNames.STATIONS,
 			String.format("%d = %d", DbFieldNames.ID, station.getId()), null);
 	}
+
+	public List<Station> getStationsByRoute(Route route) {
+		List<Station> stationsList = new ArrayList<Station>();
+
+		Cursor databaseCursor = database.rawQuery(buildStationsByRouteSelectionQuery(route), null);
+
+		while (databaseCursor.moveToNext()) {
+			ContentValues databaseValues = extractStationDatabaseValuesFromCursor(databaseCursor);
+			stationsList.add(new Station(databaseValues));
+		}
+
+		return stationsList;
+	}
+
+	private String buildStationsByRouteSelectionQuery(Route route) {
+		StringBuilder queryBulder = new StringBuilder();
+
+		queryBulder.append("select distinct ");
+
+		queryBulder.append(String.format("%s.%s, ", DbTableNames.STATIONS, DbFieldNames.ID));
+		queryBulder.append(String.format("%s.%s ", DbTableNames.STATIONS, DbFieldNames.NAME));
+
+		queryBulder.append(String.format("from %s ", DbTableNames.STATIONS));
+		queryBulder.append(String.format("inner join %s ", DbTableNames.ROUTES_AND_STATIONS));
+		queryBulder.append(String.format("on %s.%s = %s.%s ", DbTableNames.STATIONS, DbFieldNames.ID,
+			DbTableNames.ROUTES_AND_STATIONS, DbFieldNames.STATION_ID));
+
+		queryBulder.append(String.format("where %s.%s = %d", DbTableNames.ROUTES_AND_STATIONS,
+			DbFieldNames.ROUTE_ID, route.getId()));
+
+		return queryBulder.toString();
+	}
 }

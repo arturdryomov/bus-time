@@ -150,4 +150,36 @@ public class Routes
 		database.delete(DbTableNames.ROUTES, String.format("%s = %d", DbFieldNames.ID, route.getId()),
 			null);
 	}
+
+	public List<Route> getRoutesListByStation(Station station) {
+		List<Route> routesList = new ArrayList<Route>();
+
+		Cursor databaseCursor = database.rawQuery(buildRoutesByStationSelectionQuery(station), null);
+
+		while (databaseCursor.moveToNext()) {
+			ContentValues databaseValues = extractRouteDatabaseValuesFromCursor(databaseCursor);
+			routesList.add(new Route(databaseValues));
+		}
+
+		return routesList;
+	}
+
+	private String buildRoutesByStationSelectionQuery(Station station) {
+		StringBuilder queryBuilder = new StringBuilder();
+
+		queryBuilder.append("select distinct ");
+
+		queryBuilder.append(String.format("%s.%s, ", DbTableNames.ROUTES, DbFieldNames.ID));
+		queryBuilder.append(String.format("%s.%s ", DbTableNames.ROUTES, DbFieldNames.NAME));
+
+		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES));
+		queryBuilder.append(String.format("inner join %s ", DbTableNames.ROUTES_AND_STATIONS));
+		queryBuilder.append(String.format("on %s.%s = %s.%s ", DbTableNames.ROUTES, DbFieldNames.ID,
+			DbTableNames.ROUTES_AND_STATIONS, DbFieldNames.ROUTE_ID));
+
+		queryBuilder.append(String.format("where %s.%s = %d", DbTableNames.ROUTES_AND_STATIONS,
+			DbFieldNames.STATION_ID, station.getId()));
+
+		return queryBuilder.toString();
+	}
 }
