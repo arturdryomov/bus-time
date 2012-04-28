@@ -12,7 +12,9 @@ public class DbProvider
 	}
 
 	private static DbProvider instance;
-	private final DbOpenHelper dbOpenHelper;
+
+	private final DbOpenHelper databaseOpenHelper;
+	private Routes routes;
 
 	public static DbProvider getInstance() {
 		return instance;
@@ -32,12 +34,20 @@ public class DbProvider
 			throw new AlreadyInstantiatedException();
 		}
 
-		dbOpenHelper = new DbOpenHelper(context.getApplicationContext());
+		databaseOpenHelper = new DbOpenHelper(context.getApplicationContext());
 
 		instance = this;
 	}
 
 	SQLiteDatabase getDatabase() {
-		return dbOpenHelper.getWritableDatabase();
+		return databaseOpenHelper.getWritableDatabase();
+	}
+
+	public Routes getRoutes() {
+		if (routes == null) {
+			routes = new Routes();
+		}
+
+		return routes;
 	}
 }

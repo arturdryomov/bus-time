@@ -95,7 +95,7 @@ public class DbOpenHelper extends SQLiteOpenHelper
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldDbVersion, int newDbVersion) {
-		throw new DatabaseException(String.format(
+		throw new DbException(String.format(
 			"%s database is currently not intended to be upgraded", DATABASE_NAME));
 	}
 }
