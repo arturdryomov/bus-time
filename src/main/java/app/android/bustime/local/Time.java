@@ -27,10 +27,6 @@ public class Time
 	public Time(String timeAsString) {
 		Date time = getTime(timeAsString);
 
-		if (time == null) {
-			throw new TimeException();
-		}
-
 		int hours = time.getHours();
 		int minutes = time.getMinutes();
 
@@ -45,6 +41,11 @@ public class Time
 	private Date getTime(String timeAsString) {
 		try {
 			Date time = timeFormatter.parse(timeAsString);
+
+			if (time == null) {
+				throw new TimeException();
+			}
+
 			return time;
 		}
 		catch (ParseException e) {
