@@ -1,7 +1,11 @@
 package app.android.bustime.local;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 
@@ -72,5 +76,77 @@ public class Station
 
 		database.update(DbTableNames.STATIONS, databaseValues,
 			String.format("%s = %d", DbFieldNames.ID, id), null);
+	}
+
+	public void insertShiftTimeForRoute(Route route, Time time) {
+		database.beginTransaction();
+
+		try {
+			tryInsertShiftTimeForRoute(route, time);
+			database.setTransactionSuccessful();
+		}
+		finally {
+			database.endTransaction();
+		}
+	}
+
+	private void tryInsertShiftTimeForRoute(Route route, Time time) {
+		ContentValues databaseValues = new ContentValues();
+
+		databaseValues.put(DbFieldNames.ROUTE_ID, route.getId());
+		databaseValues.put(DbFieldNames.STATION_ID, id);
+		databaseValues.put(DbFieldNames.TIME_SHIFT, time.toString());
+
+		database.insert(DbTableNames.ROUTES_AND_STATIONS, null, databaseValues);
+	}
+
+	public void removeShiftTimeForRoute(Route route, Time time) {
+		database.beginTransaction();
+
+		try {
+			tryRemoveShiftTimeForRoute(route, time);
+			database.setTransactionSuccessful();
+		}
+		finally {
+			database.endTransaction();
+		}
+	}
+
+	private void tryRemoveShiftTimeForRoute(Route route, Time time) {
+		database.delete(DbTableNames.ROUTES_AND_STATIONS, String.format("%s = %d and %s = %s",
+			DbFieldNames.ROUTE_ID, route.getId(), DbFieldNames.TIME_SHIFT, time.toString()), null);
+	}
+
+	public List<Time> getTimetableForRoute(Route route) {
+		List<Time> routeTimetable = new ArrayList<Time>();
+
+		Cursor databaseCursor = database.rawQuery(buildRouteTimetableSelectionQuery(route), null);
+
+		while (databaseCursor.moveToNext()) {
+			String timeAsString = extractTimeFromCursor(databaseCursor);
+			// TODO: Append time or decide where to do it
+			routeTimetable.add(new Time(timeAsString));
+		}
+
+		return routeTimetable;
+	}
+
+	private String buildRouteTimetableSelectionQuery(Route route) {
+		StringBuilder queryBuilder = new StringBuilder();
+
+		queryBuilder.append("select ");
+
+		queryBuilder.append(String.format("%s ", DbFieldNames.TIME_SHIFT));
+
+		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES_AND_STATIONS));
+		queryBuilder.append(String.format("where %s = %d and %s = %d", DbFieldNames.STATION_ID, id,
+			DbFieldNames.ROUTE_ID, route.getId()));
+
+		return queryBuilder.toString();
+	}
+
+	private String extractTimeFromCursor(Cursor databaseCursor) {
+		return databaseCursor.getString(databaseCursor
+			.getColumnIndexOrThrow(DbFieldNames.DEPARTURE_TIME));
 	}
 }
