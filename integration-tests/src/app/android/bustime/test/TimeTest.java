@@ -1,14 +1,13 @@
-package app.android.bustime.local;
+package app.android.bustime.test;
 
 
-import static org.junit.Assert.assertEquals;
+import android.test.AndroidTestCase;
+import app.android.bustime.local.Time;
+import app.android.bustime.local.TimeException;
 
-import org.junit.Test;
 
-
-public class TimeTest
+public class TimeTest extends AndroidTestCase
 {
-	@Test
 	public void testNormalCreatingFromNumbers() {
 		Time firstTime = new Time(10, 40);
 		assertEquals("10:40", firstTime.toString());
@@ -20,27 +19,36 @@ public class TimeTest
 		assertEquals("23:59", thirdTime.toString());
 	}
 
-	@Test(expected = TimeException.class)
 	public void testCreatingFromNumbersWithNegativeHours() {
-		new Time(-10, 40);
+		try {
+			new Time(-10, 40);
+
+			fail();
+		}
+		catch (TimeException e) {
+		}
 	}
 
-	@Test(expected = TimeException.class)
-	public void testCreatingFromNumbersWithNegativeMinutes() {
-		new Time(10, -40);
-	}
-
-	@Test(expected = TimeException.class)
 	public void testCreatingFromNumbersWithHugeHours() {
-		new Time(25, 40);
+		try {
+			new Time(25, 40);
+
+			fail();
+		}
+		catch (TimeException e) {
+		}
 	}
 
-	@Test(expected = TimeException.class)
 	public void testCreatingFromNumbersWithHugeMinutes() {
-		new Time(10, 65);
+		try {
+			new Time(10, 65);
+
+			fail();
+		}
+		catch (TimeException e) {
+		}
 	}
 
-	@Test
 	public void testNormalCreatingFromString() {
 		Time firstTime = new Time("10:40");
 		assertEquals("10:40", firstTime.toString());
