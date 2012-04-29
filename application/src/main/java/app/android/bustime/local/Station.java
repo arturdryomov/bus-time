@@ -7,9 +7,11 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 
-public class Station
+public class Station implements Parcelable
 {
 	private final SQLiteDatabase database;
 	private final Stations stations;
@@ -147,5 +149,38 @@ public class Station
 
 	private String extractTimeFromCursor(Cursor databaseCursor) {
 		return databaseCursor.getString(databaseCursor.getColumnIndexOrThrow(DbFieldNames.TIME_SHIFT));
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel destinationParcel, int flags) {
+		destinationParcel.writeLong(id);
+		destinationParcel.writeString(name);
+	}
+
+	private static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>() {
+		@Override
+		public Station createFromParcel(Parcel sourceParcel) {
+			return new Station(sourceParcel);
+		};
+
+		@Override
+		public Station[] newArray(int size) {
+			return new Station[size];
+		};
+	};
+
+	private Station(Parcel parcel) {
+		database = DbProvider.getInstance().getDatabase();
+		stations = DbProvider.getInstance().getStations();
+	}
+
+	public void readStationDataFromParcel(Parcel parcel) {
+		id = parcel.readLong();
+		name = parcel.readString();
 	}
 }

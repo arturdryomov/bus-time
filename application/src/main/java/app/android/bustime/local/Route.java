@@ -7,9 +7,11 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 
-public class Route
+public class Route implements Parcelable
 {
 	private final SQLiteDatabase database;
 	private final Routes routes;
@@ -145,5 +147,40 @@ public class Route
 	private String extractTimeFromCursor(Cursor databaseCursor) {
 		return databaseCursor.getString(databaseCursor
 			.getColumnIndexOrThrow(DbFieldNames.DEPARTURE_TIME));
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel destinationParcel, int flags) {
+		destinationParcel.writeLong(id);
+		destinationParcel.writeString(name);
+	}
+
+	private static final Parcelable.Creator<Route> CREATOR = new Parcelable.Creator<Route>() {
+		@Override
+		public Route createFromParcel(Parcel sourceParcel) {
+			return new Route(sourceParcel);
+		};
+
+		@Override
+		public Route[] newArray(int size) {
+			return new Route[size];
+		};
+	};
+
+	private Route(Parcel parcel) {
+		database = DbProvider.getInstance().getDatabase();
+		routes = DbProvider.getInstance().getRoutes();
+
+		readRouteDataFromParcel(parcel);
+	}
+
+	public void readRouteDataFromParcel(Parcel parcel) {
+		id = parcel.readLong();
+		name = parcel.readString();
 	}
 }
