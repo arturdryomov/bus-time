@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>BusTime Integration Tests</name>
-	<artifactId>bustime-integration-tests</artifactId>
+	<name>BusTime Application</name>
+	<artifactId>bustime-application</artifactId>
 	<packaging>apk</packaging>
 
 	<parent>
@@ -22,37 +22,31 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>android-test</artifactId>
-			<version>2.2.1</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>app.android</groupId>
-			<artifactId>bustime-application</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-			<type>apk</type>
-		</dependency>
-
-		<dependency>
-		  <groupId>app.android</groupId>
-		  <artifactId>bustime-application</artifactId>
-		  <version>${project.version}</version>
-			<scope>provided</scope>
-		  <type>jar</type>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<sourceDirectory>${project.basedir}/src</sourceDirectory>
+		<testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
 
 		<plugins>
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
 			</plugin>
+
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+
 </project>
