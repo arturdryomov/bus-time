@@ -14,5 +14,7 @@
 	<string name="rename">Rename</string>
 	<string name="delete">Delete</string>
 	<string name="editDepartureTimetable">Edit departure timetable</string>
+	<string name="routeRenaming">Route Renaming</string>
+	<string name="renameRoute">Rename route</string>
 
 </resources>

@@ -160,7 +160,7 @@ public class Route implements Parcelable
 		destinationParcel.writeString(name);
 	}
 
-	private static final Parcelable.Creator<Route> CREATOR = new Parcelable.Creator<Route>() {
+	public static final Parcelable.Creator<Route> CREATOR = new Parcelable.Creator<Route>() {
 		@Override
 		public Route createFromParcel(Parcel sourceParcel) {
 			return new Route(sourceParcel);

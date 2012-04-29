@@ -162,7 +162,7 @@ public class Station implements Parcelable
 		destinationParcel.writeString(name);
 	}
 
-	private static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>() {
+	public static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>() {
 		@Override
 		public Station createFromParcel(Parcel sourceParcel) {
 			return new Station(sourceParcel);

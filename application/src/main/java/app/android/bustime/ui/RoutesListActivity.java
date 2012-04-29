@@ -147,7 +147,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 
 		switch (item.getItemId()) {
 			case R.id.rename:
-				// TODO: callRouteRenaming(routePosition);
+				callRouteRenaming(routePosition);
 				return true;
 			case R.id.delete:
 				callRouteDeleting(routePosition);
@@ -158,6 +158,13 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 			default:
 				return super.onContextItemSelected(item);
 		}
+	}
+
+	private void callRouteRenaming(int routePosition) {
+		Route route = getRoute(routePosition);
+
+		Intent callIntent = IntentFactory.createDeckRenamingInten(activityContext, route);
+		startActivity(callIntent);
 	}
 
 	private void callRouteDeleting(int routePosition) {
