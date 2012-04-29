@@ -7,6 +7,7 @@
 	<uses-sdk android:minSdkVersion="10" />
 
 	<application
+		android:name="BusTimeApplication"
 		android:icon="@drawable/ic_launcher_bustime"
 		android:label="@string/applicationName"
 		android:theme="@android:style/Theme.Light.NoTitleBar" >
