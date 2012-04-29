@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="applicationName">Bus Time</string>
+
+	<string name="applicationName">Bus Time</string>
+	<string name="routes">Routes</string>
+	<string name="noRoutes">There are no routes.</string>
+	<string name="loadingRoutes">Loading routes…</string>
+	<string name="someError">Ooops, some error just happened.</string>
+	<string name="routeCreation">Route Creation</string>
+	<string name="routeName">Route name</string>
+	<string name="createRoute">Create route</string>
+	<string name="routeAlreadyExists">Route with such name already exists.</string>
+	<string name="enterRouteName">Enter route name.</string>
+	<string name="rename">Rename</string>
+	<string name="delete">Delete</string>
+	<string name="editDepartureTimetable">Edit departure timetable</string>
+
 </resources>

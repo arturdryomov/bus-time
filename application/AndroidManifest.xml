@@ -11,12 +11,14 @@
 		android:icon="@drawable/ic_launcher_bustime"
 		android:label="@string/applicationName"
 		android:theme="@android:style/Theme.Light.NoTitleBar" >
-		<activity android:name=".ui.DashboardActivity" >
+		<activity android:name=".ui.RoutesListActivity" >
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
+		</activity>
+		<activity android:name=".ui.RouteCreationActivity" >
 		</activity>
 	</application>
 
