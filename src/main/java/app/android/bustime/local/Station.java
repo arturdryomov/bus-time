@@ -113,7 +113,7 @@ public class Station
 	}
 
 	private void tryRemoveShiftTimeForRoute(Route route, Time time) {
-		database.delete(DbTableNames.ROUTES_AND_STATIONS, String.format("%s = %d and %s = %s",
+		database.delete(DbTableNames.ROUTES_AND_STATIONS, String.format("%s = %d and %s = '%s'",
 			DbFieldNames.ROUTE_ID, route.getId(), DbFieldNames.TIME_SHIFT, time.toString()), null);
 	}
 
@@ -146,7 +146,6 @@ public class Station
 	}
 
 	private String extractTimeFromCursor(Cursor databaseCursor) {
-		return databaseCursor.getString(databaseCursor
-			.getColumnIndexOrThrow(DbFieldNames.DEPARTURE_TIME));
+		return databaseCursor.getString(databaseCursor.getColumnIndexOrThrow(DbFieldNames.TIME_SHIFT));
 	}
 }

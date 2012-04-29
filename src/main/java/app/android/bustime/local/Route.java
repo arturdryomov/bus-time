@@ -113,7 +113,7 @@ public class Route
 
 	private void tryRemoveDepartureTime(Time time) {
 		database.delete(DbTableNames.TRIPS,
-			String.format("%s = %s", DbFieldNames.DEPARTURE_TIME, time.toString()), null);
+			String.format("%s = '%s'", DbFieldNames.DEPARTURE_TIME, time.toString()), null);
 	}
 
 	public List<Time> getDepartureTimetable() {

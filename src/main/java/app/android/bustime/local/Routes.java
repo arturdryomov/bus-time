@@ -182,4 +182,12 @@ public class Routes
 
 		return queryBuilder.toString();
 	}
+
+	public void beginTransaction() {
+		database.beginTransaction();
+	}
+
+	public void endTransaction() {
+		database.endTransaction();
+	}
 }

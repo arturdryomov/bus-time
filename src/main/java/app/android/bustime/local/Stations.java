@@ -146,7 +146,7 @@ public class Stations
 			String.format("%s = %d", DbFieldNames.STATION_ID, station.getId()), null);
 
 		database.delete(DbTableNames.STATIONS,
-			String.format("%d = %d", DbFieldNames.ID, station.getId()), null);
+			String.format("%s = %d", DbFieldNames.ID, station.getId()), null);
 	}
 
 	public List<Station> getStationsByRoute(Route route) {
@@ -179,5 +179,13 @@ public class Stations
 			DbFieldNames.ROUTE_ID, route.getId()));
 
 		return queryBulder.toString();
+	}
+
+	public void beginTransaction() {
+		database.beginTransaction();
+	}
+
+	public void endTransaction() {
+		database.endTransaction();
 	}
 }
