@@ -26,6 +26,8 @@
 		</activity>
 		<activity android:name=".ui.DepartureTimeCreationActivity" >
 		</activity>
+		<activity android:name=".ui.DepartureTimeEditingActivity" >
+		</activity>
 	</application>
 
 </manifest>

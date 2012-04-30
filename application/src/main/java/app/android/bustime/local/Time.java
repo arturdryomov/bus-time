@@ -90,6 +90,14 @@ public class Time implements Parcelable
 		return calendar.getTime();
 	}
 
+	public int getHours() {
+		return hours;
+	}
+
+	public int getMinutes() {
+		return minutes;
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;

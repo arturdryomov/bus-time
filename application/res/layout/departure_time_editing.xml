@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" >
+
+	<!-- Actionbar -->
+
+	<RelativeLayout
+		android:id="@+id/actionbar"
+		style="@style/Actionbar" >
+
+		<TextView
+			style="@style/ActionbarTitle"
+			android:text="@string/departureTimeEditing" />
+	</RelativeLayout>
+
+	<!-- Main view -->
+
+	<ScrollView
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_below="@id/actionbar" >
+
+		<LinearLayout style="@style/BodyLinearLayout" >
+
+			<TimePicker
+				android:id="@+id/departureTimePicker"
+				style="@style/BodyLinearLayoutItem" />
+
+			<Button
+				android:id="@+id/confirmButton"
+				style="@style/BodyLinearLayoutItem"
+				android:layout_marginTop="@dimen/confirm_button_top_margin"
+				android:text="@string/updateDepartureTime" />
+		</LinearLayout>
+	</ScrollView>
+
+</RelativeLayout>

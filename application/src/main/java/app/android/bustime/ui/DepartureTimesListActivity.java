@@ -178,7 +178,9 @@ public class DepartureTimesListActivity extends SimpleAdapterListActivity
 	private void callDepartureTimeEditing(int timePosition) {
 		Time time = getTime(timePosition);
 
-		// TODO: Call editing with intent
+		Intent callIntent = IntentFactory
+			.createDepartureTimeEditingIntent(activityContext, route, time);
+		startActivity(callIntent);
 	}
 
 	private void callDepartureTimeDeleting(int timePosition) {
