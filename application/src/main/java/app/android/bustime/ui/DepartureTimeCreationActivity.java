@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -40,6 +41,11 @@ public class DepartureTimeCreationActivity extends Activity
 	private void initializeBodyControls() {
 		Button confirmButton = (Button) findViewById(R.id.confirmButton);
 		confirmButton.setOnClickListener(confirmListener);
+
+		if (DateFormat.is24HourFormat(activityContext)) {
+			TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departureTimePicker);
+			departureTimePicker.setIs24HourView(true);
+		}
 	}
 
 	private final OnClickListener confirmListener = new OnClickListener() {
