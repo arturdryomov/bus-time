@@ -153,7 +153,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 				callRouteDeleting(routePosition);
 				return true;
 			case R.id.editDepartureTimetable:
-				// TODO: callDepartureTimetable(routePosition);
+				callDepartureTimesList(routePosition);
 				return true;
 			default:
 				return super.onContextItemSelected(item);
@@ -224,5 +224,12 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 		Map<String, Object> adapterItem = (Map<String, Object>) listAdapter.getItem(routePosition);
 
 		return (Route) adapterItem.get(LIST_ITEM_OBJECT_ID);
+	}
+
+	private void callDepartureTimesList(int routePosition) {
+		Route route = getRoute(routePosition);
+
+		Intent callIntent = IntentFactory.createDepartureTimesListIntent(activityContext, route);
+		startActivity(callIntent);
 	}
 }

@@ -16,5 +16,8 @@
 	<string name="editDepartureTimetable">Edit departure timetable</string>
 	<string name="routeRenaming">Route Renaming</string>
 	<string name="renameRoute">Rename route</string>
+	<string name="departureTimes">Departure Times</string>
+	<string name="noDepartureTimes">There are no departure times.</string>
+	<string name="loadingDepartureTimes">Loading departure times…</string>
 
 </resources>
