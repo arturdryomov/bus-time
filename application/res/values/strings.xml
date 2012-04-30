@@ -19,5 +19,11 @@
 	<string name="departureTimes">Departure Times</string>
 	<string name="noDepartureTimes">There are no departure times.</string>
 	<string name="loadingDepartureTimes">Loading departure times…</string>
+	<string name="departureTimeCreation">Departure Time Creation</string>
+	<string name="departureTime">Departure time</string>
+	<string name="createDepartureTime">Create departure time</string>
+	<string name="edit">Edit</string>
+	<string name="departureTimeEditing">Departure Time Editing</string>
+	<string name="updateDepartureTime">Update departure time</string>
 
 </resources>

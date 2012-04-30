@@ -1,7 +1,9 @@
 package app.android.bustime.ui;
 
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -96,13 +98,18 @@ public class RouteCreationActivity extends Activity
 			super.onPostExecute(errorMessage);
 
 			if (errorMessage.isEmpty()) {
-				// TODO: Call trips list
+				callDepartureTimesList();
 
 				finish();
 			}
 			else {
 				UserAlerter.alert(activityContext, errorMessage);
 			}
+		}
+
+		private void callDepartureTimesList() {
+			Intent callIntent = IntentFactory.createDepartureTimesListIntent(activityContext, route);
+			startActivity(callIntent);
 		}
 	}
 }

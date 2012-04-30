@@ -3,12 +3,18 @@ package app.android.bustime.ui;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -50,7 +56,8 @@ public class DepartureTimesListActivity extends SimpleAdapterListActivity
 		}
 
 		private void callDepartureTimeCreation() {
-			// TODO: Call intent
+			Intent callIntent = IntentFactory.createDepartureTimeCreationIntent(activityContext, route);
+			activityContext.startActivity(callIntent);
 		}
 	};
 
@@ -64,7 +71,7 @@ public class DepartureTimesListActivity extends SimpleAdapterListActivity
 
 		getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-		// TODO: registerForContextMenu(getListView());
+		registerForContextMenu(getListView());
 	}
 
 	private void processReceivedRoute() {
@@ -142,5 +149,94 @@ public class DepartureTimesListActivity extends SimpleAdapterListActivity
 		timeItem.put(LIST_ITEM_OBJECT_ID, time);
 
 		listData.add(timeItem);
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, view, menuInfo);
+
+		getMenuInflater().inflate(R.menu.departure_times_context_menu, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo itemInfo = (AdapterContextMenuInfo) item.getMenuInfo();
+		int timePosition = itemInfo.position;
+
+		switch (item.getItemId()) {
+			case R.id.edit:
+				callDepartureTimeEditing(timePosition);
+				return true;
+			case R.id.delete:
+				callDepartureTimeDeleting(timePosition);
+				return true;
+			default:
+				return super.onContextItemSelected(item);
+		}
+	}
+
+	private void callDepartureTimeEditing(int timePosition) {
+		Time time = getTime(timePosition);
+
+		// TODO: Call editing with intent
+	}
+
+	private void callDepartureTimeDeleting(int timePosition) {
+		new DeleteDepartureTimeTask(timePosition).execute();
+	}
+
+	private class DeleteDepartureTimeTask extends AsyncTask<Void, Void, String>
+	{
+		private final int timePosition;
+		private final Time time;
+
+		public DeleteDepartureTimeTask(int timePosition) {
+			super();
+
+			this.timePosition = timePosition;
+			this.time = getTime(timePosition);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+
+			listData.remove(timePosition);
+			updateList();
+
+			if (listData.isEmpty()) {
+				setEmptyListText(getString(R.string.noDepartureTimes));
+			}
+		}
+
+		@Override
+		protected String doInBackground(Void... params) {
+			try {
+				route.removeDepartureTime(time);
+			}
+			catch (DbException e) {
+				return getString(R.string.someError);
+			}
+
+			return new String();
+		}
+
+		@Override
+		protected void onPostExecute(String errorMessage) {
+			super.onPostExecute(errorMessage);
+
+			if (!errorMessage.isEmpty()) {
+				UserAlerter.alert(activityContext, errorMessage);
+			}
+		}
+	}
+
+	private Time getTime(int timePosition) {
+		SimpleAdapter listAdapter = (SimpleAdapter) getListAdapter();
+
+		@SuppressWarnings("unchecked")
+		Map<String, Object> adapterItem = (Map<String, Object>) listAdapter.getItem(timePosition);
+
+		return (Time) adapterItem.get(LIST_ITEM_OBJECT_ID);
 	}
 }

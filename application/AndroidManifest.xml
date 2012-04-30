@@ -24,6 +24,8 @@
 		</activity>
 		<activity android:name=".ui.DepartureTimesListActivity" >
 		</activity>
+		<activity android:name=".ui.DepartureTimeCreationActivity" >
+		</activity>
 	</application>
 
 </manifest>
