@@ -38,10 +38,10 @@ public class DepartureTimesListActivity extends SimpleAdapterListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.departure_times);
 
+		processReceivedRoute();
+
 		initializeActionbar();
 		initializeList();
-
-		processReceivedRoute();
 	}
 
 	private void initializeActionbar() {

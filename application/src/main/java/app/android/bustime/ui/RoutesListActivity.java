@@ -232,4 +232,18 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 		Intent callIntent = IntentFactory.createDepartureTimesListIntent(activityContext, route);
 		startActivity(callIntent);
 	}
+
+	@Override
+	protected void onListItemClick(ListView listView, View view, int position, long id) {
+		super.onListItemClick(listView, view, position, id);
+
+		callStationsList(position);
+	}
+
+	private void callStationsList(int routePosition) {
+		Route route = getRoute(routePosition);
+
+		Intent callIntent = IntentFactory.createStationsListIntent(activityContext, route);
+		startActivity(callIntent);
+	}
 }

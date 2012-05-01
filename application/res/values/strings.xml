@@ -25,5 +25,8 @@
 	<string name="edit">Edit</string>
 	<string name="departureTimeEditing">Departure Time Editing</string>
 	<string name="updateDepartureTime">Update departure time</string>
+	<string name="stations">Stations</string>
+	<string name="noStations">There are no stations.</string>
+	<string name="loadingStations">Loadint stations…</string>
 
 </resources>
