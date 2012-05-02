@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" >
+
+	<!-- Actionbar -->
+
+	<RelativeLayout
+		android:id="@+id/actionbar"
+		style="@style/Actionbar" >
+
+		<TextView
+			style="@style/ActionbarTitle"
+			android:text="@string/stationCreation" />
+	</RelativeLayout>
+
+	<!-- Main view -->
+
+	<ScrollView
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_below="@id/actionbar" >
+
+		<LinearLayout style="@style/BodyLinearLayout" >
+
+			<CheckBox
+				android:id="@+id/stationWasCreatedCheckbox"
+				style="@style/BodyLinearLayoutItem"
+				android:text="@string/stationWasCreated"
+				android:textSize="@dimen/checkbox_text_size" />
+
+			<TextView
+				style="@style/BodyLinearLayoutItem"
+				android:text="@string/stationName" />
+
+			<EditText
+				android:id="@+id/stationNameEdit"
+				style="@style/BodyLinearLayoutItem"
+				android:inputType="text"
+				android:singleLine="true" />
+
+			<Spinner
+				android:id="@+id/stationsSpinner"
+				style="@style/BodyLinearLayoutItem"
+				android:visibility="gone" />
+
+			<TextView
+				style="@style/BodyLinearLayoutItem"
+				android:text="@string/departureShiftTime" />
+
+			<TimePicker
+				android:id="@+id/shiftTimePicker"
+				style="@style/BodyLinearLayoutItem"
+				android:layout_marginTop="@dimen/time_picker_top_margin" />
+
+			<Button
+				android:id="@+id/confirmButton"
+				style="@style/BodyLinearLayoutItem"
+				android:layout_marginTop="@dimen/confirm_button_top_margin"
+				android:text="@string/createStation" />
+		</LinearLayout>
+	</ScrollView>
+
+</RelativeLayout>

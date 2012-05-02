@@ -30,6 +30,8 @@
 		</activity>
 		<activity android:name=".ui.StationsListActivity" >
 		</activity>
+		<activity android:name=".ui.StationCreationActivity" >
+		</activity>
 	</application>
 
 </manifest>

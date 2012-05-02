@@ -28,5 +28,11 @@
 	<string name="stations">Stations</string>
 	<string name="noStations">There are no stations.</string>
 	<string name="loadingStations">Loadint stations…</string>
+	<string name="stationWasCreated">Station was already created.</string>
+	<string name="stationCreation">Station Creation</string>
+	<string name="stationName">Station name</string>
+	<string name="departureShiftTime">Departure shift time</string>
+	<string name="createStation">Create station</string>
+	<string name="enterStationName">Enter station name.</string>
 
 </resources>
