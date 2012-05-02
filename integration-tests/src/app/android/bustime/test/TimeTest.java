@@ -59,4 +59,11 @@ public class TimeTest extends AndroidTestCase
 		Time thirdTime = new Time("23:59");
 		assertEquals("23:59", thirdTime.toString());
 	}
+
+	public void testSum() {
+		Time firstTime = new Time("10:40");
+		Time secondTime = new Time("00:30");
+
+		assertEquals("11:10", firstTime.sum(secondTime).toString());
+	}
 }

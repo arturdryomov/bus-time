@@ -125,4 +125,18 @@ public class Time implements Parcelable
 		hours = parcel.readInt();
 		minutes = parcel.readInt();
 	}
+
+	public Time sum(Time timeToSum) {
+		Calendar calendar = new GregorianCalendar();
+		calendar.set(Calendar.HOUR_OF_DAY, hours);
+		calendar.set(Calendar.MINUTE, minutes);
+
+		calendar.add(Calendar.HOUR_OF_DAY, timeToSum.hours);
+		calendar.add(Calendar.MINUTE, timeToSum.minutes);
+
+		int resultHours = calendar.get(Calendar.HOUR_OF_DAY);
+		int resultMinutes = calendar.get(Calendar.MINUTE);
+
+		return new Time(resultHours, resultMinutes);
+	}
 }
