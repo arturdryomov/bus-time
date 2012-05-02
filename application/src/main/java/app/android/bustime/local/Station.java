@@ -120,20 +120,34 @@ public class Station implements Parcelable
 	}
 
 	public List<Time> getTimetableForRoute(Route route) {
-		List<Time> routeTimetable = new ArrayList<Time>();
+		List<Time> timetable = new ArrayList<Time>();
 
-		Cursor databaseCursor = database.rawQuery(buildRouteTimetableSelectionQuery(route), null);
+		Time shiftTimeForRoute = getShiftTimeForRoute(route);
 
-		while (databaseCursor.moveToNext()) {
-			String timeAsString = extractTimeFromCursor(databaseCursor);
-			// TODO: Append time or decide where to do it
-			routeTimetable.add(new Time(timeAsString));
+		for (Time departureTime : route.getDepartureTimetable()) {
+			timetable.add(departureTime.sum(shiftTimeForRoute));
 		}
 
-		return routeTimetable;
+		return timetable;
 	}
 
-	private String buildRouteTimetableSelectionQuery(Route route) {
+	public Time getShiftTimeForRoute(Route route) {
+		Cursor databaseCursor = database.rawQuery(buildRouteShiftTimeSelectionQuery(route), null);
+
+		Time shiftTime;
+
+		if (databaseCursor.getCount() == 0) {
+			shiftTime = new Time("00:00");
+		}
+		else {
+			databaseCursor.moveToFirst();
+			shiftTime = new Time(extractTimeFromCursor(databaseCursor));
+		}
+
+		return shiftTime;
+	}
+
+	private String buildRouteShiftTimeSelectionQuery(Route route) {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select ");
