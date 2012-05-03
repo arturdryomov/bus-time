@@ -38,7 +38,7 @@ public class RouteCreationActivity extends Activity
 
 	private final OnClickListener confirmListener = new OnClickListener() {
 		@Override
-		public void onClick(View v) {
+		public void onClick(View view) {
 			readUserDataFromFields();
 
 			String userDataErrorMessage = getUserDataErrorMessage();
@@ -52,7 +52,7 @@ public class RouteCreationActivity extends Activity
 		}
 
 		private void callRouteCreation() {
-			new RouteCreationTask().execute();
+			new CreateRouteTask().execute();
 		}
 	};
 
@@ -74,7 +74,7 @@ public class RouteCreationActivity extends Activity
 		return new String();
 	}
 
-	private class RouteCreationTask extends AsyncTask<Void, Void, String>
+	private class CreateRouteTask extends AsyncTask<Void, Void, String>
 	{
 		private Route route;
 
