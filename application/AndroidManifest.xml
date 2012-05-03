@@ -11,12 +11,28 @@
 		android:icon="@drawable/ic_launcher_bustime"
 		android:label="@string/applicationName"
 		android:theme="@android:style/Theme.Light.NoTitleBar" >
-		<activity android:name=".ui.DashboardActivity" >
+		<activity android:name=".ui.RoutesListActivity" >
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
+		</activity>
+		<activity android:name=".ui.RouteCreationActivity" >
+		</activity>
+		<activity android:name=".ui.RouteRenamingActivity" >
+		</activity>
+		<activity android:name=".ui.DepartureTimesListActivity" >
+		</activity>
+		<activity android:name=".ui.DepartureTimeCreationActivity" >
+		</activity>
+		<activity android:name=".ui.DepartureTimeEditingActivity" >
+		</activity>
+		<activity android:name=".ui.StationsListActivity" >
+		</activity>
+		<activity android:name=".ui.StationCreationActivity" >
+		</activity>
+		<activity android:name=".ui.TimetableActivity" >
 		</activity>
 	</application>
 

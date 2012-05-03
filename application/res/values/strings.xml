@@ -1,4 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="applicationName">Bus Time</string>
+
+	<string name="applicationName">Bus Time</string>
+	<string name="routes">Routes</string>
+	<string name="noRoutes">There are no routes.</string>
+	<string name="loadingRoutes">Loading routes…</string>
+	<string name="someError">Ooops, some error just happened.</string>
+	<string name="routeCreation">Route Creation</string>
+	<string name="routeName">Route name</string>
+	<string name="createRoute">Create route</string>
+	<string name="routeAlreadyExists">Route with such name already exists.</string>
+	<string name="enterRouteName">Enter route name.</string>
+	<string name="rename">Rename</string>
+	<string name="delete">Delete</string>
+	<string name="editDepartureTimetable">Edit departure timetable</string>
+	<string name="routeRenaming">Route Renaming</string>
+	<string name="renameRoute">Rename route</string>
+	<string name="departureTimes">Departure Times</string>
+	<string name="noDepartureTimes">There are no departure times.</string>
+	<string name="loadingDepartureTimes">Loading departure times…</string>
+	<string name="departureTimeCreation">Departure Time Creation</string>
+	<string name="departureTime">Departure time</string>
+	<string name="createDepartureTime">Create departure time</string>
+	<string name="edit">Edit</string>
+	<string name="departureTimeEditing">Departure Time Editing</string>
+	<string name="updateDepartureTime">Update departure time</string>
+	<string name="stations">Stations</string>
+	<string name="noStations">There are no stations.</string>
+	<string name="loadingStations">Loadint stations…</string>
+	<string name="stationWasCreated">Station was already created.</string>
+	<string name="stationCreation">Station Creation</string>
+	<string name="stationName">Station name</string>
+	<string name="departureShiftTime">Departure shift time</string>
+	<string name="createStation">Create station</string>
+	<string name="enterStationName">Enter station name.</string>
+	<string name="timetable">Timetable</string>
+	<string name="emptyTimetable">Timetable is empty.</string>
+	<string name="loadingTimetable">Loading timetable.</string>
+
 </resources>

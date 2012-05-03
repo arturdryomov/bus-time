@@ -11,7 +11,7 @@
 
 		<TextView
 			style="@style/ActionbarTitle"
-			android:text="@string/routes" />
+			android:text="@string/departureTimes" />
 
 		<LinearLayout
 			android:id="@+id/actions"
@@ -35,6 +35,6 @@
 	<TextView
 		android:id="@android:id/empty"
 		style="@style/BodyEmptyListViewSign"
-		android:text="@string/noRoutes" />
+		android:text="@string/noDepartureTimes" />
 
 </RelativeLayout>

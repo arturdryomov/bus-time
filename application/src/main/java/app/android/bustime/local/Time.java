@@ -7,8 +7,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Time
+
+public class Time implements Parcelable
 {
 	private static final int MAXIMUM_HOURS_COUNT = 23;
 	private static final int MINIMUM_HOURS_COUNT = 0;
@@ -85,5 +88,55 @@ public class Time
 		calendar.set(Calendar.MINUTE, minutes);
 
 		return calendar.getTime();
+	}
+
+	public int getHours() {
+		return hours;
+	}
+
+	public int getMinutes() {
+		return minutes;
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel parcel, int flags) {
+		parcel.writeInt(hours);
+		parcel.writeInt(minutes);
+	}
+
+	public static final Parcelable.Creator<Time> CREATOR = new Parcelable.Creator<Time>() {
+		@Override
+		public Time createFromParcel(Parcel parcel) {
+			return new Time(parcel);
+		};
+
+		@Override
+		public Time[] newArray(int size) {
+			return new Time[size];
+		};
+	};
+
+	private Time(Parcel parcel) {
+		hours = parcel.readInt();
+		minutes = parcel.readInt();
+	}
+
+	public Time sum(Time timeToSum) {
+		Calendar calendar = new GregorianCalendar();
+		calendar.set(Calendar.HOUR_OF_DAY, hours);
+		calendar.set(Calendar.MINUTE, minutes);
+
+		calendar.add(Calendar.HOUR_OF_DAY, timeToSum.hours);
+		calendar.add(Calendar.MINUTE, timeToSum.minutes);
+
+		int resultHours = calendar.get(Calendar.HOUR_OF_DAY);
+		int resultMinutes = calendar.get(Calendar.MINUTE);
+
+		return new Time(resultHours, resultMinutes);
 	}
 }
