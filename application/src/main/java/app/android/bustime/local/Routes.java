@@ -13,7 +13,7 @@ public class Routes
 {
 	private final SQLiteDatabase database;
 
-	public Routes() {
+	Routes() {
 		database = DbProvider.getInstance().getDatabase();
 	}
 
@@ -61,8 +61,8 @@ public class Routes
 
 		try {
 			Route route = tryCreateRoute(name);
-			database.setTransactionSuccessful();
 
+			database.setTransactionSuccessful();
 			return route;
 		}
 		finally {
@@ -78,7 +78,7 @@ public class Routes
 		return getRouteById(insertRoute(name));
 	}
 
-	public boolean isRouteExist(String name) {
+	boolean isRouteExist(String name) {
 		Cursor databaseCursor = database.rawQuery(buildRoutesWithNameCountQuery(name), null);
 		databaseCursor.moveToFirst();
 
@@ -93,7 +93,6 @@ public class Routes
 
 		queryBuilder.append("select count(*) ");
 		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES));
-
 		queryBuilder.append(String.format("where upper(%s) = upper('%s')", DbFieldNames.NAME, name));
 
 		return queryBuilder.toString();

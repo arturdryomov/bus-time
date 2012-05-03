@@ -13,7 +13,7 @@ public class Stations
 {
 	private final SQLiteDatabase database;
 
-	public Stations() {
+	Stations() {
 		database = DbProvider.getInstance().getDatabase();
 	}
 
@@ -61,8 +61,8 @@ public class Stations
 
 		try {
 			Station station = tryCreateStation(name);
-			database.setTransactionSuccessful();
 
+			database.setTransactionSuccessful();
 			return station;
 		}
 		finally {
@@ -78,7 +78,7 @@ public class Stations
 		return getStationById(insertStation(name));
 	}
 
-	public boolean isStationExist(String name) {
+	boolean isStationExist(String name) {
 		Cursor databaseCursor = database.rawQuery(buildStationsWithNameCountQuery(name), null);
 		databaseCursor.moveToFirst();
 
@@ -93,7 +93,6 @@ public class Stations
 
 		queryBuilder.append("select count(*)");
 		queryBuilder.append(String.format("from %s ", DbTableNames.STATIONS));
-
 		queryBuilder.append(String.format("where upper(%s) = upper('%s')", DbFieldNames.NAME, name));
 
 		return queryBuilder.toString();
