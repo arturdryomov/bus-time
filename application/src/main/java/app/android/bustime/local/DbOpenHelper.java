@@ -53,9 +53,9 @@ public class DbOpenHelper extends SQLiteOpenHelper
 		queryBuilder.append("(");
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ID, DbFieldParameters.ID));
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ROUTE_ID,
-			DbFieldParameters.TRIP_ROUTE_ID));
+			DbFieldParameters.TRIPS_ROUTE_ID));
 		queryBuilder.append(String.format("%s %s", DbFieldNames.DEPARTURE_TIME,
-			DbFieldParameters.TRIP_DEPARTURE_TIME));
+			DbFieldParameters.TRIPS_DEPARTURE_TIME));
 		queryBuilder.append(")");
 
 		return queryBuilder.toString();
@@ -95,7 +95,7 @@ public class DbOpenHelper extends SQLiteOpenHelper
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldDbVersion, int newDbVersion) {
-		throw new DbException(String.format(
-			"%s database is currently not intended to be upgraded", DATABASE_NAME));
+		throw new DbException(String.format("%s database is currently not intended to be upgraded",
+			DATABASE_NAME));
 	}
 }

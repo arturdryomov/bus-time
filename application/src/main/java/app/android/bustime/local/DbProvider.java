@@ -14,6 +14,7 @@ public class DbProvider
 	private static DbProvider instance;
 
 	private final DbOpenHelper databaseOpenHelper;
+
 	private Routes routes;
 	private Stations stations;
 
