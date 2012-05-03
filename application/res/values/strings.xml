@@ -34,5 +34,8 @@
 	<string name="departureShiftTime">Departure shift time</string>
 	<string name="createStation">Create station</string>
 	<string name="enterStationName">Enter station name.</string>
+	<string name="timetable">Timetable</string>
+	<string name="emptyTimetable">Timetable is empty.</string>
+	<string name="loadingTimetable">Loading timetable.</string>
 
 </resources>

@@ -4,6 +4,7 @@ package app.android.bustime.ui;
 import android.content.Context;
 import android.content.Intent;
 import app.android.bustime.local.Route;
+import app.android.bustime.local.Station;
 import app.android.bustime.local.Time;
 
 
@@ -62,6 +63,14 @@ public class IntentFactory
 	public static Intent createStationCreationIntent(Context context, Route route) {
 		Intent intent = new Intent(context, StationCreationActivity.class);
 		intent.putExtra(MESSAGE_ID, route);
+
+		return intent;
+	}
+
+	public static Intent createTimetableIntent(Context context, Route route, Station station) {
+		Intent intent = new Intent(context, TimetableActivity.class);
+		intent.putExtra(MESSAGE_ID, route);
+		intent.putExtra(EXTRA_MESSAGE_ID, station);
 
 		return intent;
 	}

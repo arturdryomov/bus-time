@@ -32,6 +32,8 @@
 		</activity>
 		<activity android:name=".ui.StationCreationActivity" >
 		</activity>
+		<activity android:name=".ui.TimetableActivity" >
+		</activity>
 	</application>
 
 </manifest>

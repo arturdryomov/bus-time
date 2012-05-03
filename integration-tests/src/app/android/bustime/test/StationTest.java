@@ -1,5 +1,8 @@
 package app.android.bustime.test;
 
+
+import java.util.List;
+
 import app.android.bustime.local.Route;
 import app.android.bustime.local.Station;
 import app.android.bustime.local.Time;
@@ -17,6 +20,8 @@ public class StationTest extends DbTestCase
 		route = routes.createRoute(ROUTE_10_NAME);
 
 		station.insertShiftTimeForRoute(route, new Time("00:10"));
+		route.insertDepartureTime(new Time("10:00"));
+		route.insertDepartureTime(new Time("12:00"));
 	}
 
 	public void testGetName() {
@@ -34,6 +39,13 @@ public class StationTest extends DbTestCase
 
 		assertNotNull(shiftTimeForRoute);
 		assertEquals("00:10", station.getShiftTimeForRoute(route).toString());
+	}
+
+	public void testGetTimetable() {
+		List<Time> timetable = station.getTimetableForRoute(route);
+
+		assertEquals("10:10", timetable.get(0).toString());
+		assertEquals("12:10", timetable.get(1).toString());
 	}
 
 	public void testRemoveShiftTimeForRoute() {

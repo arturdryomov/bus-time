@@ -233,4 +233,18 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 		return (Station) adapterItem.get(LIST_ITEM_OBJECT_ID);
 	}
+
+	@Override
+	protected void onListItemClick(ListView listView, View view, int position, long id) {
+		super.onListItemClick(listView, view, position, id);
+
+		callTimetable(position);
+	}
+
+	private void callTimetable(int stationPosition) {
+		Station station = getStation(stationPosition);
+
+		Intent callIntent = IntentFactory.createTimetableIntent(activityContext, route, station);
+		startActivity(callIntent);
+	}
 }

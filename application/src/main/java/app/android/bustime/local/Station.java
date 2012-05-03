@@ -125,7 +125,8 @@ public class Station implements Parcelable
 		Time shiftTimeForRoute = getShiftTimeForRoute(route);
 
 		for (Time departureTime : route.getDepartureTimetable()) {
-			timetable.add(departureTime.sum(shiftTimeForRoute));
+			Time routeTime = departureTime.sum(shiftTimeForRoute);
+			timetable.add(routeTime);
 		}
 
 		return timetable;
@@ -191,6 +192,8 @@ public class Station implements Parcelable
 	private Station(Parcel parcel) {
 		database = DbProvider.getInstance().getDatabase();
 		stations = DbProvider.getInstance().getStations();
+
+		readStationDataFromParcel(parcel);
 	}
 
 	public void readStationDataFromParcel(Parcel parcel) {
