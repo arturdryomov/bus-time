@@ -19,12 +19,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
-import app.android.bustime.local.DbException;
 import app.android.bustime.local.Route;
 import app.android.bustime.local.Time;
 
 
-public class DepartureTimesListActivity extends SimpleAdapterListActivity
+public class DepartureTimetableActivity extends SimpleAdapterListActivity
 {
 	private final Context activityContext = this;
 
@@ -44,6 +43,19 @@ public class DepartureTimesListActivity extends SimpleAdapterListActivity
 		initializeList();
 	}
 
+	private void processReceivedRoute() {
+		Bundle receivedData = this.getIntent().getExtras();
+
+		if (receivedData.containsKey(IntentFactory.MESSAGE_ID)) {
+			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
+		}
+		else {
+			UserAlerter.alert(activityContext, getString(R.string.someError));
+
+			finish();
+		}
+	}
+
 	private void initializeActionbar() {
 		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.itemCreationButton);
 		itemCreationButton.setOnClickListener(departureTimeCreationListener);
@@ -51,7 +63,7 @@ public class DepartureTimesListActivity extends SimpleAdapterListActivity
 
 	private final OnClickListener departureTimeCreationListener = new OnClickListener() {
 		@Override
-		public void onClick(View v) {
+		public void onClick(View view) {
 			callDepartureTimeCreation();
 		}
 
@@ -74,19 +86,6 @@ public class DepartureTimesListActivity extends SimpleAdapterListActivity
 		registerForContextMenu(getListView());
 	}
 
-	private void processReceivedRoute() {
-		Bundle receivedData = this.getIntent().getExtras();
-
-		if (receivedData.containsKey(IntentFactory.MESSAGE_ID)) {
-			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
-		}
-		else {
-			UserAlerter.alert(activityContext, getString(R.string.someError));
-
-			finish();
-		}
-	}
-
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -95,12 +94,12 @@ public class DepartureTimesListActivity extends SimpleAdapterListActivity
 	}
 
 	private void loadDepartureTimes() {
-		new LoadDepartureTimesTask().execute();
+		new LoadDepartureTimetableTask().execute();
 	}
 
-	private class LoadDepartureTimesTask extends AsyncTask<Void, Void, String>
+	private class LoadDepartureTimetableTask extends AsyncTask<Void, Void, Void>
 	{
-		private List<Time> departureTimes;
+		private List<Time> departureTimetable;
 
 		@Override
 		protected void onPreExecute() {
@@ -110,31 +109,22 @@ public class DepartureTimesListActivity extends SimpleAdapterListActivity
 		}
 
 		@Override
-		protected String doInBackground(Void... params) {
-			try {
-				departureTimes = route.getDepartureTimetable();
-			}
-			catch (DbException e) {
-				return getString(R.string.someError);
-			}
+		protected Void doInBackground(Void... params) {
+			departureTimetable = route.getDepartureTimetable();
 
-			return new String();
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(String errorMessage) {
-			super.onPostExecute(errorMessage);
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
 
-			if (departureTimes.isEmpty()) {
+			if (departureTimetable.isEmpty()) {
 				setEmptyListText(getString(R.string.noDepartureTimes));
 			}
 			else {
-				fillList(departureTimes);
+				fillList(departureTimetable);
 				updateList();
-			}
-
-			if (!errorMessage.isEmpty()) {
-				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}
 	}
@@ -183,11 +173,20 @@ public class DepartureTimesListActivity extends SimpleAdapterListActivity
 		startActivity(callIntent);
 	}
 
+	private Time getTime(int timePosition) {
+		SimpleAdapter timetableAdapter = (SimpleAdapter) getListAdapter();
+
+		@SuppressWarnings("unchecked")
+		Map<String, Object> adapterItem = (Map<String, Object>) timetableAdapter.getItem(timePosition);
+
+		return (Time) adapterItem.get(LIST_ITEM_OBJECT_ID);
+	}
+
 	private void callDepartureTimeDeleting(int timePosition) {
 		new DeleteDepartureTimeTask(timePosition).execute();
 	}
 
-	private class DeleteDepartureTimeTask extends AsyncTask<Void, Void, String>
+	private class DeleteDepartureTimeTask extends AsyncTask<Void, Void, Void>
 	{
 		private final int timePosition;
 		private final Time time;
@@ -212,33 +211,10 @@ public class DepartureTimesListActivity extends SimpleAdapterListActivity
 		}
 
 		@Override
-		protected String doInBackground(Void... params) {
-			try {
-				route.removeDepartureTime(time);
-			}
-			catch (DbException e) {
-				return getString(R.string.someError);
-			}
+		protected Void doInBackground(Void... params) {
+			route.removeDepartureTime(time);
 
-			return new String();
+			return null;
 		}
-
-		@Override
-		protected void onPostExecute(String errorMessage) {
-			super.onPostExecute(errorMessage);
-
-			if (!errorMessage.isEmpty()) {
-				UserAlerter.alert(activityContext, errorMessage);
-			}
-		}
-	}
-
-	private Time getTime(int timePosition) {
-		SimpleAdapter listAdapter = (SimpleAdapter) getListAdapter();
-
-		@SuppressWarnings("unchecked")
-		Map<String, Object> adapterItem = (Map<String, Object>) listAdapter.getItem(timePosition);
-
-		return (Time) adapterItem.get(LIST_ITEM_OBJECT_ID);
 	}
 }

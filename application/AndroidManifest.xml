@@ -22,7 +22,7 @@
 		</activity>
 		<activity android:name=".ui.RouteRenamingActivity" >
 		</activity>
-		<activity android:name=".ui.DepartureTimesListActivity" >
+		<activity android:name=".ui.DepartureTimetableActivity" >
 		</activity>
 		<activity android:name=".ui.DepartureTimeCreationActivity" >
 		</activity>

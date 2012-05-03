@@ -205,7 +205,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	private void callDepartureTimesList(int routePosition) {
 		Route route = getRoute(routePosition);
 
-		Intent callIntent = IntentFactory.createDepartureTimesListIntent(activityContext, route);
+		Intent callIntent = IntentFactory.createDepartureTimetableIntent(activityContext, route);
 		startActivity(callIntent);
 	}
 

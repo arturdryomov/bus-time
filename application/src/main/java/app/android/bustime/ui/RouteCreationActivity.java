@@ -108,7 +108,7 @@ public class RouteCreationActivity extends Activity
 		}
 
 		private void callDepartureTimesList() {
-			Intent callIntent = IntentFactory.createDepartureTimesListIntent(activityContext, route);
+			Intent callIntent = IntentFactory.createDepartureTimetableIntent(activityContext, route);
 			startActivity(callIntent);
 		}
 	}
