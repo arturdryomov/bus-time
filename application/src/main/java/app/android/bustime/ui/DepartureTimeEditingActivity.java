@@ -11,10 +11,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TimePicker;
 import app.android.bustime.R;
-import app.android.bustime.local.DbException;
 import app.android.bustime.local.Route;
 import app.android.bustime.local.Time;
-import app.android.bustime.local.TimeException;
 
 
 public class DepartureTimeEditingActivity extends Activity
@@ -31,70 +29,9 @@ public class DepartureTimeEditingActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.departure_time_editing);
 
-		initializeBodyControls();
-
 		processReceivedRouteAndTime();
-		setUpReceivedTime();
-	}
 
-	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.confirmButton);
-		confirmButton.setOnClickListener(confirmListener);
-
-		if (DateFormat.is24HourFormat(activityContext)) {
-			TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departureTimePicker);
-			departureTimePicker.setIs24HourView(true);
-		}
-	}
-
-	private final OnClickListener confirmListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			readUserDataFromTimePicker();
-			callDepartureTimeUpdating();
-		}
-
-		private void callDepartureTimeUpdating() {
-			new UpdateDepartureTimeTask().execute();
-		}
-	};
-
-	private void readUserDataFromTimePicker() {
-		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departureTimePicker);
-
-		departureTimeHour = departureTimePicker.getCurrentHour();
-		departureTimeMinute = departureTimePicker.getCurrentMinute();
-	}
-
-	private class UpdateDepartureTimeTask extends AsyncTask<Void, Void, String>
-	{
-		@Override
-		protected String doInBackground(Void... params) {
-			try {
-				route.removeDepartureTime(time);
-				route.insertDepartureTime(new Time(departureTimeHour, departureTimeMinute));
-			}
-			catch (TimeException e) {
-				return getString(R.string.someError);
-			}
-			catch (DbException e) {
-				return getString(R.string.someError);
-			}
-
-			return new String();
-		}
-
-		@Override
-		protected void onPostExecute(String errorMessage) {
-			super.onPostExecute(errorMessage);
-
-			if (errorMessage.isEmpty()) {
-				finish();
-			}
-			else {
-				UserAlerter.alert(activityContext, errorMessage);
-			}
-		}
+		initializeBodyControls();
 	}
 
 	private void processReceivedRouteAndTime() {
@@ -112,6 +49,54 @@ public class DepartureTimeEditingActivity extends Activity
 		UserAlerter.alert(activityContext, getString(R.string.someError));
 
 		finish();
+	}
+
+	private void initializeBodyControls() {
+		Button confirmButton = (Button) findViewById(R.id.confirmButton);
+		confirmButton.setOnClickListener(confirmListener);
+
+		if (DateFormat.is24HourFormat(activityContext)) {
+			TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departureTimePicker);
+			departureTimePicker.setIs24HourView(true);
+		}
+		setUpReceivedTime();
+	}
+
+	private final OnClickListener confirmListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			readUserDataFromTimePicker();
+			callDepartureTimeUpdating();
+		}
+
+		private void callDepartureTimeUpdating() {
+			new UpdateDepartureTimeTask().execute();
+		}
+	};
+
+	private void readUserDataFromTimePicker() {
+		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departureTimePicker);
+
+		departureTimeHour = departureTimePicker.getCurrentHour();
+		departureTimeMinute = departureTimePicker.getCurrentMinute();
+	}
+
+	private class UpdateDepartureTimeTask extends AsyncTask<Void, Void, Void>
+	{
+		@Override
+		protected Void doInBackground(Void... params) {
+			route.removeDepartureTime(time);
+			route.insertDepartureTime(new Time(departureTimeHour, departureTimeMinute));
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+
+			finish();
+		}
 	}
 
 	private void setUpReceivedTime() {
