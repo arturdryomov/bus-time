@@ -128,6 +128,8 @@ public class Route implements Parcelable
 			departureTimetable.add(new Time(timeAsString));
 		}
 
+		databaseCursor.close();
+
 		return departureTimetable;
 	}
 

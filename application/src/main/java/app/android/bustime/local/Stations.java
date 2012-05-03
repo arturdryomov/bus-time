@@ -27,6 +27,8 @@ public class Stations
 			stationsList.add(new Station(databaseValues));
 		}
 
+		databaseCursor.close();
+
 		return stationsList;
 	}
 
@@ -85,7 +87,11 @@ public class Stations
 		final int STATIONS_COUNT_COLUMN_INDEX = 0;
 		int stationsWithNameCount = databaseCursor.getInt(STATIONS_COUNT_COLUMN_INDEX);
 
-		return stationsWithNameCount > 0;
+		boolean isStationExist = stationsWithNameCount > 0;
+
+		databaseCursor.close();
+
+		return isStationExist;
 	}
 
 	private String buildStationsWithNameCountQuery(String name) {
@@ -111,7 +117,11 @@ public class Stations
 			throw new DbException();
 		}
 
-		return new Station(extractStationDatabaseValuesFromCursor(databaseCursor));
+		Station createdStation = new Station(extractStationDatabaseValuesFromCursor(databaseCursor));
+
+		databaseCursor.close();
+
+		return createdStation;
 	}
 
 	private String buildStationByIdSelectionQuery(long id) {

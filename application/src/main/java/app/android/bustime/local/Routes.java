@@ -27,6 +27,8 @@ public class Routes
 			routesList.add(new Route(databaseValues));
 		}
 
+		databaseCursor.close();
+
 		return routesList;
 	}
 
@@ -85,7 +87,11 @@ public class Routes
 		final int ROUTES_COUNT_COLUMN_INDEX = 0;
 		int routesWithNameCount = databaseCursor.getInt(ROUTES_COUNT_COLUMN_INDEX);
 
-		return routesWithNameCount > 0;
+		boolean isRouteExist = routesWithNameCount > 0;
+
+		databaseCursor.close();
+
+		return isRouteExist;
 	}
 
 	private String buildRoutesWithNameCountQuery(String name) {
@@ -111,7 +117,11 @@ public class Routes
 			throw new DbException();
 		}
 
-		return new Route(extractRouteDatabaseValuesFromCursor(databaseCursor));
+		Route createdRoute = new Route(extractRouteDatabaseValuesFromCursor(databaseCursor));
+
+		databaseCursor.close();
+
+		return createdRoute;
 	}
 
 	private String buildRouteByIdSelectionQuery(long id) {
@@ -159,6 +169,8 @@ public class Routes
 			ContentValues databaseValues = extractRouteDatabaseValuesFromCursor(databaseCursor);
 			routesList.add(new Route(databaseValues));
 		}
+
+		databaseCursor.close();
 
 		return routesList;
 	}

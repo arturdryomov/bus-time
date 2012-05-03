@@ -145,6 +145,8 @@ public class Station implements Parcelable
 			shiftTime = new Time(extractTimeFromCursor(databaseCursor));
 		}
 
+		databaseCursor.close();
+
 		return shiftTime;
 	}
 
