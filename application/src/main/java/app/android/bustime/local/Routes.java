@@ -58,6 +58,10 @@ public class Routes
 		return databaseValues;
 	}
 
+	/**
+	 * @throws AlreadyExistsException if route with such name already exists.
+	 * @throws DbException if something internal went wrong during creating.
+	 */
 	public Route createRoute(String name) {
 		database.beginTransaction();
 

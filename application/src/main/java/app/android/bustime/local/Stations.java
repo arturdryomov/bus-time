@@ -58,6 +58,10 @@ public class Stations
 		return databaseValues;
 	}
 
+	/**
+	 * @throws AlreadyExistsException if station with such name already exists.
+	 * @throws DbException if something internal went wrong during creating.
+	 */
 	public Station createStation(String name) {
 		database.beginTransaction();
 

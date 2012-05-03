@@ -63,6 +63,9 @@ public class Station implements Parcelable
 		}
 	}
 
+	/**
+	 * @throws AlreadyExistsException if station with such name already exists.
+	 */
 	private void trySetName(String name) {
 		if (stations.isStationExist(name)) {
 			throw new AlreadyExistsException();

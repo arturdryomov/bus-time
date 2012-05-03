@@ -48,6 +48,9 @@ public class Route implements Parcelable
 		return name;
 	}
 
+	/**
+	 * @throws AlreadyExistsException if route with such name already exists.
+	 */
 	public void setName(String name) {
 		if (name.equals(this.name)) {
 			return;
