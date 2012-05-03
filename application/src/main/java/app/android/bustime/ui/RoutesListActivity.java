@@ -52,7 +52,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 		}
 
 		private void callRouteCreation() {
-			Intent callIntent = IntentFactory.createDeckCreationIntent(activityContext);
+			Intent callIntent = IntentFactory.createRouteCreationIntent(activityContext);
 			activityContext.startActivity(callIntent);
 		}
 	};
@@ -163,7 +163,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	private void callRouteRenaming(int routePosition) {
 		Route route = getRoute(routePosition);
 
-		Intent callIntent = IntentFactory.createDeckRenamingInten(activityContext, route);
+		Intent callIntent = IntentFactory.createRouteRenamingIntent(activityContext, route);
 		startActivity(callIntent);
 	}
 
