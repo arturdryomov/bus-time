@@ -22,7 +22,10 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	private Route route;
 	private Station station;
 
-	private static final String LIST_ITEM_TEXT_ID = "text";
+	private Time currentTime;
+
+	private static final String LIST_ITEM_TIME_ID = "time";
+	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
 	private static final String LIST_ITEM_OBJECT_ID = "object";
 
 	@Override
@@ -55,7 +58,8 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter timetetableAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.one_line_list_item, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
+			R.layout.two_line_list_item, new String[] { LIST_ITEM_TIME_ID, LIST_ITEM_REMAINING_TIME_ID },
+			new int[] { R.id.first_line, R.id.second_line });
 
 		setListAdapter(timetetableAdapter);
 
@@ -99,6 +103,8 @@ public class TimetableActivity extends SimpleAdapterListActivity
 				setEmptyListText(getString(R.string.emptyTimetable));
 			}
 			else {
+				currentTime = Time.getCurrentTime();
+
 				fillList(timetable);
 				updateList();
 			}
@@ -111,9 +117,23 @@ public class TimetableActivity extends SimpleAdapterListActivity
 
 		HashMap<String, Object> timeItem = new HashMap<String, Object>();
 
-		timeItem.put(LIST_ITEM_TEXT_ID, time.toString());
+		timeItem.put(LIST_ITEM_TIME_ID, time.toString());
+		timeItem.put(LIST_ITEM_REMAINING_TIME_ID, constructRemainingTimeText(time));
 		timeItem.put(LIST_ITEM_OBJECT_ID, time);
 
 		listData.add(timeItem);
+	}
+
+	private String constructRemainingTimeText(Time busTime) {
+		if (busTime.isAfter(currentTime)) {
+			Time timeDifference = busTime.difference(currentTime);
+
+			return String.format("%s %s", timeDifference.toString(), getString(R.string.to));
+		}
+		else {
+			Time timeDifference = currentTime.difference(busTime);
+
+			return String.format("%s %s", timeDifference.toString(), getString(R.string.before));
+		}
 	}
 }
