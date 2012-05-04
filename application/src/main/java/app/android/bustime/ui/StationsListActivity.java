@@ -77,7 +77,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter stationsAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.stations_list_item, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
+			R.layout.one_line_list_item, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
 
 		setListAdapter(stationsAdapter);
 

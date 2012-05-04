@@ -55,7 +55,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter timetetableAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.timetable_list_item, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
+			R.layout.one_line_list_item, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
 
 		setListAdapter(timetetableAdapter);
 
