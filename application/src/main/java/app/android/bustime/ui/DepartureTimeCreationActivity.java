@@ -1,8 +1,6 @@
 package app.android.bustime.ui;
 
 
-import java.util.Calendar;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -96,9 +94,9 @@ public class DepartureTimeCreationActivity extends Activity
 	}
 
 	private void setUpCurrentTime() {
-		final Calendar calendar = Calendar.getInstance();
-		departureTimeHour = calendar.get(Calendar.HOUR_OF_DAY);
-		departureTimeMinute = calendar.get(Calendar.MINUTE);
+		Time currentTime = Time.getCurrentTime();
+		departureTimeHour = currentTime.getHours();
+		departureTimeMinute = currentTime.getMinutes();
 
 		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departureTimePicker);
 		departureTimePicker.setCurrentHour(departureTimeHour);
