@@ -37,5 +37,6 @@
 	<string name="timetable">Timetable</string>
 	<string name="emptyTimetable">Timetable is empty.</string>
 	<string name="loadingTimetable">Loading timetable.</string>
+	<string name="stationAlreadyExists">Station with such name already exists.</string>
 
 </resources>

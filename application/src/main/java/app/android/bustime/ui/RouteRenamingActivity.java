@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import app.android.bustime.R;
 import app.android.bustime.local.AlreadyExistsException;
-import app.android.bustime.local.DbException;
 import app.android.bustime.local.Route;
 
 
@@ -27,10 +26,23 @@ public class RouteRenamingActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.route_renaming);
 
-		initializeBodyControls();
-
 		processReceivedRoute();
+
+		initializeBodyControls();
 		setUpReceivedRouteData();
+	}
+
+	private void processReceivedRoute() {
+		Bundle receivedData = this.getIntent().getExtras();
+
+		if (receivedData.containsKey(IntentFactory.MESSAGE_ID)) {
+			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
+		}
+		else {
+			UserAlerter.alert(activityContext, getString(R.string.someError));
+
+			finish();
+		}
 	}
 
 	private void initializeBodyControls() {
@@ -54,7 +66,7 @@ public class RouteRenamingActivity extends Activity
 		}
 
 		private void callRouteUpdating() {
-			new RouteUpdateTask().execute();
+			new UpdateRouteTask().execute();
 		}
 	};
 
@@ -76,7 +88,7 @@ public class RouteRenamingActivity extends Activity
 		return new String();
 	}
 
-	private class RouteUpdateTask extends AsyncTask<Void, Void, String>
+	private class UpdateRouteTask extends AsyncTask<Void, Void, String>
 	{
 		@Override
 		protected String doInBackground(Void... params) {
@@ -85,9 +97,6 @@ public class RouteRenamingActivity extends Activity
 			}
 			catch (AlreadyExistsException e) {
 				return getString(R.string.routeAlreadyExists);
-			}
-			catch (DbException e) {
-				return getString(R.string.someError);
 			}
 
 			return new String();
@@ -103,19 +112,6 @@ public class RouteRenamingActivity extends Activity
 			else {
 				UserAlerter.alert(activityContext, errorMessage);
 			}
-		}
-	}
-
-	private void processReceivedRoute() {
-		Bundle receivedData = this.getIntent().getExtras();
-
-		if (receivedData.containsKey(IntentFactory.MESSAGE_ID)) {
-			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
-		}
-		else {
-			UserAlerter.alert(activityContext, getString(R.string.someError));
-
-			finish();
 		}
 	}
 

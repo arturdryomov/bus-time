@@ -21,6 +21,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import app.android.bustime.R;
+import app.android.bustime.local.AlreadyExistsException;
 import app.android.bustime.local.DbException;
 import app.android.bustime.local.DbProvider;
 import app.android.bustime.local.Route;
@@ -33,7 +34,6 @@ public class StationCreationActivity extends Activity
 	private final Context activityContext = this;
 
 	private Route route;
-	private List<Station> stations;
 
 	private Station chosenExistingStation;
 	private String stationName;
@@ -77,6 +77,8 @@ public class StationCreationActivity extends Activity
 	}
 
 	private void initializeBodyControls() {
+		fillStationsSpinner();
+
 		Button confirmButton = (Button) findViewById(R.id.confirmButton);
 		confirmButton.setOnClickListener(confirmListener);
 
@@ -86,13 +88,11 @@ public class StationCreationActivity extends Activity
 
 		CheckBox stationWasCreatedCheckbox = (CheckBox) findViewById(R.id.stationWasCreatedCheckbox);
 		stationWasCreatedCheckbox.setOnCheckedChangeListener(isStationExistListener);
-
-		fillStationsSpinner();
 	}
 
 	private final OnClickListener confirmListener = new OnClickListener() {
 		@Override
-		public void onClick(View v) {
+		public void onClick(View view) {
 			readUserDataFromFields();
 
 			String userDataErrorMessage = getUserDataErrorMessage();
@@ -106,7 +106,7 @@ public class StationCreationActivity extends Activity
 		}
 
 		private void callStationCreation() {
-			new StationCreationTask().execute();
+			new CreateStationTask().execute();
 		}
 	};
 
@@ -116,7 +116,7 @@ public class StationCreationActivity extends Activity
 		shiftTimeMinute = shiftTimePicker.getCurrentMinute();
 
 		if (isStationExist) {
-			chosenExistingStation = getChoosedStation();
+			chosenExistingStation = getChosenStation();
 		}
 		else {
 			EditText stationNameEdit = (EditText) findViewById(R.id.stationNameEdit);
@@ -124,7 +124,7 @@ public class StationCreationActivity extends Activity
 		}
 	}
 
-	private Station getChoosedStation() {
+	private Station getChosenStation() {
 		Spinner stationsSpinner = (Spinner) findViewById(R.id.stationsSpinner);
 
 		@SuppressWarnings("unchecked")
@@ -151,27 +151,31 @@ public class StationCreationActivity extends Activity
 		return new String();
 	}
 
-	private class StationCreationTask extends AsyncTask<Void, Void, String>
+	private class CreateStationTask extends AsyncTask<Void, Void, String>
 	{
 		@Override
 		protected String doInBackground(Void... params) {
-			try {
-				Station stationToInsertShiftTime;
 
-				if (isStationExist) {
-					stationToInsertShiftTime = chosenExistingStation;
-				}
-				else {
+			Station stationToInsertShiftTime;
+
+			if (isStationExist) {
+				stationToInsertShiftTime = chosenExistingStation;
+			}
+			else {
+				try {
 					stationToInsertShiftTime = DbProvider.getInstance().getStations()
 						.createStation(stationName);
 				}
+				catch (AlreadyExistsException e) {
+					return getString(R.string.stationAlreadyExists);
+				}
+				catch (DbException e) {
+					return getString(R.string.someError);
+				}
+			}
 
-				stationToInsertShiftTime.insertShiftTimeForRoute(route, new Time(shiftTimeHour,
-					shiftTimeMinute));
-			}
-			catch (DbException e) {
-				return getString(R.string.someError);
-			}
+			stationToInsertShiftTime.insertShiftTimeForRoute(route, new Time(shiftTimeHour,
+				shiftTimeMinute));
 
 			return new String();
 		}
@@ -222,35 +226,27 @@ public class StationCreationActivity extends Activity
 		new LoadStationsTask().execute();
 	}
 
-	private class LoadStationsTask extends AsyncTask<Void, Void, String>
+	private class LoadStationsTask extends AsyncTask<Void, Void, Void>
 	{
-		@Override
-		protected String doInBackground(Void... params) {
-			try {
-				stations = DbProvider.getInstance().getStations().getStationsList();
-			}
-			catch (DbException e) {
-				return getString(R.string.noStations);
-			}
+		private List<Station> stationsList;
 
-			return new String();
+		@Override
+		protected Void doInBackground(Void... params) {
+			stationsList = DbProvider.getInstance().getStations().getStationsList();
+
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(String errorMessage) {
-			super.onPostExecute(errorMessage);
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
 
-			if (!errorMessage.isEmpty()) {
-				UserAlerter.alert(activityContext, errorMessage);
-				return;
-			}
-
-			if (stations.isEmpty()) {
+			if (stationsList.isEmpty()) {
 				hidePossibilityToChooseExistingStation();
 				return;
 			}
 
-			setUpStationsSpinner();
+			setUpStationsSpinner(stationsList);
 		}
 	}
 
@@ -259,8 +255,8 @@ public class StationCreationActivity extends Activity
 		stationWasCreateBox.setVisibility(View.GONE);
 	}
 
-	private void setUpStationsSpinner() {
-		fillStationsData();
+	private void setUpStationsSpinner(List<Station> stationsList) {
+		fillStationsData(stationsList);
 
 		SimpleAdapter stationsAdapter = new SimpleAdapter(activityContext, stationsData,
 			android.R.layout.simple_spinner_item, new String[] { SPINNER_ITEM_TEXT_ID },
@@ -271,10 +267,10 @@ public class StationCreationActivity extends Activity
 		stationsSpinner.setAdapter(stationsAdapter);
 	}
 
-	private void fillStationsData() {
+	private void fillStationsData(List<Station> stationsList) {
 		stationsData.clear();
 
-		for (Station station : stations) {
+		for (Station station : stationsList) {
 			addItemToStationsData(station);
 		}
 	}

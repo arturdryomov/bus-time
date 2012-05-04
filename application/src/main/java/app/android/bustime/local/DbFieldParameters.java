@@ -6,8 +6,8 @@ public class DbFieldParameters
 
 	public static final String ROUTE_NAME = "text not null unique";
 
-	public static final String TRIP_ROUTE_ID = "integer not null references Routes(_id)";
-	public static final String TRIP_DEPARTURE_TIME = "text not null";
+	public static final String TRIPS_ROUTE_ID = "integer not null references Routes(_id)";
+	public static final String TRIPS_DEPARTURE_TIME = "text not null";
 
 	public static final String STATION_NAME = "text not null unique";
 	public static final String STATION_LONGITUDE = "text not null";

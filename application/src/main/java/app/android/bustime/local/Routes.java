@@ -13,7 +13,7 @@ public class Routes
 {
 	private final SQLiteDatabase database;
 
-	public Routes() {
+	Routes() {
 		database = DbProvider.getInstance().getDatabase();
 	}
 
@@ -26,6 +26,8 @@ public class Routes
 			ContentValues databaseValues = extractRouteDatabaseValuesFromCursor(databaseCursor);
 			routesList.add(new Route(databaseValues));
 		}
+
+		databaseCursor.close();
 
 		return routesList;
 	}
@@ -56,13 +58,17 @@ public class Routes
 		return databaseValues;
 	}
 
+	/**
+	 * @throws AlreadyExistsException if route with such name already exists.
+	 * @throws DbException if something internal went wrong during creating.
+	 */
 	public Route createRoute(String name) {
 		database.beginTransaction();
 
 		try {
 			Route route = tryCreateRoute(name);
-			database.setTransactionSuccessful();
 
+			database.setTransactionSuccessful();
 			return route;
 		}
 		finally {
@@ -78,14 +84,18 @@ public class Routes
 		return getRouteById(insertRoute(name));
 	}
 
-	public boolean isRouteExist(String name) {
+	boolean isRouteExist(String name) {
 		Cursor databaseCursor = database.rawQuery(buildRoutesWithNameCountQuery(name), null);
 		databaseCursor.moveToFirst();
 
 		final int ROUTES_COUNT_COLUMN_INDEX = 0;
 		int routesWithNameCount = databaseCursor.getInt(ROUTES_COUNT_COLUMN_INDEX);
 
-		return routesWithNameCount > 0;
+		boolean isRouteExist = routesWithNameCount > 0;
+
+		databaseCursor.close();
+
+		return isRouteExist;
 	}
 
 	private String buildRoutesWithNameCountQuery(String name) {
@@ -93,7 +103,6 @@ public class Routes
 
 		queryBuilder.append("select count(*) ");
 		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES));
-
 		queryBuilder.append(String.format("where upper(%s) = upper('%s')", DbFieldNames.NAME, name));
 
 		return queryBuilder.toString();
@@ -112,7 +121,11 @@ public class Routes
 			throw new DbException();
 		}
 
-		return new Route(extractRouteDatabaseValuesFromCursor(databaseCursor));
+		Route createdRoute = new Route(extractRouteDatabaseValuesFromCursor(databaseCursor));
+
+		databaseCursor.close();
+
+		return createdRoute;
 	}
 
 	private String buildRouteByIdSelectionQuery(long id) {
@@ -160,6 +173,8 @@ public class Routes
 			ContentValues databaseValues = extractRouteDatabaseValuesFromCursor(databaseCursor);
 			routesList.add(new Route(databaseValues));
 		}
+
+		databaseCursor.close();
 
 		return routesList;
 	}

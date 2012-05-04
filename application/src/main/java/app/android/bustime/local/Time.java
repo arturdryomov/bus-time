@@ -139,4 +139,10 @@ public class Time implements Parcelable
 
 		return new Time(resultHours, resultMinutes);
 	}
+
+	public static Time getCurrentTime() {
+		final Calendar calendar = Calendar.getInstance();
+
+		return new Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+	}
 }

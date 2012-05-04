@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
-import app.android.bustime.local.DbException;
 import app.android.bustime.local.Route;
 import app.android.bustime.local.Station;
 import app.android.bustime.local.Time;
@@ -56,7 +55,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter timetetableAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.timetable_list_item, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
+			R.layout.one_line_list_item, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
 
 		setListAdapter(timetetableAdapter);
 
@@ -74,7 +73,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		new LoadTimetableTask().execute();
 	}
 
-	private class LoadTimetableTask extends AsyncTask<Void, Void, String>
+	private class LoadTimetableTask extends AsyncTask<Void, Void, Void>
 	{
 		private List<Time> timetable;
 
@@ -86,20 +85,15 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		}
 
 		@Override
-		protected String doInBackground(Void... params) {
-			try {
-				timetable = station.getTimetableForRoute(route);
-			}
-			catch (DbException e) {
-				return getString(R.string.someError);
-			}
+		protected Void doInBackground(Void... params) {
+			timetable = station.getTimetableForRoute(route);
 
-			return new String();
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(String errorMessage) {
-			super.onPostExecute(errorMessage);
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
 
 			if (timetable.isEmpty()) {
 				setEmptyListText(getString(R.string.emptyTimetable));
@@ -107,10 +101,6 @@ public class TimetableActivity extends SimpleAdapterListActivity
 			else {
 				fillList(timetable);
 				updateList();
-			}
-
-			if (!errorMessage.isEmpty()) {
-				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}
 	}

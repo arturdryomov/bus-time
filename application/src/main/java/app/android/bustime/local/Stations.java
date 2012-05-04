@@ -13,7 +13,7 @@ public class Stations
 {
 	private final SQLiteDatabase database;
 
-	public Stations() {
+	Stations() {
 		database = DbProvider.getInstance().getDatabase();
 	}
 
@@ -26,6 +26,8 @@ public class Stations
 			ContentValues databaseValues = extractStationDatabaseValuesFromCursor(databaseCursor);
 			stationsList.add(new Station(databaseValues));
 		}
+
+		databaseCursor.close();
 
 		return stationsList;
 	}
@@ -56,13 +58,17 @@ public class Stations
 		return databaseValues;
 	}
 
+	/**
+	 * @throws AlreadyExistsException if station with such name already exists.
+	 * @throws DbException if something internal went wrong during creating.
+	 */
 	public Station createStation(String name) {
 		database.beginTransaction();
 
 		try {
 			Station station = tryCreateStation(name);
-			database.setTransactionSuccessful();
 
+			database.setTransactionSuccessful();
 			return station;
 		}
 		finally {
@@ -78,14 +84,18 @@ public class Stations
 		return getStationById(insertStation(name));
 	}
 
-	public boolean isStationExist(String name) {
+	boolean isStationExist(String name) {
 		Cursor databaseCursor = database.rawQuery(buildStationsWithNameCountQuery(name), null);
 		databaseCursor.moveToFirst();
 
 		final int STATIONS_COUNT_COLUMN_INDEX = 0;
 		int stationsWithNameCount = databaseCursor.getInt(STATIONS_COUNT_COLUMN_INDEX);
 
-		return stationsWithNameCount > 0;
+		boolean isStationExist = stationsWithNameCount > 0;
+
+		databaseCursor.close();
+
+		return isStationExist;
 	}
 
 	private String buildStationsWithNameCountQuery(String name) {
@@ -93,7 +103,6 @@ public class Stations
 
 		queryBuilder.append("select count(*)");
 		queryBuilder.append(String.format("from %s ", DbTableNames.STATIONS));
-
 		queryBuilder.append(String.format("where upper(%s) = upper('%s')", DbFieldNames.NAME, name));
 
 		return queryBuilder.toString();
@@ -112,7 +121,11 @@ public class Stations
 			throw new DbException();
 		}
 
-		return new Station(extractStationDatabaseValuesFromCursor(databaseCursor));
+		Station createdStation = new Station(extractStationDatabaseValuesFromCursor(databaseCursor));
+
+		databaseCursor.close();
+
+		return createdStation;
 	}
 
 	private String buildStationByIdSelectionQuery(long id) {

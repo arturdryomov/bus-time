@@ -63,6 +63,9 @@ public class Station implements Parcelable
 		}
 	}
 
+	/**
+	 * @throws AlreadyExistsException if station with such name already exists.
+	 */
 	private void trySetName(String name) {
 		if (stations.isStationExist(name)) {
 			throw new AlreadyExistsException();
@@ -145,6 +148,8 @@ public class Station implements Parcelable
 			shiftTime = new Time(extractTimeFromCursor(databaseCursor));
 		}
 
+		databaseCursor.close();
+
 		return shiftTime;
 	}
 
@@ -172,15 +177,15 @@ public class Station implements Parcelable
 	}
 
 	@Override
-	public void writeToParcel(Parcel destinationParcel, int flags) {
-		destinationParcel.writeLong(id);
-		destinationParcel.writeString(name);
+	public void writeToParcel(Parcel parcel, int flags) {
+		parcel.writeLong(id);
+		parcel.writeString(name);
 	}
 
 	public static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>() {
 		@Override
-		public Station createFromParcel(Parcel sourceParcel) {
-			return new Station(sourceParcel);
+		public Station createFromParcel(Parcel parcel) {
+			return new Station(parcel);
 		};
 
 		@Override
@@ -196,7 +201,7 @@ public class Station implements Parcelable
 		readStationDataFromParcel(parcel);
 	}
 
-	public void readStationDataFromParcel(Parcel parcel) {
+	private void readStationDataFromParcel(Parcel parcel) {
 		id = parcel.readLong();
 		name = parcel.readString();
 	}

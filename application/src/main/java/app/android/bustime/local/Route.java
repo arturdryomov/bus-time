@@ -48,6 +48,9 @@ public class Route implements Parcelable
 		return name;
 	}
 
+	/**
+	 * @throws AlreadyExistsException if route with such name already exists.
+	 */
 	public void setName(String name) {
 		if (name.equals(this.name)) {
 			return;
@@ -128,6 +131,8 @@ public class Route implements Parcelable
 			departureTimetable.add(new Time(timeAsString));
 		}
 
+		databaseCursor.close();
+
 		return departureTimetable;
 	}
 
@@ -155,15 +160,15 @@ public class Route implements Parcelable
 	}
 
 	@Override
-	public void writeToParcel(Parcel destinationParcel, int flags) {
-		destinationParcel.writeLong(id);
-		destinationParcel.writeString(name);
+	public void writeToParcel(Parcel parcel, int flags) {
+		parcel.writeLong(id);
+		parcel.writeString(name);
 	}
 
 	public static final Parcelable.Creator<Route> CREATOR = new Parcelable.Creator<Route>() {
 		@Override
-		public Route createFromParcel(Parcel sourceParcel) {
-			return new Route(sourceParcel);
+		public Route createFromParcel(Parcel parcel) {
+			return new Route(parcel);
 		};
 
 		@Override
@@ -179,7 +184,7 @@ public class Route implements Parcelable
 		readRouteDataFromParcel(parcel);
 	}
 
-	public void readRouteDataFromParcel(Parcel parcel) {
+	private void readRouteDataFromParcel(Parcel parcel) {
 		id = parcel.readLong();
 		name = parcel.readString();
 	}

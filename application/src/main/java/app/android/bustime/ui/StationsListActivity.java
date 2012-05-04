@@ -19,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
-import app.android.bustime.local.DbException;
 import app.android.bustime.local.DbProvider;
 import app.android.bustime.local.Route;
 import app.android.bustime.local.Station;
@@ -45,23 +44,6 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		initializeList();
 	}
 
-	private void initializeActionbar() {
-		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.itemCreationButton);
-		itemCreationButton.setOnClickListener(stationCreationListener);
-	}
-
-	private final OnClickListener stationCreationListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			callStationCreation();
-		}
-
-		private void callStationCreation() {
-			Intent callIntent = IntentFactory.createStationCreationIntent(activityContext, route);
-			activityContext.startActivity(callIntent);
-		}
-	};
-
 	private void processReceivedRoute() {
 		Bundle receivedData = this.getIntent().getExtras();
 
@@ -75,10 +57,27 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		}
 	}
 
+	private void initializeActionbar() {
+		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.itemCreationButton);
+		itemCreationButton.setOnClickListener(stationCreationListener);
+	}
+
+	private final OnClickListener stationCreationListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			callStationCreation();
+		}
+
+		private void callStationCreation() {
+			Intent callIntent = IntentFactory.createStationCreationIntent(activityContext, route);
+			activityContext.startActivity(callIntent);
+		}
+	};
+
 	@Override
 	protected void initializeList() {
 		SimpleAdapter stationsAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.stations_list_item, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
+			R.layout.one_line_list_item, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
 
 		setListAdapter(stationsAdapter);
 
@@ -98,7 +97,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		new LoadStationsTask().execute();
 	}
 
-	private class LoadStationsTask extends AsyncTask<Void, Void, String>
+	private class LoadStationsTask extends AsyncTask<Void, Void, Void>
 	{
 		private List<Station> stations;
 
@@ -110,20 +109,15 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		}
 
 		@Override
-		protected String doInBackground(Void... params) {
-			try {
-				stations = DbProvider.getInstance().getStations().getStationsByRoute(route);
-			}
-			catch (DbException e) {
-				return getString(R.string.someError);
-			}
+		protected Void doInBackground(Void... params) {
+			stations = DbProvider.getInstance().getStations().getStationsByRoute(route);
 
-			return new String();
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(String errorMessage) {
-			super.onPostExecute(errorMessage);
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
 
 			if (stations.isEmpty()) {
 				setEmptyListText(getString(R.string.noStations));
@@ -131,10 +125,6 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			else {
 				fillList(stations);
 				updateList();
-			}
-
-			if (!errorMessage.isEmpty()) {
-				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}
 	}
@@ -179,7 +169,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		new DeleteStationTask(stationPosition).execute();
 	}
 
-	private class DeleteStationTask extends AsyncTask<Void, Void, String>
+	private class DeleteStationTask extends AsyncTask<Void, Void, Void>
 	{
 		private final int stationPosition;
 		private final Station station;
@@ -204,24 +194,10 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		}
 
 		@Override
-		protected String doInBackground(Void... params) {
-			try {
-				DbProvider.getInstance().getStations().deleteStation(station);
-			}
-			catch (DbException e) {
-				return getString(R.string.someError);
-			}
+		protected Void doInBackground(Void... params) {
+			DbProvider.getInstance().getStations().deleteStation(station);
 
-			return new String();
-		}
-
-		@Override
-		protected void onPostExecute(String errorMessage) {
-			super.onPostExecute(errorMessage);
-
-			if (!errorMessage.isEmpty()) {
-				UserAlerter.alert(activityContext, errorMessage);
-			}
+			return null;
 		}
 	}
 

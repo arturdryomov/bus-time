@@ -18,21 +18,21 @@ public class IntentFactory
 		EXTRA_MESSAGE_ID = String.format("%s.extramessage", IntentFactory.class.getPackage().getName());
 	}
 
-	public static Intent createDeckCreationIntent(Context context) {
+	public static Intent createRouteCreationIntent(Context context) {
 		Intent intent = new Intent(context, RouteCreationActivity.class);
 
 		return intent;
 	}
 
-	public static Intent createDeckRenamingInten(Context context, Route route) {
+	public static Intent createRouteRenamingIntent(Context context, Route route) {
 		Intent intent = new Intent(context, RouteRenamingActivity.class);
 		intent.putExtra(MESSAGE_ID, route);
 
 		return intent;
 	}
 
-	public static Intent createDepartureTimesListIntent(Context context, Route route) {
-		Intent intent = new Intent(context, DepartureTimesListActivity.class);
+	public static Intent createDepartureTimetableIntent(Context context, Route route) {
+		Intent intent = new Intent(context, DepartureTimetableActivity.class);
 		intent.putExtra(MESSAGE_ID, route);
 
 		return intent;

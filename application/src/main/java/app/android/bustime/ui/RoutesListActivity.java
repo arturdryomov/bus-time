@@ -19,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
-import app.android.bustime.local.DbException;
 import app.android.bustime.local.DbProvider;
 import app.android.bustime.local.Route;
 
@@ -47,12 +46,12 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 
 	private final OnClickListener routeCreationListener = new OnClickListener() {
 		@Override
-		public void onClick(View v) {
+		public void onClick(View view) {
 			callRouteCreation();
 		}
 
 		private void callRouteCreation() {
-			Intent callIntent = IntentFactory.createDeckCreationIntent(activityContext);
+			Intent callIntent = IntentFactory.createRouteCreationIntent(activityContext);
 			activityContext.startActivity(callIntent);
 		}
 	};
@@ -60,7 +59,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter routesAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.routes_list_item, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
+			R.layout.one_line_list_item, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
 
 		setListAdapter(routesAdapter);
 
@@ -80,9 +79,9 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 		new LoadRoutesTask().execute();
 	}
 
-	private class LoadRoutesTask extends AsyncTask<Void, Void, String>
+	private class LoadRoutesTask extends AsyncTask<Void, Void, Void>
 	{
-		private List<Route> routes;
+		private List<Route> routesList;
 
 		@Override
 		protected void onPreExecute() {
@@ -92,31 +91,22 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 		}
 
 		@Override
-		protected String doInBackground(Void... params) {
-			try {
-				routes = DbProvider.getInstance().getRoutes().getRoutesList();
-			}
-			catch (DbException e) {
-				return getString(R.string.someError);
-			}
+		protected Void doInBackground(Void... params) {
+			routesList = DbProvider.getInstance().getRoutes().getRoutesList();
 
-			return new String();
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(String errorMessage) {
-			super.onPostExecute(errorMessage);
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
 
-			if (routes.isEmpty()) {
+			if (routesList.isEmpty()) {
 				setEmptyListText(getString(R.string.noRoutes));
 			}
 			else {
-				fillList(routes);
+				fillList(routesList);
 				updateList();
-			}
-
-			if (!errorMessage.isEmpty()) {
-				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}
 	}
@@ -163,15 +153,24 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	private void callRouteRenaming(int routePosition) {
 		Route route = getRoute(routePosition);
 
-		Intent callIntent = IntentFactory.createDeckRenamingInten(activityContext, route);
+		Intent callIntent = IntentFactory.createRouteRenamingIntent(activityContext, route);
 		startActivity(callIntent);
+	}
+
+	private Route getRoute(int routePosition) {
+		SimpleAdapter routesAdapter = (SimpleAdapter) getListAdapter();
+
+		@SuppressWarnings("unchecked")
+		Map<String, Object> adapterItem = (Map<String, Object>) routesAdapter.getItem(routePosition);
+
+		return (Route) adapterItem.get(LIST_ITEM_OBJECT_ID);
 	}
 
 	private void callRouteDeleting(int routePosition) {
 		new DeleteRouteTask(routePosition).execute();
 	}
 
-	private class DeleteRouteTask extends AsyncTask<Void, Void, String>
+	private class DeleteRouteTask extends AsyncTask<Void, Void, Void>
 	{
 		private final int routePosition;
 		private final Route route;
@@ -196,40 +195,17 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 		}
 
 		@Override
-		protected String doInBackground(Void... params) {
-			try {
-				DbProvider.getInstance().getRoutes().deleteRoute(route);
-			}
-			catch (DbException e) {
-				return getString(R.string.someError);
-			}
+		protected Void doInBackground(Void... params) {
+			DbProvider.getInstance().getRoutes().deleteRoute(route);
 
-			return new String();
+			return null;
 		}
-
-		@Override
-		protected void onPostExecute(String errorMessage) {
-			super.onPostExecute(errorMessage);
-
-			if (!errorMessage.isEmpty()) {
-				UserAlerter.alert(activityContext, errorMessage);
-			}
-		}
-	}
-
-	private Route getRoute(int routePosition) {
-		SimpleAdapter listAdapter = (SimpleAdapter) getListAdapter();
-
-		@SuppressWarnings("unchecked")
-		Map<String, Object> adapterItem = (Map<String, Object>) listAdapter.getItem(routePosition);
-
-		return (Route) adapterItem.get(LIST_ITEM_OBJECT_ID);
 	}
 
 	private void callDepartureTimesList(int routePosition) {
 		Route route = getRoute(routePosition);
 
-		Intent callIntent = IntentFactory.createDepartureTimesListIntent(activityContext, route);
+		Intent callIntent = IntentFactory.createDepartureTimetableIntent(activityContext, route);
 		startActivity(callIntent);
 	}
 
