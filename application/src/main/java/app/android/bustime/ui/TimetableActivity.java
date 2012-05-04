@@ -23,10 +23,17 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	private Station station;
 
 	private Time currentTime;
+	private final HumanTimeFormatter timeFormatter;
 
 	private static final String LIST_ITEM_TIME_ID = "time";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
 	private static final String LIST_ITEM_OBJECT_ID = "object";
+
+	public TimetableActivity() {
+		super();
+
+		timeFormatter = new HumanTimeFormatter(activityContext);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -128,12 +135,14 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		if (busTime.isAfter(currentTime)) {
 			Time timeDifference = busTime.difference(currentTime);
 
-			return String.format("%s %s", timeDifference.toString(), getString(R.string.to));
+			return String.format("%s %s", getString(R.string.in),
+				timeFormatter.toHumanFormat(timeDifference));
 		}
 		else {
 			Time timeDifference = currentTime.difference(busTime);
 
-			return String.format("%s %s", timeDifference.toString(), getString(R.string.before));
+			return String.format("%s %s", timeFormatter.toHumanFormat(timeDifference),
+				getString(R.string.ago));
 		}
 	}
 }

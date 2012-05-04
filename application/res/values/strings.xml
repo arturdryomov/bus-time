@@ -38,8 +38,8 @@
 	<string name="emptyTimetable">Timetable is empty.</string>
 	<string name="loadingTimetable">Loading timetable.</string>
 	<string name="stationAlreadyExists">Station with such name already exists.</string>
-	<string name="before">before</string>
-	<string name="to">to</string>
+	<string name="ago">ago</string>
+	<string name="in">in</string>
 	<string name="minuteSingularForm">minute</string>
 	<string name="minutePluralForm">minutes</string>
 	<string name="hourSingularForm">hour</string>
