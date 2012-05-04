@@ -40,5 +40,9 @@
 	<string name="stationAlreadyExists">Station with such name already exists.</string>
 	<string name="before">before</string>
 	<string name="to">to</string>
+	<string name="minuteSingularForm">minute</string>
+	<string name="minutePluralForm">minutes</string>
+	<string name="hourSingularForm">hour</string>
+	<string name="hourPluralForm">hours</string>
 
 </resources>
