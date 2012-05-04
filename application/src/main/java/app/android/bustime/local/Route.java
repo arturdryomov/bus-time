@@ -144,7 +144,8 @@ public class Route implements Parcelable
 		queryBuilder.append(String.format("%s ", DbFieldNames.DEPARTURE_TIME));
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.TRIPS));
-		queryBuilder.append(String.format("where %s = %d", DbFieldNames.ROUTE_ID, id));
+		queryBuilder.append(String.format("where %s = %d ", DbFieldNames.ROUTE_ID, id));
+		queryBuilder.append(String.format("order by %s", DbFieldNames.DEPARTURE_TIME));
 
 		return queryBuilder.toString();
 	}
