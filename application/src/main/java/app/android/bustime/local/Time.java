@@ -140,6 +140,20 @@ public class Time implements Parcelable
 		return new Time(resultHours, resultMinutes);
 	}
 
+	public Time difference(Time timeToDiffer) {
+		Calendar calendar = new GregorianCalendar();
+		calendar.set(Calendar.HOUR_OF_DAY, hours);
+		calendar.set(Calendar.MINUTE, minutes);
+
+		calendar.add(Calendar.HOUR_OF_DAY, -timeToDiffer.hours);
+		calendar.add(Calendar.MINUTE, -timeToDiffer.minutes);
+
+		int resultHours = calendar.get(Calendar.HOUR_OF_DAY);
+		int resultMinutes = calendar.get(Calendar.MINUTE);
+
+		return new Time(resultHours, resultMinutes);
+	}
+
 	public static Time getCurrentTime() {
 		final Calendar calendar = Calendar.getInstance();
 
