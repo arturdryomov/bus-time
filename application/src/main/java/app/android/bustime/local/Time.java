@@ -154,6 +154,10 @@ public class Time implements Parcelable
 		return new Time(resultHours, resultMinutes);
 	}
 
+	public boolean isAfter(Time time) {
+		return getTime().after(time.getTime());
+	}
+
 	public static Time getCurrentTime() {
 		final Calendar calendar = Calendar.getInstance();
 

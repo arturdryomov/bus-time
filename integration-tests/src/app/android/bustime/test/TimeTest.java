@@ -73,4 +73,11 @@ public class TimeTest extends AndroidTestCase
 
 		assertEquals("00:10", minuend.difference(subtrahend).toString());
 	}
+
+	public void testComparsion() {
+		Time firstTime = new Time("10:40");
+		Time secondTime = new Time("10:30");
+
+		assertTrue(firstTime.isAfter(secondTime));
+	}
 }
