@@ -77,6 +77,8 @@ public class StationCreationActivity extends Activity
 	}
 
 	private void initializeBodyControls() {
+		fillStationsSpinner();
+
 		Button confirmButton = (Button) findViewById(R.id.confirmButton);
 		confirmButton.setOnClickListener(confirmListener);
 
@@ -86,8 +88,6 @@ public class StationCreationActivity extends Activity
 
 		CheckBox stationWasCreatedCheckbox = (CheckBox) findViewById(R.id.stationWasCreatedCheckbox);
 		stationWasCreatedCheckbox.setOnCheckedChangeListener(isStationExistListener);
-
-		fillStationsSpinner();
 	}
 
 	private final OnClickListener confirmListener = new OnClickListener() {
