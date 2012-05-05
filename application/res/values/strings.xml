@@ -44,5 +44,6 @@
 	<string name="minutePluralForm">minutes</string>
 	<string name="hourSingularForm">hour</string>
 	<string name="hourPluralForm">hours</string>
+	<string name="departureTimeExist">Such departure time already exists.</string>
 
 </resources>

@@ -83,6 +83,9 @@ public class Route implements Parcelable
 			String.format("%s = %d", DbFieldNames.ID, id), null);
 	}
 
+	/**
+	 * @throws AlreadyExistsException if such departure time already exists.
+	 */
 	public void insertDepartureTime(Time time) {
 		database.beginTransaction();
 
@@ -96,12 +99,41 @@ public class Route implements Parcelable
 	}
 
 	private void tryInsertDepartureTime(Time time) {
+		if (isDepartureTimeExist(time)) {
+			throw new AlreadyExistsException();
+		}
+
 		ContentValues databaseValues = new ContentValues();
 
 		databaseValues.put(DbFieldNames.ROUTE_ID, id);
 		databaseValues.put(DbFieldNames.DEPARTURE_TIME, time.toString());
 
 		database.insert(DbTableNames.TRIPS, null, databaseValues);
+	}
+
+	private boolean isDepartureTimeExist(Time time) {
+		Cursor databaseCursor = database.rawQuery(buildDepartureTimeCountQuery(time.toString()), null);
+		databaseCursor.moveToFirst();
+
+		final int DEPARTURE_TIMES_COUNT_COLUMN_INDEX = 0;
+		int departureTimesCount = databaseCursor.getInt(DEPARTURE_TIMES_COUNT_COLUMN_INDEX);
+
+		boolean isDepartureTimeExist = departureTimesCount > 0;
+
+		databaseCursor.close();
+
+		return isDepartureTimeExist;
+	}
+
+	private String buildDepartureTimeCountQuery(String timeAsString) {
+		StringBuilder queryBuilder = new StringBuilder();
+
+		queryBuilder.append("select count(*) ");
+		queryBuilder.append(String.format("from %s ", DbTableNames.TRIPS));
+		queryBuilder.append(String.format("where %s = %d and %s = '%s'", DbFieldNames.ROUTE_ID, id,
+			DbFieldNames.DEPARTURE_TIME, timeAsString));
+
+		return queryBuilder.toString();
 	}
 
 	public void removeDepartureTime(Time time) {

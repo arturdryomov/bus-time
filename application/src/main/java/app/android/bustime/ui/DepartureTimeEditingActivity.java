@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TimePicker;
 import app.android.bustime.R;
+import app.android.bustime.local.AlreadyExistsException;
 import app.android.bustime.local.Route;
 import app.android.bustime.local.Time;
 
@@ -81,21 +82,31 @@ public class DepartureTimeEditingActivity extends Activity
 		departureTimeMinute = departureTimePicker.getCurrentMinute();
 	}
 
-	private class UpdateDepartureTimeTask extends AsyncTask<Void, Void, Void>
+	private class UpdateDepartureTimeTask extends AsyncTask<Void, Void, String>
 	{
 		@Override
-		protected Void doInBackground(Void... params) {
-			route.removeDepartureTime(time);
-			route.insertDepartureTime(new Time(departureTimeHour, departureTimeMinute));
+		protected String doInBackground(Void... params) {
+			try {
+				route.removeDepartureTime(time);
+				route.insertDepartureTime(new Time(departureTimeHour, departureTimeMinute));
+			}
+			catch (AlreadyExistsException e) {
+				return getString(R.string.departureTimeExist);
+			}
 
-			return null;
+			return new String();
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
+		protected void onPostExecute(String errorMessage) {
+			super.onPostExecute(errorMessage);
 
-			finish();
+			if (errorMessage.isEmpty()) {
+				finish();
+			}
+			else {
+				UserAlerter.alert(activityContext, errorMessage);
+			}
 		}
 	}
 
