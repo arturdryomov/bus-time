@@ -1,4 +1,4 @@
-package app.android.bustime.ui;
+package app.android.bustime.ui.dispatch.routes;
 
 
 import java.util.ArrayList;
@@ -27,6 +27,8 @@ import app.android.bustime.local.DbProvider;
 import app.android.bustime.local.Route;
 import app.android.bustime.local.Station;
 import app.android.bustime.local.Time;
+import app.android.bustime.ui.IntentFactory;
+import app.android.bustime.ui.UserAlerter;
 
 
 public class StationCreationActivity extends Activity
@@ -56,7 +58,7 @@ public class StationCreationActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_station_creation);
+		setContentView(R.layout.activity_station_with_shift_time_creation);
 
 		processReceivedRoute();
 

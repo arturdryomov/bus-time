@@ -23,6 +23,12 @@
 
 		<LinearLayout style="@style/BodyLinearLayout" >
 
+			<CheckBox
+				android:id="@+id/station_exists_checkbox"
+				style="@style/BodyLinearLayoutItem"
+				android:text="@string/signature_station_was_created"
+				android:textSize="@dimen/checkbox_text_size" />
+
 			<TextView
 				style="@style/BodyLinearLayoutItem"
 				android:text="@string/signature_station_name" />
@@ -32,6 +38,20 @@
 				style="@style/BodyLinearLayoutItem"
 				android:inputType="text"
 				android:singleLine="true" />
+
+			<Spinner
+				android:id="@+id/stations_spinner"
+				style="@style/BodyLinearLayoutItem"
+				android:visibility="gone" />
+
+			<TextView
+				style="@style/BodyLinearLayoutItem"
+				android:text="@string/signature_departure_shift_time" />
+
+			<TimePicker
+				android:id="@+id/shift_time_picker"
+				style="@style/BodyLinearLayoutItem"
+				android:layout_marginTop="@dimen/time_picker_top_margin" />
 
 			<Button
 				android:id="@+id/confirm_button"

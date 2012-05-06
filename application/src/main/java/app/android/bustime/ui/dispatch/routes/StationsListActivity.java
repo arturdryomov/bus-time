@@ -1,4 +1,4 @@
-package app.android.bustime.ui;
+package app.android.bustime.ui.dispatch.routes;
 
 
 import java.util.HashMap;
@@ -22,6 +22,9 @@ import app.android.bustime.R;
 import app.android.bustime.local.DbProvider;
 import app.android.bustime.local.Route;
 import app.android.bustime.local.Station;
+import app.android.bustime.ui.IntentFactory;
+import app.android.bustime.ui.SimpleAdapterListActivity;
+import app.android.bustime.ui.UserAlerter;
 
 
 public class StationsListActivity extends SimpleAdapterListActivity
@@ -69,7 +72,8 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		}
 
 		private void callStationCreation() {
-			Intent callIntent = IntentFactory.createStationCreationIntent(activityContext, route);
+			Intent callIntent = DispatchRoutesIntentFactory.createStationCreationIntent(activityContext,
+				route);
 			activityContext.startActivity(callIntent);
 		}
 	};
@@ -144,7 +148,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, view, menuInfo);
 
-		getMenuInflater().inflate(R.menu.stations_context_menu_items, menu);
+		getMenuInflater().inflate(R.menu.dispatch_routes_stations_context_menu_items, menu);
 	}
 
 	@Override
