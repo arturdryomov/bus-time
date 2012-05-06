@@ -11,17 +11,17 @@
 
 		<TextView
 			style="@style/ActionbarTitle"
-			android:text="@string/departureTimes" />
+			android:text="@string/title_routes" />
 
 		<LinearLayout
 			android:id="@+id/actions"
 			style="@style/ActionbarButtons" >
 
 			<ImageButton
-				android:id="@+id/itemCreationButton"
+				android:id="@+id/item_creation_button"
 				style="@style/ActionbarButton"
+				android:contentDescription="@string/description_item_creation"
 				android:src="@drawable/actionbar_add_new_item_icon" />
-      >
 		</LinearLayout>
 	</RelativeLayout>
 
@@ -35,6 +35,6 @@
 	<TextView
 		android:id="@android:id/empty"
 		style="@style/BodyEmptyListViewSign"
-		android:text="@string/noDepartureTimes" />
+		android:text="@string/empty_routes" />
 
 </RelativeLayout>

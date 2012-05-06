@@ -11,7 +11,7 @@
 
 		<TextView
 			style="@style/ActionbarTitle"
-			android:text="@string/timetable" />
+			android:text="@string/title_timetable" />
 	</RelativeLayout>
 
 	<!-- Main view -->
@@ -24,6 +24,6 @@
 	<TextView
 		android:id="@android:id/empty"
 		style="@style/BodyEmptyListViewSign"
-		android:text="@string/emptyTimetable" />
+		android:text="@string/empty_timetable" />
 
 </RelativeLayout>

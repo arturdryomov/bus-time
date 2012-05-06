@@ -33,14 +33,14 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.routes);
+		setContentView(R.layout.activity_routes);
 
 		initializeActionbar();
 		initializeList();
 	}
 
 	private void initializeActionbar() {
-		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.itemCreationButton);
+		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.item_creation_button);
 		itemCreationButton.setOnClickListener(routeCreationListener);
 	}
 
@@ -59,7 +59,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter routesAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.one_line_list_item, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
+			R.layout.list_item_one_line, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
 
 		setListAdapter(routesAdapter);
 
@@ -87,7 +87,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			setEmptyListText(getString(R.string.loadingRoutes));
+			setEmptyListText(getString(R.string.loading_routes));
 		}
 
 		@Override
@@ -102,7 +102,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 			super.onPostExecute(result);
 
 			if (routesList.isEmpty()) {
-				setEmptyListText(getString(R.string.noRoutes));
+				setEmptyListText(getString(R.string.empty_routes));
 			}
 			else {
 				fillList(routesList);
@@ -127,7 +127,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, view, menuInfo);
 
-		getMenuInflater().inflate(R.menu.routes_context_menu, menu);
+		getMenuInflater().inflate(R.menu.routes_context_menu_items, menu);
 	}
 
 	@Override
@@ -190,7 +190,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 			updateList();
 
 			if (listData.isEmpty()) {
-				setEmptyListText(getString(R.string.noRoutes));
+				setEmptyListText(getString(R.string.empty_routes));
 			}
 		}
 

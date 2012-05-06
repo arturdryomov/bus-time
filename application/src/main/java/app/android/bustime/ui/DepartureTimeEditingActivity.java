@@ -28,7 +28,7 @@ public class DepartureTimeEditingActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.departure_time_editing);
+		setContentView(R.layout.activity_departure_time_editing);
 
 		processReceivedRouteAndTime();
 
@@ -47,17 +47,17 @@ public class DepartureTimeEditingActivity extends Activity
 			}
 		}
 
-		UserAlerter.alert(activityContext, getString(R.string.someError));
+		UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 		finish();
 	}
 
 	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.confirmButton);
+		Button confirmButton = (Button) findViewById(R.id.confirm_button);
 		confirmButton.setOnClickListener(confirmListener);
 
 		if (DateFormat.is24HourFormat(activityContext)) {
-			TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departureTimePicker);
+			TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
 			departureTimePicker.setIs24HourView(true);
 		}
 		setUpReceivedTime();
@@ -76,7 +76,7 @@ public class DepartureTimeEditingActivity extends Activity
 	};
 
 	private void readUserDataFromTimePicker() {
-		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departureTimePicker);
+		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
 
 		departureTimeHour = departureTimePicker.getCurrentHour();
 		departureTimeMinute = departureTimePicker.getCurrentMinute();
@@ -91,7 +91,7 @@ public class DepartureTimeEditingActivity extends Activity
 				route.insertDepartureTime(new Time(departureTimeHour, departureTimeMinute));
 			}
 			catch (AlreadyExistsException e) {
-				return getString(R.string.departureTimeExist);
+				return getString(R.string.error_departure_time_exists);
 			}
 
 			return new String();
@@ -114,7 +114,7 @@ public class DepartureTimeEditingActivity extends Activity
 		departureTimeHour = time.getHours();
 		departureTimeMinute = time.getMinutes();
 
-		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departureTimePicker);
+		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
 		departureTimePicker.setCurrentHour(departureTimeHour);
 		departureTimePicker.setCurrentMinute(departureTimeMinute);
 	}

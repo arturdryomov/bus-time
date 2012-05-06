@@ -83,6 +83,9 @@ public class Station implements Parcelable
 			String.format("%s = %d", DbFieldNames.ID, id), null);
 	}
 
+	/**
+	 * @throws AlreadyExistsException if such shift time for route and station already exists.
+	 */
 	public void insertShiftTimeForRoute(Route route, Time time) {
 		database.beginTransaction();
 
@@ -96,6 +99,10 @@ public class Station implements Parcelable
 	}
 
 	private void tryInsertShiftTimeForRoute(Route route, Time time) {
+		if (isShiftTimeForRouteExist(route, time)) {
+			throw new AlreadyExistsException();
+		}
+
 		ContentValues databaseValues = new ContentValues();
 
 		databaseValues.put(DbFieldNames.ROUTE_ID, route.getId());
@@ -103,6 +110,33 @@ public class Station implements Parcelable
 		databaseValues.put(DbFieldNames.TIME_SHIFT, time.toString());
 
 		database.insert(DbTableNames.ROUTES_AND_STATIONS, null, databaseValues);
+	}
+
+	private boolean isShiftTimeForRouteExist(Route route, Time time) {
+		Cursor databaseCursor = database.rawQuery(
+			buildShiftTimeForRouteCountQuery(route.getId(), time.toString()), null);
+		databaseCursor.moveToFirst();
+
+		final int SHIFT_TIMES_FOR_ROUTE_COLUMN_INDEX = 0;
+		int shiftTimesCount = databaseCursor.getInt(SHIFT_TIMES_FOR_ROUTE_COLUMN_INDEX);
+
+		boolean isShiftTimeExist = shiftTimesCount > 0;
+
+		databaseCursor.close();
+
+		return isShiftTimeExist;
+	}
+
+	private String buildShiftTimeForRouteCountQuery(long routeId, String timeAsString) {
+		StringBuilder queryBuilder = new StringBuilder();
+
+		queryBuilder.append("select count(*) ");
+		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES_AND_STATIONS));
+		queryBuilder.append(String.format("where %s = %d and %s = '%s'", DbFieldNames.ROUTE_ID,
+			routeId, DbFieldNames.TIME_SHIFT,
+			timeAsString));
+
+		return queryBuilder.toString();
 	}
 
 	public void removeShiftTimeForRoute(Route route, Time time) {

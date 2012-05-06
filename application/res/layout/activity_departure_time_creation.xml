@@ -11,7 +11,7 @@
 
 		<TextView
 			style="@style/ActionbarTitle"
-			android:text="@string/departureTimeCreation" />
+			android:text="@string/title_departure_time_creation" />
 	</RelativeLayout>
 
 	<!-- Main view -->
@@ -24,14 +24,14 @@
 		<LinearLayout style="@style/BodyLinearLayout" >
 
 			<TimePicker
-				android:id="@+id/departureTimePicker"
+				android:id="@+id/departure_time_picker"
 				style="@style/BodyLinearLayoutItem" />
 
 			<Button
-				android:id="@+id/confirmButton"
+				android:id="@+id/confirm_button"
 				style="@style/BodyLinearLayoutItem"
 				android:layout_marginTop="@dimen/confirm_button_top_margin"
-				android:text="@string/createDepartureTime" />
+				android:text="@string/button_create_departure_time" />
 		</LinearLayout>
 	</ScrollView>
 

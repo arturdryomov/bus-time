@@ -36,7 +36,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.stations);
+		setContentView(R.layout.activity_stations);
 
 		processReceivedRoute();
 
@@ -51,14 +51,14 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
 		}
 		else {
-			UserAlerter.alert(activityContext, getString(R.string.someError));
+			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 			finish();
 		}
 	}
 
 	private void initializeActionbar() {
-		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.itemCreationButton);
+		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.item_creation_button);
 		itemCreationButton.setOnClickListener(stationCreationListener);
 	}
 
@@ -77,7 +77,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter stationsAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.one_line_list_item, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
+			R.layout.list_item_one_line, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
 
 		setListAdapter(stationsAdapter);
 
@@ -105,7 +105,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			setEmptyListText(getString(R.string.loadingStations));
+			setEmptyListText(getString(R.string.loading_stations));
 		}
 
 		@Override
@@ -120,7 +120,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			super.onPostExecute(result);
 
 			if (stations.isEmpty()) {
-				setEmptyListText(getString(R.string.noStations));
+				setEmptyListText(getString(R.string.empty_stations));
 			}
 			else {
 				fillList(stations);
@@ -145,7 +145,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, view, menuInfo);
 
-		getMenuInflater().inflate(R.menu.stations_context_menu, menu);
+		getMenuInflater().inflate(R.menu.stations_context_menu_items, menu);
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			updateList();
 
 			if (listData.isEmpty()) {
-				setEmptyListText(getString(R.string.noStations));
+				setEmptyListText(getString(R.string.empty_stations));
 			}
 		}
 

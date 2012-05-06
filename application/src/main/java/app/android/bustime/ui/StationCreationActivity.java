@@ -56,7 +56,7 @@ public class StationCreationActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.station_creation);
+		setContentView(R.layout.activity_station_creation);
 
 		processReceivedRoute();
 
@@ -70,7 +70,7 @@ public class StationCreationActivity extends Activity
 			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
 		}
 		else {
-			UserAlerter.alert(activityContext, getString(R.string.someError));
+			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 			finish();
 		}
@@ -79,14 +79,14 @@ public class StationCreationActivity extends Activity
 	private void initializeBodyControls() {
 		fillStationsSpinner();
 
-		Button confirmButton = (Button) findViewById(R.id.confirmButton);
+		Button confirmButton = (Button) findViewById(R.id.confirm_button);
 		confirmButton.setOnClickListener(confirmListener);
 
-		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.shiftTimePicker);
+		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.shift_time_picker);
 		shiftTimePicker.setIs24HourView(true);
 		setUpNullTimeToShiftTimePicker();
 
-		CheckBox stationWasCreatedCheckbox = (CheckBox) findViewById(R.id.stationWasCreatedCheckbox);
+		CheckBox stationWasCreatedCheckbox = (CheckBox) findViewById(R.id.station_exists_checkbox);
 		stationWasCreatedCheckbox.setOnCheckedChangeListener(isStationExistListener);
 	}
 
@@ -111,7 +111,7 @@ public class StationCreationActivity extends Activity
 	};
 
 	private void readUserDataFromFields() {
-		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.shiftTimePicker);
+		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.shift_time_picker);
 		shiftTimeHour = shiftTimePicker.getCurrentHour();
 		shiftTimeMinute = shiftTimePicker.getCurrentMinute();
 
@@ -119,13 +119,13 @@ public class StationCreationActivity extends Activity
 			chosenExistingStation = getChosenStation();
 		}
 		else {
-			EditText stationNameEdit = (EditText) findViewById(R.id.stationNameEdit);
+			EditText stationNameEdit = (EditText) findViewById(R.id.station_name_edit);
 			stationName = stationNameEdit.getText().toString().trim();
 		}
 	}
 
 	private Station getChosenStation() {
-		Spinner stationsSpinner = (Spinner) findViewById(R.id.stationsSpinner);
+		Spinner stationsSpinner = (Spinner) findViewById(R.id.stations_spinner);
 
 		@SuppressWarnings("unchecked")
 		Map<String, Object> stationSpinnerItem = (Map<String, Object>) stationsSpinner
@@ -145,7 +145,7 @@ public class StationCreationActivity extends Activity
 
 	private String getStationNameErrorMessage() {
 		if (stationName.isEmpty()) {
-			return getString(R.string.enterStationName);
+			return getString(R.string.error_enter_station_name);
 		}
 
 		return new String();
@@ -167,15 +167,22 @@ public class StationCreationActivity extends Activity
 						.createStation(stationName);
 				}
 				catch (AlreadyExistsException e) {
-					return getString(R.string.stationAlreadyExists);
+					return getString(R.string.error_station_exists);
 				}
 				catch (DbException e) {
-					return getString(R.string.someError);
+					return getString(R.string.error_unspecified);
 				}
 			}
 
-			stationToInsertShiftTime.insertShiftTimeForRoute(route, new Time(shiftTimeHour,
-				shiftTimeMinute));
+			try {
+				stationToInsertShiftTime.insertShiftTimeForRoute(route, new Time(shiftTimeHour,
+					shiftTimeMinute));
+			}
+			catch (AlreadyExistsException e) {
+				// TODO: Delete created station
+
+				return getString(R.string.error_shift_time_exists);
+			}
 
 			return new String();
 		}
@@ -194,7 +201,7 @@ public class StationCreationActivity extends Activity
 	}
 
 	private void setUpNullTimeToShiftTimePicker() {
-		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.shiftTimePicker);
+		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.shift_time_picker);
 		shiftTimePicker.setCurrentHour(0);
 		shiftTimePicker.setCurrentMinute(0);
 	}
@@ -209,8 +216,8 @@ public class StationCreationActivity extends Activity
 	};
 
 	private void updateBodyControls() {
-		EditText stationNameEdit = (EditText) findViewById(R.id.stationNameEdit);
-		Spinner stationsListSpinner = (Spinner) findViewById(R.id.stationsSpinner);
+		EditText stationNameEdit = (EditText) findViewById(R.id.station_name_edit);
+		Spinner stationsListSpinner = (Spinner) findViewById(R.id.stations_spinner);
 
 		if (isStationExist) {
 			stationNameEdit.setVisibility(View.GONE);
@@ -251,7 +258,7 @@ public class StationCreationActivity extends Activity
 	}
 
 	private void hidePossibilityToChooseExistingStation() {
-		CheckBox stationWasCreateBox = (CheckBox) findViewById(R.id.stationWasCreatedCheckbox);
+		CheckBox stationWasCreateBox = (CheckBox) findViewById(R.id.station_exists_checkbox);
 		stationWasCreateBox.setVisibility(View.GONE);
 	}
 
@@ -263,7 +270,7 @@ public class StationCreationActivity extends Activity
 			new int[] { android.R.id.text1 });
 		stationsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-		Spinner stationsSpinner = (Spinner) findViewById(R.id.stationsSpinner);
+		Spinner stationsSpinner = (Spinner) findViewById(R.id.stations_spinner);
 		stationsSpinner.setAdapter(stationsAdapter);
 	}
 

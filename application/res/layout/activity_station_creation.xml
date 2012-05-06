@@ -11,7 +11,7 @@
 
 		<TextView
 			style="@style/ActionbarTitle"
-			android:text="@string/stationCreation" />
+			android:text="@string/title_station_creation" />
 	</RelativeLayout>
 
 	<!-- Main view -->
@@ -24,40 +24,40 @@
 		<LinearLayout style="@style/BodyLinearLayout" >
 
 			<CheckBox
-				android:id="@+id/stationWasCreatedCheckbox"
+				android:id="@+id/station_exists_checkbox"
 				style="@style/BodyLinearLayoutItem"
-				android:text="@string/stationWasCreated"
+				android:text="@string/signature_station_was_created"
 				android:textSize="@dimen/checkbox_text_size" />
 
 			<TextView
 				style="@style/BodyLinearLayoutItem"
-				android:text="@string/stationName" />
+				android:text="@string/signature_station_name" />
 
 			<EditText
-				android:id="@+id/stationNameEdit"
+				android:id="@+id/station_name_edit"
 				style="@style/BodyLinearLayoutItem"
 				android:inputType="text"
 				android:singleLine="true" />
 
 			<Spinner
-				android:id="@+id/stationsSpinner"
+				android:id="@+id/stations_spinner"
 				style="@style/BodyLinearLayoutItem"
 				android:visibility="gone" />
 
 			<TextView
 				style="@style/BodyLinearLayoutItem"
-				android:text="@string/departureShiftTime" />
+				android:text="@string/signature_departure_shift_time" />
 
 			<TimePicker
-				android:id="@+id/shiftTimePicker"
+				android:id="@+id/shift_time_picker"
 				style="@style/BodyLinearLayoutItem"
 				android:layout_marginTop="@dimen/time_picker_top_margin" />
 
 			<Button
-				android:id="@+id/confirmButton"
+				android:id="@+id/confirm_button"
 				style="@style/BodyLinearLayoutItem"
 				android:layout_marginTop="@dimen/confirm_button_top_margin"
-				android:text="@string/createStation" />
+				android:text="@string/button_create_station" />
 		</LinearLayout>
 	</ScrollView>
 

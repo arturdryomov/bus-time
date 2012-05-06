@@ -24,7 +24,7 @@ public class RouteRenamingActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.route_renaming);
+		setContentView(R.layout.activity_route_renaming);
 
 		processReceivedRoute();
 
@@ -39,14 +39,14 @@ public class RouteRenamingActivity extends Activity
 			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
 		}
 		else {
-			UserAlerter.alert(activityContext, getString(R.string.someError));
+			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 			finish();
 		}
 	}
 
 	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.confirmButton);
+		Button confirmButton = (Button) findViewById(R.id.confirm_button);
 		confirmButton.setOnClickListener(confirmListener);
 	}
 
@@ -71,7 +71,7 @@ public class RouteRenamingActivity extends Activity
 	};
 
 	private void readUserDataFromFields() {
-		EditText routeNameEdit = (EditText) findViewById(R.id.routeNameEdit);
+		EditText routeNameEdit = (EditText) findViewById(R.id.route_name_edit);
 
 		routeName = routeNameEdit.getText().toString().trim();
 	}
@@ -82,7 +82,7 @@ public class RouteRenamingActivity extends Activity
 
 	private String getRouteNameErrorMessage() {
 		if (routeName.isEmpty()) {
-			return getString(R.string.enterRouteName);
+			return getString(R.string.error_enter_route_name);
 		}
 
 		return new String();
@@ -96,7 +96,7 @@ public class RouteRenamingActivity extends Activity
 				route.setName(routeName);
 			}
 			catch (AlreadyExistsException e) {
-				return getString(R.string.routeAlreadyExists);
+				return getString(R.string.error_route_exists);
 			}
 
 			return new String();
@@ -116,7 +116,7 @@ public class RouteRenamingActivity extends Activity
 	}
 
 	private void setUpReceivedRouteData() {
-		EditText routeNameEdit = (EditText) findViewById(R.id.routeNameEdit);
+		EditText routeNameEdit = (EditText) findViewById(R.id.route_name_edit);
 		routeNameEdit.setText(route.getName());
 	}
 }

@@ -11,7 +11,7 @@
 
 		<TextView
 			style="@style/ActionbarTitle"
-			android:text="@string/routeCreation" />
+			android:text="@string/title_departure_time_editing" />
 	</RelativeLayout>
 
 	<!-- Main view -->
@@ -23,21 +23,15 @@
 
 		<LinearLayout style="@style/BodyLinearLayout" >
 
-			<TextView
-				style="@style/BodyLinearLayoutItem"
-				android:text="@string/routeName" />
-
-			<EditText
-				android:id="@+id/routeNameEdit"
-				style="@style/BodyLinearLayoutItem"
-				android:inputType="text"
-				android:singleLine="true" />
+			<TimePicker
+				android:id="@+id/departure_time_picker"
+				style="@style/BodyLinearLayoutItem" />
 
 			<Button
-				android:id="@+id/confirmButton"
+				android:id="@+id/confirm_button"
 				style="@style/BodyLinearLayoutItem"
 				android:layout_marginTop="@dimen/confirm_button_top_margin"
-				android:text="@string/createRoute" />
+				android:text="@string/button_update_departure_time" />
 		</LinearLayout>
 	</ScrollView>
 
