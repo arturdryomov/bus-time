@@ -36,7 +36,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.stations);
+		setContentView(R.layout.activity_stations);
 
 		processReceivedRoute();
 
@@ -77,7 +77,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter stationsAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.one_line_list_item, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
+			R.layout.list_item_one_line, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
 
 		setListAdapter(stationsAdapter);
 

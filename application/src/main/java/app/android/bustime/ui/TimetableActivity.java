@@ -38,7 +38,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.timetable);
+		setContentView(R.layout.activity_timetable);
 
 		processReceivedRouteAndStation();
 
@@ -65,7 +65,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter timetetableAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.two_line_list_item, new String[] { LIST_ITEM_TIME_ID, LIST_ITEM_REMAINING_TIME_ID },
+			R.layout.list_item_two_line, new String[] { LIST_ITEM_TIME_ID, LIST_ITEM_REMAINING_TIME_ID },
 			new int[] { R.id.first_line, R.id.second_line });
 
 		setListAdapter(timetetableAdapter);

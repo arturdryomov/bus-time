@@ -35,7 +35,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.departure_timetable);
+		setContentView(R.layout.activity_departure_timetable);
 
 		processReceivedRoute();
 
@@ -76,7 +76,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter departureTimesAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.one_line_list_item, new String[] { LIST_ITEM_TEXT_ID },
+			R.layout.list_item_one_line, new String[] { LIST_ITEM_TEXT_ID },
 			new int[] { R.id.text });
 
 		setListAdapter(departureTimesAdapter);

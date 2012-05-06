@@ -28,7 +28,7 @@ public class DepartureTimeEditingActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.departure_time_editing);
+		setContentView(R.layout.activity_departure_time_editing);
 
 		processReceivedRouteAndTime();
 

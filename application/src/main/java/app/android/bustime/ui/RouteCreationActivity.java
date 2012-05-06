@@ -26,7 +26,7 @@ public class RouteCreationActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.route_creation);
+		setContentView(R.layout.activity_route_creation);
 
 		initializeBodyControls();
 	}

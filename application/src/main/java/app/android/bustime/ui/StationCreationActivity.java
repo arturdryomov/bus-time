@@ -56,7 +56,7 @@ public class StationCreationActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.station_creation);
+		setContentView(R.layout.activity_station_creation);
 
 		processReceivedRoute();
 
