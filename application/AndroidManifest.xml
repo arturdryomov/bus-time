@@ -11,12 +11,7 @@
 		android:icon="@drawable/ic_launcher_bustime"
 		android:label="@string/application_name"
 		android:theme="@android:style/Theme.Light.NoTitleBar" >
-		<activity android:name=".ui.RoutesListActivity" >
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
+		<activity android:name=".ui.dispatch.routes.RoutesListActivity" >
 		</activity>
 		<activity android:name=".ui.RouteCreationActivity" >
 		</activity>
@@ -28,15 +23,28 @@
 		</activity>
 		<activity android:name=".ui.DepartureTimeEditingActivity" >
 		</activity>
-		<activity android:name=".ui.StationsListActivity" >
+		<activity android:name=".ui.dispatch.routes.StationsListActivity" >
 		</activity>
-		<activity android:name=".ui.StationCreationActivity" >
+		<activity android:name=".ui.dispatch.routes.StationCreationActivity" >
 		</activity>
 		<activity android:name=".ui.StationRenamingActivity" >
 		</activity>
 		<activity android:name=".ui.ShiftTimeEditingActivity" >
 		</activity>
 		<activity android:name=".ui.TimetableActivity" >
+		</activity>
+		<activity android:name=".ui.dispatch.stations.StationsListActivity" >
+		</activity>
+		<activity android:name=".ui.dispatch.stations.StationCreationActivity" >
+		</activity>
+		<activity android:name=".ui.dispatch.stations.RoutesListActivity" >
+		</activity>
+		<activity android:name=".ui.DashboardActivity" >
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
 		</activity>
 	</application>
 

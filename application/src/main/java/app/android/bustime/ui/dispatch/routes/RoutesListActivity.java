@@ -1,4 +1,4 @@
-package app.android.bustime.ui;
+package app.android.bustime.ui.dispatch.routes;
 
 
 import java.util.HashMap;
@@ -21,6 +21,8 @@ import android.widget.SimpleAdapter;
 import app.android.bustime.R;
 import app.android.bustime.local.DbProvider;
 import app.android.bustime.local.Route;
+import app.android.bustime.ui.IntentFactory;
+import app.android.bustime.ui.SimpleAdapterListActivity;
 
 
 public class RoutesListActivity extends SimpleAdapterListActivity
@@ -218,7 +220,8 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	private void callStationsList(int routePosition) {
 		Route route = getRoute(routePosition);
 
-		Intent callIntent = IntentFactory.createStationsListIntent(activityContext, route);
+		Intent callIntent = DispatchRoutesIntentFactory
+			.createStationsListIntent(activityContext, route);
 		startActivity(callIntent);
 	}
 }
