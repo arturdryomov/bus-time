@@ -124,7 +124,6 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			}
 			else {
 				fillList(stations);
-				updateList();
 			}
 		}
 	}

@@ -28,6 +28,8 @@ public abstract class SimpleAdapterListActivity extends ListActivity
 		for (Object itemData : itemsData) {
 			addItemToList(itemData);
 		}
+
+		updateList();
 	}
 
 	protected abstract void addItemToList(Object itemData);

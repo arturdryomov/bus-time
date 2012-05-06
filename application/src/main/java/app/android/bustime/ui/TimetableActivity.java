@@ -113,7 +113,6 @@ public class TimetableActivity extends SimpleAdapterListActivity
 				currentTime = Time.getCurrentTime();
 
 				fillList(timetable);
-				updateList();
 			}
 		}
 	}

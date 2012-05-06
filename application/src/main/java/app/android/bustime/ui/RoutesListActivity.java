@@ -106,7 +106,6 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 			}
 			else {
 				fillList(routesList);
-				updateList();
 			}
 		}
 	}
