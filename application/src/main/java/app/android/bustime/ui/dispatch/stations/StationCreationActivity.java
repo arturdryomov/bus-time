@@ -13,7 +13,6 @@ import app.android.bustime.R;
 import app.android.bustime.local.AlreadyExistsException;
 import app.android.bustime.local.DbException;
 import app.android.bustime.local.DbProvider;
-import app.android.bustime.local.Station;
 import app.android.bustime.ui.UserAlerter;
 
 
@@ -76,12 +75,10 @@ public class StationCreationActivity extends Activity
 
 	private class CreateStationTask extends AsyncTask<Void, Void, String>
 	{
-		private Station station;
-
 		@Override
 		protected String doInBackground(Void... params) {
 			try {
-				station = DbProvider.getInstance().getStations().createStation(stationName);
+				DbProvider.getInstance().getStations().createStation(stationName);
 			}
 			catch (AlreadyExistsException e) {
 				return getString(R.string.error_station_exists);
