@@ -57,7 +57,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 			}
 		}
 
-		UserAlerter.alert(activityContext, getString(R.string.someError));
+		UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 		finish();
 	}
@@ -92,7 +92,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			setEmptyListText(getString(R.string.loadingTimetable));
+			setEmptyListText(getString(R.string.loading_timetable));
 		}
 
 		@Override
@@ -107,7 +107,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 			super.onPostExecute(result);
 
 			if (timetable.isEmpty()) {
-				setEmptyListText(getString(R.string.emptyTimetable));
+				setEmptyListText(getString(R.string.empty_timetable));
 			}
 			else {
 				currentTime = Time.getCurrentTime();
@@ -135,14 +135,14 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		if (busTime.isAfter(currentTime)) {
 			Time timeDifference = busTime.difference(currentTime);
 
-			return String.format("%s %s", getString(R.string.in),
+			return String.format("%s %s", getString(R.string.token_time_in),
 				timeFormatter.toHumanFormat(timeDifference));
 		}
 		else {
 			Time timeDifference = currentTime.difference(busTime);
 
 			return String.format("%s %s", timeFormatter.toHumanFormat(timeDifference),
-				getString(R.string.ago));
+				getString(R.string.token_time_ago));
 		}
 	}
 }

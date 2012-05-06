@@ -32,7 +32,7 @@ public class RouteCreationActivity extends Activity
 	}
 
 	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.confirmButton);
+		Button confirmButton = (Button) findViewById(R.id.confirm_button);
 		confirmButton.setOnClickListener(confirmListener);
 	}
 
@@ -57,7 +57,7 @@ public class RouteCreationActivity extends Activity
 	};
 
 	private void readUserDataFromFields() {
-		EditText routeNameEdit = (EditText) findViewById(R.id.routeNameEdit);
+		EditText routeNameEdit = (EditText) findViewById(R.id.route_name_edit);
 
 		routeName = routeNameEdit.getText().toString().trim();
 	}
@@ -68,7 +68,7 @@ public class RouteCreationActivity extends Activity
 
 	private String getRouteNameErrorMessage() {
 		if (routeName.isEmpty()) {
-			return getString(R.string.enterRouteName);
+			return getString(R.string.error_enter_route_name);
 		}
 
 		return new String();
@@ -84,10 +84,10 @@ public class RouteCreationActivity extends Activity
 				route = DbProvider.getInstance().getRoutes().createRoute(routeName);
 			}
 			catch (AlreadyExistsException e) {
-				return getString(R.string.routeAlreadyExists);
+				return getString(R.string.error_route_exists);
 			}
 			catch (DbException e) {
-				return getString(R.string.someError);
+				return getString(R.string.error_unspecified);
 			}
 
 			return new String();

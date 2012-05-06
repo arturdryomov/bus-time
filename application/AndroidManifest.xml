@@ -9,7 +9,7 @@
 	<application
 		android:name="BusTimeApplication"
 		android:icon="@drawable/ic_launcher_bustime"
-		android:label="@string/applicationName"
+		android:label="@string/application_name"
 		android:theme="@android:style/Theme.Light.NoTitleBar" >
 		<activity android:name=".ui.RoutesListActivity" >
 			<intent-filter>

@@ -50,14 +50,14 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
 		}
 		else {
-			UserAlerter.alert(activityContext, getString(R.string.someError));
+			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 			finish();
 		}
 	}
 
 	private void initializeActionbar() {
-		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.itemCreationButton);
+		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.item_creation_button);
 		itemCreationButton.setOnClickListener(departureTimeCreationListener);
 	}
 
@@ -105,7 +105,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			setEmptyListText(getString(R.string.loadingDepartureTimes));
+			setEmptyListText(getString(R.string.loading_departure_timetable));
 		}
 
 		@Override
@@ -120,7 +120,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 			super.onPostExecute(result);
 
 			if (departureTimetable.isEmpty()) {
-				setEmptyListText(getString(R.string.noDepartureTimes));
+				setEmptyListText(getString(R.string.empty_departure_timetable));
 			}
 			else {
 				fillList(departureTimetable);
@@ -206,7 +206,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 			updateList();
 
 			if (listData.isEmpty()) {
-				setEmptyListText(getString(R.string.noDepartureTimes));
+				setEmptyListText(getString(R.string.empty_departure_timetable));
 			}
 		}
 

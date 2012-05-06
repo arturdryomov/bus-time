@@ -1,49 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="applicationName">Bus Time</string>
-	<string name="routes">Routes</string>
-	<string name="noRoutes">There are no routes.</string>
-	<string name="loadingRoutes">Loading routes…</string>
-	<string name="someError">Ooops, some error just happened.</string>
-	<string name="routeCreation">Route Creation</string>
-	<string name="routeName">Route name</string>
-	<string name="createRoute">Create route</string>
-	<string name="routeAlreadyExists">Route with such name already exists.</string>
-	<string name="enterRouteName">Enter route name.</string>
-	<string name="rename">Rename</string>
-	<string name="delete">Delete</string>
-	<string name="editDepartureTimetable">Edit departure timetable</string>
-	<string name="routeRenaming">Route Renaming</string>
-	<string name="renameRoute">Rename route</string>
-	<string name="departureTimes">Departure Times</string>
-	<string name="noDepartureTimes">There are no departure times.</string>
-	<string name="loadingDepartureTimes">Loading departure times…</string>
-	<string name="departureTimeCreation">Departure Time Creation</string>
-	<string name="departureTime">Departure time</string>
-	<string name="createDepartureTime">Create departure time</string>
-	<string name="edit">Edit</string>
-	<string name="departureTimeEditing">Departure Time Editing</string>
-	<string name="updateDepartureTime">Update departure time</string>
-	<string name="stations">Stations</string>
-	<string name="noStations">There are no stations.</string>
-	<string name="loadingStations">Loadint stations…</string>
-	<string name="stationWasCreated">Station was already created.</string>
-	<string name="stationCreation">Station Creation</string>
-	<string name="stationName">Station name</string>
-	<string name="departureShiftTime">Departure shift time</string>
-	<string name="createStation">Create station</string>
-	<string name="enterStationName">Enter station name.</string>
-	<string name="timetable">Timetable</string>
-	<string name="emptyTimetable">Timetable is empty.</string>
-	<string name="loadingTimetable">Loading timetable.</string>
-	<string name="stationAlreadyExists">Station with such name already exists.</string>
-	<string name="ago">ago</string>
-	<string name="in">in</string>
-	<string name="minuteSingularForm">minute</string>
-	<string name="minutePluralForm">minutes</string>
-	<string name="hourSingularForm">hour</string>
-	<string name="hourPluralForm">hours</string>
-	<string name="departureTimeExist">Such departure time already exists.</string>
+	<string name="application_name">Bus Time</string>
+
+	<string name="title_routes">Routes</string>
+	<string name="title_route_creation">Route Creation</string>
+	<string name="title_route_renaming">Route Renaming</string>
+	<string name="title_departure_timetable">Departure Timetable</string>
+	<string name="title_departure_time_creation">Departure Time Creation</string>
+	<string name="title_departure_time_editing">Departure Time Editing</string>
+	<string name="title_stations">Stations</string>
+	<string name="title_station_creation">Station Creation</string>
+	<string name="title_timetable">Timetable</string>
+
+	<string name="empty_routes">There are no routes.</string>
+	<string name="empty_departure_timetable">Departure timetable is empty.</string>
+	<string name="empty_stations">There are no stations.</string>
+	<string name="empty_timetable">Timetable is empty.</string>
+
+	<string name="loading_routes">Loading routes…</string>
+	<string name="loading_departure_timetable">Loading departure timetable…</string>
+	<string name="loading_stations">Loadint stations…</string>
+	<string name="loading_timetable">Loading timetable…</string>
+
+	<string name="error_unspecified">Ooops, some error just happened.</string>
+	<string name="error_route_exists">Route with such name already exists.</string>
+	<string name="error_enter_route_name">Enter route name.</string>
+	<string name="error_station_exists">Station with such name already exists.</string>
+	<string name="error_enter_station_name">Enter station name.</string>
+	<string name="error_departure_time_exists">Such departure time already exists.</string>
+	<string name="error_shift_time_exists">Such shift time already exists.</string>
+
+	<string name="signature_route_name">Route name</string>
+	<string name="signature_station_name">Station name</string>
+	<string name="signature_departure_time">Departure time</string>
+	<string name="signature_departure_shift_time">Departure shift time</string>
+	<string name="signature_station_was_created">Station was already created.</string>
+
+	<string name="button_create_route">Create route</string>
+	<string name="button_rename_route">Rename route</string>
+	<string name="button_create_departure_time">Create departure time</string>
+	<string name="button_update_departure_time">Update departure time</string>
+	<string name="button_create_station">Create station</string>
+
+	<string name="menu_rename">Rename</string>
+	<string name="menu_delete">Delete</string>
+	<string name="menu_edit">Edit</string>
+	<string name="menu_edit_departure_timetable">Edit departure timetable</string>
+
+	<string name="token_time_ago">ago</string>
+	<string name="token_time_in">in</string>
+	<string name="token_time_minute_singular">minute</string>
+	<string name="token_time_minute_plural">minutes</string>
+	<string name="token_time_hour_singular">hour</string>
+	<string name="token_time_hour_plural">hours</string>
 
 </resources>

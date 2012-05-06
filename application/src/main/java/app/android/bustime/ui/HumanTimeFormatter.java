@@ -42,19 +42,19 @@ public class HumanTimeFormatter
 
 	private String getMinutePostfix(int minutes) {
 		if (minutes == MINUTE_SINGULAR_FORM_CASE) {
-			return context.getString(R.string.minuteSingularForm);
+			return context.getString(R.string.token_time_minute_singular);
 		}
 		else {
-			return context.getString(R.string.minutePluralForm);
+			return context.getString(R.string.token_time_minute_plural);
 		}
 	}
 
 	private String getHourPostfix(int hours) {
 		if (hours == HOUR_SINGULAR_FORM_CASE) {
-			return context.getString(R.string.hourSingularForm);
+			return context.getString(R.string.token_time_hour_singular);
 		}
 		else {
-			return context.getString(R.string.hourPluralForm);
+			return context.getString(R.string.token_time_hour_plural);
 		}
 	}
 }

@@ -51,14 +51,14 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
 		}
 		else {
-			UserAlerter.alert(activityContext, getString(R.string.someError));
+			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 			finish();
 		}
 	}
 
 	private void initializeActionbar() {
-		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.itemCreationButton);
+		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.item_creation_button);
 		itemCreationButton.setOnClickListener(stationCreationListener);
 	}
 
@@ -105,7 +105,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			setEmptyListText(getString(R.string.loadingStations));
+			setEmptyListText(getString(R.string.loading_stations));
 		}
 
 		@Override
@@ -120,7 +120,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			super.onPostExecute(result);
 
 			if (stations.isEmpty()) {
-				setEmptyListText(getString(R.string.noStations));
+				setEmptyListText(getString(R.string.empty_stations));
 			}
 			else {
 				fillList(stations);
@@ -189,7 +189,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			updateList();
 
 			if (listData.isEmpty()) {
-				setEmptyListText(getString(R.string.noStations));
+				setEmptyListText(getString(R.string.empty_stations));
 			}
 		}
 

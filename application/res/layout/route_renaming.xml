@@ -11,7 +11,7 @@
 
 		<TextView
 			style="@style/ActionbarTitle"
-			android:text="@string/routeRenaming" />
+			android:text="@string/title_route_renaming" />
 	</RelativeLayout>
 
 	<!-- Main view -->
@@ -25,19 +25,19 @@
 
 			<TextView
 				style="@style/BodyLinearLayoutItem"
-				android:text="@string/routeName" />
+				android:text="@string/signature_route_name" />
 
 			<EditText
-				android:id="@+id/routeNameEdit"
+				android:id="@+id/route_name_edit"
 				style="@style/BodyLinearLayoutItem"
 				android:inputType="text"
 				android:singleLine="true" />
 
 			<Button
-				android:id="@+id/confirmButton"
+				android:id="@+id/confirm_button"
 				style="@style/BodyLinearLayoutItem"
 				android:layout_marginTop="@dimen/confirm_button_top_margin"
-				android:text="@string/renameRoute" />
+				android:text="@string/button_rename_route" />
 		</LinearLayout>
 	</ScrollView>
 

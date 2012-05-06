@@ -40,7 +40,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	}
 
 	private void initializeActionbar() {
-		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.itemCreationButton);
+		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.item_creation_button);
 		itemCreationButton.setOnClickListener(routeCreationListener);
 	}
 
@@ -87,7 +87,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			setEmptyListText(getString(R.string.loadingRoutes));
+			setEmptyListText(getString(R.string.loading_routes));
 		}
 
 		@Override
@@ -102,7 +102,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 			super.onPostExecute(result);
 
 			if (routesList.isEmpty()) {
-				setEmptyListText(getString(R.string.noRoutes));
+				setEmptyListText(getString(R.string.empty_routes));
 			}
 			else {
 				fillList(routesList);
@@ -190,7 +190,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 			updateList();
 
 			if (listData.isEmpty()) {
-				setEmptyListText(getString(R.string.noRoutes));
+				setEmptyListText(getString(R.string.empty_routes));
 			}
 		}
 
