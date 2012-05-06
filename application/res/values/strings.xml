@@ -29,7 +29,7 @@
 	<string name="error_station_exists">Station with such name already exists.</string>
 	<string name="error_empty_station_name">Enter station name.</string>
 	<string name="error_departure_time_exists">Such departure time already exists.</string>
-	<string name="error_shift_time_exists">Such shift time already exists.</string>
+	<string name="error_shift_time_or_station_exist">Such shift time or station for route already exist.</string>
 
 	<string name="signature_route_name">Route name</string>
 	<string name="signature_station_name">Station name</string>

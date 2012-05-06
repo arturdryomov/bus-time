@@ -179,9 +179,11 @@ public class StationCreationActivity extends Activity
 					shiftTimeMinute));
 			}
 			catch (AlreadyExistsException e) {
-				// TODO: Delete created station
+				if (!isStationExist) {
+					DbProvider.getInstance().getStations().deleteStation(stationToInsertShiftTime);
+				}
 
-				return getString(R.string.error_shift_time_exists);
+				return getString(R.string.error_shift_time_or_station_exist);
 			}
 
 			return new String();
