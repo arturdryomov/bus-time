@@ -20,8 +20,8 @@
 			<ImageButton
 				android:id="@+id/item_creation_button"
 				style="@style/ActionbarButton"
+				android:contentDescription="@string/description_item_creation"
 				android:src="@drawable/actionbar_add_new_item_icon" />
-      >
 		</LinearLayout>
 	</RelativeLayout>
 

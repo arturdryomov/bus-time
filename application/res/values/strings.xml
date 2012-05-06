@@ -33,7 +33,6 @@
 
 	<string name="signature_route_name">Route name</string>
 	<string name="signature_station_name">Station name</string>
-	<string name="signature_departure_time">Departure time</string>
 	<string name="signature_departure_shift_time">Departure shift time</string>
 	<string name="signature_station_was_created">Station was already created.</string>
 
@@ -47,6 +46,8 @@
 	<string name="menu_delete">Delete</string>
 	<string name="menu_edit">Edit</string>
 	<string name="menu_edit_departure_timetable">Edit departure timetable</string>
+	
+	<string name="description_item_creation">Creation of new item</string>
 
 	<string name="token_time_ago">ago</string>
 	<string name="token_time_in">in</string>
