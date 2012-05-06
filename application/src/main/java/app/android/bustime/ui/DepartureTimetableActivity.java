@@ -145,7 +145,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, view, menuInfo);
 
-		getMenuInflater().inflate(R.menu.departure_times_context_menu, menu);
+		getMenuInflater().inflate(R.menu.departure_times_context_menu_items, menu);
 	}
 
 	@Override
