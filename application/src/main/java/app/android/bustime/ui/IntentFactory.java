@@ -67,6 +67,13 @@ public class IntentFactory
 		return intent;
 	}
 
+	public static Intent createStationRenamingIntent(Context context, Station station) {
+		Intent intent = new Intent(context, StationRenamingActivity.class);
+		intent.putExtra(MESSAGE_ID, station);
+
+		return intent;
+	}
+
 	public static Intent createTimetableIntent(Context context, Route route, Station station) {
 		Intent intent = new Intent(context, TimetableActivity.class);
 		intent.putExtra(MESSAGE_ID, route);

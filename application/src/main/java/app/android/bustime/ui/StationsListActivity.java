@@ -153,8 +153,8 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		int stationPosition = itemInfo.position;
 
 		switch (item.getItemId()) {
-			case R.id.edit:
-				// TODO: callStationEditing(stationPosition);
+			case R.id.rename_station:
+				callStationRenaming(stationPosition);
 				return true;
 			case R.id.delete:
 				callStationDeleting(stationPosition);
@@ -162,6 +162,22 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			default:
 				return super.onContextItemSelected(item);
 		}
+	}
+
+	private void callStationRenaming(int stationPosition) {
+		Station station = getStation(stationPosition);
+
+		Intent callIntent = IntentFactory.createStationRenamingIntent(activityContext, station);
+		startActivity(callIntent);
+	}
+
+	private Station getStation(int stationPosition) {
+		SimpleAdapter listAdapter = (SimpleAdapter) getListAdapter();
+
+		@SuppressWarnings("unchecked")
+		Map<String, Object> adapterItem = (Map<String, Object>) listAdapter.getItem(stationPosition);
+
+		return (Station) adapterItem.get(LIST_ITEM_OBJECT_ID);
 	}
 
 	private void callStationDeleting(int stationPosition) {
@@ -198,15 +214,6 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 			return null;
 		}
-	}
-
-	private Station getStation(int stationPosition) {
-		SimpleAdapter listAdapter = (SimpleAdapter) getListAdapter();
-
-		@SuppressWarnings("unchecked")
-		Map<String, Object> adapterItem = (Map<String, Object>) listAdapter.getItem(stationPosition);
-
-		return (Station) adapterItem.get(LIST_ITEM_OBJECT_ID);
 	}
 
 	@Override
