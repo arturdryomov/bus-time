@@ -42,6 +42,8 @@
 		</activity>
 		<activity android:name=".ui.dispatch.stations.StationCreationActivity" >
 		</activity>
+		<activity android:name=".ui.dispatch.stations.RoutesListActivity" >
+		</activity>
 	</application>
 
 </manifest>

@@ -3,6 +3,7 @@ package app.android.bustime.ui.dispatch.stations;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -98,13 +99,19 @@ public class StationCreationActivity extends Activity
 			super.onPostExecute(errorMessage);
 
 			if (errorMessage.isEmpty()) {
-				// TODO: Call routes list for station
+				callRoutesList();
 
 				finish();
 			}
 			else {
 				UserAlerter.alert(activityContext, errorMessage);
 			}
+		}
+
+		private void callRoutesList() {
+			Intent callIntent = DispatchStationsIntentFactory.createRoutesListIntent(activityContext,
+				station);
+			startActivity(callIntent);
 		}
 	}
 }

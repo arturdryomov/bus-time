@@ -205,7 +205,14 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	protected void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 
-		// TODO: Change to calling routes
-		// callTimetable(position);
+		callRoutesList(position);
+	}
+
+	private void callRoutesList(int stationPosition) {
+		Station station = getStation(stationPosition);
+
+		Intent callIntent = DispatchStationsIntentFactory.createRoutesListIntent(activityContext,
+			station);
+		startActivity(callIntent);
 	}
 }
