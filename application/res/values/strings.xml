@@ -25,9 +25,9 @@
 
 	<string name="error_unspecified">Ooops, some error just happened.</string>
 	<string name="error_route_exists">Route with such name already exists.</string>
-	<string name="error_enter_route_name">Enter route name.</string>
+	<string name="error_empty_route_name">Enter route name.</string>
 	<string name="error_station_exists">Station with such name already exists.</string>
-	<string name="error_enter_station_name">Enter station name.</string>
+	<string name="error_empty_station_name">Enter station name.</string>
 	<string name="error_departure_time_exists">Such departure time already exists.</string>
 	<string name="error_shift_time_exists">Such shift time already exists.</string>
 
