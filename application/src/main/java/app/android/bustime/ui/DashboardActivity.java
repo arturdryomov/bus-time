@@ -1,0 +1,59 @@
+package app.android.bustime.ui;
+
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import app.android.bustime.R;
+import app.android.bustime.ui.dispatch.routes.DispatchRoutesIntentFactory;
+import app.android.bustime.ui.dispatch.stations.DispatchStationsIntentFactory;
+
+
+public class DashboardActivity extends Activity
+{
+	private final Context activityContext = this;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_dashboard);
+
+		initializeButtons();
+	}
+
+	private void initializeButtons() {
+		Button routesButton = (Button) findViewById(R.id.routes_button);
+		routesButton.setOnClickListener(routesListener);
+
+		Button stationsButton = (Button) findViewById(R.id.stations_button);
+		stationsButton.setOnClickListener(stationsListener);
+	}
+
+	private final OnClickListener routesListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			callRoutesList();
+		}
+
+		private void callRoutesList() {
+			Intent callIntent = DispatchRoutesIntentFactory.createRoutesListIntent(activityContext);
+			startActivity(callIntent);
+		}
+	};
+
+	private final OnClickListener stationsListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			callStationsList();
+		}
+
+		private void callStationsList() {
+			Intent callIntent = DispatchStationsIntentFactory.createStationsListIntent(activityContext);
+			startActivity(callIntent);
+		}
+	};
+}

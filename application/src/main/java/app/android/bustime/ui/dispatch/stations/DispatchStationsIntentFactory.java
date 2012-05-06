@@ -7,8 +7,14 @@ import app.android.bustime.local.Station;
 import app.android.bustime.ui.IntentFactory;
 
 
-class DispatchStationsIntentFactory extends IntentFactory
+public class DispatchStationsIntentFactory extends IntentFactory
 {
+	public static Intent createStationsListIntent(Context context) {
+		Intent intent = new Intent(context, StationsListActivity.class);
+
+		return intent;
+	}
+
 	public static Intent createStationCreationIntent(Context context) {
 		Intent intent = new Intent(context, StationCreationActivity.class);
 

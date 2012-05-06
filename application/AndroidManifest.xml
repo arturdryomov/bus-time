@@ -34,15 +34,17 @@
 		<activity android:name=".ui.TimetableActivity" >
 		</activity>
 		<activity android:name=".ui.dispatch.stations.StationsListActivity" >
+		</activity>
+		<activity android:name=".ui.dispatch.stations.StationCreationActivity" >
+		</activity>
+		<activity android:name=".ui.dispatch.stations.RoutesListActivity" >
+		</activity>
+		<activity android:name=".ui.DashboardActivity" >
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
-		</activity>
-		<activity android:name=".ui.dispatch.stations.StationCreationActivity" >
-		</activity>
-		<activity android:name=".ui.dispatch.stations.RoutesListActivity" >
 		</activity>
 	</application>
 
