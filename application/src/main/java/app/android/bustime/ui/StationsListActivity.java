@@ -156,6 +156,9 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			case R.id.rename_station:
 				callStationRenaming(stationPosition);
 				return true;
+			case R.id.edit_shift_time:
+				callShiftTimeEditing(stationPosition);
+				return true;
 			case R.id.delete:
 				callStationDeleting(stationPosition);
 				return true;
@@ -178,6 +181,13 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		Map<String, Object> adapterItem = (Map<String, Object>) listAdapter.getItem(stationPosition);
 
 		return (Station) adapterItem.get(LIST_ITEM_OBJECT_ID);
+	}
+
+	private void callShiftTimeEditing(int stationPosition) {
+		Station station = getStation(stationPosition);
+
+		Intent callIntent = IntentFactory.createShiftTimeEditingIntent(activityContext, route, station);
+		startActivity(callIntent);
 	}
 
 	private void callStationDeleting(int stationPosition) {

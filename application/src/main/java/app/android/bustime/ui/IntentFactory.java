@@ -74,6 +74,14 @@ public class IntentFactory
 		return intent;
 	}
 
+	public static Intent createShiftTimeEditingIntent(Context context, Route route, Station station) {
+		Intent intent = new Intent(context, ShiftTimeEditingActivity.class);
+		intent.putExtra(MESSAGE_ID, route);
+		intent.putExtra(EXTRA_MESSAGE_ID, station);
+
+		return intent;
+	}
+
 	public static Intent createTimetableIntent(Context context, Route route, Station station) {
 		Intent intent = new Intent(context, TimetableActivity.class);
 		intent.putExtra(MESSAGE_ID, route);

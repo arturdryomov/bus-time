@@ -6,6 +6,10 @@
 		android:title="@string/menu_rename_station"/>
 
 	<item
+		android:id="@+id/edit_shift_time"
+		android:title="@string/menu_edit_shift_time"/>
+
+	<item
 		android:id="@+id/delete"
 		android:title="@string/menu_delete"/>
 

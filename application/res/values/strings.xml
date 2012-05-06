@@ -13,6 +13,7 @@
 	<string name="title_station_creation">Station Creation</string>
 	<string name="title_station_renaming">Station Renaming</string>
 	<string name="title_timetable">Timetable</string>
+	<string name="title_shift_time_editing">Shift Time Editing</string>
 
 	<string name="empty_routes">There are no routes.</string>
 	<string name="empty_departure_timetable">Departure timetable is empty.</string>
@@ -31,6 +32,7 @@
 	<string name="error_empty_station_name">Enter station name.</string>
 	<string name="error_departure_time_exists">Such departure time already exists.</string>
 	<string name="error_shift_time_or_station_exist">Such shift time or station for route already exist.</string>
+	<string name="error_shift_time_exists">Such shift time already exists.</string>
 
 	<string name="signature_route_name">Route name</string>
 	<string name="signature_station_name">Station name</string>
@@ -43,12 +45,14 @@
 	<string name="button_update_departure_time">Update departure time</string>
 	<string name="button_create_station">Create station</string>
 	<string name="button_rename_station">Rename station</string>
+	<string name="button_update_shift_time">Update shift time</string>
 
 	<string name="menu_rename">Rename</string>
 	<string name="menu_delete">Delete</string>
 	<string name="menu_edit">Edit</string>
 	<string name="menu_edit_departure_timetable">Edit departure timetable</string>
 	<string name="menu_rename_station">Rename station</string>
+	<string name="menu_edit_shift_time">Edit shift time</string>
 	
 	<string name="description_item_creation">Creation of new item</string>
 
