@@ -56,11 +56,15 @@ public class DepartureTimeEditingActivity extends Activity
 		Button confirmButton = (Button) findViewById(R.id.confirm_button);
 		confirmButton.setOnClickListener(confirmListener);
 
+		setSystemTimeFormatForTimePicker();
+		setUpReceivedTime();
+	}
+
+	private void setSystemTimeFormatForTimePicker() {
 		if (DateFormat.is24HourFormat(activityContext)) {
 			TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
 			departureTimePicker.setIs24HourView(true);
 		}
-		setUpReceivedTime();
 	}
 
 	private final OnClickListener confirmListener = new OnClickListener() {
