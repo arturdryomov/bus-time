@@ -42,6 +42,8 @@ public class TimetableActivity extends SimpleAdapterListActivity
 
 		processReceivedRouteAndStation();
 
+		loadTimetable();
+
 		initializeList();
 	}
 
@@ -77,7 +79,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	protected void onResume() {
 		super.onResume();
 
-		loadTimetable();
+		updateRemainingTimes();
 	}
 
 	private void loadTimetable() {
@@ -113,8 +115,43 @@ public class TimetableActivity extends SimpleAdapterListActivity
 				currentTime = Time.getCurrentTime();
 
 				fillList(timetable);
+
+				placeClosestTimeOnCenter();
 			}
 		}
+	}
+
+	private void placeClosestTimeOnCenter() {
+		int timePosition = getClosestTimePosition();
+		int topPadding = getListViewHeight() / 3;
+
+		getListView().setSelectionFromTop(timePosition, topPadding);
+	}
+
+	private int getClosestTimePosition() {
+		int closestTimePosition = 0;
+
+		// TODO: Just remove it after debugging
+		Time currentTime = new Time("08:00");
+
+		for (int adapterPosition = 0; adapterPosition < listData.size(); adapterPosition++) {
+			Time listDataElementTime = (Time) listData.get(adapterPosition).get(LIST_ITEM_OBJECT_ID);
+
+			if (listDataElementTime.isAfter(currentTime)) {
+				closestTimePosition = adapterPosition;
+
+				break;
+			}
+		}
+
+		return closestTimePosition;
+	}
+
+	private int getListViewHeight() {
+		int displayHeight = getWindowManager().getDefaultDisplay().getHeight();
+		int actionbarHeight = (int) getResources().getDimension(R.dimen.actionbar_height);
+
+		return displayHeight - actionbarHeight;
 	}
 
 	@Override
@@ -128,6 +165,19 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		timeItem.put(LIST_ITEM_OBJECT_ID, time);
 
 		listData.add(timeItem);
+	}
+
+	private void updateRemainingTimes() {
+		currentTime = Time.getCurrentTime();
+
+		for (HashMap<String, Object> listDataElement : listData) {
+			Time listDataElementTime = (Time) listDataElement.get(LIST_ITEM_OBJECT_ID);
+
+			listDataElement.put(LIST_ITEM_REMAINING_TIME_ID,
+				constructRemainingTimeText(listDataElementTime));
+		}
+
+		updateList();
 	}
 
 	private String constructRemainingTimeText(Time busTime) {
