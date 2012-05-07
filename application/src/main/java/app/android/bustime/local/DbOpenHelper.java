@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 
-public class DbOpenHelper extends SQLiteOpenHelper
+class DbOpenHelper extends SQLiteOpenHelper
 {
 	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_NAME = "BusTime";
@@ -58,8 +58,8 @@ public class DbOpenHelper extends SQLiteOpenHelper
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ID, DbFieldParameters.ID));
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ROUTE_ID,
 			DbFieldParameters.FOREIGN_ROUTE_ID));
-		queryBuilder.append(String.format("%s %s", DbFieldNames.DEPARTURE_TIME,
-			DbFieldParameters.TIME));
+		queryBuilder
+			.append(String.format("%s %s", DbFieldNames.DEPARTURE_TIME, DbFieldParameters.TIME));
 		queryBuilder.append(")");
 
 		return queryBuilder.toString();
@@ -90,8 +90,7 @@ public class DbOpenHelper extends SQLiteOpenHelper
 			DbFieldParameters.FOREIGN_ROUTE_ID));
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.STATION_ID,
 			DbFieldParameters.FOREIGN_STATION_ID));
-		queryBuilder.append(String.format("%s %s", DbFieldNames.TIME_SHIFT,
-			DbFieldParameters.TIME));
+		queryBuilder.append(String.format("%s %s", DbFieldNames.TIME_SHIFT, DbFieldParameters.TIME));
 		queryBuilder.append(")");
 
 		return queryBuilder.toString();
@@ -99,7 +98,6 @@ public class DbOpenHelper extends SQLiteOpenHelper
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldDbVersion, int newDbVersion) {
-		throw new DbException(String.format("%s database does not provide upgrade",
-			DATABASE_NAME));
+		throw new DbException(String.format("%s database does not provide upgrade", DATABASE_NAME));
 	}
 }
