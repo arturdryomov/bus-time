@@ -7,6 +7,7 @@ import java.util.List;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
@@ -29,6 +30,8 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
 	private static final String LIST_ITEM_OBJECT_ID = "object";
 
+	private static final int AUTO_UPDATE_SECONDS_PERIOD = 60;
+
 	public TimetableActivity() {
 		super();
 
@@ -41,7 +44,6 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		setContentView(R.layout.activity_timetable);
 
 		processReceivedRouteAndStation();
-
 		loadTimetable();
 
 		initializeList();
@@ -80,6 +82,14 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		super.onResume();
 
 		updateRemainingTimes();
+		startUpdatingRemainingTimeText();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		stopUpdatingRemainingTimeText();
 	}
 
 	private void loadTimetable() {
@@ -193,5 +203,32 @@ public class TimetableActivity extends SimpleAdapterListActivity
 			return String.format("%s %s", timeFormatter.toHumanFormat(timeDifference),
 				getString(R.string.token_time_ago));
 		}
+	}
+
+	private void startUpdatingRemainingTimeText() {
+		stopUpdatingRemainingTimeText();
+
+		timer.postDelayed(timerTask, convertSecondsToMilliseconds(AUTO_UPDATE_SECONDS_PERIOD));
+	}
+
+	private void stopUpdatingRemainingTimeText() {
+		timer.removeCallbacks(timerTask);
+	}
+
+	private final Handler timer = new Handler();
+
+	private final Runnable timerTask = new Runnable() {
+		@Override
+		public void run() {
+			updateRemainingTimes();
+
+			startUpdatingRemainingTimeText();
+		}
+	};
+
+	private long convertSecondsToMilliseconds(int secondsCount) {
+		final int millisecondsInSecondCount = 1000;
+
+		return millisecondsInSecondCount * secondsCount;
 	}
 }
