@@ -20,16 +20,20 @@ public class DbOpenHelper extends SQLiteOpenHelper
 		db.beginTransaction();
 
 		try {
-			db.execSQL(buildRoutesTableCreationQuery());
-			db.execSQL(buildTripsTableCreationQuery());
-			db.execSQL(buildStationsTableCreationQuery());
-			db.execSQL(buildRoutesAndStationsTableCreationQuery());
+			createTables();
 
 			db.setTransactionSuccessful();
 		}
 		finally {
 			db.endTransaction();
 		}
+	}
+
+	private void createTables() {
+		db.execSQL(buildRoutesTableCreationQuery());
+		db.execSQL(buildTripsTableCreationQuery());
+		db.execSQL(buildStationsTableCreationQuery());
+		db.execSQL(buildRoutesAndStationsTableCreationQuery());
 	}
 
 	private String buildRoutesTableCreationQuery() {
@@ -39,7 +43,7 @@ public class DbOpenHelper extends SQLiteOpenHelper
 
 		queryBuilder.append("(");
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ID, DbFieldParameters.ID));
-		queryBuilder.append(String.format("%s %s", DbFieldNames.NAME, DbFieldParameters.ROUTE_NAME));
+		queryBuilder.append(String.format("%s %s", DbFieldNames.NAME, DbFieldParameters.NAME));
 		queryBuilder.append(")");
 
 		return queryBuilder.toString();
@@ -53,9 +57,9 @@ public class DbOpenHelper extends SQLiteOpenHelper
 		queryBuilder.append("(");
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ID, DbFieldParameters.ID));
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ROUTE_ID,
-			DbFieldParameters.TRIPS_ROUTE_ID));
+			DbFieldParameters.FOREIGN_ROUTE_ID));
 		queryBuilder.append(String.format("%s %s", DbFieldNames.DEPARTURE_TIME,
-			DbFieldParameters.TRIPS_DEPARTURE_TIME));
+			DbFieldParameters.TIME));
 		queryBuilder.append(")");
 
 		return queryBuilder.toString();
@@ -68,7 +72,7 @@ public class DbOpenHelper extends SQLiteOpenHelper
 
 		queryBuilder.append("(");
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ID, DbFieldParameters.ID));
-		queryBuilder.append(String.format("%s %s", DbFieldNames.NAME, DbFieldParameters.STATION_NAME));
+		queryBuilder.append(String.format("%s %s", DbFieldNames.NAME, DbFieldParameters.NAME));
 		// TODO: Do not forget about coordinates later
 		queryBuilder.append(")");
 
@@ -83,11 +87,11 @@ public class DbOpenHelper extends SQLiteOpenHelper
 		queryBuilder.append("(");
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ID, DbFieldParameters.ID));
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ROUTE_ID,
-			DbFieldParameters.ROUTES_AND_STATIONS_ROUTE_ID));
+			DbFieldParameters.FOREIGN_ROUTE_ID));
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.STATION_ID,
-			DbFieldParameters.ROUTES_AND_STATIONS_STATION_ID));
+			DbFieldParameters.FOREIGN_STATION_ID));
 		queryBuilder.append(String.format("%s %s", DbFieldNames.TIME_SHIFT,
-			DbFieldParameters.ROUTES_AND_STATIONS_TIME_SHIFT));
+			DbFieldParameters.TIME));
 		queryBuilder.append(")");
 
 		return queryBuilder.toString();
@@ -95,7 +99,7 @@ public class DbOpenHelper extends SQLiteOpenHelper
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldDbVersion, int newDbVersion) {
-		throw new DbException(String.format("%s database is currently not intended to be upgraded",
+		throw new DbException(String.format("%s database does not provide upgrade",
 			DATABASE_NAME));
 	}
 }
