@@ -14,8 +14,6 @@
 	</parent>
 
 	<build>
-		<testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
-
 		<plugins>
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
