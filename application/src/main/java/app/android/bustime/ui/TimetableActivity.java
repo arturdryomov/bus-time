@@ -30,12 +30,15 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
 	private static final String LIST_ITEM_OBJECT_ID = "object";
 
+	private final Handler timer;
 	private static final int AUTO_UPDATE_SECONDS_PERIOD = 60;
 
 	public TimetableActivity() {
 		super();
 
 		timeFormatter = new HumanTimeFormatter(activityContext);
+
+		timer = new Handler();
 	}
 
 	@Override
@@ -64,32 +67,6 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 		finish();
-	}
-
-	@Override
-	protected void initializeList() {
-		SimpleAdapter timetetableAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.list_item_two_line, new String[] { LIST_ITEM_TIME_ID, LIST_ITEM_REMAINING_TIME_ID },
-			new int[] { R.id.first_line, R.id.second_line });
-
-		setListAdapter(timetetableAdapter);
-
-		getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		updateRemainingTimes();
-		startUpdatingRemainingTimeText();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-
-		stopUpdatingRemainingTimeText();
 	}
 
 	private void loadTimetable() {
@@ -131,6 +108,34 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		}
 	}
 
+	@Override
+	protected void addItemToList(Object itemData) {
+		Time time = (Time) itemData;
+
+		HashMap<String, Object> timeItem = new HashMap<String, Object>();
+
+		timeItem.put(LIST_ITEM_TIME_ID, time.toString());
+		timeItem.put(LIST_ITEM_REMAINING_TIME_ID, constructRemainingTimeText(time));
+		timeItem.put(LIST_ITEM_OBJECT_ID, time);
+
+		listData.add(timeItem);
+	}
+
+	private String constructRemainingTimeText(Time busTime) {
+		if (busTime.isAfter(currentTime)) {
+			Time timeDifference = busTime.difference(currentTime);
+
+			return String.format("%s %s", getString(R.string.token_time_in),
+				timeFormatter.toHumanFormat(timeDifference));
+		}
+		else {
+			Time timeDifference = currentTime.difference(busTime);
+
+			return String.format("%s %s", timeFormatter.toHumanFormat(timeDifference),
+				getString(R.string.token_time_ago));
+		}
+	}
+
 	private void placeClosestTimeOnCenter() {
 		int timePosition = getClosestTimePosition();
 		int topPadding = getListViewHeight() / 3;
@@ -140,9 +145,6 @@ public class TimetableActivity extends SimpleAdapterListActivity
 
 	private int getClosestTimePosition() {
 		int closestTimePosition = 0;
-
-		// TODO: Just remove it after debugging
-		Time currentTime = new Time("08:00");
 
 		for (int adapterPosition = 0; adapterPosition < listData.size(); adapterPosition++) {
 			Time listDataElementTime = (Time) listData.get(adapterPosition).get(LIST_ITEM_OBJECT_ID);
@@ -165,16 +167,22 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	}
 
 	@Override
-	protected void addItemToList(Object itemData) {
-		Time time = (Time) itemData;
+	protected void initializeList() {
+		SimpleAdapter timetetableAdapter = new SimpleAdapter(activityContext, listData,
+			R.layout.list_item_two_line, new String[] { LIST_ITEM_TIME_ID, LIST_ITEM_REMAINING_TIME_ID },
+			new int[] { R.id.first_line, R.id.second_line });
 
-		HashMap<String, Object> timeItem = new HashMap<String, Object>();
+		setListAdapter(timetetableAdapter);
 
-		timeItem.put(LIST_ITEM_TIME_ID, time.toString());
-		timeItem.put(LIST_ITEM_REMAINING_TIME_ID, constructRemainingTimeText(time));
-		timeItem.put(LIST_ITEM_OBJECT_ID, time);
+		getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+	}
 
-		listData.add(timeItem);
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		updateRemainingTimes();
+		startUpdatingRemainingTimeText();
 	}
 
 	private void updateRemainingTimes() {
@@ -190,32 +198,11 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		updateList();
 	}
 
-	private String constructRemainingTimeText(Time busTime) {
-		if (busTime.isAfter(currentTime)) {
-			Time timeDifference = busTime.difference(currentTime);
-
-			return String.format("%s %s", getString(R.string.token_time_in),
-				timeFormatter.toHumanFormat(timeDifference));
-		}
-		else {
-			Time timeDifference = currentTime.difference(busTime);
-
-			return String.format("%s %s", timeFormatter.toHumanFormat(timeDifference),
-				getString(R.string.token_time_ago));
-		}
-	}
-
 	private void startUpdatingRemainingTimeText() {
 		stopUpdatingRemainingTimeText();
 
 		timer.postDelayed(timerTask, convertSecondsToMilliseconds(AUTO_UPDATE_SECONDS_PERIOD));
 	}
-
-	private void stopUpdatingRemainingTimeText() {
-		timer.removeCallbacks(timerTask);
-	}
-
-	private final Handler timer = new Handler();
 
 	private final Runnable timerTask = new Runnable() {
 		@Override
@@ -230,5 +217,16 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		final int millisecondsInSecondCount = 1000;
 
 		return millisecondsInSecondCount * secondsCount;
+	}
+
+	private void stopUpdatingRemainingTimeText() {
+		timer.removeCallbacks(timerTask);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		stopUpdatingRemainingTimeText();
 	}
 }
