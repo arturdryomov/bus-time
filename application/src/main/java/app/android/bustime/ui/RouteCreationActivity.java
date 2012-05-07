@@ -98,7 +98,7 @@ public class RouteCreationActivity extends Activity
 			super.onPostExecute(errorMessage);
 
 			if (errorMessage.isEmpty()) {
-				callDepartureTimesList();
+				callDepartureTimetable();
 
 				finish();
 			}
@@ -107,7 +107,7 @@ public class RouteCreationActivity extends Activity
 			}
 		}
 
-		private void callDepartureTimesList() {
+		private void callDepartureTimetable() {
 			Intent callIntent = IntentFactory.createDepartureTimetableIntent(activityContext, route);
 			startActivity(callIntent);
 		}

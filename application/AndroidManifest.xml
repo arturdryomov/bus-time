@@ -7,44 +7,67 @@
 	<uses-sdk android:minSdkVersion="10" />
 
 	<application
-		android:name="BusTimeApplication"
-		android:icon="@drawable/ic_launcher_bustime"
 		android:label="@string/application_name"
-		android:theme="@android:style/Theme.Light.NoTitleBar" >
-		<activity android:name=".ui.dispatch.routes.RoutesListActivity" >
-		</activity>
-		<activity android:name=".ui.RouteCreationActivity" >
-		</activity>
-		<activity android:name=".ui.RouteRenamingActivity" >
-		</activity>
-		<activity android:name=".ui.DepartureTimetableActivity" >
-		</activity>
-		<activity android:name=".ui.DepartureTimeCreationActivity" >
-		</activity>
-		<activity android:name=".ui.DepartureTimeEditingActivity" >
-		</activity>
-		<activity android:name=".ui.dispatch.routes.StationsListActivity" >
-		</activity>
-		<activity android:name=".ui.dispatch.routes.StationCreationActivity" >
-		</activity>
-		<activity android:name=".ui.StationRenamingActivity" >
-		</activity>
-		<activity android:name=".ui.ShiftTimeEditingActivity" >
-		</activity>
-		<activity android:name=".ui.TimetableActivity" >
-		</activity>
-		<activity android:name=".ui.dispatch.stations.StationsListActivity" >
-		</activity>
-		<activity android:name=".ui.dispatch.stations.StationCreationActivity" >
-		</activity>
-		<activity android:name=".ui.dispatch.stations.RoutesListActivity" >
-		</activity>
-		<activity android:name=".ui.DashboardActivity" >
+		android:icon="@drawable/ic_launcher_bustime"
+		android:theme="@android:style/Theme.Light.NoTitleBar"
+		android:name="BusTimeApplication" >
+
+		<activity
+			android:name=".ui.DashboardActivity" >
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
+		</activity>
+
+		<activity
+			android:name=".ui.RouteCreationActivity" >
+		</activity>
+		<activity
+			android:name=".ui.RouteRenamingActivity" >
+		</activity>
+		<activity
+			android:name=".ui.DepartureTimetableActivity" >
+		</activity>
+		<activity
+			android:name=".ui.DepartureTimeCreationActivity" >
+		</activity>
+		<activity
+			android:name=".ui.DepartureTimeEditingActivity" >
+		</activity>
+		<activity
+			android:name=".ui.StationRenamingActivity" >
+		</activity>
+		<activity
+			android:name=".ui.ShiftTimeEditingActivity" >
+		</activity>
+		<activity
+			android:name=".ui.TimetableActivity" >
+		</activity>
+
+		<!-- Specific activities with routes dispatch -->
+
+		<activity
+			android:name=".ui.dispatch.routes.RoutesListActivity" >
+		</activity>
+		<activity
+			android:name=".ui.dispatch.routes.StationsListActivity" >
+		</activity>
+		<activity
+			android:name=".ui.dispatch.routes.StationCreationActivity" >
+		</activity>
+
+		<!-- Specific activities with stations dispatch -->
+
+		<activity
+			android:name=".ui.dispatch.stations.RoutesListActivity" >
+		</activity>
+		<activity
+			android:name=".ui.dispatch.stations.StationsListActivity" >
+		</activity>
+		<activity
+			android:name=".ui.dispatch.stations.StationCreationActivity" >
 		</activity>
 	</application>
 
