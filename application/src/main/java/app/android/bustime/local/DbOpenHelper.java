@@ -20,7 +20,7 @@ public class DbOpenHelper extends SQLiteOpenHelper
 		db.beginTransaction();
 
 		try {
-			createTables();
+			createTables(db);
 
 			db.setTransactionSuccessful();
 		}
@@ -29,7 +29,7 @@ public class DbOpenHelper extends SQLiteOpenHelper
 		}
 	}
 
-	private void createTables() {
+	private void createTables(SQLiteDatabase db) {
 		db.execSQL(buildRoutesTableCreationQuery());
 		db.execSQL(buildTripsTableCreationQuery());
 		db.execSQL(buildStationsTableCreationQuery());
