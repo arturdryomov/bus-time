@@ -11,7 +11,7 @@
 
 	<modules>
 		<module>application</module>
-		<module>integration-tests</module>
+		<module>tests</module>
 	</modules>
 
 	<properties>
