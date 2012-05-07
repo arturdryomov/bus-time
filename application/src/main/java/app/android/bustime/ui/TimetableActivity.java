@@ -122,6 +122,10 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	}
 
 	private String constructRemainingTimeText(Time busTime) {
+		if (busTime.equals(currentTime)) {
+			return getString(R.string.token_time_now);
+		}
+
 		if (busTime.isAfter(currentTime)) {
 			Time timeDifference = busTime.difference(currentTime);
 

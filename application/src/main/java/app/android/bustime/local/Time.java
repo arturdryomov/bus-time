@@ -163,4 +163,11 @@ public class Time implements Parcelable
 
 		return new Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
 	}
+
+	@Override
+	public boolean equals(Object otherObject) {
+		Time otherTime = (Time) otherObject;
+
+		return (otherTime.hours == this.hours) && (otherTime.minutes == this.minutes);
+	}
 }

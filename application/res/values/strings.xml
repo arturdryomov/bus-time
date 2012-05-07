@@ -58,6 +58,7 @@
 
 	<string name="token_time_ago">ago</string>
 	<string name="token_time_in">in</string>
+	<string name="token_time_now">right now</string>
 	<string name="token_time_minute_singular">minute</string>
 	<string name="token_time_minute_plural">minutes</string>
 	<string name="token_time_hour_singular">hour</string>
