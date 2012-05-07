@@ -22,6 +22,7 @@ public class DepartureTimeEditingActivity extends Activity
 
 	private Route route;
 	private Time time;
+
 	private int departureTimeHour;
 	private int departureTimeMinute;
 
@@ -60,13 +61,6 @@ public class DepartureTimeEditingActivity extends Activity
 		setUpReceivedTime();
 	}
 
-	private void setSystemTimeFormatForTimePicker() {
-		if (DateFormat.is24HourFormat(activityContext)) {
-			TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
-			departureTimePicker.setIs24HourView(true);
-		}
-	}
-
 	private final OnClickListener confirmListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
@@ -95,6 +89,8 @@ public class DepartureTimeEditingActivity extends Activity
 				route.insertDepartureTime(new Time(departureTimeHour, departureTimeMinute));
 			}
 			catch (AlreadyExistsException e) {
+				route.insertDepartureTime(time);
+
 				return getString(R.string.error_departure_time_exists);
 			}
 
@@ -112,6 +108,11 @@ public class DepartureTimeEditingActivity extends Activity
 				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}
+	}
+
+	private void setSystemTimeFormatForTimePicker() {
+		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
+		departureTimePicker.setIs24HourView(DateFormat.is24HourFormat(activityContext));
 	}
 
 	private void setUpReceivedTime() {

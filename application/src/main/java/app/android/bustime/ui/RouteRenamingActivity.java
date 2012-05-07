@@ -19,6 +19,7 @@ public class RouteRenamingActivity extends Activity
 	private final Context activityContext = this;
 
 	private Route route;
+
 	private String routeName;
 
 	@Override
@@ -77,10 +78,6 @@ public class RouteRenamingActivity extends Activity
 	}
 
 	private String getUserDataErrorMessage() {
-		return getRouteNameErrorMessage();
-	}
-
-	private String getRouteNameErrorMessage() {
 		if (routeName.isEmpty()) {
 			return getString(R.string.error_empty_route_name);
 		}

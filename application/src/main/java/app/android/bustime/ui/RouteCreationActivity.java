@@ -63,10 +63,6 @@ public class RouteCreationActivity extends Activity
 	}
 
 	private String getUserDataErrorMessage() {
-		return getRouteNameErrorMessage();
-	}
-
-	private String getRouteNameErrorMessage() {
 		if (routeName.isEmpty()) {
 			return getString(R.string.error_empty_route_name);
 		}

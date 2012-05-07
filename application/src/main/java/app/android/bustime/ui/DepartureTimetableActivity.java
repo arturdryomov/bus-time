@@ -90,10 +90,10 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 	protected void onResume() {
 		super.onResume();
 
-		loadDepartureTimes();
+		loadDepartureTimetable();
 	}
 
-	private void loadDepartureTimes() {
+	private void loadDepartureTimetable() {
 		new LoadDepartureTimetableTask().execute();
 	}
 

@@ -19,6 +19,7 @@ public class StationRenamingActivity extends Activity
 	private final Context activityContext = this;
 
 	private Station station;
+
 	private String stationName;
 
 	@Override
@@ -74,10 +75,6 @@ public class StationRenamingActivity extends Activity
 	}
 
 	private String getUserDataErrorMessage() {
-		return getStationNameErrorMessage();
-	}
-
-	private String getStationNameErrorMessage() {
 		if (stationName.isEmpty()) {
 			return getString(R.string.error_empty_station_name);
 		}

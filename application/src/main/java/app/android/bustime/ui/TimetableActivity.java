@@ -208,6 +208,10 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		timer.postDelayed(timerTask, convertSecondsToMilliseconds(AUTO_UPDATE_SECONDS_PERIOD));
 	}
 
+	private void stopUpdatingRemainingTimeText() {
+		timer.removeCallbacks(timerTask);
+	}
+
 	private final Runnable timerTask = new Runnable() {
 		@Override
 		public void run() {
@@ -221,10 +225,6 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		final int millisecondsInSecondCount = 1000;
 
 		return millisecondsInSecondCount * secondsCount;
-	}
-
-	private void stopUpdatingRemainingTimeText() {
-		timer.removeCallbacks(timerTask);
 	}
 
 	@Override

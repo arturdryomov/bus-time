@@ -25,7 +25,7 @@ public class HumanTimeFormatter
 
 		if (hours != 0) {
 			humanTimeBuilder.append(String.format("%d ", hours));
-			humanTimeBuilder.append(getHourPostfix(hours));
+			humanTimeBuilder.append(getHoursPostfix(hours));
 		}
 
 		if ((hours != 0) && (minutes != 0)) {
@@ -34,13 +34,13 @@ public class HumanTimeFormatter
 
 		if (minutes != 0) {
 			humanTimeBuilder.append(String.format("%d ", minutes));
-			humanTimeBuilder.append(getMinutePostfix(minutes));
+			humanTimeBuilder.append(getMinutesPostfix(minutes));
 		}
 
 		return humanTimeBuilder.toString();
 	}
 
-	private String getMinutePostfix(int minutes) {
+	private String getMinutesPostfix(int minutes) {
 		if (minutes == MINUTE_SINGULAR_FORM_CASE) {
 			return context.getString(R.string.token_time_minute_singular);
 		}
@@ -49,7 +49,7 @@ public class HumanTimeFormatter
 		}
 	}
 
-	private String getHourPostfix(int hours) {
+	private String getHoursPostfix(int hours) {
 		if (hours == HOUR_SINGULAR_FORM_CASE) {
 			return context.getString(R.string.token_time_hour_singular);
 		}

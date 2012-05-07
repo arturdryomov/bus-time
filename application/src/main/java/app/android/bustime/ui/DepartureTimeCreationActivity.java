@@ -21,6 +21,7 @@ public class DepartureTimeCreationActivity extends Activity
 	private final Context activityContext = this;
 
 	private Route route;
+
 	private int departureTimeHour;
 	private int departureTimeMinute;
 
@@ -53,13 +54,6 @@ public class DepartureTimeCreationActivity extends Activity
 
 		setSystemTimeFormatForTimePicker();
 		setUpCurrentTime();
-	}
-
-	private void setSystemTimeFormatForTimePicker() {
-		if (DateFormat.is24HourFormat(activityContext)) {
-			TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
-			departureTimePicker.setIs24HourView(true);
-		}
 	}
 
 	private final OnClickListener confirmListener = new OnClickListener() {
@@ -106,6 +100,11 @@ public class DepartureTimeCreationActivity extends Activity
 				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}
+	}
+
+	private void setSystemTimeFormatForTimePicker() {
+		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
+		departureTimePicker.setIs24HourView(DateFormat.is24HourFormat(activityContext));
 	}
 
 	private void setUpCurrentTime() {
