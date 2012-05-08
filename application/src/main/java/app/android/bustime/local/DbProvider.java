@@ -14,6 +14,7 @@ public class DbProvider
 	private static DbProvider instance;
 
 	private final DbOpenHelper databaseOpenHelper;
+	private final SQLiteDatabase writeableDatabase;
 
 	private Routes routes;
 	private Stations stations;
@@ -37,12 +38,13 @@ public class DbProvider
 		}
 
 		databaseOpenHelper = new DbOpenHelper(context.getApplicationContext());
+		writeableDatabase = databaseOpenHelper.getWritableDatabase();
 
 		instance = this;
 	}
 
 	SQLiteDatabase getDatabase() {
-		return databaseOpenHelper.getWritableDatabase();
+		return writeableDatabase;
 	}
 
 	public Routes getRoutes() {
