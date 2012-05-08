@@ -17,47 +17,6 @@ public class Routes
 		database = DbProvider.getInstance().getDatabase();
 	}
 
-	public List<Route> getRoutesList() {
-		List<Route> routesList = new ArrayList<Route>();
-
-		Cursor databaseCursor = database.rawQuery(buildRoutesSelectionQuery(), null);
-
-		while (databaseCursor.moveToNext()) {
-			ContentValues databaseValues = extractRouteDatabaseValuesFromCursor(databaseCursor);
-			routesList.add(new Route(databaseValues));
-		}
-
-		databaseCursor.close();
-
-		return routesList;
-	}
-
-	private String buildRoutesSelectionQuery() {
-		StringBuilder queryBuilder = new StringBuilder();
-
-		queryBuilder.append("select ");
-
-		queryBuilder.append(String.format("%s, ", DbFieldNames.ID));
-		queryBuilder.append(String.format("%s ", DbFieldNames.NAME));
-
-		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES));
-		queryBuilder.append(String.format("order by %s", DbFieldNames.NAME));
-
-		return queryBuilder.toString();
-	}
-
-	private ContentValues extractRouteDatabaseValuesFromCursor(Cursor databaseCursor) {
-		ContentValues databaseValues = new ContentValues();
-
-		long id = databaseCursor.getLong(databaseCursor.getColumnIndexOrThrow(DbFieldNames.ID));
-		databaseValues.put(DbFieldNames.ID, id);
-
-		String name = databaseCursor.getString(databaseCursor.getColumnIndexOrThrow(DbFieldNames.NAME));
-		databaseValues.put(DbFieldNames.NAME, name);
-
-		return databaseValues;
-	}
-
 	/**
 	 * @throws AlreadyExistsException if route with such name already exists.
 	 * @throws DbException if something internal went wrong during creating.
@@ -142,6 +101,18 @@ public class Routes
 		return queryBuilder.toString();
 	}
 
+	private ContentValues extractRouteDatabaseValuesFromCursor(Cursor databaseCursor) {
+		ContentValues databaseValues = new ContentValues();
+
+		long id = databaseCursor.getLong(databaseCursor.getColumnIndexOrThrow(DbFieldNames.ID));
+		databaseValues.put(DbFieldNames.ID, id);
+
+		String name = databaseCursor.getString(databaseCursor.getColumnIndexOrThrow(DbFieldNames.NAME));
+		databaseValues.put(DbFieldNames.NAME, name);
+
+		return databaseValues;
+	}
+
 	public void deleteRoute(Route route) {
 		database.beginTransaction();
 
@@ -164,7 +135,36 @@ public class Routes
 			null);
 	}
 
-	public List<Route> getRoutesListByStation(Station station) {
+	public List<Route> getRoutesList() {
+		List<Route> routesList = new ArrayList<Route>();
+
+		Cursor databaseCursor = database.rawQuery(buildRoutesSelectionQuery(), null);
+
+		while (databaseCursor.moveToNext()) {
+			ContentValues databaseValues = extractRouteDatabaseValuesFromCursor(databaseCursor);
+			routesList.add(new Route(databaseValues));
+		}
+
+		databaseCursor.close();
+
+		return routesList;
+	}
+
+	private String buildRoutesSelectionQuery() {
+		StringBuilder queryBuilder = new StringBuilder();
+
+		queryBuilder.append("select ");
+
+		queryBuilder.append(String.format("%s, ", DbFieldNames.ID));
+		queryBuilder.append(String.format("%s ", DbFieldNames.NAME));
+
+		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES));
+		queryBuilder.append(String.format("order by %s", DbFieldNames.NAME));
+
+		return queryBuilder.toString();
+	}
+
+	public List<Route> getRoutesList(Station station) {
 		List<Route> routesList = new ArrayList<Route>();
 
 		Cursor databaseCursor = database.rawQuery(buildRoutesByStationSelectionQuery(station), null);

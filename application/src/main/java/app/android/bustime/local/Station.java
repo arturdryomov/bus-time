@@ -183,19 +183,6 @@ public class Station implements Parcelable
 			DbFieldNames.ROUTE_ID, route.getId(), DbFieldNames.TIME_SHIFT, time.toString()), null);
 	}
 
-	public List<Time> getTimetableForRoute(Route route) {
-		List<Time> timetable = new ArrayList<Time>();
-
-		Time shiftTimeForRoute = getShiftTimeForRoute(route);
-
-		for (Time departureTime : route.getDepartureTimetable()) {
-			Time routeTime = departureTime.sum(shiftTimeForRoute);
-			timetable.add(routeTime);
-		}
-
-		return timetable;
-	}
-
 	public Time getShiftTimeForRoute(Route route) {
 		Cursor databaseCursor = database.rawQuery(buildRouteShiftTimeSelectionQuery(route), null);
 
@@ -230,6 +217,19 @@ public class Station implements Parcelable
 
 	private String extractTimeFromCursor(Cursor databaseCursor) {
 		return databaseCursor.getString(databaseCursor.getColumnIndexOrThrow(DbFieldNames.TIME_SHIFT));
+	}
+
+	public List<Time> getTimetableForRoute(Route route) {
+		List<Time> timetable = new ArrayList<Time>();
+
+		Time shiftTimeForRoute = getShiftTimeForRoute(route);
+
+		for (Time departureTime : route.getDepartureTimetable()) {
+			Time routeTime = departureTime.sum(shiftTimeForRoute);
+			timetable.add(routeTime);
+		}
+
+		return timetable;
 	}
 
 	@Override
