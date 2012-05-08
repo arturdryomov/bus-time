@@ -60,6 +60,18 @@ public class TimeTest extends AndroidTestCase
 		assertEquals("23:59", thirdTime.toString());
 	}
 
+	public void testGetHours() {
+		Time time = new Time("10:40");
+
+		assertEquals(10, time.getHours());
+	}
+
+	public void testGetMinutes() {
+		Time time = new Time("10:40");
+
+		assertEquals(40, time.getMinutes());
+	}
+
 	public void testSum() {
 		Time firstTime = new Time("10:40");
 		Time secondTime = new Time("00:30");
@@ -79,5 +91,12 @@ public class TimeTest extends AndroidTestCase
 		Time secondTime = new Time("10:30");
 
 		assertTrue(firstTime.isAfter(secondTime));
+	}
+
+	public void testEquals() {
+		Time firstTime = new Time("10:40");
+		Time secondTime = new Time("10:40");
+
+		assertTrue(firstTime.equals(secondTime));
 	}
 }

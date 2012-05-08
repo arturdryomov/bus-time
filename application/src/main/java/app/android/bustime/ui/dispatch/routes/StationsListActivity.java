@@ -114,7 +114,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			stations = DbProvider.getInstance().getStations().getStations(route);
+			stations = DbProvider.getInstance().getStations().getStationsList(route);
 
 			return null;
 		}

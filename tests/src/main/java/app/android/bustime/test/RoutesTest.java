@@ -4,19 +4,12 @@ package app.android.bustime.test;
 import java.util.List;
 
 import app.android.bustime.local.Route;
+import app.android.bustime.local.Station;
+import app.android.bustime.local.Time;
 
 
 public class RoutesTest extends DbTestCase
 {
-	public void testGetRoutesList() {
-		fillDatabaseWithRoutes();
-
-		List<Route> routesList = routes.getRoutesList();
-
-		assertNotNull(routesList);
-		assertEquals(ROUTES_COUNT, routesList.size());
-	}
-
 	public void testRouteCreation() {
 		Route route = routes.createRoute(ROUTE_10_NAME);
 
@@ -30,5 +23,25 @@ public class RoutesTest extends DbTestCase
 		routes.deleteRoute(route);
 
 		assertEquals(0, routes.getRoutesList().size());
+	}
+
+	public void testGetRoutesList() {
+		fillDatabaseWithRoutes();
+
+		List<Route> routesList = routes.getRoutesList();
+
+		assertNotNull(routesList);
+		assertEquals(ROUTES_COUNT, routesList.size());
+	}
+
+	public void testGetRoutesListByStation() {
+		fillDatabaseWithRoutes();
+
+		Route route = routes.getRoutesList().get(0);
+
+		Station station = stations.createStation(STATION_MONODEJNAYA_NAME);
+		station.insertShiftTimeForRoute(route, new Time(0, 10));
+
+		assertEquals(1, routes.getRoutesList(station).size());
 	}
 }

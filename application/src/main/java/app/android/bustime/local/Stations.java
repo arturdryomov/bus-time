@@ -162,7 +162,7 @@ public class Stations
 		return queryBuilder.toString();
 	}
 
-	public List<Station> getStations(Route route) {
+	public List<Station> getStationsList(Route route) {
 		List<Station> stationsList = new ArrayList<Station>();
 
 		Cursor databaseCursor = database.rawQuery(buildStationsByRouteSelectionQuery(route), null);
