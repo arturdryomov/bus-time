@@ -103,29 +103,6 @@ public class Time implements Parcelable
 		return 0;
 	}
 
-	@Override
-	public void writeToParcel(Parcel parcel, int flags) {
-		parcel.writeInt(hours);
-		parcel.writeInt(minutes);
-	}
-
-	public static final Parcelable.Creator<Time> CREATOR = new Parcelable.Creator<Time>() {
-		@Override
-		public Time createFromParcel(Parcel parcel) {
-			return new Time(parcel);
-		};
-
-		@Override
-		public Time[] newArray(int size) {
-			return new Time[size];
-		};
-	};
-
-	private Time(Parcel parcel) {
-		hours = parcel.readInt();
-		minutes = parcel.readInt();
-	}
-
 	public Time sum(Time timeToSum) {
 		Calendar calendar = new GregorianCalendar();
 		calendar.set(Calendar.HOUR_OF_DAY, hours);
@@ -169,5 +146,28 @@ public class Time implements Parcelable
 		Time otherTime = (Time) otherObject;
 
 		return (otherTime.hours == this.hours) && (otherTime.minutes == this.minutes);
+	}
+
+	@Override
+	public void writeToParcel(Parcel parcel, int flags) {
+		parcel.writeInt(hours);
+		parcel.writeInt(minutes);
+	}
+
+	public static final Parcelable.Creator<Time> CREATOR = new Parcelable.Creator<Time>() {
+		@Override
+		public Time createFromParcel(Parcel parcel) {
+			return new Time(parcel);
+		};
+
+		@Override
+		public Time[] newArray(int size) {
+			return new Time[size];
+		};
+	};
+
+	private Time(Parcel parcel) {
+		hours = parcel.readInt();
+		minutes = parcel.readInt();
 	}
 }
