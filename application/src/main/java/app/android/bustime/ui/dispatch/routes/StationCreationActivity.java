@@ -92,6 +92,68 @@ public class StationCreationActivity extends Activity
 		stationWasCreatedCheckbox.setOnCheckedChangeListener(isStationExistListener);
 	}
 
+	private void fillStationsSpinner() {
+		new LoadStationsTask().execute();
+	}
+
+	private class LoadStationsTask extends AsyncTask<Void, Void, Void>
+	{
+		private List<Station> stationsList;
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			stationsList = DbProvider.getInstance().getStations().getStationsList();
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+
+			if (stationsList.isEmpty()) {
+				hidePossibilityToChooseExistingStation();
+				return;
+			}
+
+			setUpStationsSpinner(stationsList);
+		}
+	}
+
+	private void hidePossibilityToChooseExistingStation() {
+		CheckBox stationWasCreateBox = (CheckBox) findViewById(R.id.station_exists_checkbox);
+		stationWasCreateBox.setVisibility(View.GONE);
+	}
+
+	private void setUpStationsSpinner(List<Station> stationsList) {
+		fillStationsData(stationsList);
+
+		SimpleAdapter stationsAdapter = new SimpleAdapter(activityContext, stationsData,
+			android.R.layout.simple_spinner_item, new String[] { SPINNER_ITEM_TEXT_ID },
+			new int[] { android.R.id.text1 });
+		stationsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+		Spinner stationsSpinner = (Spinner) findViewById(R.id.stations_spinner);
+		stationsSpinner.setAdapter(stationsAdapter);
+	}
+
+	private void fillStationsData(List<Station> stationsList) {
+		stationsData.clear();
+
+		for (Station station : stationsList) {
+			addItemToStationsData(station);
+		}
+	}
+
+	private void addItemToStationsData(Station station) {
+		HashMap<String, Object> stationItem = new HashMap<String, Object>();
+
+		stationItem.put(SPINNER_ITEM_TEXT_ID, station.getName());
+		stationItem.put(SPINNER_ITEM_OBJECT_ID, station);
+
+		stationsData.add(stationItem);
+	}
+
 	private final OnClickListener confirmListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
@@ -206,6 +268,7 @@ public class StationCreationActivity extends Activity
 
 	private void setUpNullTimeToShiftTimePicker() {
 		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.shift_time_picker);
+
 		shiftTimePicker.setCurrentHour(0);
 		shiftTimePicker.setCurrentMinute(0);
 	}
@@ -233,65 +296,4 @@ public class StationCreationActivity extends Activity
 		}
 	}
 
-	private void fillStationsSpinner() {
-		new LoadStationsTask().execute();
-	}
-
-	private class LoadStationsTask extends AsyncTask<Void, Void, Void>
-	{
-		private List<Station> stationsList;
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			stationsList = DbProvider.getInstance().getStations().getStationsList();
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-
-			if (stationsList.isEmpty()) {
-				hidePossibilityToChooseExistingStation();
-				return;
-			}
-
-			setUpStationsSpinner(stationsList);
-		}
-	}
-
-	private void hidePossibilityToChooseExistingStation() {
-		CheckBox stationWasCreateBox = (CheckBox) findViewById(R.id.station_exists_checkbox);
-		stationWasCreateBox.setVisibility(View.GONE);
-	}
-
-	private void setUpStationsSpinner(List<Station> stationsList) {
-		fillStationsData(stationsList);
-
-		SimpleAdapter stationsAdapter = new SimpleAdapter(activityContext, stationsData,
-			android.R.layout.simple_spinner_item, new String[] { SPINNER_ITEM_TEXT_ID },
-			new int[] { android.R.id.text1 });
-		stationsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-		Spinner stationsSpinner = (Spinner) findViewById(R.id.stations_spinner);
-		stationsSpinner.setAdapter(stationsAdapter);
-	}
-
-	private void fillStationsData(List<Station> stationsList) {
-		stationsData.clear();
-
-		for (Station station : stationsList) {
-			addItemToStationsData(station);
-		}
-	}
-
-	private void addItemToStationsData(Station station) {
-		HashMap<String, Object> stationItem = new HashMap<String, Object>();
-
-		stationItem.put(SPINNER_ITEM_TEXT_ID, station.getName());
-		stationItem.put(SPINNER_ITEM_OBJECT_ID, station);
-
-		stationsData.add(stationItem);
-	}
 }

@@ -62,10 +62,6 @@ public class StationCreationActivity extends Activity
 	}
 
 	private String getUserDataErrorMessage() {
-		return getStationNameErrorMessage();
-	}
-
-	private String getStationNameErrorMessage() {
 		if (stationName.isEmpty()) {
 			return getString(R.string.error_empty_station_name);
 		}
