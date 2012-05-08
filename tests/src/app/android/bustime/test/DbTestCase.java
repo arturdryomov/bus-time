@@ -28,6 +28,8 @@ public abstract class DbTestCase extends AndroidTestCase
 	protected void setUp() throws Exception {
 		super.setUp();
 
+		DbProvider.getInstance(getContext());
+
 		routes = DbProvider.getInstance().getRoutes();
 		routes.beginTransaction();
 
