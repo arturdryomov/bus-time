@@ -97,7 +97,28 @@ class DbOpenHelper extends SQLiteOpenHelper
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldDbVersion, int newDbVersion) {
-		throw new DbException(String.format("%s database does not provide upgrade", DATABASE_NAME));
+	public void onUpgrade(SQLiteDatabase db, int oldDatabaseVersion, int newDatabaseVersion) {
+		db.beginTransaction();
+
+		try {
+			dropTables(db);
+			createTables(db);
+
+			db.setTransactionSuccessful();
+		}
+		finally {
+			db.endTransaction();
+		}
+	}
+
+	private void dropTables(SQLiteDatabase db) {
+		dropTable(db, DbTableNames.ROUTES_AND_STATIONS);
+		dropTable(db, DbTableNames.TRIPS);
+		dropTable(db, DbTableNames.ROUTES);
+		dropTable(db, DbTableNames.STATIONS);
+	}
+
+	private void dropTable(SQLiteDatabase db, String tableName) {
+		db.execSQL(String.format("drop table %s", tableName));
 	}
 }
