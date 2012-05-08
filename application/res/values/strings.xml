@@ -22,7 +22,7 @@
 
 	<string name="loading_routes">Loading routes…</string>
 	<string name="loading_departure_timetable">Loading departure timetable…</string>
-	<string name="loading_stations">Loadint stations…</string>
+	<string name="loading_stations">Loading stations…</string>
 	<string name="loading_timetable">Loading timetable…</string>
 
 	<string name="error_unspecified">Ooops, some error just happened.</string>
