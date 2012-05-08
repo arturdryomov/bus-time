@@ -16,6 +16,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<android.version>2.3.3</android.version>
+		<android.version.platform>10</android.version.platform>
 	</properties>
 
 	<build>
@@ -28,7 +31,7 @@
 					<extensions>true</extensions>
 					<configuration>
 						<sdk>
-							<platform>10</platform>
+							<platform>${android.version.platform}</platform>
 						</sdk>
 						<deleteConflictingFiles>true</deleteConflictingFiles>
 						<undeployBeforeDeploy>true</undeployBeforeDeploy>

@@ -8,38 +8,38 @@
 	<packaging>apk</packaging>
 
 	<parent>
+		<artifactId>bustime-parent</artifactId>
 		<version>0.0.1</version>
 		<groupId>app.android</groupId>
-		<artifactId>bustime-parent</artifactId>
 	</parent>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
-			<version>2.2.1</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
+			<version>${android.version}</version>
 			<groupId>com.google.android</groupId>
-			<artifactId>android-test</artifactId>
-			<version>2.2.1</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>app.android</groupId>
+			<artifactId>android-test</artifactId>
+			<version>${android.version}</version>
+			<groupId>com.google.android</groupId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
 			<artifactId>bustime-application</artifactId>
 			<version>${project.version}</version>
+			<groupId>app.android</groupId>
 			<scope>provided</scope>
 			<type>apk</type>
 		</dependency>
 
 		<dependency>
-		  <groupId>app.android</groupId>
 		  <artifactId>bustime-application</artifactId>
 		  <version>${project.version}</version>
+		  <groupId>app.android</groupId>
 			<scope>provided</scope>
 		  <type>jar</type>
 		</dependency>
