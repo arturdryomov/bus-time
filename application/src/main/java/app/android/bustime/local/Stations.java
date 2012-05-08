@@ -188,8 +188,10 @@ public class Stations
 		queryBuilder.append(String.format("on %s.%s = %s.%s ", DbTableNames.STATIONS, DbFieldNames.ID,
 			DbTableNames.ROUTES_AND_STATIONS, DbFieldNames.STATION_ID));
 
-		queryBuilder.append(String.format("where %s.%s = %d", DbTableNames.ROUTES_AND_STATIONS,
+		queryBuilder.append(String.format("where %s.%s = %d ", DbTableNames.ROUTES_AND_STATIONS,
 			DbFieldNames.ROUTE_ID, route.getId()));
+
+		queryBuilder.append(String.format("order by %s.%s", DbTableNames.STATIONS, DbFieldNames.NAME));
 
 		return queryBuilder.toString();
 	}
