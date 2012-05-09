@@ -1,5 +1,6 @@
 package app.android.bustime.local;
 
+
 public class DbTableNames
 {
 	public static final String ROUTES = "Routes";

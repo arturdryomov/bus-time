@@ -1,5 +1,6 @@
 package app.android.bustime.local;
 
+
 public class DbFieldNames
 {
 	public static final String ID = "_id";
