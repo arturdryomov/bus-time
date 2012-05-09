@@ -143,9 +143,26 @@ public class Time implements Parcelable
 
 	@Override
 	public boolean equals(Object otherObject) {
+		if (otherObject == null) {
+			return false;
+		}
+
+		if (otherObject == this) {
+			return true;
+		}
+
+		if (otherObject.getClass() != otherObject.getClass()) {
+			return false;
+		}
+
 		Time otherTime = (Time) otherObject;
 
 		return (otherTime.hours == this.hours) && (otherTime.minutes == this.minutes);
+	}
+
+	@Override
+	public int hashCode() {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
