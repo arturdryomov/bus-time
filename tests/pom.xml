@@ -37,11 +37,11 @@
 		</dependency>
 
 		<dependency>
-		  <artifactId>bustime-application</artifactId>
-		  <version>${project.version}</version>
-		  <groupId>app.android</groupId>
+			<artifactId>bustime-application</artifactId>
+			<version>${project.version}</version>
+			<groupId>app.android</groupId>
 			<scope>provided</scope>
-		  <type>jar</type>
+			<type>jar</type>
 		</dependency>
 	</dependencies>
 
