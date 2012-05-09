@@ -20,6 +20,13 @@
 			<groupId>com.google.android</groupId>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<artifactId>maps</artifactId>
+			<version>10_r2</version>
+			<groupId>com.google.android.maps</groupId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
