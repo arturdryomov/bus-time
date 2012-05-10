@@ -29,6 +29,9 @@ public class StationsListActivity extends SimpleAdapterListActivity
 {
 	private final Context activityContext = this;
 
+	private final static int COORDINATES_REQUEST_CODE = 42;
+	private Station stationForChangingCoordinates;
+
 	private static final String LIST_ITEM_TEXT_ID = "text";
 	private static final String LIST_ITEM_OBJECT_ID = "object";
 
@@ -141,6 +144,9 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			case R.id.rename:
 				callStationRenaming(stationPosition);
 				return true;
+			case R.id.edit_coordinates:
+				callStationCoordinatesUpdating(stationPosition);
+				return true;
 			case R.id.delete:
 				callStationDeleting(stationPosition);
 				return true;
@@ -196,6 +202,48 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		@Override
 		protected Void doInBackground(Void... params) {
 			DbProvider.getInstance().getStations().deleteStation(station);
+
+			return null;
+		}
+	}
+
+	private void callStationCoordinatesUpdating(int stationPosition) {
+		stationForChangingCoordinates = getStation(stationPosition);
+
+		callStationCoordinatesActivity();
+	}
+
+	private void callStationCoordinatesActivity() {
+		Intent callIntent = IntentFactory.createStationCoordinatesIntent(activityContext,
+			stationForChangingCoordinates.getLatitude(), stationForChangingCoordinates.getLongitude());
+		startActivityForResult(callIntent, COORDINATES_REQUEST_CODE);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if ((resultCode == RESULT_OK) && (requestCode == COORDINATES_REQUEST_CODE)) {
+			double latitude = data.getExtras().getDouble(IntentFactory.MESSAGE_ID);
+			double longitude = data.getExtras().getDouble(IntentFactory.EXTRA_MESSAGE_ID);
+
+			new UpdateStationCoordinatesTask(latitude, longitude).execute();
+		}
+	};
+
+	private class UpdateStationCoordinatesTask extends AsyncTask<Void, Void, Void>
+	{
+		private final double latitude;
+		private final double longitude;
+
+		public UpdateStationCoordinatesTask(double latitude, double longitude) {
+			super();
+
+			this.latitude = latitude;
+			this.longitude = longitude;
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			stationForChangingCoordinates.setCoordinates(latitude, longitude);
 
 			return null;
 		}
