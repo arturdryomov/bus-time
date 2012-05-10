@@ -19,7 +19,8 @@
 	<app.android.bustime.ui.DashboardLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent" >
+		android:layout_height="fill_parent"
+		android:layout_below="@id/actionbar" >
 
 		<Button
 			android:id="@+id/routes_button"
