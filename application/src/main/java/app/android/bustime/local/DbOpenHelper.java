@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 class DbOpenHelper extends SQLiteOpenHelper
 {
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	private static final String DATABASE_NAME = "BusTime";
 
 	public DbOpenHelper(Context context) {
@@ -72,8 +72,11 @@ class DbOpenHelper extends SQLiteOpenHelper
 
 		queryBuilder.append("(");
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ID, DbFieldParameters.ID));
-		queryBuilder.append(String.format("%s %s", DbFieldNames.NAME, DbFieldParameters.NAME));
-		// TODO: Do not forget about coordinates later
+		queryBuilder.append(String.format("%s %s, ", DbFieldNames.NAME, DbFieldParameters.NAME));
+		queryBuilder.append(String.format("%s %s, ", DbFieldNames.LATITUDE,
+			DbFieldParameters.STATION_COORDINATE));
+		queryBuilder.append(String.format("%s %s", DbFieldNames.LONGITUDE,
+			DbFieldParameters.STATION_COORDINATE));
 		queryBuilder.append(")");
 
 		return queryBuilder.toString();
