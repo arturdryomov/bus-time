@@ -74,7 +74,8 @@ public class StationCreationActivity extends Activity
 		@Override
 		protected String doInBackground(Void... params) {
 			try {
-				DbProvider.getInstance().getStations().createStation(stationName);
+				// TODO: Fix this
+				DbProvider.getInstance().getStations().createStation(stationName, 0, 0);
 			}
 			catch (AlreadyExistsException e) {
 				return getString(R.string.error_station_exists);

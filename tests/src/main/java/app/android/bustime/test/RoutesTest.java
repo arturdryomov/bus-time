@@ -39,7 +39,8 @@ public class RoutesTest extends DbTestCase
 
 		Route route = routes.getRoutesList().get(0);
 
-		Station station = stations.createStation(STATION_MONODEJNAYA_NAME);
+		Station station = stations.createStation(STATION_MOLODEJNAYA_NAME,
+			STATION_MOLODEJNAYA_LATITUDE, STATION_MOLODEJNAYA_LONGITUDE);
 		station.insertShiftTimeForRoute(route, new Time(0, 10));
 
 		assertEquals(1, routes.getRoutesList(station).size());

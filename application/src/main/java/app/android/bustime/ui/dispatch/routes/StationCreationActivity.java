@@ -227,8 +227,9 @@ public class StationCreationActivity extends Activity
 			}
 			else {
 				try {
+					// TODO: Fix this
 					stationToInsertShiftTime = DbProvider.getInstance().getStations()
-						.createStation(stationName);
+						.createStation(stationName, 0, 0);
 				}
 				catch (AlreadyExistsException e) {
 					return getString(R.string.error_station_exists);
