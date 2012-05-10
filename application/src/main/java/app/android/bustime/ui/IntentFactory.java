@@ -76,8 +76,11 @@ public class IntentFactory
 		return intent;
 	}
 
-	public static Intent createStationCoordinatesIntent(Context context) {
+	public static Intent createStationCoordinatesIntent(Context context, double latitude,
+		double longitude) {
 		Intent intent = new Intent(context, StationCoordinatesActivity.class);
+		intent.putExtra(MESSAGE_ID, latitude);
+		intent.putExtra(EXTRA_MESSAGE_ID, longitude);
 
 		return intent;
 	}
