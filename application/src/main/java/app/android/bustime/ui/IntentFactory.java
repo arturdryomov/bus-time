@@ -75,4 +75,10 @@ public class IntentFactory
 
 		return intent;
 	}
+
+	public static Intent createStationCoordinatesIntent(Context context) {
+		Intent intent = new Intent(context, StationCoordinatesActivity.class);
+
+		return intent;
+	}
 }

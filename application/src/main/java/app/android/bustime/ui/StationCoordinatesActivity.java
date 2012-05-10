@@ -94,11 +94,10 @@ public class StationCoordinatesActivity extends MapActivity
 	};
 
 	private void goToLocation(Location location) {
-		int latitude = (int) location.getLatitude() * MICRODEGREES_IN_DEGREE;
-		int longitude = (int) location.getLongitude() * MICRODEGREES_IN_DEGREE;
+		GeoPoint locationGeoPoint = getGeoPoint(location.getLatitude(), location.getLongitude());
 
-		map.getController().animateTo(new GeoPoint(latitude, longitude));
-		pin.setPosition(new GeoPoint(latitude, longitude));
+		map.getController().animateTo(locationGeoPoint);
+		pin.setPosition(locationGeoPoint);
 	}
 
 	@Override
