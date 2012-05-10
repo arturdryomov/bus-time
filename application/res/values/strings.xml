@@ -14,6 +14,7 @@
 	<string name="title_station_renaming">Station Renaming</string>
 	<string name="title_timetable">Timetable</string>
 	<string name="title_shift_time_editing">Shift Time Editing</string>
+	<string name="title_station_coordinates">Station Coordinates</string>
 
 	<string name="empty_routes">There are no routes.</string>
 	<string name="empty_departure_timetable">Departure timetable is empty.</string>
@@ -55,6 +56,8 @@
 	<string name="menu_edit_shift_time">Edit shift time</string>
 	
 	<string name="description_item_creation">Creation of new item</string>
+	<string name="description_map_pin">Map pin</string>
+	<string name="description_confirm">Confirm action</string>
 
 	<string name="token_time_ago">ago</string>
 	<string name="token_time_in">in</string>
