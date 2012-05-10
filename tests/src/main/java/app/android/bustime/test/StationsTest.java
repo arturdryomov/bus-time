@@ -46,4 +46,11 @@ public class StationsTest extends DbTestCase
 
 		assertEquals(1, stations.getStationsList(route).size());
 	}
+
+	public void testGetStationsListByLocation() {
+		fillDatabaseWithStations();
+
+		assertEquals(2, stations.getStationsList(STATION_KALININA_LATITUDE, STATION_KALININA_LONGITUDE)
+			.size());
+	}
 }

@@ -7,10 +7,13 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 
 
 public class Stations
 {
+	private final static int CLOSE_DISTANCE_IN_METERS = 500;
+
 	private final SQLiteDatabase database;
 
 	Stations() {
@@ -210,6 +213,30 @@ public class Stations
 		queryBuilder.append(String.format("order by %s.%s", DbTableNames.STATIONS, DbFieldNames.NAME));
 
 		return queryBuilder.toString();
+	}
+
+	public List<Station> getStationsList(double latitude, double longitude) {
+		List<Station> stations = new ArrayList<Station>();
+
+		Location currentLocation = constructLocation(latitude, longitude);
+
+		for (Station station : getStationsList()) {
+			Location stationLocation = constructLocation(station.getLatitude(), station.getLongitude());
+
+			if (currentLocation.distanceTo(stationLocation) < CLOSE_DISTANCE_IN_METERS) {
+				stations.add(station);
+			}
+		}
+
+		return stations;
+	}
+
+	private Location constructLocation(double latitude, double longitude) {
+		Location location = new Location(new String());
+		location.setLatitude(latitude);
+		location.setLongitude(longitude);
+
+		return location;
 	}
 
 	public void beginTransaction() {
