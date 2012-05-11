@@ -114,6 +114,10 @@ public class StationCreationActivity extends Activity
 	private final OnClickListener locationListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
+			callStationLocationActivity();
+		}
+
+		private void callStationLocationActivity() {
 			Intent callIntent = IntentFactory.createStationLocationIntent(activityContext, latitude,
 				longitude);
 			startActivityForResult(callIntent, LOCATION_REQUEST_CODE);

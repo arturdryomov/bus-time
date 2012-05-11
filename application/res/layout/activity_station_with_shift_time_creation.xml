@@ -39,6 +39,12 @@
 				android:inputType="text"
 				android:singleLine="true" />
 
+			<Button
+				android:id="@+id/station_location_button"
+				style="@style/BodyLinearLayoutItem"
+				android:layout_marginTop="@dimen/form_button_padding"
+				android:text="@string/button_set_location" />
+
 			<Spinner
 				android:id="@+id/stations_spinner"
 				style="@style/BodyLinearLayoutItem"
