@@ -298,7 +298,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			case R.id.change_location:
 				callStationLocationUpdating(stationPosition);
 				return true;
-			case R.id.edit_shift_time:
+			case R.id.change_shift_time:
 				callShiftTimeEditing(stationPosition);
 				return true;
 			case R.id.delete:

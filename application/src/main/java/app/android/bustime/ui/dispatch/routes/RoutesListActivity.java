@@ -143,7 +143,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 			case R.id.delete:
 				callRouteDeleting(routePosition);
 				return true;
-			case R.id.editDepartureTimetable:
+			case R.id.edit_departure_timetable:
 				callDepartureTimetable(routePosition);
 				return true;
 			default:

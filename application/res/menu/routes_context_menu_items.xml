@@ -10,7 +10,7 @@
 		android:title="@string/menu_delete"/>
 
 	<item
-		android:id="@+id/editDepartureTimetable"
+		android:id="@+id/edit_departure_timetable"
 		android:title="@string/menu_edit_departure_timetable"/>
 
 </menu>
