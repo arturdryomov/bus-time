@@ -18,7 +18,7 @@ import app.android.bustime.local.Time;
 
 public class ShiftTimeEditingActivity extends Activity
 {
-	private final Context acvitityContext = this;
+	private final Context activityContext = this;
 
 	private Route route;
 	private Station station;
@@ -50,7 +50,7 @@ public class ShiftTimeEditingActivity extends Activity
 			}
 		}
 
-		UserAlerter.alert(acvitityContext, getString(R.string.error_unspecified));
+		UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 		finish();
 	}
@@ -66,7 +66,7 @@ public class ShiftTimeEditingActivity extends Activity
 	private final OnClickListener confirmListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
-			readUserdataFromTimePicker();
+			readUserDataFromTimePicker();
 			callShiftTimeUpdating();
 		}
 
@@ -75,7 +75,7 @@ public class ShiftTimeEditingActivity extends Activity
 		}
 	};
 
-	private void readUserdataFromTimePicker() {
+	private void readUserDataFromTimePicker() {
 		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.shift_time_picker);
 
 		shiftTimeHour = shiftTimePicker.getCurrentHour();
@@ -107,7 +107,7 @@ public class ShiftTimeEditingActivity extends Activity
 				finish();
 			}
 			else {
-				UserAlerter.alert(acvitityContext, errorMessage);
+				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}
 	}

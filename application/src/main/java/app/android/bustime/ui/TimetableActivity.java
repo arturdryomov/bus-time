@@ -172,11 +172,11 @@ public class TimetableActivity extends SimpleAdapterListActivity
 
 	@Override
 	protected void initializeList() {
-		SimpleAdapter timetetableAdapter = new SimpleAdapter(activityContext, listData,
+		SimpleAdapter timetableAdapter = new SimpleAdapter(activityContext, listData,
 			R.layout.list_item_two_line, new String[] { LIST_ITEM_TIME_ID, LIST_ITEM_REMAINING_TIME_ID },
 			new int[] { R.id.first_line, R.id.second_line });
 
-		setListAdapter(timetetableAdapter);
+		setListAdapter(timetableAdapter);
 
 		getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 	}

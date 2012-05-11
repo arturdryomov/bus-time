@@ -204,12 +204,12 @@ public class Station implements Parcelable
 		return isStationForRouteExist;
 	}
 
-	private String buildStationForRouteCountQuery(long routeid) {
+	private String buildStationForRouteCountQuery(long routeId) {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select count(*) ");
 		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES_AND_STATIONS));
-		queryBuilder.append(String.format("where %s = %d and %s = %d", DbFieldNames.ROUTE_ID, routeid,
+		queryBuilder.append(String.format("where %s = %d and %s = %d", DbFieldNames.ROUTE_ID, routeId,
 			DbFieldNames.STATION_ID, id));
 
 		return queryBuilder.toString();

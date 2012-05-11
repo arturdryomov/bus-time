@@ -156,7 +156,7 @@ public class Route implements Parcelable
 	public List<Time> getDepartureTimetable() {
 		List<Time> departureTimetable = new ArrayList<Time>();
 
-		Cursor databaseCursor = database.rawQuery(buildDepertureTimetableSelectionQuery(), null);
+		Cursor databaseCursor = database.rawQuery(buildDepartureTimetableSelectionQuery(), null);
 
 		while (databaseCursor.moveToNext()) {
 			String timeAsString = extractTimeFromCursor(databaseCursor);
@@ -168,7 +168,7 @@ public class Route implements Parcelable
 		return departureTimetable;
 	}
 
-	private String buildDepertureTimetableSelectionQuery() {
+	private String buildDepartureTimetableSelectionQuery() {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select ");

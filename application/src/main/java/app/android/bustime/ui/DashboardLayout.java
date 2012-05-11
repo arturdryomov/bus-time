@@ -22,8 +22,8 @@ public class DashboardLayout extends ViewGroup
 		super(context, attributes, 0);
 	}
 
-	public DashboardLayout(Context context, AttributeSet attributess, int style) {
-		super(context, attributess, style);
+	public DashboardLayout(Context context, AttributeSet attributes, int style) {
+		super(context, attributes, style);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class DashboardLayout extends ViewGroup
 
 		int bestSpaceDifference = Integer.MAX_VALUE;
 		int spaceDifference;
-		int horizonatlItemSpace = 0;
+		int horizontalItemSpace = 0;
 		int verticalItemSpace = 0;
 		int columnsCount = 1;
 		int rowsCount;
@@ -95,10 +95,10 @@ public class DashboardLayout extends ViewGroup
 		while (true) {
 			rowsCount = (visibleChildrenCount - 1) / columnsCount + 1;
 
-			horizonatlItemSpace = ((width - maximumChildWidth * columnsCount) / (columnsCount + 1));
+			horizontalItemSpace = ((width - maximumChildWidth * columnsCount) / (columnsCount + 1));
 			verticalItemSpace = ((height - maximumChildHeight * rowsCount) / (rowsCount + 1));
 
-			spaceDifference = Math.abs(verticalItemSpace - horizonatlItemSpace);
+			spaceDifference = Math.abs(verticalItemSpace - horizontalItemSpace);
 			if (rowsCount * columnsCount != visibleChildrenCount) {
 				spaceDifference *= UNEVEN_GRID_PENALTY_MULTIPLIER;
 			}
@@ -117,7 +117,7 @@ public class DashboardLayout extends ViewGroup
 				// This is a worse whitespace ratio, use the previous value of cols and exit
 				--columnsCount;
 				rowsCount = (visibleChildrenCount - 1) / columnsCount + 1;
-				horizonatlItemSpace = ((width - maximumChildWidth * columnsCount) / (columnsCount + 1));
+				horizontalItemSpace = ((width - maximumChildWidth * columnsCount) / (columnsCount + 1));
 				verticalItemSpace = ((height - maximumChildHeight * rowsCount) / (rowsCount + 1));
 				break;
 			}
@@ -128,11 +128,11 @@ public class DashboardLayout extends ViewGroup
 		// Lay out children based on calculated best-fit number of rows and cols
 
 		// If we chose a layout that has negative horizontal or vertical space, force it to zero
-		horizonatlItemSpace = Math.max(0, horizonatlItemSpace);
+		horizontalItemSpace = Math.max(0, horizontalItemSpace);
 		verticalItemSpace = Math.max(0, verticalItemSpace);
 
 		// Re-use width/height variables to be child width/height
-		width = (width - horizonatlItemSpace * (columnsCount + 1)) / columnsCount;
+		width = (width - horizontalItemSpace * (columnsCount + 1)) / columnsCount;
 		height = (height - verticalItemSpace * (rowsCount + 1)) / rowsCount;
 
 		int left, top;
@@ -147,10 +147,10 @@ public class DashboardLayout extends ViewGroup
 			row = visibleIndex / columnsCount;
 			col = visibleIndex % columnsCount;
 
-			left = horizonatlItemSpace * (col + 1) + width * col;
+			left = horizontalItemSpace * (col + 1) + width * col;
 			top = verticalItemSpace * (row + 1) + height * row;
 
-			child.layout(left, top, (horizonatlItemSpace == 0 && col == columnsCount - 1) ? rightPosition
+			child.layout(left, top, (horizontalItemSpace == 0 && col == columnsCount - 1) ? rightPosition
 				: (left + width), (verticalItemSpace == 0 && row == rowsCount - 1) ? bottomPosition
 				: (top + height));
 			++visibleIndex;
