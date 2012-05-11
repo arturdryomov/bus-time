@@ -39,12 +39,16 @@ public class PinOverlay extends ItemizedOverlay<OverlayItem>
 	private static final String DEFAULT_PIN_TITLE;
 	private static final String DEFAULT_PIN_SNIPPET;
 
+	private static final double MICRODEGREES_IN_DEGREE;
+
 	static {
 		DEFAULT_LATITUDE = 55.534229;
 		DEFAULT_LONGITUDE = 28.661546;
 
 		DEFAULT_PIN_TITLE = new String();
 		DEFAULT_PIN_SNIPPET = new String();
+
+		MICRODEGREES_IN_DEGREE = 1E6;
 	}
 
 	public PinOverlay(Drawable pinImage, ImageView pinView, MapView map) {
@@ -64,15 +68,15 @@ public class PinOverlay extends ItemizedOverlay<OverlayItem>
 	}
 
 	private OverlayItem constructPinAsMapElementAtStartPosition() {
-		GeoPoint startPinPosition = getGeoPoint(DEFAULT_LATITUDE, DEFAULT_LONGITUDE);
+		GeoPoint startPinPosition = constructGeoPoint(DEFAULT_LATITUDE, DEFAULT_LONGITUDE);
 		return new OverlayItem(startPinPosition, DEFAULT_PIN_SNIPPET, DEFAULT_PIN_TITLE);
 	}
 
-	private GeoPoint getGeoPoint(double latitude, double longitude) {
-		final int microdegreesInDegrees = 1000000;
+	private GeoPoint constructGeoPoint(double latitude, double longitude) {
+		int latitudeE6 = (int) (latitude * MICRODEGREES_IN_DEGREE);
+		int longitudeE6 = (int) (longitude * MICRODEGREES_IN_DEGREE);
 
-		return (new GeoPoint((int) (latitude * microdegreesInDegrees),
-			(int) (longitude * microdegreesInDegrees)));
+		return new GeoPoint(latitudeE6, longitudeE6);
 	}
 
 	private void showPinAsMapElement() {
@@ -87,7 +91,7 @@ public class PinOverlay extends ItemizedOverlay<OverlayItem>
 
 	@Override
 	protected OverlayItem createItem(int position) {
-		return (mapItems.get(position));
+		return mapItems.get(position);
 	}
 
 	@Override

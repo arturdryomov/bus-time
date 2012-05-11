@@ -19,9 +19,7 @@ public class IntentFactory
 	}
 
 	public static Intent createRouteCreationIntent(Context context) {
-		Intent intent = new Intent(context, RouteCreationActivity.class);
-
-		return intent;
+		return new Intent(context, RouteCreationActivity.class);
 	}
 
 	public static Intent createRouteRenamingIntent(Context context, Route route) {

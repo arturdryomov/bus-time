@@ -10,9 +10,7 @@ import app.android.bustime.ui.IntentFactory;
 public class DispatchStationsIntentFactory extends IntentFactory
 {
 	public static Intent createStationsListIntent(Context context) {
-		Intent intent = new Intent(context, StationsListActivity.class);
-
-		return intent;
+		return new Intent(context, StationsListActivity.class);
 	}
 
 	public static Intent createStationCreationIntent(Context context) {

@@ -40,21 +40,21 @@ public class HumanTimeFormatter
 		return humanTimeBuilder.toString();
 	}
 
-	private String getMinutesPostfix(int minutes) {
-		if (minutes == MINUTE_SINGULAR_FORM_CASE) {
-			return context.getString(R.string.token_time_minute_singular);
-		}
-		else {
-			return context.getString(R.string.token_time_minute_plural);
-		}
-	}
-
 	private String getHoursPostfix(int hours) {
 		if (hours == HOUR_SINGULAR_FORM_CASE) {
 			return context.getString(R.string.token_time_hour_singular);
 		}
 		else {
 			return context.getString(R.string.token_time_hour_plural);
+		}
+	}
+
+	private String getMinutesPostfix(int minutes) {
+		if (minutes == MINUTE_SINGULAR_FORM_CASE) {
+			return context.getString(R.string.token_time_minute_singular);
+		}
+		else {
+			return context.getString(R.string.token_time_minute_plural);
 		}
 	}
 }
