@@ -75,4 +75,13 @@ public class IntentFactory
 
 		return intent;
 	}
+
+	public static Intent createStationLocationIntent(Context context, double latitude,
+		double longitude) {
+		Intent intent = new Intent(context, StationLocationActivity.class);
+		intent.putExtra(MESSAGE_ID, latitude);
+		intent.putExtra(EXTRA_MESSAGE_ID, longitude);
+
+		return intent;
+	}
 }

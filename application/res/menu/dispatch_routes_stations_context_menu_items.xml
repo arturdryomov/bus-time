@@ -4,6 +4,10 @@
 	<item
 		android:id="@+id/rename_station"
 		android:title="@string/menu_rename_station"/>
+	
+	<item
+		android:id="@+id/change_location"
+		android:title="@string/menu_change_location"/>
 
 	<item
 		android:id="@+id/edit_shift_time"

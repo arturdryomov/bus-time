@@ -6,6 +6,10 @@
 		android:title="@string/menu_rename"/>
 
 	<item
+		android:id="@+id/change_location"
+		android:title="@string/menu_change_location"/>
+
+	<item
 		android:id="@+id/delete"
 		android:title="@string/menu_delete"/>
 

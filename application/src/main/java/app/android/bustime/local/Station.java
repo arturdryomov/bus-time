@@ -18,6 +18,8 @@ public class Station implements Parcelable
 
 	private long id;
 	private String name;
+	private double latitude;
+	private double longitude;
 
 	Station(ContentValues databaseValues) {
 		database = DbProvider.getInstance().getDatabase();
@@ -38,6 +40,18 @@ public class Station implements Parcelable
 			throw new DbException();
 		}
 		name = nameAsString;
+
+		Double latitudeAsDouble = databaseValues.getAsDouble(DbFieldNames.LATITUDE);
+		if (latitudeAsDouble == null) {
+			throw new DbException();
+		}
+		latitude = latitudeAsDouble.doubleValue();
+
+		Double longitudeAsDouble = databaseValues.getAsDouble(DbFieldNames.LONGITUDE);
+		if (longitudeAsDouble == null) {
+			throw new DbException();
+		}
+		longitude = longitudeAsDouble.doubleValue();
 	}
 
 	public long getId() {
@@ -48,6 +62,17 @@ public class Station implements Parcelable
 		return name;
 	}
 
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	/**
+	 * @throws AlreadyExistsException if station with such name already exists.
+	 */
 	public void setName(String name) {
 		if (name.equals(this.name)) {
 			return;
@@ -63,9 +88,6 @@ public class Station implements Parcelable
 		}
 	}
 
-	/**
-	 * @throws AlreadyExistsException if station with such name already exists.
-	 */
 	private void trySetName(String name) {
 		if (stations.isStationExist(name)) {
 			throw new AlreadyExistsException();
@@ -78,6 +100,33 @@ public class Station implements Parcelable
 	private void updateName(String name) {
 		ContentValues databaseValues = new ContentValues();
 		databaseValues.put(DbFieldNames.NAME, name);
+
+		database.update(DbTableNames.STATIONS, databaseValues,
+			String.format("%s = %d", DbFieldNames.ID, id), null);
+	}
+
+	public void setCoordinates(double latitude, double longitude) {
+		database.beginTransaction();
+
+		try {
+			trySetCoordinates(latitude, longitude);
+			database.setTransactionSuccessful();
+		}
+		finally {
+			database.endTransaction();
+		}
+	}
+
+	private void trySetCoordinates(double latitude, double longitude) {
+		updateCoordinates(latitude, longitude);
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
+
+	private void updateCoordinates(double latitude, double longitude) {
+		ContentValues databaseValues = new ContentValues();
+		databaseValues.put(DbFieldNames.LATITUDE, latitude);
+		databaseValues.put(DbFieldNames.LONGITUDE, longitude);
 
 		database.update(DbTableNames.STATIONS, databaseValues,
 			String.format("%s = %d", DbFieldNames.ID, id), null);

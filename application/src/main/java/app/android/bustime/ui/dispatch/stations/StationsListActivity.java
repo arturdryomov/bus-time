@@ -7,6 +7,9 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -29,6 +32,12 @@ public class StationsListActivity extends SimpleAdapterListActivity
 {
 	private final Context activityContext = this;
 
+	private boolean areLoadedStationsNearby = false;
+
+	private LocationManager locationManager;
+	private final static int COORDINATES_REQUEST_CODE = 42;
+	private Station stationForChangingLocation;
+
 	private static final String LIST_ITEM_TEXT_ID = "text";
 	private static final String LIST_ITEM_OBJECT_ID = "object";
 
@@ -37,13 +46,22 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stations);
 
+		initializeLocationManager();
+
 		initializeActionbar();
 		initializeList();
+	}
+
+	private void initializeLocationManager() {
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 	}
 
 	private void initializeActionbar() {
 		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.item_creation_button);
 		itemCreationButton.setOnClickListener(stationCreationListener);
+
+		ImageButton statiosNearbyButton = (ImageButton) findViewById(R.id.stations_nearby_button);
+		statiosNearbyButton.setOnClickListener(stationsNearbyListener);
 	}
 
 	private final OnClickListener stationCreationListener = new OnClickListener() {
@@ -58,6 +76,119 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			startActivity(callIntent);
 		}
 	};
+
+	private final OnClickListener stationsNearbyListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+
+			if (areLoadedStationsNearby) {
+				loadStations();
+
+				stopLocationUpdates();
+
+				areLoadedStationsNearby = false;
+			}
+			else {
+				loadStationsNearby();
+
+				areLoadedStationsNearby = true;
+			}
+
+			updateActionbarNearbyButtonIcon();
+		}
+
+		private void updateActionbarNearbyButtonIcon() {
+			ImageButton nearbyButton = (ImageButton) findViewById(R.id.stations_nearby_button);
+
+			if (areLoadedStationsNearby) {
+				nearbyButton.setImageDrawable(getResources().getDrawable(
+					R.drawable.actionbar_nearby_enabled_icon));
+
+			}
+			else {
+				nearbyButton.setImageDrawable(getResources().getDrawable(
+					R.drawable.actionbar_nearby_disabled_icon));
+			}
+		}
+
+	};
+
+	private void loadStationsNearby() {
+		emptyStationsList();
+		setEmptyListText(getString(R.string.loading_location));
+
+		loadLocation();
+	}
+
+	private void emptyStationsList() {
+		listData.clear();
+		updateList();
+	}
+
+	private void loadLocation() {
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+	}
+
+	private final LocationListener locationListener = new LocationListener() {
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+		}
+
+		@Override
+		public void onLocationChanged(Location location) {
+			loadStationsNearby(location.getLatitude(), location.getLongitude());
+
+			stopLocationUpdates();
+		}
+	};
+
+	private void loadStationsNearby(double latitude, double longitude) {
+		new LoadStationsByLocationTask(latitude, longitude).execute();
+	}
+
+	private class LoadStationsByLocationTask extends AsyncTask<Void, Void, Void>
+	{
+		private List<Station> stations;
+
+		private final double latitude;
+		private final double longitude;
+
+		public LoadStationsByLocationTask(double latitude, double longitude) {
+			this.latitude = latitude;
+			this.longitude = longitude;
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			stations = DbProvider.getInstance().getStations().getStationsList(latitude, longitude);
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+
+			if (stations.isEmpty()) {
+				setEmptyListText(getString(R.string.empty_stations_nearby));
+			}
+			else {
+				fillList(stations);
+			}
+		}
+	}
+
+	private void stopLocationUpdates() {
+		locationManager.removeUpdates(locationListener);
+	}
 
 	@Override
 	protected void initializeList() {
@@ -75,7 +206,12 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	protected void onResume() {
 		super.onResume();
 
-		loadStations();
+		if (areLoadedStationsNearby) {
+			loadStationsNearby();
+		}
+		else {
+			loadStations();
+		}
 	}
 
 	private void loadStations() {
@@ -141,6 +277,9 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			case R.id.rename:
 				callStationRenaming(stationPosition);
 				return true;
+			case R.id.change_location:
+				callStationLocationUpdating(stationPosition);
+				return true;
 			case R.id.delete:
 				callStationDeleting(stationPosition);
 				return true;
@@ -199,6 +338,59 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 			return null;
 		}
+	}
+
+	private void callStationLocationUpdating(int stationPosition) {
+		stationForChangingLocation = getStation(stationPosition);
+
+		callStationLocationActivity();
+	}
+
+	private void callStationLocationActivity() {
+		Intent callIntent = IntentFactory.createStationLocationIntent(activityContext,
+			stationForChangingLocation.getLatitude(), stationForChangingLocation.getLongitude());
+		startActivityForResult(callIntent, COORDINATES_REQUEST_CODE);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if ((resultCode == RESULT_OK) && (requestCode == COORDINATES_REQUEST_CODE)) {
+			double latitude = data.getExtras().getDouble(IntentFactory.MESSAGE_ID);
+			double longitude = data.getExtras().getDouble(IntentFactory.EXTRA_MESSAGE_ID);
+
+			callStationUpdating(latitude, longitude);
+		}
+	};
+
+	private void callStationUpdating(double latitude, double longitude) {
+		new UpdateStationLocationTask(latitude, longitude).execute();
+	}
+
+	private class UpdateStationLocationTask extends AsyncTask<Void, Void, Void>
+	{
+		private final double latitude;
+		private final double longitude;
+
+		public UpdateStationLocationTask(double latitude, double longitude) {
+			super();
+
+			this.latitude = latitude;
+			this.longitude = longitude;
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			stationForChangingLocation.setCoordinates(latitude, longitude);
+
+			return null;
+		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		stopLocationUpdates();
 	}
 
 	@Override

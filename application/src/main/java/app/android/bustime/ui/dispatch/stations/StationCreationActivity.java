@@ -3,6 +3,7 @@ package app.android.bustime.ui.dispatch.stations;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,7 @@ import app.android.bustime.R;
 import app.android.bustime.local.AlreadyExistsException;
 import app.android.bustime.local.DbException;
 import app.android.bustime.local.DbProvider;
+import app.android.bustime.ui.IntentFactory;
 import app.android.bustime.ui.UserAlerter;
 
 
@@ -20,7 +22,14 @@ public class StationCreationActivity extends Activity
 {
 	private final Context activityContext = this;
 
+	private final static int LOCATION_REQUEST_CODE = 42;
+
+	private final static double DEFAULT_LATITUDE = 55.534229;
+	private final static double DEFAULT_LONGITUDE = 28.661546;
+
 	private String stationName;
+	private double latitude = DEFAULT_LATITUDE;
+	private double longitude = DEFAULT_LONGITUDE;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +42,9 @@ public class StationCreationActivity extends Activity
 	private void initializeBodyControls() {
 		Button confirmButton = (Button) findViewById(R.id.confirm_button);
 		confirmButton.setOnClickListener(confirmListener);
+
+		Button locationButton = (Button) findViewById(R.id.location_button);
+		locationButton.setOnClickListener(locationListener);
 	}
 
 	private final OnClickListener confirmListener = new OnClickListener() {
@@ -74,7 +86,7 @@ public class StationCreationActivity extends Activity
 		@Override
 		protected String doInBackground(Void... params) {
 			try {
-				DbProvider.getInstance().getStations().createStation(stationName);
+				DbProvider.getInstance().getStations().createStation(stationName, latitude, longitude);
 			}
 			catch (AlreadyExistsException e) {
 				return getString(R.string.error_station_exists);
@@ -98,4 +110,25 @@ public class StationCreationActivity extends Activity
 			}
 		}
 	}
+
+	private final OnClickListener locationListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			callStationLocationActivity();
+		}
+
+		private void callStationLocationActivity() {
+			Intent callIntent = IntentFactory.createStationLocationIntent(activityContext, latitude,
+				longitude);
+			startActivityForResult(callIntent, LOCATION_REQUEST_CODE);
+		}
+	};
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if ((resultCode == RESULT_OK) && (requestCode == LOCATION_REQUEST_CODE)) {
+			latitude = data.getExtras().getDouble(IntentFactory.MESSAGE_ID);
+			longitude = data.getExtras().getDouble(IntentFactory.EXTRA_MESSAGE_ID);
+		}
+	};
 }

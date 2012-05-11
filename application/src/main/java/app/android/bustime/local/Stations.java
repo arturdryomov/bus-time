@@ -7,10 +7,13 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 
 
 public class Stations
 {
+	private final static int CLOSE_DISTANCE_IN_METERS = 500;
+
 	private final SQLiteDatabase database;
 
 	Stations() {
@@ -21,11 +24,11 @@ public class Stations
 	 * @throws AlreadyExistsException if station with such name already exists.
 	 * @throws DbException if something internal went wrong during creating.
 	 */
-	public Station createStation(String name) {
+	public Station createStation(String name, double latitude, double longitude) {
 		database.beginTransaction();
 
 		try {
-			Station station = tryCreateStation(name);
+			Station station = tryCreateStation(name, latitude, longitude);
 
 			database.setTransactionSuccessful();
 			return station;
@@ -35,12 +38,12 @@ public class Stations
 		}
 	}
 
-	private Station tryCreateStation(String name) {
+	private Station tryCreateStation(String name, double latitude, double longitude) {
 		if (isStationExist(name)) {
 			throw new AlreadyExistsException();
 		}
 
-		return getStationById(insertStation(name));
+		return getStationById(insertStation(name, latitude, longitude));
 	}
 
 	boolean isStationExist(String name) {
@@ -67,9 +70,11 @@ public class Stations
 		return queryBuilder.toString();
 	}
 
-	private long insertStation(String name) {
+	private long insertStation(String name, double latitude, double longitude) {
 		ContentValues databaseValues = new ContentValues();
 		databaseValues.put(DbFieldNames.NAME, name);
+		databaseValues.put(DbFieldNames.LATITUDE, latitude);
+		databaseValues.put(DbFieldNames.LONGITUDE, longitude);
 
 		return database.insert(DbTableNames.STATIONS, null, databaseValues);
 	}
@@ -93,7 +98,9 @@ public class Stations
 		queryBuilder.append("select ");
 
 		queryBuilder.append(String.format("%s, ", DbFieldNames.ID));
-		queryBuilder.append(String.format("%s ", DbFieldNames.NAME));
+		queryBuilder.append(String.format("%s, ", DbFieldNames.NAME));
+		queryBuilder.append(String.format("%s, ", DbFieldNames.LATITUDE));
+		queryBuilder.append(String.format("%s ", DbFieldNames.LONGITUDE));
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.STATIONS));
 		queryBuilder.append(String.format("where %s = %d", DbFieldNames.ID, id));
@@ -109,6 +116,14 @@ public class Stations
 
 		String name = databaseCursor.getString(databaseCursor.getColumnIndexOrThrow(DbFieldNames.NAME));
 		databaseValues.put(DbFieldNames.NAME, name);
+
+		double latitude = databaseCursor.getDouble(databaseCursor
+			.getColumnIndexOrThrow(DbFieldNames.LATITUDE));
+		databaseValues.put(DbFieldNames.LATITUDE, latitude);
+
+		double longitude = databaseCursor.getDouble(databaseCursor
+			.getColumnIndexOrThrow(DbFieldNames.LONGITUDE));
+		databaseValues.put(DbFieldNames.LONGITUDE, longitude);
 
 		return databaseValues;
 	}
@@ -154,7 +169,9 @@ public class Stations
 		queryBuilder.append("select ");
 
 		queryBuilder.append(String.format("%s, ", DbFieldNames.ID));
-		queryBuilder.append(String.format("%s ", DbFieldNames.NAME));
+		queryBuilder.append(String.format("%s, ", DbFieldNames.NAME));
+		queryBuilder.append(String.format("%s, ", DbFieldNames.LATITUDE));
+		queryBuilder.append(String.format("%s ", DbFieldNames.LONGITUDE));
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.STATIONS));
 		queryBuilder.append(String.format("order by %s", DbFieldNames.NAME));
@@ -181,7 +198,9 @@ public class Stations
 		queryBuilder.append("select distinct ");
 
 		queryBuilder.append(String.format("%s.%s, ", DbTableNames.STATIONS, DbFieldNames.ID));
-		queryBuilder.append(String.format("%s.%s ", DbTableNames.STATIONS, DbFieldNames.NAME));
+		queryBuilder.append(String.format("%s.%s, ", DbTableNames.STATIONS, DbFieldNames.NAME));
+		queryBuilder.append(String.format("%s.%s, ", DbTableNames.STATIONS, DbFieldNames.LATITUDE));
+		queryBuilder.append(String.format("%s.%s ", DbTableNames.STATIONS, DbFieldNames.LONGITUDE));
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.STATIONS));
 		queryBuilder.append(String.format("inner join %s ", DbTableNames.ROUTES_AND_STATIONS));
@@ -194,6 +213,47 @@ public class Stations
 		queryBuilder.append(String.format("order by %s.%s", DbTableNames.STATIONS, DbFieldNames.NAME));
 
 		return queryBuilder.toString();
+	}
+
+	// TODO: Two methods contain dublicate code
+	public List<Station> getStationsList(double latitude, double longitude) {
+		List<Station> stations = new ArrayList<Station>();
+
+		Location currentLocation = constructLocation(latitude, longitude);
+
+		for (Station station : getStationsList()) {
+			Location stationLocation = constructLocation(station.getLatitude(), station.getLongitude());
+
+			if (currentLocation.distanceTo(stationLocation) < CLOSE_DISTANCE_IN_METERS) {
+				stations.add(station);
+			}
+		}
+
+		return stations;
+	}
+
+	public List<Station> getStationsList(Route route, double latitude, double longitude) {
+		List<Station> stations = new ArrayList<Station>();
+
+		Location currentLocation = constructLocation(latitude, longitude);
+
+		for (Station station : getStationsList(route)) {
+			Location stationLocation = constructLocation(station.getLatitude(), station.getLongitude());
+
+			if (currentLocation.distanceTo(stationLocation) < CLOSE_DISTANCE_IN_METERS) {
+				stations.add(station);
+			}
+		}
+
+		return stations;
+	}
+
+	private Location constructLocation(double latitude, double longitude) {
+		Location location = new Location(new String());
+		location.setLatitude(latitude);
+		location.setLongitude(longitude);
+
+		return location;
 	}
 
 	public void beginTransaction() {

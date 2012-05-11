@@ -6,11 +6,16 @@
 
 	<uses-sdk android:minSdkVersion="10" />
 
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
 	<application
 		android:label="@string/application_name"
 		android:icon="@drawable/ic_launcher_bustime"
 		android:theme="@android:style/Theme.Light.NoTitleBar"
 		android:name="BusTimeApplication" >
+
+		<uses-library android:name="com.google.android.maps" />
 
 		<activity
 			android:name=".ui.DashboardActivity" >
@@ -44,6 +49,9 @@
 		</activity>
 		<activity
 			android:name=".ui.TimetableActivity" >
+		</activity>
+		<activity
+			android:name=".ui.StationLocationActivity" >
 		</activity>
 
 		<!-- Specific activities with routes dispatch -->

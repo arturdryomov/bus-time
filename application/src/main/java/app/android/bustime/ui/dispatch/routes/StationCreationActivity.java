@@ -8,6 +8,7 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -37,8 +38,15 @@ public class StationCreationActivity extends Activity
 
 	private Route route;
 
+	private final static int LOCATION_REQUEST_CODE = 42;
+
+	private final static double DEFAULT_LATITUDE = 55.534229;
+	private final static double DEFAULT_LONGITUDE = 28.661546;
+
 	private Station chosenExistingStation;
 	private String stationName;
+	private double stationLatitude = DEFAULT_LATITUDE;
+	private double stationLongitude = DEFAULT_LONGITUDE;
 	private int shiftTimeHour;
 	private int shiftTimeMinute;
 
@@ -90,6 +98,9 @@ public class StationCreationActivity extends Activity
 
 		CheckBox stationWasCreatedCheckbox = (CheckBox) findViewById(R.id.station_exists_checkbox);
 		stationWasCreatedCheckbox.setOnCheckedChangeListener(isStationExistListener);
+
+		Button stationLocationButton = (Button) findViewById(R.id.station_location_button);
+		stationLocationButton.setOnClickListener(stationLocationListener);
 	}
 
 	private void fillStationsSpinner() {
@@ -228,7 +239,7 @@ public class StationCreationActivity extends Activity
 			else {
 				try {
 					stationToInsertShiftTime = DbProvider.getInstance().getStations()
-						.createStation(stationName);
+						.createStation(stationName, stationLatitude, stationLongitude);
 				}
 				catch (AlreadyExistsException e) {
 					return getString(R.string.error_station_exists);
@@ -284,16 +295,39 @@ public class StationCreationActivity extends Activity
 
 	private void updateBodyControls() {
 		EditText stationNameEdit = (EditText) findViewById(R.id.station_name_edit);
+		Button stationLocationButton = (Button) findViewById(R.id.station_location_button);
 		Spinner stationsListSpinner = (Spinner) findViewById(R.id.stations_spinner);
 
 		if (isStationExist) {
 			stationNameEdit.setVisibility(View.GONE);
+			stationLocationButton.setVisibility(View.GONE);
 			stationsListSpinner.setVisibility(View.VISIBLE);
 		}
 		else {
 			stationNameEdit.setVisibility(View.VISIBLE);
+			stationLocationButton.setVisibility(View.VISIBLE);
 			stationsListSpinner.setVisibility(View.GONE);
 		}
 	}
 
+	private final OnClickListener stationLocationListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			callStationLocationActivity();
+		}
+
+		private void callStationLocationActivity() {
+			Intent callIntent = IntentFactory.createStationLocationIntent(activityContext,
+				stationLatitude, stationLongitude);
+			startActivityForResult(callIntent, LOCATION_REQUEST_CODE);
+		}
+	};
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if ((resultCode == RESULT_OK) && (requestCode == LOCATION_REQUEST_CODE)) {
+			stationLatitude = data.getExtras().getDouble(IntentFactory.MESSAGE_ID);
+			stationLongitude = data.getExtras().getDouble(IntentFactory.EXTRA_MESSAGE_ID);
+		}
+	};
 }

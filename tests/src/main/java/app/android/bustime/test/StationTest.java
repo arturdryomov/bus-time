@@ -16,7 +16,8 @@ public class StationTest extends DbTestCase
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		station = stations.createStation(STATION_KALININA_NAME);
+		station = stations.createStation(STATION_KALININA_NAME, STATION_KALININA_LATITUDE,
+			STATION_KALININA_LONGITUDE);
 		route = routes.createRoute(ROUTE_10_NAME);
 
 		station.insertShiftTimeForRoute(route, new Time("00:10"));
@@ -28,10 +29,25 @@ public class StationTest extends DbTestCase
 		assertEquals(STATION_KALININA_NAME, station.getName());
 	}
 
+	public void testGetLatitude() {
+		assertEquals(STATION_KALININA_LATITUDE, station.getLatitude());
+	}
+
+	public void testGetLongitude() {
+		assertEquals(STATION_KALININA_LONGITUDE, station.getLongitude());
+	}
+
 	public void testSetName() {
 		station.setName(STATION_KOPTEVO_NAME);
 
 		assertEquals(STATION_KOPTEVO_NAME, station.getName());
+	}
+
+	public void testSetCoordinates() {
+		station.setCoordinates(STATION_KOPTEVO_LATITUDE, STATION_KOPTEVO_LONGITUDE);
+
+		assertEquals(STATION_KOPTEVO_LATITUDE, station.getLatitude());
+		assertEquals(STATION_KOPTEVO_LONGITUDE, station.getLongitude());
 	}
 
 	public void testGetShiftTimeForRoute() {
