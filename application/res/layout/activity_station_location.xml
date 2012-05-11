@@ -11,7 +11,7 @@
 
 		<TextView
 			style="@style/ActionbarTitle"
-			android:text="@string/title_station_coordinates" />
+			android:text="@string/title_station_location" />
 
 		<LinearLayout
 			android:id="@+id/actions"
@@ -20,7 +20,7 @@
 			<ImageButton
 				android:id="@+id/save_button"
 				style="@style/ActionbarButton"
-				android:contentDescription="@string/description_confirm"
+				android:contentDescription="@string/description_save_location"
 				android:src="@drawable/actionbar_confirm_icon" />
 		</LinearLayout>
 	</RelativeLayout>

@@ -22,7 +22,7 @@ public class StationCreationActivity extends Activity
 {
 	private final Context activityContext = this;
 
-	private final static int COORDINATES_REQUEST_CODE = 42;
+	private final static int LOCATION_REQUEST_CODE = 42;
 
 	private final static double DEFAULT_LATITUDE = 55.534229;
 	private final static double DEFAULT_LONGITUDE = 28.661546;
@@ -43,8 +43,8 @@ public class StationCreationActivity extends Activity
 		Button confirmButton = (Button) findViewById(R.id.confirm_button);
 		confirmButton.setOnClickListener(confirmListener);
 
-		Button coordinatesButton = (Button) findViewById(R.id.coordinates_button);
-		coordinatesButton.setOnClickListener(coordinatesListener);
+		Button locationButton = (Button) findViewById(R.id.location_button);
+		locationButton.setOnClickListener(locationListener);
 	}
 
 	private final OnClickListener confirmListener = new OnClickListener() {
@@ -111,18 +111,18 @@ public class StationCreationActivity extends Activity
 		}
 	}
 
-	private final OnClickListener coordinatesListener = new OnClickListener() {
+	private final OnClickListener locationListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
-			Intent callIntent = IntentFactory.createStationCoordinatesIntent(activityContext, latitude,
+			Intent callIntent = IntentFactory.createStationLocationIntent(activityContext, latitude,
 				longitude);
-			startActivityForResult(callIntent, COORDINATES_REQUEST_CODE);
+			startActivityForResult(callIntent, LOCATION_REQUEST_CODE);
 		}
 	};
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if ((resultCode == RESULT_OK) && (requestCode == COORDINATES_REQUEST_CODE)) {
+		if ((resultCode == RESULT_OK) && (requestCode == LOCATION_REQUEST_CODE)) {
 			latitude = data.getExtras().getDouble(IntentFactory.MESSAGE_ID);
 			longitude = data.getExtras().getDouble(IntentFactory.EXTRA_MESSAGE_ID);
 		}

@@ -32,11 +32,11 @@ public class StationsListActivity extends SimpleAdapterListActivity
 {
 	private final Context activityContext = this;
 
-	private boolean isLoadedNearbyStations = false;
+	private boolean areLoadedStationsNearby = false;
 
 	private LocationManager locationManager;
 	private final static int COORDINATES_REQUEST_CODE = 42;
-	private Station stationForChangingCoordinates;
+	private Station stationForChangingLocation;
 
 	private static final String LIST_ITEM_TEXT_ID = "text";
 	private static final String LIST_ITEM_OBJECT_ID = "object";
@@ -46,16 +46,22 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stations);
 
+		initializeLocationManager();
+
 		initializeActionbar();
 		initializeList();
+	}
+
+	private void initializeLocationManager() {
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 	}
 
 	private void initializeActionbar() {
 		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.item_creation_button);
 		itemCreationButton.setOnClickListener(stationCreationListener);
 
-		ImageButton nearbyStationsButton = (ImageButton) findViewById(R.id.stations_nearby_button);
-		nearbyStationsButton.setOnClickListener(nearbyStationsListener);
+		ImageButton statiosNearbyButton = (ImageButton) findViewById(R.id.stations_nearby_button);
+		statiosNearbyButton.setOnClickListener(stationsNearbyListener);
 	}
 
 	private final OnClickListener stationCreationListener = new OnClickListener() {
@@ -70,6 +76,118 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			startActivity(callIntent);
 		}
 	};
+
+	private final OnClickListener stationsNearbyListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+
+			if (areLoadedStationsNearby) {
+				loadStations();
+
+				stopLocationUpdates();
+
+				areLoadedStationsNearby = false;
+			}
+			else {
+				loadStationsNearby();
+
+				areLoadedStationsNearby = true;
+			}
+
+			updateActionbarNearbyIcon();
+		}
+
+		private void updateActionbarNearbyIcon() {
+			ImageButton nearbyButton = (ImageButton) findViewById(R.id.stations_nearby_button);
+
+			if (areLoadedStationsNearby) {
+				nearbyButton.setImageDrawable(getResources().getDrawable(
+					R.drawable.actionbar_nearby_enabled_icon));
+
+			}
+			else {
+				nearbyButton.setImageDrawable(getResources().getDrawable(
+					R.drawable.actionbar_nearby_disabled_icon));
+			}
+		}
+	};
+
+	private void loadStationsNearby() {
+		emptyStationsList();
+		setEmptyListText(getString(R.string.loading_location));
+
+		loadLocation();
+	}
+
+	private void emptyStationsList() {
+		listData.clear();
+		updateList();
+	}
+
+	private void loadLocation() {
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+	}
+
+	private final LocationListener locationListener = new LocationListener() {
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+		}
+
+		@Override
+		public void onLocationChanged(Location location) {
+			loadStationsNearby(location.getLatitude(), location.getLongitude());
+
+			stopLocationUpdates();
+		}
+	};
+
+	private void loadStationsNearby(double latitude, double longitude) {
+		new LoadStationsByLocationTask(latitude, longitude).execute();
+	}
+
+	private class LoadStationsByLocationTask extends AsyncTask<Void, Void, Void>
+	{
+		private List<Station> stations;
+
+		private final double latitude;
+		private final double longitude;
+
+		public LoadStationsByLocationTask(double latitude, double longitude) {
+			this.latitude = latitude;
+			this.longitude = longitude;
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			stations = DbProvider.getInstance().getStations().getStationsList(latitude, longitude);
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+
+			if (stations.isEmpty()) {
+				setEmptyListText(getString(R.string.empty_stations_nearby));
+			}
+			else {
+				fillList(stations);
+			}
+		}
+	}
+
+	private void stopLocationUpdates() {
+		locationManager.removeUpdates(locationListener);
+	}
 
 	@Override
 	protected void initializeList() {
@@ -153,8 +271,8 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			case R.id.rename:
 				callStationRenaming(stationPosition);
 				return true;
-			case R.id.edit_coordinates:
-				callStationCoordinatesUpdating(stationPosition);
+			case R.id.change_location:
+				callStationLocationUpdating(stationPosition);
 				return true;
 			case R.id.delete:
 				callStationDeleting(stationPosition);
@@ -216,15 +334,15 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		}
 	}
 
-	private void callStationCoordinatesUpdating(int stationPosition) {
-		stationForChangingCoordinates = getStation(stationPosition);
+	private void callStationLocationUpdating(int stationPosition) {
+		stationForChangingLocation = getStation(stationPosition);
 
-		callStationCoordinatesActivity();
+		callStationLocationActivity();
 	}
 
-	private void callStationCoordinatesActivity() {
-		Intent callIntent = IntentFactory.createStationCoordinatesIntent(activityContext,
-			stationForChangingCoordinates.getLatitude(), stationForChangingCoordinates.getLongitude());
+	private void callStationLocationActivity() {
+		Intent callIntent = IntentFactory.createStationLocationIntent(activityContext,
+			stationForChangingLocation.getLatitude(), stationForChangingLocation.getLongitude());
 		startActivityForResult(callIntent, COORDINATES_REQUEST_CODE);
 	}
 
@@ -234,16 +352,20 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			double latitude = data.getExtras().getDouble(IntentFactory.MESSAGE_ID);
 			double longitude = data.getExtras().getDouble(IntentFactory.EXTRA_MESSAGE_ID);
 
-			new UpdateStationCoordinatesTask(latitude, longitude).execute();
+			callStationUpdating(latitude, longitude);
 		}
 	};
 
-	private class UpdateStationCoordinatesTask extends AsyncTask<Void, Void, Void>
+	private void callStationUpdating(double latitude, double longitude) {
+		new UpdateStationLocationTask(latitude, longitude).execute();
+	}
+
+	private class UpdateStationLocationTask extends AsyncTask<Void, Void, Void>
 	{
 		private final double latitude;
 		private final double longitude;
 
-		public UpdateStationCoordinatesTask(double latitude, double longitude) {
+		public UpdateStationLocationTask(double latitude, double longitude) {
 			super();
 
 			this.latitude = latitude;
@@ -252,10 +374,17 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			stationForChangingCoordinates.setCoordinates(latitude, longitude);
+			stationForChangingLocation.setCoordinates(latitude, longitude);
 
 			return null;
 		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		stopLocationUpdates();
 	}
 
 	@Override
@@ -271,116 +400,5 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		Intent callIntent = DispatchStationsIntentFactory.createRoutesListIntent(activityContext,
 			station);
 		startActivity(callIntent);
-	}
-
-	private final OnClickListener nearbyStationsListener = new OnClickListener() {
-		@Override
-		public void onClick(View view) {
-			if (isLoadedNearbyStations) {
-				loadStations();
-
-				if (locationManager != null) {
-					locationManager.removeUpdates(locationListener);
-				}
-
-				ImageButton nearbyButton = (ImageButton) findViewById(R.id.stations_nearby_button);
-				nearbyButton.setImageDrawable(getResources().getDrawable(
-					R.drawable.actionbar_nearby_disabled_icon));
-
-				isLoadedNearbyStations = false;
-			}
-			else {
-				loadNearbyStations();
-
-				ImageButton nearbyButton = (ImageButton) findViewById(R.id.stations_nearby_button);
-				nearbyButton.setImageDrawable(getResources().getDrawable(
-					R.drawable.actionbar_nearby_enabled_icon));
-
-				isLoadedNearbyStations = true;
-			}
-		}
-	};
-
-	private void loadNearbyStations() {
-		emptyStationsForNearby();
-
-		loadLocation();
-	}
-
-	private void emptyStationsForNearby() {
-		listData.clear();
-		updateList();
-
-		setEmptyListText(getString(R.string.loading_location));
-	}
-
-	private void loadLocation() {
-		if (locationManager == null) {
-			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		}
-
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-	}
-
-	private final LocationListener locationListener = new LocationListener() {
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-		}
-
-		@Override
-		public void onProviderEnabled(String provider) {
-		}
-
-		@Override
-		public void onProviderDisabled(String provider) {
-		}
-
-		@Override
-		public void onLocationChanged(Location location) {
-			new LoadStationsByLocationTask(location.getLatitude(), location.getLongitude()).execute();
-
-			locationManager.removeUpdates(locationListener);
-		}
-	};
-
-	private class LoadStationsByLocationTask extends AsyncTask<Void, Void, Void>
-	{
-		private List<Station> stations;
-
-		private final double latitude;
-		private final double longitude;
-
-		public LoadStationsByLocationTask(double latitude, double longitude) {
-			this.latitude = latitude;
-			this.longitude = longitude;
-		}
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			stations = DbProvider.getInstance().getStations().getStationsList(latitude, longitude);
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-
-			if (stations.isEmpty()) {
-				setEmptyListText(getString(R.string.empty_stations_nearby));
-			}
-			else {
-				fillList(stations);
-			}
-		}
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-
-		if (locationManager != null) {
-			locationManager.removeUpdates(locationListener);
-		}
 	}
 }

@@ -34,10 +34,10 @@
 				android:singleLine="true" />
 
 			<Button
-				android:id="@+id/coordinates_button"
+				android:id="@+id/location_button"
 				style="@style/BodyLinearLayoutItem"
 				android:layout_marginTop="@dimen/form_button_padding"
-				android:text="@string/button_set_coordinates" />
+				android:text="@string/button_set_location" />
 
 			<Button
 				android:id="@+id/confirm_button"

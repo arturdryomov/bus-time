@@ -51,7 +51,7 @@
 			android:name=".ui.TimetableActivity" >
 		</activity>
 		<activity
-			android:name=".ui.StationCoordinatesActivity" >
+			android:name=".ui.StationLocationActivity" >
 		</activity>
 
 		<!-- Specific activities with routes dispatch -->

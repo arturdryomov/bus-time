@@ -6,8 +6,8 @@
 		android:title="@string/menu_rename"/>
 
 	<item
-		android:id="@+id/edit_coordinates"
-		android:title="@string/menu_edit_coordinates"/>
+		android:id="@+id/change_location"
+		android:title="@string/menu_change_location"/>
 
 	<item
 		android:id="@+id/delete"
