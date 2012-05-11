@@ -215,12 +215,29 @@ public class Stations
 		return queryBuilder.toString();
 	}
 
+	// TODO: Two methods contain dublicate code
 	public List<Station> getStationsList(double latitude, double longitude) {
 		List<Station> stations = new ArrayList<Station>();
 
 		Location currentLocation = constructLocation(latitude, longitude);
 
 		for (Station station : getStationsList()) {
+			Location stationLocation = constructLocation(station.getLatitude(), station.getLongitude());
+
+			if (currentLocation.distanceTo(stationLocation) < CLOSE_DISTANCE_IN_METERS) {
+				stations.add(station);
+			}
+		}
+
+		return stations;
+	}
+
+	public List<Station> getStationsList(Route route, double latitude, double longitude) {
+		List<Station> stations = new ArrayList<Station>();
+
+		Location currentLocation = constructLocation(latitude, longitude);
+
+		for (Station station : getStationsList(route)) {
 			Location stationLocation = constructLocation(station.getLatitude(), station.getLongitude());
 
 			if (currentLocation.distanceTo(stationLocation) < CLOSE_DISTANCE_IN_METERS) {
