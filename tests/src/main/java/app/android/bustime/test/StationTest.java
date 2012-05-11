@@ -44,7 +44,7 @@ public class StationTest extends DbTestCase
 	}
 
 	public void testSetCoordinates() {
-		station.setCoordinates(STATION_KOPTEVO_LATITUDE, STATION_KOPTEVO_LONGITUDE);
+		station.setLocation(STATION_KOPTEVO_LATITUDE, STATION_KOPTEVO_LONGITUDE);
 
 		assertEquals(STATION_KOPTEVO_LATITUDE, station.getLatitude());
 		assertEquals(STATION_KOPTEVO_LONGITUDE, station.getLongitude());
