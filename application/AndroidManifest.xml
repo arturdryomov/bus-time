@@ -42,6 +42,9 @@
 			android:name=".ui.DepartureTimeEditingActivity" >
 		</activity>
 		<activity
+			android:name=".ui.StationLocationActivity" >
+		</activity>
+		<activity
 			android:name=".ui.StationRenamingActivity" >
 		</activity>
 		<activity
@@ -49,9 +52,6 @@
 		</activity>
 		<activity
 			android:name=".ui.TimetableActivity" >
-		</activity>
-		<activity
-			android:name=".ui.StationLocationActivity" >
 		</activity>
 
 		<!-- Specific activities with routes dispatch -->
