@@ -215,37 +215,24 @@ public class Stations
 		return queryBuilder.toString();
 	}
 
-	// TODO: Two methods contain dublicate code
 	public List<Station> getStationsList(double latitude, double longitude) {
-		List<Station> stations = new ArrayList<Station>();
-
-		Location currentLocation = constructLocation(latitude, longitude);
-
-		for (Station station : getStationsList()) {
-			Location stationLocation = constructLocation(station.getLatitude(), station.getLongitude());
-
-			if (currentLocation.distanceTo(stationLocation) < CLOSE_DISTANCE_IN_METERS) {
-				stations.add(station);
-			}
-		}
-
-		return stations;
+		return getClosestStations(latitude, longitude, getStationsList());
 	}
 
-	public List<Station> getStationsList(Route route, double latitude, double longitude) {
-		List<Station> stations = new ArrayList<Station>();
+	private List<Station> getClosestStations(double latitude, double longitude, List<Station> stations) {
+		List<Station> closestStations = new ArrayList<Station>();
 
 		Location currentLocation = constructLocation(latitude, longitude);
 
-		for (Station station : getStationsList(route)) {
+		for (Station station : stations) {
 			Location stationLocation = constructLocation(station.getLatitude(), station.getLongitude());
 
-			if (currentLocation.distanceTo(stationLocation) < CLOSE_DISTANCE_IN_METERS) {
+			if (currentLocation.distanceTo(stationLocation) <= CLOSE_DISTANCE_IN_METERS) {
 				stations.add(station);
 			}
 		}
 
-		return stations;
+		return closestStations;
 	}
 
 	private Location constructLocation(double latitude, double longitude) {
@@ -254,6 +241,10 @@ public class Stations
 		location.setLongitude(longitude);
 
 		return location;
+	}
+
+	public List<Station> getStationsList(Route route, double latitude, double longitude) {
+		return getClosestStations(latitude, longitude, getStationsList(route));
 	}
 
 	public void beginTransaction() {

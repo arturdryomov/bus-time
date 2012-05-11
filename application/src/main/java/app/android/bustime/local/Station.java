@@ -105,11 +105,11 @@ public class Station implements Parcelable
 			String.format("%s = %d", DbFieldNames.ID, id), null);
 	}
 
-	public void setCoordinates(double latitude, double longitude) {
+	public void setLocation(double latitude, double longitude) {
 		database.beginTransaction();
 
 		try {
-			trySetCoordinates(latitude, longitude);
+			trySetLocation(latitude, longitude);
 			database.setTransactionSuccessful();
 		}
 		finally {
@@ -117,13 +117,13 @@ public class Station implements Parcelable
 		}
 	}
 
-	private void trySetCoordinates(double latitude, double longitude) {
-		updateCoordinates(latitude, longitude);
+	private void trySetLocation(double latitude, double longitude) {
+		updateLocation(latitude, longitude);
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
 
-	private void updateCoordinates(double latitude, double longitude) {
+	private void updateLocation(double latitude, double longitude) {
 		ContentValues databaseValues = new ContentValues();
 		databaseValues.put(DbFieldNames.LATITUDE, latitude);
 		databaseValues.put(DbFieldNames.LONGITUDE, longitude);
@@ -148,10 +148,10 @@ public class Station implements Parcelable
 	}
 
 	private void tryInsertShiftTimeForRoute(Route route, Time time) {
-		if (isStationForRouteExist(route)) {
+		if (isShiftTimeForRouteExist(route, time)) {
 			throw new AlreadyExistsException();
 		}
-		if (isShiftTimeForRouteExist(route, time)) {
+		if (isStationForRouteExist(route)) {
 			throw new AlreadyExistsException();
 		}
 

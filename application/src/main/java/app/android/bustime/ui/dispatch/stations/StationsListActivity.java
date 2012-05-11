@@ -380,7 +380,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			stationForChangingLocation.setCoordinates(latitude, longitude);
+			stationForChangingLocation.setLocation(latitude, longitude);
 
 			return null;
 		}
