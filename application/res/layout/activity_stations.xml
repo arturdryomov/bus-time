@@ -20,6 +20,7 @@
 			<ImageButton
 				android:id="@+id/stations_nearby_button"
 				style="@style/ActionbarButton"
+				android:contentDescription="@string/description_enable_location_detecting"
 				android:src="@drawable/ic_menu_location_disabled" />
 
 			<ImageButton
