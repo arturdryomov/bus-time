@@ -296,12 +296,12 @@ public class Station implements Parcelable
 		@Override
 		public Station createFromParcel(Parcel parcel) {
 			return new Station(parcel);
-		};
+		}
 
 		@Override
 		public Station[] newArray(int size) {
 			return new Station[size];
-		};
+		}
 	};
 
 	private Station(Parcel parcel) {

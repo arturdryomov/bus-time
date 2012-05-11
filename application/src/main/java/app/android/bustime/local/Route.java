@@ -202,12 +202,12 @@ public class Route implements Parcelable
 		@Override
 		public Route createFromParcel(Parcel parcel) {
 			return new Route(parcel);
-		};
+		}
 
 		@Override
 		public Route[] newArray(int size) {
 			return new Route[size];
-		};
+		}
 	};
 
 	private Route(Parcel parcel) {

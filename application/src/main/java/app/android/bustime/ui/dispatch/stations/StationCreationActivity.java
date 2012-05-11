@@ -130,5 +130,5 @@ public class StationCreationActivity extends Activity
 			latitude = data.getExtras().getDouble(IntentFactory.MESSAGE_ID);
 			longitude = data.getExtras().getDouble(IntentFactory.EXTRA_MESSAGE_ID);
 		}
-	};
+	}
 }

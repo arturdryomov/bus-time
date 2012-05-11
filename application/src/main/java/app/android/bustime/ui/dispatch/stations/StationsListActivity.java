@@ -360,7 +360,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 			callStationUpdating(latitude, longitude);
 		}
-	};
+	}
 
 	private void callStationUpdating(double latitude, double longitude) {
 		new UpdateStationLocationTask(latitude, longitude).execute();

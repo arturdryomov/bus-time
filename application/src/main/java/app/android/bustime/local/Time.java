@@ -175,12 +175,12 @@ public class Time implements Parcelable
 		@Override
 		public Time createFromParcel(Parcel parcel) {
 			return new Time(parcel);
-		};
+		}
 
 		@Override
 		public Time[] newArray(int size) {
 			return new Time[size];
-		};
+		}
 	};
 
 	private Time(Parcel parcel) {
