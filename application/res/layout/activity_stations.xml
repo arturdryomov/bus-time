@@ -18,6 +18,11 @@
 			style="@style/ActionbarButtons" >
 
 			<ImageButton
+				android:id="@+id/stations_nearby_button"
+				style="@style/ActionbarButton"
+				android:src="@drawable/actionbar_nearby_disabled_icon" />
+
+			<ImageButton
 				android:id="@+id/item_creation_button"
 				style="@style/ActionbarButton"
 				android:contentDescription="@string/description_item_creation"

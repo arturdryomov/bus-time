@@ -7,6 +7,9 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -29,6 +32,9 @@ public class StationsListActivity extends SimpleAdapterListActivity
 {
 	private final Context activityContext = this;
 
+	private boolean isLoadedNearbyStations = false;
+
+	private LocationManager locationManager;
 	private final static int COORDINATES_REQUEST_CODE = 42;
 	private Station stationForChangingCoordinates;
 
@@ -47,6 +53,9 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	private void initializeActionbar() {
 		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.item_creation_button);
 		itemCreationButton.setOnClickListener(stationCreationListener);
+
+		ImageButton nearbyStationsButton = (ImageButton) findViewById(R.id.stations_nearby_button);
+		nearbyStationsButton.setOnClickListener(nearbyStationsListener);
 	}
 
 	private final OnClickListener stationCreationListener = new OnClickListener() {
@@ -262,5 +271,116 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		Intent callIntent = DispatchStationsIntentFactory.createRoutesListIntent(activityContext,
 			station);
 		startActivity(callIntent);
+	}
+
+	private final OnClickListener nearbyStationsListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			if (isLoadedNearbyStations) {
+				loadStations();
+
+				if (locationManager != null) {
+					locationManager.removeUpdates(locationListener);
+				}
+
+				ImageButton nearbyButton = (ImageButton) findViewById(R.id.stations_nearby_button);
+				nearbyButton.setImageDrawable(getResources().getDrawable(
+					R.drawable.actionbar_nearby_disabled_icon));
+
+				isLoadedNearbyStations = false;
+			}
+			else {
+				loadNearbyStations();
+
+				ImageButton nearbyButton = (ImageButton) findViewById(R.id.stations_nearby_button);
+				nearbyButton.setImageDrawable(getResources().getDrawable(
+					R.drawable.actionbar_nearby_enabled_icon));
+
+				isLoadedNearbyStations = true;
+			}
+		}
+	};
+
+	private void loadNearbyStations() {
+		emptyStationsForNearby();
+
+		loadLocation();
+	}
+
+	private void emptyStationsForNearby() {
+		listData.clear();
+		updateList();
+
+		setEmptyListText(getString(R.string.loading_location));
+	}
+
+	private void loadLocation() {
+		if (locationManager == null) {
+			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		}
+
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+	}
+
+	private final LocationListener locationListener = new LocationListener() {
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+		}
+
+		@Override
+		public void onLocationChanged(Location location) {
+			new LoadStationsByLocationTask(location.getLatitude(), location.getLongitude()).execute();
+
+			locationManager.removeUpdates(locationListener);
+		}
+	};
+
+	private class LoadStationsByLocationTask extends AsyncTask<Void, Void, Void>
+	{
+		private List<Station> stations;
+
+		private final double latitude;
+		private final double longitude;
+
+		public LoadStationsByLocationTask(double latitude, double longitude) {
+			this.latitude = latitude;
+			this.longitude = longitude;
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			stations = DbProvider.getInstance().getStations().getStationsList(latitude, longitude);
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+
+			if (stations.isEmpty()) {
+				setEmptyListText(getString(R.string.empty_stations_nearby));
+			}
+			else {
+				fillList(stations);
+			}
+		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		if (locationManager != null) {
+			locationManager.removeUpdates(locationListener);
+		}
 	}
 }

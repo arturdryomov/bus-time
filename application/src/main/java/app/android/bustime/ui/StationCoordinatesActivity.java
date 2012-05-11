@@ -150,6 +150,8 @@ public class StationCoordinatesActivity extends MapActivity
 
 	private void goToLocation(Location location) {
 		GeoPoint locationGeoPoint = getGeoPoint(location.getLatitude(), location.getLongitude());
+		UserAlerter.alert(activityContext, Double.toString(location.getLatitude()));
+		UserAlerter.alert(activityContext, Double.toString(location.getLongitude()));
 
 		map.getController().animateTo(locationGeoPoint);
 		pin.setPosition(locationGeoPoint);

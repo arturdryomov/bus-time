@@ -20,6 +20,7 @@
 	<string name="empty_departure_timetable">Departure timetable is empty.</string>
 	<string name="empty_stations">There are no stations.</string>
 	<string name="empty_timetable">Timetable is empty.</string>
+	<string name="empty_stations_nearby">There are no stations nearby.</string>
 
 	<string name="loading_routes">Loading routes…</string>
 	<string name="loading_departure_timetable">Loading departure timetable…</string>
