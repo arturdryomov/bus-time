@@ -228,7 +228,7 @@ public class Stations
 			Location stationLocation = constructLocation(station.getLatitude(), station.getLongitude());
 
 			if (currentLocation.distanceTo(stationLocation) <= CLOSE_DISTANCE_IN_METERS) {
-				stations.add(station);
+				closestStations.add(station);
 			}
 		}
 
