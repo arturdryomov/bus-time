@@ -1,7 +1,7 @@
 package app.android.bustime.local;
 
 
-public class DbFieldParameters
+class DbFieldParameters
 {
 	public static final String ID = "integer primary key autoincrement not null unique";
 	public static final String NAME = "text not null unique";

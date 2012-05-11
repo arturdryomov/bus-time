@@ -1,7 +1,7 @@
 package app.android.bustime.local;
 
 
-public class DbTableNames
+class DbTableNames
 {
 	public static final String ROUTES = "Routes";
 	public static final String TRIPS = "Trips";

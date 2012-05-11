@@ -18,7 +18,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
 
-public class PinOverlay extends ItemizedOverlay<OverlayItem>
+class PinOverlay extends ItemizedOverlay<OverlayItem>
 {
 	private final MapView map;
 
@@ -68,13 +68,13 @@ public class PinOverlay extends ItemizedOverlay<OverlayItem>
 	}
 
 	private OverlayItem constructPinAsMapElementAtStartPosition() {
-		GeoPoint startPinPosition = constructGeoPoint(DEFAULT_LATITUDE, DEFAULT_LONGITUDE);
+		GeoPoint startPinPosition = constructStartPinGeoPoint();
 		return new OverlayItem(startPinPosition, DEFAULT_PIN_SNIPPET, DEFAULT_PIN_TITLE);
 	}
 
-	private GeoPoint constructGeoPoint(double latitude, double longitude) {
-		int latitudeE6 = (int) (latitude * MICRODEGREES_IN_DEGREE);
-		int longitudeE6 = (int) (longitude * MICRODEGREES_IN_DEGREE);
+	private GeoPoint constructStartPinGeoPoint() {
+		int latitudeE6 = (int) (DEFAULT_LATITUDE * MICRODEGREES_IN_DEGREE);
+		int longitudeE6 = (int) (DEFAULT_LONGITUDE * MICRODEGREES_IN_DEGREE);
 
 		return new GeoPoint(latitudeE6, longitudeE6);
 	}

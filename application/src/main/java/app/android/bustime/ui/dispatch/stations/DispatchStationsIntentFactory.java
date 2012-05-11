@@ -14,9 +14,7 @@ public class DispatchStationsIntentFactory extends IntentFactory
 	}
 
 	public static Intent createStationCreationIntent(Context context) {
-		Intent intent = new Intent(context, StationCreationActivity.class);
-
-		return intent;
+		return new Intent(context, StationCreationActivity.class);
 	}
 
 	public static Intent createRoutesListIntent(Context context, Station station) {

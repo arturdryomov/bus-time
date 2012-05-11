@@ -6,7 +6,7 @@ import app.android.bustime.R;
 import app.android.bustime.local.Time;
 
 
-public class HumanTimeFormatter
+class HumanTimeFormatter
 {
 	private final static int MINUTE_SINGULAR_FORM_CASE = 1;
 	private final static int HOUR_SINGULAR_FORM_CASE = 1;

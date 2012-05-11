@@ -31,7 +31,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	private static final String LIST_ITEM_OBJECT_ID = "object";
 
 	private final Handler timer;
-	private static final int AUTO_UPDATE_SECONDS_PERIOD = 60;
+	private static final int AUTO_UPDATE_MILLISECONDS_PERIOD = 60000;
 
 	public TimetableActivity() {
 		super();
@@ -205,7 +205,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	private void startUpdatingRemainingTimeText() {
 		stopUpdatingRemainingTimeText();
 
-		timer.postDelayed(timerTask, convertSecondsToMilliseconds(AUTO_UPDATE_SECONDS_PERIOD));
+		timer.postDelayed(timerTask, AUTO_UPDATE_MILLISECONDS_PERIOD);
 	}
 
 	private void stopUpdatingRemainingTimeText() {
@@ -220,12 +220,6 @@ public class TimetableActivity extends SimpleAdapterListActivity
 			startUpdatingRemainingTimeText();
 		}
 	};
-
-	private long convertSecondsToMilliseconds(int secondsCount) {
-		final int millisecondsInSecondCount = 1000;
-
-		return millisecondsInSecondCount * secondsCount;
-	}
 
 	@Override
 	protected void onPause() {
