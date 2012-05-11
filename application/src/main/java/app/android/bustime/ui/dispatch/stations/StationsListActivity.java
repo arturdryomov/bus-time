@@ -94,10 +94,10 @@ public class StationsListActivity extends SimpleAdapterListActivity
 				areLoadedStationsNearby = true;
 			}
 
-			updateActionbarNearbyIcon();
+			updateActionbarNearbyButtonIcon();
 		}
 
-		private void updateActionbarNearbyIcon() {
+		private void updateActionbarNearbyButtonIcon() {
 			ImageButton nearbyButton = (ImageButton) findViewById(R.id.stations_nearby_button);
 
 			if (areLoadedStationsNearby) {
@@ -110,6 +110,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 					R.drawable.actionbar_nearby_disabled_icon));
 			}
 		}
+
 	};
 
 	private void loadStationsNearby() {
@@ -205,7 +206,12 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	protected void onResume() {
 		super.onResume();
 
-		loadStations();
+		if (areLoadedStationsNearby) {
+			loadStationsNearby();
+		}
+		else {
+			loadStations();
+		}
 	}
 
 	private void loadStations() {
