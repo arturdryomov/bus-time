@@ -114,7 +114,7 @@ public class StationLocationActivity extends MapActivity
 	}
 
 	private void initializePin() {
-		Drawable pinImage = getResources().getDrawable(R.drawable.pin);
+		Drawable pinImage = getResources().getDrawable(R.drawable.ic_pin);
 		pinImage.setBounds(0, 0, pinImage.getIntrinsicWidth(), pinImage.getIntrinsicHeight());
 
 		ImageView pinView = (ImageView) findViewById(R.id.pin);
@@ -159,7 +159,7 @@ public class StationLocationActivity extends MapActivity
 	@Override
 	protected void onStop() {
 		super.onStop();
-		
+
 		stopLocationUpdates();
 	}
 

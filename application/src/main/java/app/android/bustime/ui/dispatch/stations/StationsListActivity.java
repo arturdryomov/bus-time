@@ -102,12 +102,12 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 			if (areLoadedStationsNearby) {
 				nearbyButton.setImageDrawable(getResources().getDrawable(
-					R.drawable.actionbar_nearby_enabled_icon));
+					R.drawable.ic_menu_location_enabled));
 
 			}
 			else {
 				nearbyButton.setImageDrawable(getResources().getDrawable(
-					R.drawable.actionbar_nearby_disabled_icon));
+					R.drawable.ic_menu_location_disabled));
 			}
 		}
 
