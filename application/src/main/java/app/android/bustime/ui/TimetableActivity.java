@@ -1,6 +1,7 @@
 package app.android.bustime.ui;
 
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,6 +33,8 @@ public class TimetableActivity extends SimpleAdapterListActivity
 
 	private final Handler timer;
 	private static final int AUTO_UPDATE_MILLISECONDS_PERIOD = 60000;
+
+	private static final int CENTER_TIME_TOP_PADDING_PROPORTION = 3;
 
 	public TimetableActivity() {
 		super();
@@ -99,8 +102,6 @@ public class TimetableActivity extends SimpleAdapterListActivity
 				setEmptyListText(getString(R.string.empty_timetable));
 			}
 			else {
-				currentTime = Time.getCurrentTime();
-
 				fillList(timetable);
 
 				placeClosestTimeOnCenter();
@@ -122,6 +123,8 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	}
 
 	private String constructRemainingTimeText(Time busTime) {
+		currentTime = Time.getCurrentTime();
+
 		if (busTime.equals(currentTime)) {
 			return getString(R.string.token_time_now);
 		}
@@ -142,7 +145,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 
 	private void placeClosestTimeOnCenter() {
 		int timePosition = getClosestTimePosition();
-		int topPadding = getListViewHeight() / 3;
+		int topPadding = getListViewHeight() / CENTER_TIME_TOP_PADDING_PROPORTION;
 
 		getListView().setSelectionFromTop(timePosition, topPadding);
 	}
@@ -151,9 +154,9 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		int closestTimePosition = 0;
 
 		for (int adapterPosition = 0; adapterPosition < listData.size(); adapterPosition++) {
-			Time listDataElementTime = (Time) listData.get(adapterPosition).get(LIST_ITEM_OBJECT_ID);
+			Time listDataTime = (Time) listData.get(adapterPosition).get(LIST_ITEM_OBJECT_ID);
 
-			if (listDataElementTime.isAfter(currentTime)) {
+			if (listDataTime.isAfter(currentTime)) {
 				closestTimePosition = adapterPosition;
 
 				break;
@@ -193,10 +196,10 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		currentTime = Time.getCurrentTime();
 
 		for (HashMap<String, Object> listDataElement : listData) {
-			Time listDataElementTime = (Time) listDataElement.get(LIST_ITEM_OBJECT_ID);
+			Time listDataTime = (Time) listDataElement.get(LIST_ITEM_OBJECT_ID);
 
 			listDataElement.put(LIST_ITEM_REMAINING_TIME_ID,
-				constructRemainingTimeText(listDataElementTime));
+				constructRemainingTimeText(listDataTime));
 		}
 
 		updateList();
@@ -205,7 +208,17 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	private void startUpdatingRemainingTimeText() {
 		stopUpdatingRemainingTimeText();
 
-		timer.postDelayed(timerTask, AUTO_UPDATE_MILLISECONDS_PERIOD);
+		timer.postDelayed(timerTask, calculateMillisecondsForNextMinute());
+	}
+
+	private long calculateMillisecondsForNextMinute() {
+		Calendar currentTime = Calendar.getInstance();
+
+		Calendar nextMinuteTime = Calendar.getInstance();
+		nextMinuteTime.add(Calendar.MINUTE, 1);
+		nextMinuteTime.set(Calendar.SECOND, 0);
+
+		return nextMinuteTime.getTimeInMillis() - currentTime.getTimeInMillis();
 	}
 
 	private void stopUpdatingRemainingTimeText() {
@@ -217,9 +230,13 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		public void run() {
 			updateRemainingTimes();
 
-			startUpdatingRemainingTimeText();
+			continueUpdatingRemainingTimeText();
 		}
 	};
+
+	private void continueUpdatingRemainingTimeText() {
+		timer.postDelayed(timerTask, AUTO_UPDATE_MILLISECONDS_PERIOD);
+	}
 
 	@Override
 	protected void onPause() {
