@@ -58,18 +58,12 @@
 	<string name="menu_rename_station">Rename station</string>
 	<string name="menu_change_shift_time">Change shift time</string>
 	<string name="menu_change_location">Change location</string>
-	
+
 	<string name="description_item_creation">Creation of new item</string>
 	<string name="description_map_pin">Map pin</string>
 	<string name="description_save_location">Save location</string>
 	<string name="description_enable_location_detecting">Enable location detecting.</string>
 
-	<string name="token_time_ago">ago</string>
-	<string name="token_time_in">in</string>
 	<string name="token_time_now">right now</string>
-	<string name="token_time_minute_singular">minute</string>
-	<string name="token_time_minute_plural">minutes</string>
-	<string name="token_time_hour_singular">hour</string>
-	<string name="token_time_hour_plural">hours</string>
 
 </resources>

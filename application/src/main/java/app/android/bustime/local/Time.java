@@ -7,8 +7,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 
 
 public class Time implements Parcelable
@@ -82,6 +85,10 @@ public class Time implements Parcelable
 		return timeFormatter.format(getTime());
 	}
 
+	public String toString(Context activityContext) {
+		return DateFormat.getTimeFormat(activityContext).format(getTime());
+	}
+
 	private Date getTime() {
 		Calendar calendar = new GregorianCalendar();
 		calendar.set(Calendar.HOUR_OF_DAY, hours);
@@ -98,9 +105,8 @@ public class Time implements Parcelable
 		return minutes;
 	}
 
-	@Override
-	public int describeContents() {
-		return 0;
+	public long getMilliseconds() {
+		return hours * DateUtils.HOUR_IN_MILLIS + minutes * DateUtils.MINUTE_IN_MILLIS;
 	}
 
 	public Time sum(Time timeToSum) {
@@ -163,6 +169,11 @@ public class Time implements Parcelable
 	@Override
 	public int hashCode() {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
 	}
 
 	@Override

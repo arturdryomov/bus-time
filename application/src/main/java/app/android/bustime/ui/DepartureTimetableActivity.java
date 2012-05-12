@@ -134,7 +134,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 
 		HashMap<String, Object> timeItem = new HashMap<String, Object>();
 
-		timeItem.put(LIST_ITEM_TEXT_ID, time.toString());
+		timeItem.put(LIST_ITEM_TEXT_ID, time.toString(activityContext));
 		timeItem.put(LIST_ITEM_OBJECT_ID, time);
 
 		listData.add(timeItem);

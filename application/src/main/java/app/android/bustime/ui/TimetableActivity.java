@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.format.DateUtils;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
@@ -25,7 +26,6 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	private Station station;
 
 	private Time currentTime;
-	private final HumanTimeFormatter timeFormatter;
 
 	private static final String LIST_ITEM_TIME_ID = "time";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
@@ -38,8 +38,6 @@ public class TimetableActivity extends SimpleAdapterListActivity
 
 	public TimetableActivity() {
 		super();
-
-		timeFormatter = new HumanTimeFormatter(activityContext);
 
 		timer = new Handler();
 	}
@@ -115,7 +113,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 
 		HashMap<String, Object> timeItem = new HashMap<String, Object>();
 
-		timeItem.put(LIST_ITEM_TIME_ID, time.toString());
+		timeItem.put(LIST_ITEM_TIME_ID, time.toString(activityContext));
 		timeItem.put(LIST_ITEM_REMAINING_TIME_ID, constructRemainingTimeText(time));
 		timeItem.put(LIST_ITEM_OBJECT_ID, time);
 
@@ -129,18 +127,8 @@ public class TimetableActivity extends SimpleAdapterListActivity
 			return getString(R.string.token_time_now);
 		}
 
-		if (busTime.isAfter(currentTime)) {
-			Time timeDifference = busTime.difference(currentTime);
-
-			return String.format("%s %s", getString(R.string.token_time_in),
-				timeFormatter.toHumanFormat(timeDifference));
-		}
-		else {
-			Time timeDifference = currentTime.difference(busTime);
-
-			return String.format("%s %s", timeFormatter.toHumanFormat(timeDifference),
-				getString(R.string.token_time_ago));
-		}
+		return DateUtils.getRelativeTimeSpanString(busTime.getMilliseconds(),
+			currentTime.getMilliseconds(), DateUtils.MINUTE_IN_MILLIS).toString();
 	}
 
 	private void placeClosestTimeOnCenter() {
