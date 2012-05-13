@@ -47,7 +47,7 @@ public class DbProvider
 
 	public Routes getRoutes() {
 		if (routes == null) {
-			routes = new Routes();
+			routes = new Routes(getDatabase());
 		}
 
 		return routes;
@@ -55,7 +55,7 @@ public class DbProvider
 
 	public Stations getStations() {
 		if (stations == null) {
-			stations = new Stations();
+			stations = new Stations(getDatabase());
 		}
 
 		return stations;

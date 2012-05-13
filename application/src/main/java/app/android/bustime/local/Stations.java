@@ -16,8 +16,8 @@ public class Stations
 
 	private final SQLiteDatabase database;
 
-	Stations() {
-		database = DbProvider.getInstance().getDatabase();
+	Stations(SQLiteDatabase database) {
+		this.database = database;
 	}
 
 	/**

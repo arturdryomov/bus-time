@@ -238,7 +238,7 @@ public class Station implements Parcelable
 		Time shiftTime;
 
 		if (databaseCursor.getCount() == 0) {
-			shiftTime = new Time("00:00");
+			throw new NotExistsException();
 		}
 		else {
 			databaseCursor.moveToFirst();

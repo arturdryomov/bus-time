@@ -13,8 +13,8 @@ public class Routes
 {
 	private final SQLiteDatabase database;
 
-	Routes() {
-		database = DbProvider.getInstance().getDatabase();
+	Routes(SQLiteDatabase database) {
+		this.database = database;
 	}
 
 	/**

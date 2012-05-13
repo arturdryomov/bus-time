@@ -22,6 +22,12 @@ public class Synchronizer
 	private SQLiteDatabase localDatabase;
 	private SQLiteDatabase remoteDatabase;
 
+	private Stations localStations;
+	private Stations remoteStations;
+
+	private Routes localRoutes;
+	private Routes remoteRoutes;
+
 	public Synchronizer() {
 		localDatabase = DbProvider.getInstance().getDatabase();
 	}
@@ -74,7 +80,12 @@ public class Synchronizer
 		remoteDatabase = SQLiteDatabase.openDatabase(remoteDatabasePath, null,
 			SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
 
-		return areRemoteDatabaseTablesCorrect() && areRemoteDatabaseColumnsCorrect();
+		boolean isRemoteDatabaseCorrect = areRemoteDatabaseTablesCorrect() &&
+			areRemoteDatabaseColumnsCorrect();
+
+		remoteDatabase.close();
+
+		return isRemoteDatabaseCorrect;
 	}
 
 	private boolean areRemoteDatabaseTablesCorrect() {
@@ -152,5 +163,131 @@ public class Synchronizer
 		queryBuilder.append(String.format("table_info(%s)", tableName));
 
 		return queryBuilder.toString();
+	}
+
+	public void importDatabase(String importDatabasePath, boolean isUpdatingEnabled) {
+		// TODO: Check tables and columns
+
+		remoteDatabase = SQLiteDatabase.openDatabase(importDatabasePath, null,
+			SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+
+		localStations = DbProvider.getInstance().getStations();
+		remoteStations = new Stations(remoteDatabase);
+
+		localRoutes = DbProvider.getInstance().getRoutes();
+		remoteRoutes = new Routes(remoteDatabase);
+
+		importStations(isUpdatingEnabled);
+		importRoutes(isUpdatingEnabled);
+
+		remoteDatabase.close();
+	}
+
+	private void importStations(boolean isUpdatingEnabled) {
+		for (Station remoteStation : remoteStations.getStationsList()) {
+			try {
+				Station localStation = getStation(localStations, remoteStation.getName());
+
+				if (isUpdatingEnabled) {
+					localStation.setLocation(remoteStation.getLatitude(), remoteStation.getLongitude());
+				}
+			}
+			catch (NotExistsException e) {
+				localStations.createStation(remoteStation.getName(), remoteStation.getLatitude(),
+					remoteStation.getLongitude());
+			}
+		}
+	}
+
+	private Station getStation(Stations stations, String stationName) {
+		for (Station station : stations.getStationsList()) {
+			String existingStationName = unifyName(station.getName());
+			String searchStringName = unifyName(stationName);
+
+			if (existingStationName.equals(searchStringName)) {
+				return station;
+			}
+		}
+
+		throw new NotExistsException();
+	}
+
+	private String unifyName(String name) {
+		return name.toUpperCase().trim();
+	}
+
+	private void importRoutes(boolean isUpdatingEnabled) {
+		for (Route remoteRoute : remoteRoutes.getRoutesList()) {
+			Route localRoute;
+
+			try {
+				localRoute = getRoute(localRoutes, remoteRoute.getName());
+
+				if (isUpdatingEnabled) {
+					importDepartureTimetable(remoteRoute, localRoute);
+					importStations(remoteRoute, remoteStations, localRoute, localStations);
+				}
+			}
+			catch (NotExistsException e) {
+				localRoute = localRoutes.createRoute(remoteRoute.getName());
+
+				importDepartureTimetable(remoteRoute, localRoute);
+				importStations(remoteRoute, remoteStations, localRoute, localStations);
+			}
+		}
+	}
+
+	private Route getRoute(Routes routes, String routeName) {
+		for (Route route : routes.getRoutesList()) {
+			String existingRouteName = unifyName(route.getName());
+			String searchRouteName = unifyName(routeName);
+
+			if (existingRouteName.equals(searchRouteName)) {
+				return route;
+			}
+		}
+
+		throw new NotExistsException();
+	}
+
+	private void importDepartureTimetable(Route sourceRoute, Route destinationRoute) {
+		for (Time departureTime : sourceRoute.getDepartureTimetable()) {
+			try {
+				destinationRoute.insertDepartureTime(departureTime);
+			}
+			catch (AlreadyExistsException e) {
+				// Just ignore existing departure times
+			}
+		}
+	}
+
+	private void importStations(Route sourceRoute, Stations sourceStations, Route destinationRoute, Stations destinationStations) {
+		for (Station sourceStation : sourceStations.getStationsList(sourceRoute)) {
+			Station destinationStation = getStation(destinationStations, sourceStation.getName());
+
+			Time sourceStationTimeShift = sourceStation.getShiftTimeForRoute(sourceRoute);
+
+			try {
+				Time destinationStationTimeShift = destinationStation.getShiftTimeForRoute(
+					destinationRoute);
+
+				destinationStation.removeShiftTimeForRoute(destinationRoute, destinationStationTimeShift);
+
+				try {
+					destinationStation.insertShiftTimeForRoute(destinationRoute, sourceStationTimeShift);
+				}
+				catch (AlreadyExistsException e) {
+					destinationStation.insertShiftTimeForRoute(destinationRoute, destinationStationTimeShift);
+				}
+			}
+			catch (NotExistsException e) {
+				try {
+					destinationStation.insertShiftTimeForRoute(destinationRoute, sourceStationTimeShift);
+				}
+				catch (AlreadyExistsException ex) {
+					// TODO: Find out what the hell is this strange behaviour
+				}
+			}
+		}
 	}
 }
