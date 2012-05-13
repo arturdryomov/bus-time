@@ -19,9 +19,9 @@ public class Route implements Parcelable
 	private long id;
 	private String name;
 
-	Route(ContentValues databaseValues) {
-		database = DbProvider.getInstance().getDatabase();
-		routes = DbProvider.getInstance().getRoutes();
+	Route(SQLiteDatabase database, Routes routes, ContentValues databaseValues) {
+		this.database = database;
+		this.routes = routes;
 
 		setRouteValues(databaseValues);
 	}

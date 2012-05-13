@@ -80,7 +80,8 @@ public class Routes
 			throw new DbException();
 		}
 
-		Route createdRoute = new Route(extractRouteDatabaseValuesFromCursor(databaseCursor));
+		Route createdRoute = new Route(database, this, extractRouteDatabaseValuesFromCursor
+			(databaseCursor));
 
 		databaseCursor.close();
 
@@ -142,7 +143,7 @@ public class Routes
 
 		while (databaseCursor.moveToNext()) {
 			ContentValues databaseValues = extractRouteDatabaseValuesFromCursor(databaseCursor);
-			routesList.add(new Route(databaseValues));
+			routesList.add(new Route(database, this, databaseValues));
 		}
 
 		databaseCursor.close();
@@ -171,7 +172,7 @@ public class Routes
 
 		while (databaseCursor.moveToNext()) {
 			ContentValues databaseValues = extractRouteDatabaseValuesFromCursor(databaseCursor);
-			routesList.add(new Route(databaseValues));
+			routesList.add(new Route(database, this, databaseValues));
 		}
 
 		databaseCursor.close();
