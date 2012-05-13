@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import app.android.bustime.R;
 import app.android.bustime.ui.dispatch.routes.DispatchRoutesIntentFactory;
 import app.android.bustime.ui.dispatch.stations.DispatchStationsIntentFactory;
@@ -22,8 +23,26 @@ public class DashboardActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dashboard);
 
+		initializeActionbar();
 		initializeButtons();
 	}
+
+	private void initializeActionbar() {
+		ImageButton syncButton = (ImageButton) findViewById(R.id.sync_button);
+		syncButton.setOnClickListener(syncListener);
+	}
+
+	private final OnClickListener syncListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			callSynchronizationActivity();
+		}
+
+		private void callSynchronizationActivity() {
+			Intent callIntent = IntentFactory.createSynchronizationIntent(activityContext);
+			startActivity(callIntent);
+		}
+	};
 
 	private void initializeButtons() {
 		Button routesButton = (Button) findViewById(R.id.routes_button);

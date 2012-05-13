@@ -54,6 +54,9 @@
 		<activity
 			android:name=".ui.TimetableActivity" >
 		</activity>
+		<activity
+			android:name=".ui.SynchronizationActivity">
+		</activity>
 
 		<!-- Specific activities with routes dispatch -->
 
@@ -77,6 +80,20 @@
 		</activity>
 		<activity
 			android:name=".ui.dispatch.stations.StationCreationActivity" >
+		</activity>
+
+		<!-- Dropbox authorization activity -->
+
+		<activity
+			android:name="com.dropbox.client2.android.AuthActivity"
+			android:launchMode="singleTask"
+			android:configChanges="orientation|keyboard">
+			<intent-filter>
+				<data android:scheme="@string/dropbox_activity_key" />
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.BROWSABLE"/>
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
 		</activity>
 	</application>
 

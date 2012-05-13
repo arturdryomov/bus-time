@@ -12,6 +12,17 @@
 		<TextView
 			style="@style/ActionbarTitle"
 			android:text="@string/application_name" />
+
+		<LinearLayout
+			android:id="@+id/actions"
+			style="@style/ActionbarButtons" >
+
+			<ImageButton
+				android:id="@+id/sync_button"
+				style="@style/ActionbarButton"
+				android:contentDescription="@string/description_sync"
+				android:src="@drawable/ic_menu_sync" />
+		</LinearLayout>
 	</RelativeLayout>
 
 	<!-- Main view -->

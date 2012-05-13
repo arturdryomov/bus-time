@@ -82,4 +82,8 @@ public class IntentFactory
 
 		return intent;
 	}
+
+	public static Intent createSynchronizationIntent(Context context) {
+		return new Intent(context, SynchronizationActivity.class);
+	}
 }
