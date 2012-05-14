@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -106,10 +107,25 @@ public class SynchronizationActivity extends Activity
 	private void exportDatabase() {
 		currentOperation = Operation.EXPORT;
 
-		Synchronizer synchronizer = new Synchronizer();
-		synchronizer.exportDatabase(getRemoteDatabaseFilePath());
+		new ExportDatabaseTask().execute();
+	}
 
-		callDropboxAuthorization();
+	private class ExportDatabaseTask extends AsyncTask<Void, Void, Void>
+	{
+		@Override
+		protected Void doInBackground(Void... params) {
+			Synchronizer synchronizer = new Synchronizer();
+			synchronizer.exportDatabase(getRemoteDatabaseFilePath());
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+
+			callDropboxAuthorization();
+		}
 	}
 
 	private String getRemoteDatabaseFilePath() {
@@ -120,8 +136,7 @@ public class SynchronizationActivity extends Activity
 
 	private void callDropboxAuthorization() {
 		if (dropboxApiHandler.getSession().isLinked()) {
-			finishCurrentTask();
-			currentOperation = Operation.NONE;
+			new FinishCurrentOperationTask().execute();
 
 			return;
 		}
@@ -129,22 +144,39 @@ public class SynchronizationActivity extends Activity
 		dropboxApiHandler.getSession().startAuthentication(activityContext);
 	}
 
-	private void finishCurrentTask() {
-		switch (currentOperation) {
-			case IMPORT:
-				finishImport();
-				break;
-			case IMPORT_WITH_UPDATING:
-				finishImportWithUpdating();
-				break;
-			case IMPORT_WITHOUT_UPDATING:
-				finishImportWithoutUpdating();
-				break;
-			case EXPORT:
-				finishExport();
-				break;
-			case NONE:
-				break;
+	private class FinishCurrentOperationTask extends AsyncTask<Void, Void, Void>
+	{
+		@Override
+		protected Void doInBackground(Void... params) {
+			switch (currentOperation) {
+				case IMPORT:
+					finishImport();
+					break;
+				case IMPORT_WITH_UPDATING:
+					finishImportWithUpdating();
+					break;
+				case IMPORT_WITHOUT_UPDATING:
+					finishImportWithoutUpdating();
+					break;
+				case EXPORT:
+					finishExport();
+					break;
+				case NONE:
+					break;
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+
+			if (currentOperation != Operation.NONE) {
+				UserAlerter.alert(activityContext, getString(R.string.message_done));
+
+				currentOperation = Operation.NONE;
+			}
 		}
 	}
 
@@ -153,8 +185,6 @@ public class SynchronizationActivity extends Activity
 
 		Synchronizer synchronizer = new Synchronizer();
 		synchronizer.importDatabase(getRemoteDatabaseFilePath());
-
-		UserAlerter.alert(activityContext, getString(R.string.message_done));
 	}
 
 	private void downloadFile() {
@@ -178,8 +208,6 @@ public class SynchronizationActivity extends Activity
 
 		Synchronizer synchronizer = new Synchronizer();
 		synchronizer.importDatabase(getRemoteDatabaseFilePath(), true);
-
-		UserAlerter.alert(activityContext, getString(R.string.message_done));
 	}
 
 	private void finishImportWithoutUpdating() {
@@ -187,14 +215,10 @@ public class SynchronizationActivity extends Activity
 
 		Synchronizer synchronizer = new Synchronizer();
 		synchronizer.importDatabase(getRemoteDatabaseFilePath(), false);
-
-		UserAlerter.alert(activityContext, getString(R.string.message_done));
 	}
 
 	private void finishExport() {
 		uploadFile();
-
-		UserAlerter.alert(activityContext, getString(R.string.message_done));
 	}
 
 	private void uploadFile() {
@@ -225,9 +249,7 @@ public class SynchronizationActivity extends Activity
 
 			// TODO: Store auth tokens
 
-			finishCurrentTask();
-
-			currentOperation = Operation.NONE;
+			new FinishCurrentOperationTask().execute();
 		}
 	}
 
