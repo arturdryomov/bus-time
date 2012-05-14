@@ -26,10 +26,10 @@ public class SynchronizationActivity extends Activity
 {
 	private static enum Operation
 	{
-		EXPORT, IMPORT, IMPORT_WITH_UPDATING, IMPORT_WITHOUT_UPDATING
+		NONE, EXPORT, IMPORT, IMPORT_WITH_UPDATING, IMPORT_WITHOUT_UPDATING
 	}
 
-	private Operation currentOperation;
+	private Operation currentOperation = Operation.NONE;
 
 	private final Context activityContext = this;
 
@@ -121,6 +121,7 @@ public class SynchronizationActivity extends Activity
 	private void callDropboxAuthorization() {
 		if (dropboxApiHandler.getSession().isLinked()) {
 			finishCurrentTask();
+			currentOperation = Operation.NONE;
 
 			return;
 		}
@@ -141,6 +142,8 @@ public class SynchronizationActivity extends Activity
 				break;
 			case EXPORT:
 				finishExport();
+				break;
+			case NONE:
 				break;
 		}
 	}
@@ -223,6 +226,8 @@ public class SynchronizationActivity extends Activity
 			// TODO: Store auth tokens
 
 			finishCurrentTask();
+
+			currentOperation = Operation.NONE;
 		}
 	}
 
