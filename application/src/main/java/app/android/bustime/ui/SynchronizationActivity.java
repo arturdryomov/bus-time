@@ -170,12 +170,12 @@ public class SynchronizationActivity extends Activity
 		}
 	}
 
-	private void storeAuthTokens(AccessTokenPair tokenPair) {
+	private void storeAuthTokens(AccessTokenPair authTokens) {
 		SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
 		SharedPreferences.Editor preferencesEditor = sharedPreferences.edit();
 
-		preferencesEditor.putString(PREFERENCE_AUTH_KEY, tokenPair.key);
-		preferencesEditor.putString(PREFERENCE_AUTH_SECRET, tokenPair.secret);
+		preferencesEditor.putString(PREFERENCE_AUTH_KEY, authTokens.key);
+		preferencesEditor.putString(PREFERENCE_AUTH_SECRET, authTokens.secret);
 
 		preferencesEditor.commit();
 	}
