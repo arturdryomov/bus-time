@@ -38,6 +38,8 @@
 	<string name="error_shift_time_or_station_exist">Such shift time or station for route already exist.</string>
 	<string name="error_shift_time_exists">Such shift time already exists.</string>
 
+	<string name="message_done">Operation is done.</string>
+
 	<string name="signature_route_name">Route name</string>
 	<string name="signature_station_name">Station name</string>
 	<string name="signature_departure_shift_time">Departure shift time</string>
