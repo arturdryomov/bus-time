@@ -9,11 +9,13 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import app.android.bustime.R;
+import app.android.bustime.local.SyncException;
 import app.android.bustime.local.Synchronizer;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
@@ -25,6 +27,8 @@ import com.dropbox.client2.session.Session;
 
 public class SynchronizationActivity extends Activity
 {
+	private final Context activityContext = this;
+
 	private static enum Operation
 	{
 		NONE, EXPORT, IMPORT, IMPORT_WITH_UPDATING, IMPORT_WITHOUT_UPDATING
@@ -32,11 +36,11 @@ public class SynchronizationActivity extends Activity
 
 	private Operation currentOperation = Operation.NONE;
 
-	private final Context activityContext = this;
-
 	private final static String REMOTE_DATABASE_FILE_NAME = "bustime.db";
-
 	private DropboxAPI<AndroidAuthSession> dropboxApiHandler;
+
+	private final static String PREFERENCE_AUTH_KEY = "auth_key";
+	private final static String PREFERENCE_AUTH_SECRET = "auth_secret";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,42 +93,171 @@ public class SynchronizationActivity extends Activity
 	private void importDatabase() {
 		currentOperation = Operation.IMPORT;
 
-		callDropboxAuthorization();
+		continueCurrentOperation();
 	}
 
 	private void importDatabaseWithUpdating() {
 		currentOperation = Operation.IMPORT_WITH_UPDATING;
 
-		callDropboxAuthorization();
+		continueCurrentOperation();
 	}
 
 	private void importDatabaseWithoutUpdating() {
 		currentOperation = Operation.IMPORT_WITHOUT_UPDATING;
 
-		callDropboxAuthorization();
+		continueCurrentOperation();
 	}
 
 	private void exportDatabase() {
 		currentOperation = Operation.EXPORT;
 
-		new ExportDatabaseTask().execute();
+		continueCurrentOperation();
 	}
 
-	private class ExportDatabaseTask extends AsyncTask<Void, Void, Void>
-	{
-		@Override
-		protected Void doInBackground(Void... params) {
-			Synchronizer synchronizer = new Synchronizer();
-			synchronizer.exportDatabase(getRemoteDatabaseFilePath());
+	private void continueCurrentOperation() {
+		if (dropboxApiHandler.getSession().isLinked()) {
+			finishCurrentOperation();
 
-			return null;
+			return;
+		}
+
+		if (areAuthKeysStored()) {
+			dropboxApiHandler.getSession().setAccessTokenPair(loadAuthTokens());
+			finishCurrentOperation();
+
+			return;
+		}
+
+		dropboxApiHandler.getSession().startAuthentication(activityContext);
+	}
+
+	private boolean areAuthKeysStored() {
+		SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+
+		if (sharedPreferences.getString(PREFERENCE_AUTH_KEY, null) == null) {
+			return false;
+		}
+		if (sharedPreferences.getString(PREFERENCE_AUTH_SECRET, null) == null) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private AccessTokenPair loadAuthTokens() {
+		SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+
+		String authTokenKey = sharedPreferences.getString(PREFERENCE_AUTH_KEY, new String());
+		String authTokenSecret = sharedPreferences.getString(PREFERENCE_AUTH_SECRET, new String());
+
+		return new AccessTokenPair(authTokenKey, authTokenSecret);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (currentOperation == Operation.NONE) {
+			return;
+		}
+
+		if (dropboxApiHandler.getSession().authenticationSuccessful()) {
+			dropboxApiHandler.getSession().finishAuthentication();
+
+			storeAuthTokens(dropboxApiHandler.getSession().getAccessTokenPair());
+
+			finishCurrentOperation();
+		}
+	}
+
+	private void storeAuthTokens(AccessTokenPair tokenPair) {
+		SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+		SharedPreferences.Editor preferencesEditor = sharedPreferences.edit();
+
+		preferencesEditor.putString(PREFERENCE_AUTH_KEY, tokenPair.key);
+		preferencesEditor.putString(PREFERENCE_AUTH_SECRET, tokenPair.secret);
+
+		preferencesEditor.commit();
+	}
+
+	private void finishCurrentOperation() {
+		new FinishCurrentOperationTask().execute();
+	}
+
+	private class FinishCurrentOperationTask extends AsyncTask<Void, Void, String>
+	{
+		private ProgressDialogShowHelper progressDialogHelper;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+
+			progressDialogHelper = new ProgressDialogShowHelper();
+			progressDialogHelper.show(activityContext, getString(R.string.loading_sync));
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
+		protected String doInBackground(Void... params) {
+			try {
+				switch (currentOperation) {
+					case IMPORT:
+						finishImport();
+						break;
+					case IMPORT_WITH_UPDATING:
+						finishImportWithUpdating();
+						break;
+					case IMPORT_WITHOUT_UPDATING:
+						finishImportWithoutUpdating();
+						break;
+					case EXPORT:
+						finishExport();
+						break;
+				}
+			}
+			catch (SyncException e) {
+				return getString(R.string.error_unspecified);
+			}
+			finally {
+				removeRemoteDatabaseFile();
+			}
 
-			callDropboxAuthorization();
+			return new String();
+		}
+
+		@Override
+		protected void onPostExecute(String errorMessage) {
+			super.onPostExecute(errorMessage);
+
+			progressDialogHelper.hide();
+
+			if (!errorMessage.isEmpty()) {
+				UserAlerter.alert(activityContext, errorMessage);
+			}
+
+			currentOperation = Operation.NONE;
+		}
+	}
+
+	private void finishImport() {
+		downloadRemoteDatabase();
+
+		Synchronizer synchronizer = new Synchronizer();
+		synchronizer.importDatabase(getRemoteDatabaseFilePath());
+	}
+
+	private void downloadRemoteDatabase() {
+		try {
+			FileOutputStream remoteDatabaseFileStream = new FileOutputStream(getRemoteDatabaseFilePath());
+			dropboxApiHandler.getFile(REMOTE_DATABASE_FILE_NAME, null, remoteDatabaseFileStream, null);
+		}
+		catch (FileNotFoundException e) {
+			throw new SyncException();
+		}
+		catch (IOException e) {
+			throw new SyncException();
+		}
+		catch (DropboxException e) {
+			throw new SyncException();
 		}
 	}
 
@@ -134,123 +267,46 @@ public class SynchronizationActivity extends Activity
 		return new File(filesDirectory, REMOTE_DATABASE_FILE_NAME).toString();
 	}
 
-	private void callDropboxAuthorization() {
-		if (dropboxApiHandler.getSession().isLinked()) {
-			new FinishCurrentOperationTask().execute();
-
-			return;
-		}
-
-		dropboxApiHandler.getSession().startAuthentication(activityContext);
-	}
-
-	private class FinishCurrentOperationTask extends AsyncTask<Void, Void, Void>
-	{
-		@Override
-		protected Void doInBackground(Void... params) {
-			switch (currentOperation) {
-				case IMPORT:
-					finishImport();
-					break;
-				case IMPORT_WITH_UPDATING:
-					finishImportWithUpdating();
-					break;
-				case IMPORT_WITHOUT_UPDATING:
-					finishImportWithoutUpdating();
-					break;
-				case EXPORT:
-					finishExport();
-					break;
-				case NONE:
-					break;
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-
-			if (currentOperation != Operation.NONE) {
-				UserAlerter.alert(activityContext, getString(R.string.message_done));
-
-				currentOperation = Operation.NONE;
-			}
-		}
-	}
-
-	private void finishImport() {
-		downloadFile();
-
-		Synchronizer synchronizer = new Synchronizer();
-		synchronizer.importDatabase(getRemoteDatabaseFilePath());
-	}
-
-	private void downloadFile() {
-		try {
-			FileOutputStream fileStream = new FileOutputStream(getRemoteDatabaseFilePath());
-			dropboxApiHandler.getFile(REMOTE_DATABASE_FILE_NAME, null, fileStream, null);
-		}
-		catch (FileNotFoundException e) {
-			// TODO: Notify user
-		}
-		catch (IOException e) {
-			// TODO: Notify user
-		}
-		catch (DropboxException e) {
-			// TODO: Notify user
-		}
-	}
-
 	private void finishImportWithUpdating() {
-		downloadFile();
+		downloadRemoteDatabase();
 
 		Synchronizer synchronizer = new Synchronizer();
 		synchronizer.importDatabase(getRemoteDatabaseFilePath(), true);
 	}
 
 	private void finishImportWithoutUpdating() {
-		downloadFile();
+		downloadRemoteDatabase();
 
 		Synchronizer synchronizer = new Synchronizer();
 		synchronizer.importDatabase(getRemoteDatabaseFilePath(), false);
 	}
 
 	private void finishExport() {
-		uploadFile();
+		Synchronizer synchronizer = new Synchronizer();
+		synchronizer.exportDatabase(getRemoteDatabaseFilePath());
+
+		uploadLocalDatabase();
 	}
 
-	private void uploadFile() {
+	private void uploadLocalDatabase() {
 		try {
-			FileInputStream fileStream = new FileInputStream(getRemoteDatabaseFilePath());
-			dropboxApiHandler.putFileOverwrite(REMOTE_DATABASE_FILE_NAME, fileStream,
-				fileStream.getChannel().size(), null);
+			FileInputStream localDatabaseFileStream = new FileInputStream(getRemoteDatabaseFilePath());
+			dropboxApiHandler.putFileOverwrite(REMOTE_DATABASE_FILE_NAME, localDatabaseFileStream,
+				localDatabaseFileStream.getChannel().size(), null);
 		}
 		catch (FileNotFoundException e) {
-			// TODO: Notify user
+			throw new SyncException();
 		}
 		catch (IOException e) {
-			// TODO: Notify user
+			throw new SyncException();
 		}
 		catch (DropboxException e) {
-			// TODO: Notify user
+			throw new SyncException();
 		}
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		if (dropboxApiHandler.getSession().authenticationSuccessful()) {
-			dropboxApiHandler.getSession().finishAuthentication();
-
-			AccessTokenPair authTokens = dropboxApiHandler.getSession().getAccessTokenPair();
-
-			// TODO: Store auth tokens
-
-			new FinishCurrentOperationTask().execute();
-		}
+	private void removeRemoteDatabaseFile() {
+		activityContext.deleteFile(REMOTE_DATABASE_FILE_NAME);
 	}
 
 	private void initializeDropboxSession() {
