@@ -12,9 +12,9 @@
 	<string name="title_stations">Stations</string>
 	<string name="title_station_creation">Station Creation</string>
 	<string name="title_station_renaming">Station Renaming</string>
-	<string name="title_timetable">Timetable</string>
-	<string name="title_shift_time_editing">Shift Time Editing</string>
 	<string name="title_station_location">Station Location</string>
+	<string name="title_shift_time_editing">Shift Time Editing</string>
+	<string name="title_timetable">Timetable</string>
 	<string name="title_synchronization">Synchronization</string>
 
 	<string name="empty_routes">There are no routes.</string>
@@ -38,7 +38,8 @@
 	<string name="error_departure_time_exists">Such departure time already exists.</string>
 	<string name="error_shift_time_or_station_exist">Such shift time or station for route already exist.</string>
 	<string name="error_shift_time_exists">Such shift time already exists.</string>
-	<string name="error_remote_database_does_not_exist">Remote database does not exist.</string>
+	<string name="error_remote_database_does_not_exist">Remote database does not exist on
+		Dropbox.</string>
 
 	<string name="signature_route_name">Route name</string>
 	<string name="signature_station_name">Station name</string>
@@ -62,14 +63,13 @@
 	<string name="menu_delete">Delete</string>
 	<string name="menu_edit">Edit</string>
 	<string name="menu_edit_departure_timetable">Edit departure timetable</string>
-	<string name="menu_rename_station">Rename station</string>
 	<string name="menu_change_shift_time">Change shift time</string>
 	<string name="menu_change_location">Change location</string>
 
 	<string name="description_item_creation">Creation of new item</string>
 	<string name="description_map_pin">Map pin</string>
 	<string name="description_save_location">Save location</string>
-	<string name="description_enable_location_detecting">Enable location detecting.</string>
+	<string name="description_enable_location_detecting">Enable location detecting</string>
 	<string name="description_sync">Synchronization</string>
 
 	<string name="token_time_now">right now</string>
