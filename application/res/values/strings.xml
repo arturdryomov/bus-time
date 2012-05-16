@@ -38,6 +38,7 @@
 	<string name="error_departure_time_exists">Such departure time already exists.</string>
 	<string name="error_shift_time_or_station_exist">Such shift time or station for route already exist.</string>
 	<string name="error_shift_time_exists">Such shift time already exists.</string>
+	<string name="error_remote_database_does_not_exist">Remote database does not exist.</string>
 
 	<string name="message_done">Operation is done.</string>
 

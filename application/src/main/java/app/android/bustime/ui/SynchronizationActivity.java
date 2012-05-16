@@ -20,6 +20,8 @@ import app.android.bustime.local.Synchronizer;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.exception.DropboxException;
+import com.dropbox.client2.exception.DropboxServerException;
+import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.Session;
@@ -128,7 +130,7 @@ public class SynchronizationActivity extends Activity
 			return;
 		}
 
-		dropboxApiHandler.getSession().startAuthentication(activityContext);
+		startDropboxAuthentication();
 	}
 
 	private boolean areAuthKeysStored() {
@@ -151,6 +153,10 @@ public class SynchronizationActivity extends Activity
 		String authTokenSecret = sharedPreferences.getString(PREFERENCE_AUTH_SECRET, new String());
 
 		return new AccessTokenPair(authTokenKey, authTokenSecret);
+	}
+
+	private void startDropboxAuthentication() {
+		dropboxApiHandler.getSession().startAuthentication(activityContext);
 	}
 
 	@Override
@@ -186,6 +192,8 @@ public class SynchronizationActivity extends Activity
 
 	private class FinishCurrentOperationTask extends AsyncTask<Void, Void, String>
 	{
+		private boolean isUnlinked = false;
+
 		private ProgressDialogShowHelper progressDialogHelper;
 
 		@Override
@@ -214,6 +222,12 @@ public class SynchronizationActivity extends Activity
 						break;
 				}
 			}
+			catch (DropboxAuthException e) {
+				isUnlinked = true;
+			}
+			catch (DropboxRemoteFileNotFoundException e) {
+				return getString(R.string.error_remote_database_does_not_exist);
+			}
 			catch (SyncException e) {
 				return getString(R.string.error_unspecified);
 			}
@@ -229,6 +243,12 @@ public class SynchronizationActivity extends Activity
 			super.onPostExecute(errorMessage);
 
 			progressDialogHelper.hide();
+
+			if (isUnlinked) {
+				startDropboxAuthentication();
+
+				return;
+			}
 
 			if (!errorMessage.isEmpty()) {
 				UserAlerter.alert(activityContext, errorMessage);
@@ -255,6 +275,14 @@ public class SynchronizationActivity extends Activity
 		}
 		catch (IOException e) {
 			throw new SyncException();
+		}
+		catch (DropboxUnlinkedException e) {
+			throw new DropboxAuthException();
+		}
+		catch (DropboxServerException e) {
+			if (e.error == DropboxServerException._404_NOT_FOUND) {
+				throw new DropboxRemoteFileNotFoundException();
+			}
 		}
 		catch (DropboxException e) {
 			throw new SyncException();
@@ -299,6 +327,9 @@ public class SynchronizationActivity extends Activity
 		}
 		catch (IOException e) {
 			throw new SyncException();
+		}
+		catch (DropboxUnlinkedException e) {
+			throw new DropboxAuthException();
 		}
 		catch (DropboxException e) {
 			throw new SyncException();
