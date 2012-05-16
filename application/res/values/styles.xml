@@ -72,4 +72,11 @@
 		<item name="android:background">@null</item>
 	</style>
 
+	<style name="TwoLineListItemContainer">
+		<item name="android:paddingLeft">@dimen/list_item_horizontal_padding</item>
+		<item name="android:paddingRight">@dimen/list_item_horizontal_padding</item>
+		<item name="android:paddingTop">@dimen/list_item_vertical_padding</item>
+		<item name="android:paddingBottom">@dimen/list_item_horizontal_padding</item>
+	</style>
+
 </resources>
