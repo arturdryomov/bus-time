@@ -80,8 +80,7 @@ public class Synchronizer
 		remoteDatabase = SQLiteDatabase.openDatabase(remoteDatabasePath, null,
 			SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
 
-		boolean isRemoteDatabaseCorrect = areRemoteDatabaseTablesCorrect() &&
-			areRemoteDatabaseColumnsCorrect();
+		boolean isRemoteDatabaseCorrect = areRemoteDatabaseTablesCorrect() && areRemoteDatabaseColumnsCorrect();
 
 		remoteDatabase.close();
 
@@ -166,7 +165,9 @@ public class Synchronizer
 	}
 
 	public void importDatabase(String importDatabasePath, boolean isUpdatingEnabled) {
-		// TODO: Check tables and columns
+		if (!isRemoteDatabaseCorrect(importDatabasePath)) {
+			throw new SyncException();
+		}
 
 		remoteDatabase = SQLiteDatabase.openDatabase(importDatabasePath, null,
 			SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
@@ -281,12 +282,7 @@ public class Synchronizer
 				}
 			}
 			catch (NotExistsException e) {
-				try {
-					destinationStation.insertShiftTimeForRoute(destinationRoute, sourceStationTimeShift);
-				}
-				catch (AlreadyExistsException ex) {
-					// TODO: Find out what the hell is this strange behaviour
-				}
+				destinationStation.insertShiftTimeForRoute(destinationRoute, sourceStationTimeShift);
 			}
 		}
 	}
