@@ -21,9 +21,9 @@ public class Station implements Parcelable
 	private double latitude;
 	private double longitude;
 
-	Station(ContentValues databaseValues) {
-		database = DbProvider.getInstance().getDatabase();
-		stations = DbProvider.getInstance().getStations();
+	Station(SQLiteDatabase database, Stations stations, ContentValues databaseValues) {
+		this.database = database;
+		this.stations = stations;
 
 		setStationValues(databaseValues);
 	}
@@ -238,7 +238,7 @@ public class Station implements Parcelable
 		Time shiftTime;
 
 		if (databaseCursor.getCount() == 0) {
-			shiftTime = new Time("00:00");
+			throw new NotExistsException();
 		}
 		else {
 			databaseCursor.moveToFirst();

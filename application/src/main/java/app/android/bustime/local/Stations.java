@@ -16,8 +16,8 @@ public class Stations
 
 	private final SQLiteDatabase database;
 
-	Stations() {
-		database = DbProvider.getInstance().getDatabase();
+	Stations(SQLiteDatabase database) {
+		this.database = database;
 	}
 
 	/**
@@ -85,7 +85,8 @@ public class Stations
 			throw new DbException();
 		}
 
-		Station createdStation = new Station(extractStationDatabaseValuesFromCursor(databaseCursor));
+		Station createdStation = new Station(database, this, extractStationDatabaseValuesFromCursor
+			(databaseCursor));
 
 		databaseCursor.close();
 
@@ -155,7 +156,7 @@ public class Stations
 
 		while (databaseCursor.moveToNext()) {
 			ContentValues databaseValues = extractStationDatabaseValuesFromCursor(databaseCursor);
-			stationsList.add(new Station(databaseValues));
+			stationsList.add(new Station(database, this, databaseValues));
 		}
 
 		databaseCursor.close();
@@ -186,7 +187,7 @@ public class Stations
 
 		while (databaseCursor.moveToNext()) {
 			ContentValues databaseValues = extractStationDatabaseValuesFromCursor(databaseCursor);
-			stationsList.add(new Station(databaseValues));
+			stationsList.add(new Station(database, this, databaseValues));
 		}
 
 		return stationsList;

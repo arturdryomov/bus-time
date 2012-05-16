@@ -39,7 +39,7 @@ class DbOpenHelper extends SQLiteOpenHelper
 	private String buildRoutesTableCreationQuery() {
 		StringBuilder queryBuilder = new StringBuilder();
 
-		queryBuilder.append(String.format("create table %s ", DbTableNames.ROUTES));
+		queryBuilder.append(String.format("create table if not exists %s ", DbTableNames.ROUTES));
 
 		queryBuilder.append("(");
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ID, DbFieldParameters.ID));
@@ -52,7 +52,7 @@ class DbOpenHelper extends SQLiteOpenHelper
 	private String buildTripsTableCreationQuery() {
 		StringBuilder queryBuilder = new StringBuilder();
 
-		queryBuilder.append(String.format("create table %s ", DbTableNames.TRIPS));
+		queryBuilder.append(String.format("create table if not exists %s ", DbTableNames.TRIPS));
 
 		queryBuilder.append("(");
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ID, DbFieldParameters.ID));
@@ -68,7 +68,7 @@ class DbOpenHelper extends SQLiteOpenHelper
 	private String buildStationsTableCreationQuery() {
 		StringBuilder queryBuilder = new StringBuilder();
 
-		queryBuilder.append(String.format("create table %s ", DbTableNames.STATIONS));
+		queryBuilder.append(String.format("create table if not exists %s ", DbTableNames.STATIONS));
 
 		queryBuilder.append("(");
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ID, DbFieldParameters.ID));
@@ -85,7 +85,8 @@ class DbOpenHelper extends SQLiteOpenHelper
 	private String buildRoutesAndStationsTableCreationQuery() {
 		StringBuilder queryBuilder = new StringBuilder();
 
-		queryBuilder.append(String.format("create table %s ", DbTableNames.ROUTES_AND_STATIONS));
+		queryBuilder.append(String.format("create table if not exists %s ",
+			DbTableNames.ROUTES_AND_STATIONS));
 
 		queryBuilder.append("(");
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ID, DbFieldParameters.ID));
