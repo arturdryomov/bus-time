@@ -5,7 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 
 
-public class ProgressDialogShowHelper
+class ProgressDialogShowHelper
 {
 	private ProgressDialog progressDialog = null;
 

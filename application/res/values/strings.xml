@@ -40,8 +40,6 @@
 	<string name="error_shift_time_exists">Such shift time already exists.</string>
 	<string name="error_remote_database_does_not_exist">Remote database does not exist.</string>
 
-	<string name="message_done">Operation is done.</string>
-
 	<string name="signature_route_name">Route name</string>
 	<string name="signature_station_name">Station name</string>
 	<string name="signature_departure_shift_time">Departure shift time</string>
@@ -72,7 +70,7 @@
 	<string name="description_map_pin">Map pin</string>
 	<string name="description_save_location">Save location</string>
 	<string name="description_enable_location_detecting">Enable location detecting.</string>
-	<string name="description_sync">Synchroniztion</string>
+	<string name="description_sync">Synchronization</string>
 
 	<string name="token_time_now">right now</string>
 

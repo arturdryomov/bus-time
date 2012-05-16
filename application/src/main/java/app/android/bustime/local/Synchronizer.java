@@ -19,7 +19,7 @@ public class Synchronizer
 	private static final int DATABASE_TABLE_NAME_COLUMN_INDEX = 0;
 	private static final int DATABASE_TABLE_COLUMN_NAME_COLUMN_INDEX = 1;
 
-	private SQLiteDatabase localDatabase;
+	private final SQLiteDatabase localDatabase;
 	private SQLiteDatabase remoteDatabase;
 
 	private Stations localStations;
@@ -76,7 +76,7 @@ public class Synchronizer
 		copyFile(importDatabaseFile, localDatabaseFile);
 	}
 
-	public boolean isRemoteDatabaseCorrect(String remoteDatabasePath) {
+	private boolean isRemoteDatabaseCorrect(String remoteDatabasePath) {
 		remoteDatabase = SQLiteDatabase.openDatabase(remoteDatabasePath, null,
 			SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
 

@@ -1,6 +1,6 @@
 package app.android.bustime.local;
 
 
-public class NotExistsException extends DbException
+class NotExistsException extends DbException
 {
 }
