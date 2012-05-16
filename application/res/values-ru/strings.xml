@@ -24,7 +24,7 @@
 	<string name="loading_routes">Загружаю маршруты…</string>
 	<string name="loading_departure_timetable">Загружаю расписание выхода…</string>
 	<string name="loading_stations">Загружаю остановки…</string>
-	<string name="loading_timetable">Загружаю остановки…</string>
+	<string name="loading_timetable">Загружаю расписание…</string>
 	<string name="loading_location">Получаю текущее местоположение при помощи GPS…</string>
 	<string name="loading_sync">Синхронизация…</string>
 
