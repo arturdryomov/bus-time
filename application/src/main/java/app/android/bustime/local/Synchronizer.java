@@ -281,7 +281,7 @@ public class Synchronizer
 				Time destinationStationShiftTime = destinationStation.getShiftTimeForRoute(
 					destinationRoute);
 
-				destinationStation.removeShiftTimeForRoute(destinationRoute, destinationStationShiftTime);
+				destinationStation.removeShiftTimeForRoute(destinationRoute);
 
 				try {
 					destinationStation.insertShiftTimeForRoute(destinationRoute, sourceStationShiftTime);

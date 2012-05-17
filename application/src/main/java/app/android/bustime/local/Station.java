@@ -215,11 +215,11 @@ public class Station implements Parcelable
 		return queryBuilder.toString();
 	}
 
-	public void removeShiftTimeForRoute(Route route, Time time) {
+	public void removeShiftTimeForRoute(Route route) {
 		database.beginTransaction();
 
 		try {
-			tryRemoveShiftTimeForRoute(route, time);
+			tryRemoveShiftTimeForRoute(route);
 			database.setTransactionSuccessful();
 		}
 		finally {
@@ -227,9 +227,9 @@ public class Station implements Parcelable
 		}
 	}
 
-	private void tryRemoveShiftTimeForRoute(Route route, Time time) {
-		database.delete(DbTableNames.ROUTES_AND_STATIONS, String.format("%s = %d and %s = '%s'",
-			DbFieldNames.ROUTE_ID, route.getId(), DbFieldNames.TIME_SHIFT, time.toString()), null);
+	private void tryRemoveShiftTimeForRoute(Route route) {
+		database.delete(DbTableNames.ROUTES_AND_STATIONS, String.format("%s = %d",
+			DbFieldNames.ROUTE_ID, route.getId()), null);
 	}
 
 	public Time getShiftTimeForRoute(Route route) {

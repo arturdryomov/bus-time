@@ -87,7 +87,7 @@ public class ShiftTimeEditingActivity extends Activity
 		@Override
 		protected String doInBackground(Void... params) {
 			try {
-				station.removeShiftTimeForRoute(route, time);
+				station.removeShiftTimeForRoute(route);
 				station.insertShiftTimeForRoute(route, new Time(shiftTimeHour, shiftTimeMinute));
 			}
 			catch (AlreadyExistsException e) {
