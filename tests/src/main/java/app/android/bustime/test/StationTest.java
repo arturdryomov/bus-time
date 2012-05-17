@@ -66,7 +66,7 @@ public class StationTest extends DbTestCase
 	}
 
 	public void testRemoveShiftTimeForRoute() {
-		station.removeShiftTimeForRoute(route, new Time("00:10"));
+		station.removeShiftTimeForRoute(route);
 
 		try {
 			station.getShiftTimeForRoute(route);
