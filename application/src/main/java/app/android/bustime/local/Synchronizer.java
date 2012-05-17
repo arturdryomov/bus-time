@@ -275,23 +275,23 @@ public class Synchronizer
 		for (Station sourceStation : sourceStations.getStationsList(sourceRoute)) {
 			Station destinationStation = getStation(destinationStations, sourceStation.getName());
 
-			Time sourceStationTimeShift = sourceStation.getShiftTimeForRoute(sourceRoute);
+			Time sourceStationShiftTime = sourceStation.getShiftTimeForRoute(sourceRoute);
 
 			try {
-				Time destinationStationTimeShift = destinationStation.getShiftTimeForRoute(
+				Time destinationStationShiftTime = destinationStation.getShiftTimeForRoute(
 					destinationRoute);
 
-				destinationStation.removeShiftTimeForRoute(destinationRoute, destinationStationTimeShift);
+				destinationStation.removeShiftTimeForRoute(destinationRoute, destinationStationShiftTime);
 
 				try {
-					destinationStation.insertShiftTimeForRoute(destinationRoute, sourceStationTimeShift);
+					destinationStation.insertShiftTimeForRoute(destinationRoute, sourceStationShiftTime);
 				}
 				catch (AlreadyExistsException e) {
-					destinationStation.insertShiftTimeForRoute(destinationRoute, destinationStationTimeShift);
+					destinationStation.insertShiftTimeForRoute(destinationRoute, destinationStationShiftTime);
 				}
 			}
 			catch (NotExistsException e) {
-				destinationStation.insertShiftTimeForRoute(destinationRoute, sourceStationTimeShift);
+				destinationStation.insertShiftTimeForRoute(destinationRoute, sourceStationShiftTime);
 			}
 		}
 	}
