@@ -234,17 +234,16 @@ public class Synchronizer
 			try {
 				localRoute = getRoute(localRoutes, remoteRoute.getName());
 
-				if (isUpdatingEnabled) {
-					importDepartureTimetable(remoteRoute, localRoute);
-					importStations(remoteRoute, remoteStations, localRoute, localStations);
+				if (!isUpdatingEnabled) {
+					continue;
 				}
 			}
 			catch (NotExistsException e) {
 				localRoute = localRoutes.createRoute(remoteRoute.getName());
-
-				importDepartureTimetable(remoteRoute, localRoute);
-				importStations(remoteRoute, remoteStations, localRoute, localStations);
 			}
+
+			importDepartureTimetable(remoteRoute, localRoute);
+			importStations(remoteRoute, remoteStations, localRoute, localStations);
 		}
 	}
 
