@@ -32,6 +32,9 @@ public class Synchronizer
 		localDatabase = DbProvider.getInstance().getDatabase();
 	}
 
+	/**
+	 * @throws SyncException if something went wrong during copying of database file.
+	 */
 	public void exportDatabase(String exportDatabasePath) {
 		File localDatabaseFile = new File(getLocalDatabasePath());
 		File exportDatabaseFile = new File(exportDatabasePath);
@@ -65,6 +68,10 @@ public class Synchronizer
 		}
 	}
 
+	/**
+	 * @throws SyncException if something went wrong during copying of database file or database is
+	 * not valid.
+	 */
 	public void importDatabase(String importDatabasePath) {
 		if (!isRemoteDatabaseCorrect(importDatabasePath)) {
 			throw new SyncException();
@@ -164,6 +171,9 @@ public class Synchronizer
 		return queryBuilder.toString();
 	}
 
+	/**
+	 * @throws SyncException if database is not valid.
+	 */
 	public void importDatabase(String importDatabasePath, boolean isUpdatingEnabled) {
 		if (!isRemoteDatabaseCorrect(importDatabasePath)) {
 			throw new SyncException();
