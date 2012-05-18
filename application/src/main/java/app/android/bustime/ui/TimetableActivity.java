@@ -13,9 +13,9 @@ import android.text.format.DateUtils;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
-import app.android.bustime.local.Route;
-import app.android.bustime.local.Station;
-import app.android.bustime.local.Time;
+import app.android.bustime.db.Route;
+import app.android.bustime.db.Station;
+import app.android.bustime.db.Time;
 
 
 public class TimetableActivity extends SimpleAdapterListActivity

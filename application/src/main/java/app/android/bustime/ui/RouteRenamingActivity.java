@@ -10,8 +10,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import app.android.bustime.R;
-import app.android.bustime.local.AlreadyExistsException;
-import app.android.bustime.local.Route;
+import app.android.bustime.db.AlreadyExistsException;
+import app.android.bustime.db.Route;
 
 
 public class RouteRenamingActivity extends Activity

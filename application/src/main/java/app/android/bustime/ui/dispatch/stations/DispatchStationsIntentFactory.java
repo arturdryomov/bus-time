@@ -3,7 +3,7 @@ package app.android.bustime.ui.dispatch.stations;
 
 import android.content.Context;
 import android.content.Intent;
-import app.android.bustime.local.Station;
+import app.android.bustime.db.Station;
 import app.android.bustime.ui.IntentFactory;
 
 

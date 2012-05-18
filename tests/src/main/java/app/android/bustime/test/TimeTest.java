@@ -2,8 +2,8 @@ package app.android.bustime.test;
 
 
 import android.test.AndroidTestCase;
-import app.android.bustime.local.Time;
-import app.android.bustime.local.TimeException;
+import app.android.bustime.db.Time;
+import app.android.bustime.db.TimeException;
 
 
 public class TimeTest extends AndroidTestCase

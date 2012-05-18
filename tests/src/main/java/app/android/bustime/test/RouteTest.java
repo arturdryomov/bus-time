@@ -2,8 +2,8 @@ package app.android.bustime.test;
 
 import java.util.List;
 
-import app.android.bustime.local.Route;
-import app.android.bustime.local.Time;
+import app.android.bustime.db.Route;
+import app.android.bustime.db.Time;
 
 
 public class RouteTest extends DbTestCase

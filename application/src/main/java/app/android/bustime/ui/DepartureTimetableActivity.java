@@ -19,8 +19,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
-import app.android.bustime.local.Route;
-import app.android.bustime.local.Time;
+import app.android.bustime.db.Route;
+import app.android.bustime.db.Time;
 
 
 public class DepartureTimetableActivity extends SimpleAdapterListActivity

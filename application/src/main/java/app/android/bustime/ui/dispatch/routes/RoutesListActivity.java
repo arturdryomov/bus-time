@@ -19,8 +19,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
-import app.android.bustime.local.DbProvider;
-import app.android.bustime.local.Route;
+import app.android.bustime.db.DbProvider;
+import app.android.bustime.db.Route;
 import app.android.bustime.ui.IntentFactory;
 import app.android.bustime.ui.SimpleAdapterListActivity;
 

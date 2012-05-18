@@ -2,11 +2,11 @@ package app.android.bustime.test;
 
 
 import android.test.AndroidTestCase;
-import app.android.bustime.local.DbProvider;
-import app.android.bustime.local.Route;
-import app.android.bustime.local.Routes;
-import app.android.bustime.local.Station;
-import app.android.bustime.local.Stations;
+import app.android.bustime.db.DbProvider;
+import app.android.bustime.db.Route;
+import app.android.bustime.db.Routes;
+import app.android.bustime.db.Station;
+import app.android.bustime.db.Stations;
 
 
 public abstract class DbTestCase extends AndroidTestCase

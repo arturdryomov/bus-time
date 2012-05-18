@@ -11,9 +11,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TimePicker;
 import app.android.bustime.R;
-import app.android.bustime.local.AlreadyExistsException;
-import app.android.bustime.local.Route;
-import app.android.bustime.local.Time;
+import app.android.bustime.db.AlreadyExistsException;
+import app.android.bustime.db.Route;
+import app.android.bustime.db.Time;
 
 
 public class DepartureTimeCreationActivity extends Activity

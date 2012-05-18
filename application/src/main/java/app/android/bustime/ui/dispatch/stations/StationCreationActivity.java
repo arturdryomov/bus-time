@@ -11,9 +11,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import app.android.bustime.R;
-import app.android.bustime.local.AlreadyExistsException;
-import app.android.bustime.local.DbException;
-import app.android.bustime.local.DbProvider;
+import app.android.bustime.db.AlreadyExistsException;
+import app.android.bustime.db.DbException;
+import app.android.bustime.db.DbProvider;
 import app.android.bustime.ui.IntentFactory;
 import app.android.bustime.ui.UserAlerter;
 

@@ -3,9 +3,9 @@ package app.android.bustime.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import app.android.bustime.local.Route;
-import app.android.bustime.local.Station;
-import app.android.bustime.local.Time;
+import app.android.bustime.db.Route;
+import app.android.bustime.db.Station;
+import app.android.bustime.db.Time;
 
 
 public class IntentFactory

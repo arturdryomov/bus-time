@@ -1,4 +1,4 @@
-package app.android.bustime.local;
+package app.android.bustime.db;
 
 
 class DbFieldParameters

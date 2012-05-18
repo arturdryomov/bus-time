@@ -3,7 +3,7 @@ package app.android.bustime.ui.dispatch.routes;
 
 import android.content.Context;
 import android.content.Intent;
-import app.android.bustime.local.Route;
+import app.android.bustime.db.Route;
 import app.android.bustime.ui.IntentFactory;
 
 
