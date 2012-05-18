@@ -85,16 +85,16 @@ public class Time implements Parcelable
 		return timeFormatter.format(getTime());
 	}
 
-	public String toString(Context activityContext) {
-		return DateFormat.getTimeFormat(activityContext).format(getTime());
-	}
-
 	private Date getTime() {
 		Calendar calendar = new GregorianCalendar();
 		calendar.set(Calendar.HOUR_OF_DAY, hours);
 		calendar.set(Calendar.MINUTE, minutes);
 
 		return calendar.getTime();
+	}
+
+	public String toString(Context activityContext) {
+		return DateFormat.getTimeFormat(activityContext).format(getTime());
 	}
 
 	public int getHours() {
