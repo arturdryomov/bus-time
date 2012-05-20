@@ -2,37 +2,98 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="app.android.bustime"
 	android:versionCode="1"
-	android:versionName="0.0.1" >
+	android:versionName="0.5.0"
+	android:installLocation="auto" >
 
 	<uses-sdk android:minSdkVersion="10" />
 
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
 	<application
-		android:name="BusTimeApplication"
+		android:label="@string/application_name"
 		android:icon="@drawable/ic_launcher_bustime"
-		android:label="@string/applicationName"
-		android:theme="@android:style/Theme.Light.NoTitleBar" >
-		<activity android:name=".ui.RoutesListActivity" >
+		android:theme="@android:style/Theme.Light.NoTitleBar"
+		android:name="BusTimeApplication" >
+
+		<uses-library android:name="com.google.android.maps" />
+
+		<activity
+			android:name=".ui.DashboardActivity" >
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".ui.RouteCreationActivity" >
+
+		<activity
+			android:name=".ui.RouteCreationActivity" >
 		</activity>
-		<activity android:name=".ui.RouteRenamingActivity" >
+		<activity
+			android:name=".ui.RouteRenamingActivity" >
 		</activity>
-		<activity android:name=".ui.DepartureTimetableActivity" >
+		<activity
+			android:name=".ui.DepartureTimetableActivity" >
 		</activity>
-		<activity android:name=".ui.DepartureTimeCreationActivity" >
+		<activity
+			android:name=".ui.DepartureTimeCreationActivity" >
 		</activity>
-		<activity android:name=".ui.DepartureTimeEditingActivity" >
+		<activity
+			android:name=".ui.DepartureTimeEditingActivity" >
 		</activity>
-		<activity android:name=".ui.StationsListActivity" >
+		<activity
+			android:name=".ui.StationLocationActivity" >
 		</activity>
-		<activity android:name=".ui.StationCreationActivity" >
+		<activity
+			android:name=".ui.StationRenamingActivity" >
 		</activity>
-		<activity android:name=".ui.TimetableActivity" >
+		<activity
+			android:name=".ui.ShiftTimeEditingActivity" >
+		</activity>
+		<activity
+			android:name=".ui.TimetableActivity" >
+		</activity>
+		<activity
+			android:name=".ui.SynchronizationActivity">
+		</activity>
+
+		<!-- Specific activities with routes dispatch -->
+
+		<activity
+			android:name=".ui.dispatch.routes.RoutesListActivity" >
+		</activity>
+		<activity
+			android:name=".ui.dispatch.routes.StationsListActivity" >
+		</activity>
+		<activity
+			android:name=".ui.dispatch.routes.StationCreationActivity" >
+		</activity>
+
+		<!-- Specific activities with stations dispatch -->
+
+		<activity
+			android:name=".ui.dispatch.stations.RoutesListActivity" >
+		</activity>
+		<activity
+			android:name=".ui.dispatch.stations.StationsListActivity" >
+		</activity>
+		<activity
+			android:name=".ui.dispatch.stations.StationCreationActivity" >
+		</activity>
+
+		<!-- Dropbox authorization activity -->
+
+		<activity
+			android:name="com.dropbox.client2.android.AuthActivity"
+			android:launchMode="singleTask"
+			android:configChanges="orientation|keyboard">
+			<intent-filter>
+				<data android:scheme="@string/dropbox_activity_key" />
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.BROWSABLE"/>
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
 		</activity>
 	</application>
 

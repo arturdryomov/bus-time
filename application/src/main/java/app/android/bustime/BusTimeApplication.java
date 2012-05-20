@@ -1,6 +1,9 @@
 package app.android.bustime;
+
+
 import android.app.Application;
-import app.android.bustime.local.DbProvider;
+import app.android.bustime.db.DbProvider;
+
 
 public class BusTimeApplication extends Application
 {

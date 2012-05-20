@@ -19,8 +19,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
-import app.android.bustime.local.Route;
-import app.android.bustime.local.Time;
+import app.android.bustime.db.Route;
+import app.android.bustime.db.Time;
 
 
 public class DepartureTimetableActivity extends SimpleAdapterListActivity
@@ -35,7 +35,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.departure_timetable);
+		setContentView(R.layout.activity_departure_timetable);
 
 		processReceivedRoute();
 
@@ -50,14 +50,14 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
 		}
 		else {
-			UserAlerter.alert(activityContext, getString(R.string.someError));
+			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 			finish();
 		}
 	}
 
 	private void initializeActionbar() {
-		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.itemCreationButton);
+		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.item_creation_button);
 		itemCreationButton.setOnClickListener(departureTimeCreationListener);
 	}
 
@@ -76,8 +76,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter departureTimesAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.one_line_list_item, new String[] { LIST_ITEM_TEXT_ID },
-			new int[] { R.id.text });
+			R.layout.list_item_one_line, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
 
 		setListAdapter(departureTimesAdapter);
 
@@ -90,10 +89,10 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 	protected void onResume() {
 		super.onResume();
 
-		loadDepartureTimes();
+		loadDepartureTimetable();
 	}
 
-	private void loadDepartureTimes() {
+	private void loadDepartureTimetable() {
 		new LoadDepartureTimetableTask().execute();
 	}
 
@@ -105,7 +104,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			setEmptyListText(getString(R.string.loadingDepartureTimes));
+			setEmptyListText(getString(R.string.loading_departure_timetable));
 		}
 
 		@Override
@@ -120,7 +119,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 			super.onPostExecute(result);
 
 			if (departureTimetable.isEmpty()) {
-				setEmptyListText(getString(R.string.noDepartureTimes));
+				setEmptyListText(getString(R.string.empty_departure_timetable));
 			}
 			else {
 				fillList(departureTimetable);
@@ -135,7 +134,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 
 		HashMap<String, Object> timeItem = new HashMap<String, Object>();
 
-		timeItem.put(LIST_ITEM_TEXT_ID, time.toString());
+		timeItem.put(LIST_ITEM_TEXT_ID, time.toString(activityContext));
 		timeItem.put(LIST_ITEM_OBJECT_ID, time);
 
 		listData.add(timeItem);
@@ -145,7 +144,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, view, menuInfo);
 
-		getMenuInflater().inflate(R.menu.departure_times_context_menu, menu);
+		getMenuInflater().inflate(R.menu.departure_times_context_menu_items, menu);
 	}
 
 	@Override
@@ -206,7 +205,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 			updateList();
 
 			if (listData.isEmpty()) {
-				setEmptyListText(getString(R.string.noDepartureTimes));
+				setEmptyListText(getString(R.string.empty_departure_timetable));
 			}
 		}
 

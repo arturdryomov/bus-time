@@ -14,7 +14,7 @@ public abstract class SimpleAdapterListActivity extends ListActivity
 {
 	protected List<HashMap<String, Object>> listData;
 
-	public SimpleAdapterListActivity() {
+	protected SimpleAdapterListActivity() {
 		super();
 
 		listData = new ArrayList<HashMap<String, Object>>();
@@ -28,6 +28,8 @@ public abstract class SimpleAdapterListActivity extends ListActivity
 		for (Object itemData : itemsData) {
 			addItemToList(itemData);
 		}
+
+		updateList();
 	}
 
 	protected abstract void addItemToList(Object itemData);

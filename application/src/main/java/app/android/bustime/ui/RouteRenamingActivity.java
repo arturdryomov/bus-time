@@ -10,8 +10,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import app.android.bustime.R;
-import app.android.bustime.local.AlreadyExistsException;
-import app.android.bustime.local.Route;
+import app.android.bustime.db.AlreadyExistsException;
+import app.android.bustime.db.Route;
 
 
 public class RouteRenamingActivity extends Activity
@@ -19,12 +19,13 @@ public class RouteRenamingActivity extends Activity
 	private final Context activityContext = this;
 
 	private Route route;
+
 	private String routeName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.route_renaming);
+		setContentView(R.layout.activity_route_renaming);
 
 		processReceivedRoute();
 
@@ -39,14 +40,14 @@ public class RouteRenamingActivity extends Activity
 			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
 		}
 		else {
-			UserAlerter.alert(activityContext, getString(R.string.someError));
+			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 			finish();
 		}
 	}
 
 	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.confirmButton);
+		Button confirmButton = (Button) findViewById(R.id.confirm_button);
 		confirmButton.setOnClickListener(confirmListener);
 	}
 
@@ -71,18 +72,14 @@ public class RouteRenamingActivity extends Activity
 	};
 
 	private void readUserDataFromFields() {
-		EditText routeNameEdit = (EditText) findViewById(R.id.routeNameEdit);
+		EditText routeNameEdit = (EditText) findViewById(R.id.route_name_edit);
 
 		routeName = routeNameEdit.getText().toString().trim();
 	}
 
 	private String getUserDataErrorMessage() {
-		return getRouteNameErrorMessage();
-	}
-
-	private String getRouteNameErrorMessage() {
 		if (routeName.isEmpty()) {
-			return getString(R.string.enterRouteName);
+			return getString(R.string.error_empty_route_name);
 		}
 
 		return new String();
@@ -96,7 +93,7 @@ public class RouteRenamingActivity extends Activity
 				route.setName(routeName);
 			}
 			catch (AlreadyExistsException e) {
-				return getString(R.string.routeAlreadyExists);
+				return getString(R.string.error_route_exists);
 			}
 
 			return new String();
@@ -116,7 +113,7 @@ public class RouteRenamingActivity extends Activity
 	}
 
 	private void setUpReceivedRouteData() {
-		EditText routeNameEdit = (EditText) findViewById(R.id.routeNameEdit);
+		EditText routeNameEdit = (EditText) findViewById(R.id.route_name_edit);
 		routeNameEdit.setText(route.getName());
 	}
 }

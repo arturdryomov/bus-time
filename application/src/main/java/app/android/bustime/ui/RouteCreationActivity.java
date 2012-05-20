@@ -11,10 +11,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import app.android.bustime.R;
-import app.android.bustime.local.AlreadyExistsException;
-import app.android.bustime.local.DbException;
-import app.android.bustime.local.DbProvider;
-import app.android.bustime.local.Route;
+import app.android.bustime.db.AlreadyExistsException;
+import app.android.bustime.db.DbException;
+import app.android.bustime.db.DbProvider;
+import app.android.bustime.db.Route;
 
 
 public class RouteCreationActivity extends Activity
@@ -26,13 +26,13 @@ public class RouteCreationActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.route_creation);
+		setContentView(R.layout.activity_route_creation);
 
 		initializeBodyControls();
 	}
 
 	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.confirmButton);
+		Button confirmButton = (Button) findViewById(R.id.confirm_button);
 		confirmButton.setOnClickListener(confirmListener);
 	}
 
@@ -57,18 +57,14 @@ public class RouteCreationActivity extends Activity
 	};
 
 	private void readUserDataFromFields() {
-		EditText routeNameEdit = (EditText) findViewById(R.id.routeNameEdit);
+		EditText routeNameEdit = (EditText) findViewById(R.id.route_name_edit);
 
 		routeName = routeNameEdit.getText().toString().trim();
 	}
 
 	private String getUserDataErrorMessage() {
-		return getRouteNameErrorMessage();
-	}
-
-	private String getRouteNameErrorMessage() {
 		if (routeName.isEmpty()) {
-			return getString(R.string.enterRouteName);
+			return getString(R.string.error_empty_route_name);
 		}
 
 		return new String();
@@ -84,10 +80,10 @@ public class RouteCreationActivity extends Activity
 				route = DbProvider.getInstance().getRoutes().createRoute(routeName);
 			}
 			catch (AlreadyExistsException e) {
-				return getString(R.string.routeAlreadyExists);
+				return getString(R.string.error_route_exists);
 			}
 			catch (DbException e) {
-				return getString(R.string.someError);
+				return getString(R.string.error_unspecified);
 			}
 
 			return new String();
@@ -98,7 +94,7 @@ public class RouteCreationActivity extends Activity
 			super.onPostExecute(errorMessage);
 
 			if (errorMessage.isEmpty()) {
-				callDepartureTimesList();
+				callDepartureTimetable();
 
 				finish();
 			}
@@ -107,7 +103,7 @@ public class RouteCreationActivity extends Activity
 			}
 		}
 
-		private void callDepartureTimesList() {
+		private void callDepartureTimetable() {
 			Intent callIntent = IntentFactory.createDepartureTimetableIntent(activityContext, route);
 			startActivity(callIntent);
 		}

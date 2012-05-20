@@ -11,8 +11,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TimePicker;
 import app.android.bustime.R;
-import app.android.bustime.local.Route;
-import app.android.bustime.local.Time;
+import app.android.bustime.db.AlreadyExistsException;
+import app.android.bustime.db.Route;
+import app.android.bustime.db.Time;
 
 
 public class DepartureTimeCreationActivity extends Activity
@@ -20,13 +21,14 @@ public class DepartureTimeCreationActivity extends Activity
 	private final Context activityContext = this;
 
 	private Route route;
+
 	private int departureTimeHour;
 	private int departureTimeMinute;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.departure_time_creation);
+		setContentView(R.layout.activity_departure_time_creation);
 
 		processReceivedRoute();
 
@@ -40,20 +42,17 @@ public class DepartureTimeCreationActivity extends Activity
 			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
 		}
 		else {
-			UserAlerter.alert(activityContext, getString(R.string.someError));
+			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 			finish();
 		}
 	}
 
 	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.confirmButton);
+		Button confirmButton = (Button) findViewById(R.id.confirm_button);
 		confirmButton.setOnClickListener(confirmListener);
 
-		if (DateFormat.is24HourFormat(activityContext)) {
-			TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departureTimePicker);
-			departureTimePicker.setIs24HourView(true);
-		}
+		setSystemTimeFormatForTimePicker();
 		setUpCurrentTime();
 	}
 
@@ -70,27 +69,42 @@ public class DepartureTimeCreationActivity extends Activity
 	};
 
 	private void readUserDataFromTimePicker() {
-		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departureTimePicker);
+		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
 
 		departureTimeHour = departureTimePicker.getCurrentHour();
 		departureTimeMinute = departureTimePicker.getCurrentMinute();
 	}
 
-	private class CreateDepartureTimeTask extends AsyncTask<Void, Void, Void>
+	private class CreateDepartureTimeTask extends AsyncTask<Void, Void, String>
 	{
 		@Override
-		protected Void doInBackground(Void... params) {
-			route.insertDepartureTime(new Time(departureTimeHour, departureTimeMinute));
+		protected String doInBackground(Void... params) {
+			try {
+				route.insertDepartureTime(new Time(departureTimeHour, departureTimeMinute));
+			}
+			catch (AlreadyExistsException e) {
+				return getString(R.string.error_departure_time_exists);
+			}
 
-			return null;
+			return new String();
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
+		protected void onPostExecute(String errorMessage) {
+			super.onPostExecute(errorMessage);
 
-			finish();
+			if (errorMessage.isEmpty()) {
+				finish();
+			}
+			else {
+				UserAlerter.alert(activityContext, errorMessage);
+			}
 		}
+	}
+
+	private void setSystemTimeFormatForTimePicker() {
+		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
+		departureTimePicker.setIs24HourView(DateFormat.is24HourFormat(activityContext));
 	}
 
 	private void setUpCurrentTime() {
@@ -98,7 +112,7 @@ public class DepartureTimeCreationActivity extends Activity
 		departureTimeHour = currentTime.getHours();
 		departureTimeMinute = currentTime.getMinutes();
 
-		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departureTimePicker);
+		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
 		departureTimePicker.setCurrentHour(departureTimeHour);
 		departureTimePicker.setCurrentMinute(departureTimeMinute);
 	}

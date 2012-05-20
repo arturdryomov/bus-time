@@ -5,3 +5,9 @@
 bin
 gen
 target
+
+keys.xml
+
+*.iml
+.idea
+classes

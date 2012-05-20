@@ -3,9 +3,9 @@ package app.android.bustime.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import app.android.bustime.local.Route;
-import app.android.bustime.local.Station;
-import app.android.bustime.local.Time;
+import app.android.bustime.db.Route;
+import app.android.bustime.db.Station;
+import app.android.bustime.db.Time;
 
 
 public class IntentFactory
@@ -19,9 +19,7 @@ public class IntentFactory
 	}
 
 	public static Intent createRouteCreationIntent(Context context) {
-		Intent intent = new Intent(context, RouteCreationActivity.class);
-
-		return intent;
+		return new Intent(context, RouteCreationActivity.class);
 	}
 
 	public static Intent createRouteRenamingIntent(Context context, Route route) {
@@ -53,16 +51,17 @@ public class IntentFactory
 		return intent;
 	}
 
-	public static Intent createStationsListIntent(Context context, Route route) {
-		Intent intent = new Intent(context, StationsListActivity.class);
-		intent.putExtra(MESSAGE_ID, route);
+	public static Intent createStationRenamingIntent(Context context, Station station) {
+		Intent intent = new Intent(context, StationRenamingActivity.class);
+		intent.putExtra(MESSAGE_ID, station);
 
 		return intent;
 	}
 
-	public static Intent createStationCreationIntent(Context context, Route route) {
-		Intent intent = new Intent(context, StationCreationActivity.class);
+	public static Intent createShiftTimeEditingIntent(Context context, Route route, Station station) {
+		Intent intent = new Intent(context, ShiftTimeEditingActivity.class);
 		intent.putExtra(MESSAGE_ID, route);
+		intent.putExtra(EXTRA_MESSAGE_ID, station);
 
 		return intent;
 	}
@@ -73,5 +72,18 @@ public class IntentFactory
 		intent.putExtra(EXTRA_MESSAGE_ID, station);
 
 		return intent;
+	}
+
+	public static Intent createStationLocationIntent(Context context, double latitude,
+		double longitude) {
+		Intent intent = new Intent(context, StationLocationActivity.class);
+		intent.putExtra(MESSAGE_ID, latitude);
+		intent.putExtra(EXTRA_MESSAGE_ID, longitude);
+
+		return intent;
+	}
+
+	public static Intent createSynchronizationIntent(Context context) {
+		return new Intent(context, SynchronizationActivity.class);
 	}
 }
