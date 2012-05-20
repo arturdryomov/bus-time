@@ -1,7 +1,8 @@
 package app.android.bustime.db;
 
 
-public class TimeException extends DbException
+public class TimeException extends RuntimeException
 {
-
+	public TimeException() {
+	}
 }
