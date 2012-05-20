@@ -60,8 +60,8 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.item_creation_button);
 		itemCreationButton.setOnClickListener(stationCreationListener);
 
-		ImageButton statiosNearbyButton = (ImageButton) findViewById(R.id.stations_nearby_button);
-		statiosNearbyButton.setOnClickListener(stationsNearbyListener);
+		ImageButton stationsNearbyButton = (ImageButton) findViewById(R.id.stations_nearby_button);
+		stationsNearbyButton.setOnClickListener(stationsNearbyListener);
 	}
 
 	private final OnClickListener stationCreationListener = new OnClickListener() {
