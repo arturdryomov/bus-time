@@ -3,6 +3,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<prerequisites>
+		<maven>3.0.0</maven>
+	</prerequisites>
+
 	<name>BusTime Parent</name>
 	<artifactId>bustime-parent</artifactId>
 	<version>0.5.0</version>
@@ -27,7 +31,7 @@
 				<plugin>
 					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 					<artifactId>android-maven-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.2.0</version>
 					<extensions>true</extensions>
 					<configuration>
 						<sdk>
