@@ -27,7 +27,7 @@
 	<string name="loading_departure_timetable">Loading departure timetable…</string>
 	<string name="loading_stations">Loading stations…</string>
 	<string name="loading_timetable">Loading timetable…</string>
-	<string name="loading_location">Obtaining your location with GPS…</string>
+	<string name="loading_location">Obtaining current location…</string>
 	<string name="loading_sync">Synchronization in progress…</string>
 
 	<string name="error_unspecified">Ooops, some error just happened.</string>

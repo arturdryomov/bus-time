@@ -4,9 +4,9 @@
 	<string name="title_routes">Маршруты</string>
 	<string name="title_route_creation">Создание маршрута</string>
 	<string name="title_route_renaming">Переименование маршрута</string>
-	<string name="title_departure_timetable">Расписание выхода</string>
-	<string name="title_departure_time_creation">Создание времени выхода</string>
-	<string name="title_departure_time_editing">Изменение времени выхода</string>
+	<string name="title_departure_timetable">Расписание отправлений</string>
+	<string name="title_departure_time_creation">Создание времени отправления</string>
+	<string name="title_departure_time_editing">Изменение времени отправления</string>
 	<string name="title_stations">Остановки</string>
 	<string name="title_station_creation">Создание остановки</string>
 	<string name="title_station_renaming">Переименование остановки</string>
@@ -16,16 +16,16 @@
 	<string name="title_synchronization">Синхронизация</string>
 
 	<string name="empty_routes">Маршруты отсутствуют.</string>
-	<string name="empty_departure_timetable">Времена выхода отсутствуют.</string>
+	<string name="empty_departure_timetable">Расписния отправлений нет.</string>
 	<string name="empty_stations">Остановки отсутствуют.</string>
 	<string name="empty_timetable">Расписания нет.</string>
 	<string name="empty_stations_nearby">Рядом нет остановок.</string>
 
 	<string name="loading_routes">Загружаю маршруты…</string>
-	<string name="loading_departure_timetable">Загружаю расписание выхода…</string>
+	<string name="loading_departure_timetable">Загружаю расписание отправлений…</string>
 	<string name="loading_stations">Загружаю остановки…</string>
 	<string name="loading_timetable">Загружаю расписание…</string>
-	<string name="loading_location">Получаю текущее местоположение при помощи GPS…</string>
+	<string name="loading_location">Получаю текущеее местоположение…</string>
 	<string name="loading_sync">Синхронизация…</string>
 
 	<string name="error_unspecified">Ой, какая-то ошибка!</string>
@@ -33,7 +33,7 @@
 	<string name="error_empty_route_name">Введите имя маршрута.</string>
 	<string name="error_station_exists">Остановка с таким именем уже существует.</string>
 	<string name="error_empty_station_name">Введите имя остановки.</string>
-	<string name="error_departure_time_exists">Такое время выхода уже существует.</string>
+	<string name="error_departure_time_exists">Такое время отправления уже существует.</string>
 	<string name="error_shift_time_or_station_exist">Такая остановка или смещение времени уже
 		существуют для данного маршрута.</string>
 	<string name="error_shift_time_exists">Такое смещение времени уже существует.</string>
@@ -47,8 +47,8 @@
 
 	<string name="button_create_route">Создать маршрут</string>
 	<string name="button_rename_route">Переименовать маршрут</string>
-	<string name="button_create_departure_time">Создать время выхода</string>
-	<string name="button_update_departure_time">Обновить время выхода</string>
+	<string name="button_create_departure_time">Создать время отправления</string>
+	<string name="button_update_departure_time">Обновить время отправления</string>
 	<string name="button_create_station">Создать остановку</string>
 	<string name="button_rename_station">Переименовать остановку</string>
 	<string name="button_update_shift_time">Обновить смещение времени</string>
@@ -61,7 +61,7 @@
 	<string name="menu_rename">Переименовать</string>
 	<string name="menu_delete">Удалить</string>
 	<string name="menu_edit">Изменить</string>
-	<string name="menu_edit_departure_timetable">Изменить расписание выхода</string>
+	<string name="menu_edit_departure_timetable">Изменить отправления</string>
 	<string name="menu_change_shift_time">Изменить смещение времени</string>
 	<string name="menu_change_location">Изменить местоположение</string>
 

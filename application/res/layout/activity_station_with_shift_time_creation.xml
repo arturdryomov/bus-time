@@ -52,7 +52,8 @@
 
 			<TextView
 				style="@style/BodyLinearLayoutItem"
-				android:text="@string/signature_departure_shift_time" />
+				android:text="@string/signature_departure_shift_time"
+				android:layout_marginTop="@dimen/departure_time_section_top_margin" />
 
 			<TimePicker
 				android:id="@+id/shift_time_picker"

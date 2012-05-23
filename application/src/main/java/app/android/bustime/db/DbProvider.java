@@ -11,34 +11,38 @@ public class DbProvider
 	{
 	}
 
-	private static DbProvider instance;
-
 	private final DbOpenHelper databaseOpenHelper;
 
 	private Routes routes;
 	private Stations stations;
 
 	public static DbProvider getInstance() {
-		return instance;
+		return DbProviderHolder.instance;
 	}
 
-	public static DbProvider getInstance(Context context) {
-		if (instance == null) {
-			return new DbProvider(context);
-		}
-		else {
-			return instance;
+	private static class DbProviderHolder
+	{
+		private static DbProvider instance;
+
+		public DbProviderHolder(Context context) {
+			instance = new DbProvider(context);
 		}
 	}
 
 	private DbProvider(Context context) {
-		if (instance != null) {
+		if (getInstance() != null) {
 			throw new AlreadyInstantiatedException();
 		}
 
 		databaseOpenHelper = new DbOpenHelper(context.getApplicationContext());
+	}
 
-		instance = this;
+	public static DbProvider getInstance(Context context) {
+		if (getInstance() == null) {
+			new DbProviderHolder(context);
+		}
+
+		return getInstance();
 	}
 
 	SQLiteDatabase getDatabase() {
