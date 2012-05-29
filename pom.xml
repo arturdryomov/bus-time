@@ -37,7 +37,6 @@
 						<sdk>
 							<platform>${android.version.platform}</platform>
 						</sdk>
-						<deleteConflictingFiles>true</deleteConflictingFiles>
 						<undeployBeforeDeploy>true</undeployBeforeDeploy>
 						<lazyLibraryUnpack>true</lazyLibraryUnpack>
 					</configuration>

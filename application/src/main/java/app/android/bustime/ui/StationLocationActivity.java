@@ -43,7 +43,7 @@ public class StationLocationActivity extends MapActivity
 
 		processReceivedLocation();
 
-		initializeActionbar();
+		initializeActionBar();
 
 		initializeMap();
 		initializePin();
@@ -67,8 +67,8 @@ public class StationLocationActivity extends MapActivity
 		finish();
 	}
 
-	private void initializeActionbar() {
-		ImageButton saveLocationButton = (ImageButton) findViewById(R.id.save_button);
+	private void initializeActionBar() {
+		ImageButton saveLocationButton = (ImageButton) findViewById(R.id.button_save);
 		saveLocationButton.setOnClickListener(saveLocationListener);
 	}
 

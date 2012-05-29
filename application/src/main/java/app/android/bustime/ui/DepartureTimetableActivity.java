@@ -39,7 +39,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 
 		processReceivedRoute();
 
-		initializeActionbar();
+		initializeActionBar();
 		initializeList();
 	}
 
@@ -56,8 +56,8 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 		}
 	}
 
-	private void initializeActionbar() {
-		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.item_creation_button);
+	private void initializeActionBar() {
+		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.button_item_creation);
 		itemCreationButton.setOnClickListener(departureTimeCreationListener);
 	}
 
@@ -153,10 +153,10 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 		int timePosition = itemInfo.position;
 
 		switch (item.getItemId()) {
-			case R.id.edit:
+			case R.id.menu_edit:
 				callDepartureTimeEditing(timePosition);
 				return true;
-			case R.id.delete:
+			case R.id.menu_delete:
 				callDepartureTimeDeleting(timePosition);
 				return true;
 			default:

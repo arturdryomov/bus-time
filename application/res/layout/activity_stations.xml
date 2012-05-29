@@ -6,26 +6,25 @@
 	<!-- Actionbar -->
 
 	<RelativeLayout
-		android:id="@+id/actionbar"
-		style="@style/Actionbar" >
+		android:id="@+id/action_bar"
+		style="@style/ActionBar" >
 
 		<TextView
-			style="@style/ActionbarTitle"
+			style="@style/ActionBarTitle"
 			android:text="@string/title_stations" />
 
 		<LinearLayout
-			android:id="@+id/actions"
-			style="@style/ActionbarButtons" >
+			style="@style/ActionBarButtons" >
 
 			<ImageButton
-				android:id="@+id/stations_nearby_button"
-				style="@style/ActionbarButton"
+				android:id="@+id/button_stations_nearby"
+				style="@style/ActionBarButton"
 				android:contentDescription="@string/description_enable_location_detecting"
 				android:src="@drawable/ic_menu_location_disabled" />
 
 			<ImageButton
-				android:id="@+id/item_creation_button"
-				style="@style/ActionbarButton"
+				android:id="@+id/button_item_creation"
+				style="@style/ActionBarButton"
 				android:contentDescription="@string/description_item_creation"
 				android:src="@drawable/ic_menu_create_item" />
 		</LinearLayout>
@@ -36,7 +35,7 @@
 	<ListView
 		android:id="@android:id/list"
 		style="@style/BodyListView"
-		android:layout_below="@id/actionbar" />
+		android:layout_below="@id/action_bar" />
 
 	<TextView
 		android:id="@android:id/empty"

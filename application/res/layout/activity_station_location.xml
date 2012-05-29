@@ -6,20 +6,19 @@
 	<!-- Actionbar -->
 
 	<RelativeLayout
-		android:id="@+id/actionbar"
-		style="@style/Actionbar" >
+		android:id="@+id/action_bar"
+		style="@style/ActionBar" >
 
 		<TextView
-			style="@style/ActionbarTitle"
+			style="@style/ActionBarTitle"
 			android:text="@string/title_station_location" />
 
 		<LinearLayout
-			android:id="@+id/actions"
-			style="@style/ActionbarButtons" >
+			style="@style/ActionBarButtons" >
 
 			<ImageButton
-				android:id="@+id/save_button"
-				style="@style/ActionbarButton"
+				android:id="@+id/button_save"
+				style="@style/ActionBarButton"
 				android:contentDescription="@string/description_save_location"
 				android:src="@drawable/ic_menu_confirm" />
 		</LinearLayout>
@@ -31,7 +30,7 @@
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_below="@id/actionbar" >
+		android:layout_below="@id/action_bar" >
 
 		<com.google.android.maps.MapView
 			android:id="@+id/map"

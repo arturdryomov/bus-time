@@ -6,11 +6,11 @@
 	<!-- Actionbar -->
 
 	<RelativeLayout
-		android:id="@+id/actionbar"
-		style="@style/Actionbar" >
+		android:id="@+id/action_bar"
+		style="@style/ActionBar" >
 
 		<TextView
-			style="@style/ActionbarTitle"
+			style="@style/ActionBarTitle"
 			android:text="@string/title_station_creation" />
 	</RelativeLayout>
 
@@ -19,7 +19,7 @@
 	<ScrollView
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
-		android:layout_below="@id/actionbar" >
+		android:layout_below="@id/action_bar" >
 
 		<LinearLayout style="@style/BodyLinearLayout" >
 
@@ -28,19 +28,19 @@
 				android:text="@string/signature_station_name" />
 
 			<EditText
-				android:id="@+id/station_name_edit"
+				android:id="@+id/edit_station_name"
 				style="@style/BodyLinearLayoutItem"
 				android:inputType="text"
 				android:singleLine="true" />
 
 			<Button
-				android:id="@+id/location_button"
+				android:id="@+id/button_location"
 				style="@style/BodyLinearLayoutItem"
 				android:layout_marginTop="@dimen/form_button_padding"
 				android:text="@string/button_set_location" />
 
 			<Button
-				android:id="@+id/confirm_button"
+				android:id="@+id/button_confirm"
 				style="@style/BodyLinearLayoutItem"
 				android:layout_marginTop="@dimen/confirm_button_top_margin"
 				android:text="@string/button_create_station" />

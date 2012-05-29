@@ -55,7 +55,7 @@ public class SynchronizationActivity extends Activity
 	}
 
 	private void initializeBodyControls() {
-		Button importButton = (Button) findViewById(R.id.import_button);
+		Button importButton = (Button) findViewById(R.id.button_import);
 		importButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -64,7 +64,7 @@ public class SynchronizationActivity extends Activity
 			}
 		});
 
-		Button importWithUpdatingButton = (Button) findViewById(R.id.import_with_updating_button);
+		Button importWithUpdatingButton = (Button) findViewById(R.id.button_import_with_updating);
 		importWithUpdatingButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -73,7 +73,7 @@ public class SynchronizationActivity extends Activity
 			}
 		});
 
-		Button importWithoutUpdatingButton = (Button) findViewById(R.id.import_without_updating_button);
+		Button importWithoutUpdatingButton = (Button) findViewById(R.id.button_import_without_updating);
 		importWithoutUpdatingButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -82,7 +82,7 @@ public class SynchronizationActivity extends Activity
 			}
 		});
 
-		Button exportButton = (Button) findViewById(R.id.export_button);
+		Button exportButton = (Button) findViewById(R.id.button_export);
 		exportButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override

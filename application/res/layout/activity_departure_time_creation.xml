@@ -6,11 +6,12 @@
 	<!-- Actionbar -->
 
 	<RelativeLayout
-		android:id="@+id/actionbar"
-		style="@style/Actionbar" >
+		android:id="@+id/action_bar"
+		style="@style/ActionBar" >
 
 		<TextView
-			style="@style/ActionbarTitle"
+			android:id="@+id/text_action_bar"
+			style="@style/ActionBarTitle"
 			android:text="@string/title_departure_time_creation" />
 	</RelativeLayout>
 
@@ -19,16 +20,16 @@
 	<ScrollView
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
-		android:layout_below="@id/actionbar" >
+		android:layout_below="@id/action_bar" >
 
 		<LinearLayout style="@style/BodyLinearLayout" >
 
 			<TimePicker
-				android:id="@+id/departure_time_picker"
+				android:id="@+id/picker_departure_time"
 				style="@style/BodyLinearLayoutItem" />
 
 			<Button
-				android:id="@+id/confirm_button"
+				android:id="@+id/button_confirm"
 				style="@style/BodyLinearLayoutItem"
 				android:layout_marginTop="@dimen/confirm_button_top_margin"
 				android:text="@string/button_create_departure_time" />

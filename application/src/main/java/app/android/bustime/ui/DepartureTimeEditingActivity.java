@@ -9,6 +9,7 @@ import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import app.android.bustime.R;
 import app.android.bustime.db.AlreadyExistsException;
@@ -29,7 +30,7 @@ public class DepartureTimeEditingActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_departure_time_editing);
+		setContentView(R.layout.activity_departure_time_creation);
 
 		processReceivedRouteAndTime();
 
@@ -54,11 +55,21 @@ public class DepartureTimeEditingActivity extends Activity
 	}
 
 	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.confirm_button);
+		setActivityViewsInscriptions();
+
+		Button confirmButton = (Button) findViewById(R.id.button_confirm);
 		confirmButton.setOnClickListener(confirmListener);
 
 		setSystemTimeFormatForTimePicker();
 		setUpReceivedTime();
+	}
+
+	private void setActivityViewsInscriptions() {
+		TextView actionBarTitle = (TextView) findViewById(R.id.text_action_bar);
+		actionBarTitle.setText(R.string.title_departure_time_editing);
+
+		Button confirmButton = (Button) findViewById(R.id.button_confirm);
+		confirmButton.setText(R.string.button_update_departure_time);
 	}
 
 	private final OnClickListener confirmListener = new OnClickListener() {
@@ -74,7 +85,7 @@ public class DepartureTimeEditingActivity extends Activity
 	};
 
 	private void readUserDataFromTimePicker() {
-		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
+		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.picker_departure_time);
 
 		departureTimeHour = departureTimePicker.getCurrentHour();
 		departureTimeMinute = departureTimePicker.getCurrentMinute();
@@ -111,7 +122,7 @@ public class DepartureTimeEditingActivity extends Activity
 	}
 
 	private void setSystemTimeFormatForTimePicker() {
-		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
+		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.picker_departure_time);
 		departureTimePicker.setIs24HourView(DateFormat.is24HourFormat(activityContext));
 	}
 
@@ -119,7 +130,7 @@ public class DepartureTimeEditingActivity extends Activity
 		departureTimeHour = time.getHours();
 		departureTimeMinute = time.getMinutes();
 
-		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
+		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.picker_departure_time);
 		departureTimePicker.setCurrentHour(departureTimeHour);
 		departureTimePicker.setCurrentMinute(departureTimeMinute);
 	}

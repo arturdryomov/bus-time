@@ -6,20 +6,19 @@
 	<!-- Actionbar -->
 
 	<RelativeLayout
-		android:id="@+id/actionbar"
-		style="@style/Actionbar" >
+		android:id="@+id/action_bar"
+		style="@style/ActionBar" >
 
 		<TextView
-			style="@style/ActionbarTitle"
+			style="@style/ActionBarTitle"
 			android:text="@string/application_name" />
 
 		<LinearLayout
-			android:id="@+id/actions"
-			style="@style/ActionbarButtons" >
+			style="@style/ActionBarButtons" >
 
 			<ImageButton
-				android:id="@+id/sync_button"
-				style="@style/ActionbarButton"
+				android:id="@+id/button_sync"
+				style="@style/ActionBarButton"
 				android:contentDescription="@string/description_sync"
 				android:src="@drawable/ic_menu_sync" />
 		</LinearLayout>
@@ -31,16 +30,16 @@
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
-		android:layout_below="@id/actionbar" >
+		android:layout_below="@id/action_bar" >
 
 		<Button
-			android:id="@+id/routes_button"
+			android:id="@+id/button_routes"
 			style="@style/DashboardButton"
 			android:drawableTop="@drawable/home_button_routes"
 			android:text="@string/title_routes" />
 
 		<Button
-			android:id="@+id/stations_button"
+			android:id="@+id/button_stations"
 			style="@style/DashboardButton"
 			android:drawableTop="@drawable/home_button_stations"
 			android:text="@string/title_stations" />

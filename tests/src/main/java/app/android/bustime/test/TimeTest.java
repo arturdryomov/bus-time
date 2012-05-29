@@ -12,7 +12,7 @@ public class TimeTest extends AndroidTestCase
 		Time firstTime = new Time(10, 40);
 		assertEquals("10:40", firstTime.toString());
 
-		Time secondTime = new Time(00, 00);
+		Time secondTime = new Time(0, 0);
 		assertEquals("00:00", secondTime.toString());
 
 		Time thirdTime = new Time(23, 59);
