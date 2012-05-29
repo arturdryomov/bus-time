@@ -28,7 +28,7 @@
 				style="@style/BodyLinearLayoutItem" />
 
 			<Button
-				android:id="@+id/confirm_button"
+				android:id="@+id/button_confirm"
 				style="@style/BodyLinearLayoutItem"
 				android:layout_marginTop="@dimen/confirm_button_top_margin"
 				android:text="@string/button_update_departure_time" />

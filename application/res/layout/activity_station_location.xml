@@ -18,7 +18,7 @@
 			style="@style/ActionbarButtons" >
 
 			<ImageButton
-				android:id="@+id/save_button"
+				android:id="@+id/button_save"
 				style="@style/ActionbarButton"
 				android:contentDescription="@string/description_save_location"
 				android:src="@drawable/ic_menu_confirm" />

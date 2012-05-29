@@ -18,7 +18,7 @@
 			style="@style/ActionbarButtons" >
 
 			<ImageButton
-				android:id="@+id/item_creation_button"
+				android:id="@+id/button_item_creation"
 				style="@style/ActionbarButton"
 				android:contentDescription="@string/description_item_creation"
 				android:src="@drawable/ic_menu_create_item" />

@@ -28,19 +28,19 @@
 				android:text="@string/signature_station_name" />
 
 			<EditText
-				android:id="@+id/station_name_edit"
+				android:id="@+id/edit_station_name"
 				style="@style/BodyLinearLayoutItem"
 				android:inputType="text"
 				android:singleLine="true" />
 
 			<Button
-				android:id="@+id/location_button"
+				android:id="@+id/button_location_button"
 				style="@style/BodyLinearLayoutItem"
 				android:layout_marginTop="@dimen/form_button_padding"
 				android:text="@string/button_set_location" />
 
 			<Button
-				android:id="@+id/confirm_button"
+				android:id="@+id/button_confirm"
 				style="@style/BodyLinearLayoutItem"
 				android:layout_marginTop="@dimen/confirm_button_top_margin"
 				android:text="@string/button_create_station" />

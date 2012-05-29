@@ -23,22 +23,22 @@
 
 		<LinearLayout style="@style/BodyLinearLayout" >
 			<Button
-				android:id="@+id/import_button"
+				android:id="@+id/button_import"
 				style="@style/BodyLinearLayoutItem"
 				android:text="@string/button_import_full" />
 
 			<Button
-				android:id="@+id/import_with_updating_button"
+				android:id="@+id/button_import_with_updating"
 				style="@style/BodyLinearLayoutItem"
 				android:text="@string/button_import_with_updating" />
 
 			<Button
-				android:id="@+id/import_without_updating_button"
+				android:id="@+id/button_import_without_updating"
 				style="@style/BodyLinearLayoutItem"
 				android:text="@string/button_import_without_updating" />
 
 			<Button
-				android:id="@+id/export_button"
+				android:id="@+id/button_export"
 				style="@style/BodyLinearLayoutItem"
 				android:layout_marginTop="@dimen/form_button_padding"
 				android:text="@string/button_export_full" />

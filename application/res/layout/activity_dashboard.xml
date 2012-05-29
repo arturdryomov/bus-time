@@ -18,7 +18,7 @@
 			style="@style/ActionbarButtons" >
 
 			<ImageButton
-				android:id="@+id/sync_button"
+				android:id="@+id/button_sync"
 				style="@style/ActionbarButton"
 				android:contentDescription="@string/description_sync"
 				android:src="@drawable/ic_menu_sync" />
@@ -34,13 +34,13 @@
 		android:layout_below="@id/actionbar" >
 
 		<Button
-			android:id="@+id/routes_button"
+			android:id="@+id/button_routes"
 			style="@style/DashboardButton"
 			android:drawableTop="@drawable/home_button_routes"
 			android:text="@string/title_routes" />
 
 		<Button
-			android:id="@+id/stations_button"
+			android:id="@+id/button_stations"
 			style="@style/DashboardButton"
 			android:drawableTop="@drawable/home_button_stations"
 			android:text="@string/title_stations" />
