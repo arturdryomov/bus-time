@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
 	<item
-		android:id="@+id/rename"
+		android:id="@+id/menu_rename"
 		android:title="@string/menu_rename"/>
 
 	<item
-		android:id="@+id/change_location"
+		android:id="@+id/menu_change_location"
 		android:title="@string/menu_change_location"/>
 
 	<item
-		android:id="@+id/delete"
+		android:id="@+id/menu_delete"
 		android:title="@string/menu_delete"/>
 
 </menu>

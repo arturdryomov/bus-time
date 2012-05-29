@@ -272,13 +272,13 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		int stationPosition = itemInfo.position;
 
 		switch (item.getItemId()) {
-			case R.id.rename:
+			case R.id.menu_rename:
 				callStationRenaming(stationPosition);
 				return true;
-			case R.id.change_location:
+			case R.id.menu_change_location:
 				callStationLocationUpdating(stationPosition);
 				return true;
-			case R.id.delete:
+			case R.id.menu_delete:
 				callStationDeleting(stationPosition);
 				return true;
 			default:

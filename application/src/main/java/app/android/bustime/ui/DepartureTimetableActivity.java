@@ -153,10 +153,10 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 		int timePosition = itemInfo.position;
 
 		switch (item.getItemId()) {
-			case R.id.edit:
+			case R.id.menu_edit:
 				callDepartureTimeEditing(timePosition);
 				return true;
-			case R.id.delete:
+			case R.id.menu_delete:
 				callDepartureTimeDeleting(timePosition);
 				return true;
 			default:

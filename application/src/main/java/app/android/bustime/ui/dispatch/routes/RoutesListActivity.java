@@ -137,13 +137,13 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 		int routePosition = itemInfo.position;
 
 		switch (item.getItemId()) {
-			case R.id.rename:
+			case R.id.menu_rename:
 				callRouteRenaming(routePosition);
 				return true;
-			case R.id.delete:
+			case R.id.menu_delete:
 				callRouteDeleting(routePosition);
 				return true;
-			case R.id.edit_departure_timetable:
+			case R.id.menu_edit_departure_timetable:
 				callDepartureTimetable(routePosition);
 				return true;
 			default:

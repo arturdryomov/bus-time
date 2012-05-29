@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
 	<item
-		android:id="@+id/rename"
+		android:id="@+id/menu_rename"
 		android:title="@string/menu_rename"/>
 
 	<item
-		android:id="@+id/delete"
+		android:id="@+id/menu_delete"
 		android:title="@string/menu_delete"/>
 
 	<item
-		android:id="@+id/edit_departure_timetable"
+		android:id="@+id/menu_edit_departure_timetable"
 		android:title="@string/menu_edit_departure_timetable"/>
 
 </menu>
