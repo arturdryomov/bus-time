@@ -1,13 +1,9 @@
-.classpath
-.project
-.settings
-
-bin
-gen
-target
+# Application keys
 
 keys.xml
 
-*.iml
-.idea
-classes
+# Maven
+
+target/
+
+# Use global .gitignore file for your IDE
