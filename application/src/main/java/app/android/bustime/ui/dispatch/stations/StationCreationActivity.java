@@ -40,7 +40,7 @@ public class StationCreationActivity extends Activity
 	}
 
 	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.confirm_button);
+		Button confirmButton = (Button) findViewById(R.id.button_confirm);
 		confirmButton.setOnClickListener(confirmListener);
 
 		Button locationButton = (Button) findViewById(R.id.button_location);

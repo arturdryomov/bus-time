@@ -88,7 +88,7 @@ public class StationCreationActivity extends Activity
 	private void initializeBodyControls() {
 		fillStationsSpinner();
 
-		Button confirmButton = (Button) findViewById(R.id.confirm_button);
+		Button confirmButton = (Button) findViewById(R.id.button_confirm);
 		confirmButton.setOnClickListener(confirmListener);
 
 		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.picker_shift_time);

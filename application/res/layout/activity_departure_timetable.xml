@@ -14,7 +14,6 @@
 			android:text="@string/title_departure_timetable" />
 
 		<LinearLayout
-			android:id="@+id/actions"
 			style="@style/ActionBarButtons" >
 
 			<ImageButton
