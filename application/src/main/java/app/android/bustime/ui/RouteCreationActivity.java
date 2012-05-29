@@ -32,7 +32,7 @@ public class RouteCreationActivity extends Activity
 	}
 
 	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.confirm_button);
+		Button confirmButton = (Button) findViewById(R.id.button_confirm);
 		confirmButton.setOnClickListener(confirmListener);
 	}
 
@@ -57,7 +57,7 @@ public class RouteCreationActivity extends Activity
 	};
 
 	private void readUserDataFromFields() {
-		EditText routeNameEdit = (EditText) findViewById(R.id.route_name_edit);
+		EditText routeNameEdit = (EditText) findViewById(R.id.edit_route_name);
 
 		routeName = routeNameEdit.getText().toString().trim();
 	}

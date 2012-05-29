@@ -28,7 +28,7 @@ public class DashboardActivity extends Activity
 	}
 
 	private void initializeActionbar() {
-		ImageButton syncButton = (ImageButton) findViewById(R.id.sync_button);
+		ImageButton syncButton = (ImageButton) findViewById(R.id.button_sync);
 		syncButton.setOnClickListener(syncListener);
 	}
 
@@ -45,10 +45,10 @@ public class DashboardActivity extends Activity
 	};
 
 	private void initializeButtons() {
-		Button routesButton = (Button) findViewById(R.id.routes_button);
+		Button routesButton = (Button) findViewById(R.id.button_routes);
 		routesButton.setOnClickListener(routesListener);
 
-		Button stationsButton = (Button) findViewById(R.id.stations_button);
+		Button stationsButton = (Button) findViewById(R.id.button_stations);
 		stationsButton.setOnClickListener(stationsListener);
 	}
 

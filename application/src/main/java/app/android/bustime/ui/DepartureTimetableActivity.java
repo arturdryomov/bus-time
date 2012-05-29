@@ -57,7 +57,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 	}
 
 	private void initializeActionbar() {
-		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.item_creation_button);
+		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.button_item_creation);
 		itemCreationButton.setOnClickListener(departureTimeCreationListener);
 	}
 

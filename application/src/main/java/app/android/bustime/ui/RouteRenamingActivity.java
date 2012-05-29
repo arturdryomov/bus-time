@@ -47,7 +47,7 @@ public class RouteRenamingActivity extends Activity
 	}
 
 	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.confirm_button);
+		Button confirmButton = (Button) findViewById(R.id.button_confirm);
 		confirmButton.setOnClickListener(confirmListener);
 	}
 
@@ -72,7 +72,7 @@ public class RouteRenamingActivity extends Activity
 	};
 
 	private void readUserDataFromFields() {
-		EditText routeNameEdit = (EditText) findViewById(R.id.route_name_edit);
+		EditText routeNameEdit = (EditText) findViewById(R.id.edit_route_name);
 
 		routeName = routeNameEdit.getText().toString().trim();
 	}
@@ -113,7 +113,7 @@ public class RouteRenamingActivity extends Activity
 	}
 
 	private void setUpReceivedRouteData() {
-		EditText routeNameEdit = (EditText) findViewById(R.id.route_name_edit);
+		EditText routeNameEdit = (EditText) findViewById(R.id.edit_route_name);
 		routeNameEdit.setText(route.getName());
 	}
 }

@@ -54,7 +54,7 @@ public class DepartureTimeEditingActivity extends Activity
 	}
 
 	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.confirm_button);
+		Button confirmButton = (Button) findViewById(R.id.button_confirm);
 		confirmButton.setOnClickListener(confirmListener);
 
 		setSystemTimeFormatForTimePicker();
@@ -74,7 +74,7 @@ public class DepartureTimeEditingActivity extends Activity
 	};
 
 	private void readUserDataFromTimePicker() {
-		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
+		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.picker_departure_time);
 
 		departureTimeHour = departureTimePicker.getCurrentHour();
 		departureTimeMinute = departureTimePicker.getCurrentMinute();
@@ -111,7 +111,7 @@ public class DepartureTimeEditingActivity extends Activity
 	}
 
 	private void setSystemTimeFormatForTimePicker() {
-		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
+		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.picker_departure_time);
 		departureTimePicker.setIs24HourView(DateFormat.is24HourFormat(activityContext));
 	}
 
@@ -119,7 +119,7 @@ public class DepartureTimeEditingActivity extends Activity
 		departureTimeHour = time.getHours();
 		departureTimeMinute = time.getMinutes();
 
-		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.departure_time_picker);
+		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.picker_departure_time);
 		departureTimePicker.setCurrentHour(departureTimeHour);
 		departureTimePicker.setCurrentMinute(departureTimeMinute);
 	}

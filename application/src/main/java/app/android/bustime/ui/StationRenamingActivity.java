@@ -47,7 +47,7 @@ public class StationRenamingActivity extends Activity
 	}
 
 	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.confirm_button);
+		Button confirmButton = (Button) findViewById(R.id.button_confirm);
 		confirmButton.setOnClickListener(confirmListener);
 	}
 
@@ -69,7 +69,7 @@ public class StationRenamingActivity extends Activity
 	};
 
 	private void readUserDataFromFields() {
-		EditText stationNameEdit = (EditText) findViewById(R.id.station_name_edit);
+		EditText stationNameEdit = (EditText) findViewById(R.id.edit_station_name);
 
 		stationName = stationNameEdit.getText().toString().trim();
 	}
@@ -110,7 +110,7 @@ public class StationRenamingActivity extends Activity
 	}
 
 	private void setUpReceivedStationData() {
-		EditText stationNameEdit = (EditText) findViewById(R.id.station_name_edit);
+		EditText stationNameEdit = (EditText) findViewById(R.id.edit_station_name);
 		stationNameEdit.setText(station.getName());
 	}
 }
