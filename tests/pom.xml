@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>BusTime Tests</name>
-	<artifactId>bustime-tests</artifactId>
+	<name>Bus Time Tests</name>
+	<artifactId>bus-time-tests</artifactId>
 	<packaging>apk</packaging>
 
 	<parent>
-		<artifactId>bustime-parent</artifactId>
+		<artifactId>bus-time-parent</artifactId>
 		<version>0.5.1</version>
 		<groupId>app.android</groupId>
 	</parent>
@@ -29,7 +29,7 @@
 		</dependency>
 
 		<dependency>
-			<artifactId>bustime-application</artifactId>
+			<artifactId>bus-time-application</artifactId>
 			<version>${project.version}</version>
 			<groupId>app.android</groupId>
 			<scope>provided</scope>
@@ -37,7 +37,7 @@
 		</dependency>
 
 		<dependency>
-			<artifactId>bustime-application</artifactId>
+			<artifactId>bus-time-application</artifactId>
 			<version>${project.version}</version>
 			<groupId>app.android</groupId>
 			<scope>provided</scope>

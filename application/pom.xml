@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>BusTime Application</name>
-	<artifactId>bustime-application</artifactId>
+	<name>Bus Time Application</name>
+	<artifactId>bus-time-application</artifactId>
 	<packaging>apk</packaging>
 
 	<parent>
-		<artifactId>bustime-parent</artifactId>
+		<artifactId>bus-time-parent</artifactId>
 		<version>0.5.1</version>
 		<groupId>app.android</groupId>
 	</parent>
