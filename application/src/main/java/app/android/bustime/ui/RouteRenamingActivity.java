@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import app.android.bustime.R;
 import app.android.bustime.db.AlreadyExistsException;
 import app.android.bustime.db.Route;
@@ -25,7 +26,7 @@ public class RouteRenamingActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_route_renaming);
+		setContentView(R.layout.activity_route_creation);
 
 		processReceivedRoute();
 
@@ -47,8 +48,18 @@ public class RouteRenamingActivity extends Activity
 	}
 
 	private void initializeBodyControls() {
+		setActivityViewsInscriptions();
+
 		Button confirmButton = (Button) findViewById(R.id.button_confirm);
 		confirmButton.setOnClickListener(confirmListener);
+	}
+
+	private void setActivityViewsInscriptions() {
+		TextView actionBarTitle = (TextView) findViewById(R.id.text_actionbar);
+		actionBarTitle.setText(R.string.title_route_renaming);
+
+		Button confirmButton = (Button) findViewById(R.id.button_confirm);
+		confirmButton.setText(R.string.button_rename_route);
 	}
 
 	private final OnClickListener confirmListener = new OnClickListener() {

@@ -10,6 +10,7 @@
 		style="@style/Actionbar" >
 
 		<TextView
+			android:id="@+id/text_actionbar"
 			style="@style/ActionbarTitle"
 			android:text="@string/title_route_creation" />
 	</RelativeLayout>
