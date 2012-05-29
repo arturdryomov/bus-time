@@ -39,7 +39,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 
 		processReceivedRoute();
 
-		initializeActionbar();
+		initializeActionBar();
 		initializeList();
 	}
 
@@ -56,7 +56,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 		}
 	}
 
-	private void initializeActionbar() {
+	private void initializeActionBar() {
 		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.button_item_creation);
 		itemCreationButton.setOnClickListener(departureTimeCreationListener);
 	}

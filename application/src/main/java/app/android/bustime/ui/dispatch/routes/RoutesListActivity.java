@@ -37,11 +37,11 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_routes);
 
-		initializeActionbar();
+		initializeActionBar();
 		initializeList();
 	}
 
-	private void initializeActionbar() {
+	private void initializeActionBar() {
 		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.button_item_creation);
 		itemCreationButton.setOnClickListener(routeCreationListener);
 	}

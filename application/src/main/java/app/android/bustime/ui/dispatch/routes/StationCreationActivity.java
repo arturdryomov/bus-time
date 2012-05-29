@@ -91,7 +91,7 @@ public class StationCreationActivity extends Activity
 		Button confirmButton = (Button) findViewById(R.id.confirm_button);
 		confirmButton.setOnClickListener(confirmListener);
 
-		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.shift_time_picker);
+		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.picker_shift_time);
 		shiftTimePicker.setIs24HourView(true);
 		setUpNullTimeToShiftTimePicker();
 
@@ -185,7 +185,7 @@ public class StationCreationActivity extends Activity
 	};
 
 	private void readUserDataFromFields() {
-		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.shift_time_picker);
+		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.picker_shift_time);
 		shiftTimeHour = shiftTimePicker.getCurrentHour();
 		shiftTimeMinute = shiftTimePicker.getCurrentMinute();
 
@@ -272,7 +272,7 @@ public class StationCreationActivity extends Activity
 	}
 
 	private void setUpNullTimeToShiftTimePicker() {
-		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.shift_time_picker);
+		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.picker_shift_time);
 
 		shiftTimePicker.setCurrentHour(0);
 		shiftTimePicker.setCurrentMinute(0);

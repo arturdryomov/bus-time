@@ -55,7 +55,7 @@ public class RouteRenamingActivity extends Activity
 	}
 
 	private void setActivityViewsInscriptions() {
-		TextView actionBarTitle = (TextView) findViewById(R.id.text_actionbar);
+		TextView actionBarTitle = (TextView) findViewById(R.id.text_action_bar);
 		actionBarTitle.setText(R.string.title_route_renaming);
 
 		Button confirmButton = (Button) findViewById(R.id.button_confirm);

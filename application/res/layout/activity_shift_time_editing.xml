@@ -6,11 +6,11 @@
 	<!-- Actionbar -->
 
 	<RelativeLayout
-		android:id="@+id/actionbar"
-		style="@style/Actionbar" >
+		android:id="@+id/action_bar"
+		style="@style/ActionBar" >
 
 		<TextView
-			style="@style/ActionbarTitle"
+			style="@style/ActionBarTitle"
 			android:text="@string/title_shift_time_editing" />
 	</RelativeLayout>
 
@@ -19,12 +19,12 @@
 	<ScrollView
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
-		android:layout_below="@id/actionbar" >
+		android:layout_below="@id/action_bar" >
 
 		<LinearLayout style="@style/BodyLinearLayout" >
 
 			<TimePicker
-				android:id="@+id/shift_time_picker"
+				android:id="@+id/picker_shift_time"
 				style="@style/BodyLinearLayoutItem" />
 
 			<Button

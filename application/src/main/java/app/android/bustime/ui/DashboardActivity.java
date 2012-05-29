@@ -23,11 +23,11 @@ public class DashboardActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dashboard);
 
-		initializeActionbar();
+		initializeActionBar();
 		initializeButtons();
 	}
 
-	private void initializeActionbar() {
+	private void initializeActionBar() {
 		ImageButton syncButton = (ImageButton) findViewById(R.id.button_sync);
 		syncButton.setOnClickListener(syncListener);
 	}

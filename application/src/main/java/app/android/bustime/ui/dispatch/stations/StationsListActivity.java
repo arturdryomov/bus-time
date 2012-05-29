@@ -48,7 +48,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 		initializeLocationManager();
 
-		initializeActionbar();
+		initializeActionBar();
 		initializeList();
 	}
 
@@ -56,7 +56,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 	}
 
-	private void initializeActionbar() {
+	private void initializeActionBar() {
 		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.button_item_creation);
 		itemCreationButton.setOnClickListener(stationCreationListener);
 

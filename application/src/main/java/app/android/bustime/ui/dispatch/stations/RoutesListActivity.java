@@ -38,7 +38,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 
 		processReceivedStation();
 
-		initializeActionbar();
+		initializeActionBar();
 		initializeList();
 	}
 
@@ -55,7 +55,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 		}
 	}
 
-	private void initializeActionbar() {
+	private void initializeActionBar() {
 		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.button_item_creation);
 		itemCreationButton.setVisibility(View.GONE);
 	}
