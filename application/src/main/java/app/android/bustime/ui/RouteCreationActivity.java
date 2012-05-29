@@ -1,13 +1,9 @@
 package app.android.bustime.ui;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import app.android.bustime.R;
@@ -17,57 +13,40 @@ import app.android.bustime.db.DbProvider;
 import app.android.bustime.db.Route;
 
 
-public class RouteCreationActivity extends Activity
+public class RouteCreationActivity extends FormActivity
 {
-	private final Context activityContext = this;
-
 	private String routeName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_route_creation);
-
-		initializeBodyControls();
+		super.onCreate(savedInstanceState);
 	}
 
-	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.button_confirm);
-		confirmButton.setOnClickListener(confirmListener);
+	@Override
+	protected Button getConfirmButton() {
+		return (Button) findViewById(R.id.button_confirm);
 	}
 
-	private final OnClickListener confirmListener = new OnClickListener() {
-		@Override
-		public void onClick(View view) {
-			readUserDataFromFields();
-
-			String userDataErrorMessage = getUserDataErrorMessage();
-
-			if (userDataErrorMessage.isEmpty()) {
-				callRouteCreation();
-			}
-			else {
-				UserAlerter.alert(activityContext, userDataErrorMessage);
-			}
-		}
-
-		private void callRouteCreation() {
-			new CreateRouteTask().execute();
-		}
-	};
-
-	private void readUserDataFromFields() {
+	@Override
+	protected void readUserDataFromFields() {
 		EditText routeNameEdit = (EditText) findViewById(R.id.edit_route_name);
 
 		routeName = routeNameEdit.getText().toString().trim();
 	}
 
-	private String getUserDataErrorMessage() {
+	@Override
+	protected String getUserDataErrorMessage() {
 		if (routeName.isEmpty()) {
 			return getString(R.string.error_empty_route_name);
 		}
 
 		return new String();
+	}
+
+	@Override
+	protected void performSubmitAction() {
+		new CreateRouteTask().execute();
 	}
 
 	private class CreateRouteTask extends AsyncTask<Void, Void, String>
@@ -97,8 +76,7 @@ public class RouteCreationActivity extends Activity
 				callDepartureTimetable();
 
 				finish();
-			}
-			else {
+			} else {
 				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}

@@ -1,12 +1,8 @@
 package app.android.bustime.ui;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,43 +11,21 @@ import app.android.bustime.db.AlreadyExistsException;
 import app.android.bustime.db.Route;
 
 
-public class RouteRenamingActivity extends Activity
+public class RouteRenamingActivity extends FormActivity
 {
-	private final Context activityContext = this;
-
 	private Route route;
 
 	private String routeName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_route_creation);
+		super.onCreate(savedInstanceState);
 
-		processReceivedRoute();
-
-		initializeBodyControls();
-		setUpReceivedRouteData();
-	}
-
-	private void processReceivedRoute() {
-		Bundle receivedData = this.getIntent().getExtras();
-
-		if (receivedData.containsKey(IntentFactory.MESSAGE_ID)) {
-			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
-		}
-		else {
-			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
-
-			finish();
-		}
-	}
-
-	private void initializeBodyControls() {
 		setActivityViewsInscriptions();
 
-		Button confirmButton = (Button) findViewById(R.id.button_confirm);
-		confirmButton.setOnClickListener(confirmListener);
+		processReceivedRoute();
+		setUpReceivedRouteData();
 	}
 
 	private void setActivityViewsInscriptions() {
@@ -62,38 +36,30 @@ public class RouteRenamingActivity extends Activity
 		confirmButton.setText(R.string.button_rename_route);
 	}
 
-	private final OnClickListener confirmListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			readUserDataFromFields();
+	@Override
+	protected Button getConfirmButton() {
+		return (Button) findViewById(R.id.button_confirm);
+	}
 
-			String userDataErrorMessage = getUserDataErrorMessage();
-
-			if (userDataErrorMessage.isEmpty()) {
-				callRouteUpdating();
-			}
-			else {
-				UserAlerter.alert(activityContext, userDataErrorMessage);
-			}
-		}
-
-		private void callRouteUpdating() {
-			new UpdateRouteTask().execute();
-		}
-	};
-
-	private void readUserDataFromFields() {
+	@Override
+	protected void readUserDataFromFields() {
 		EditText routeNameEdit = (EditText) findViewById(R.id.edit_route_name);
 
 		routeName = routeNameEdit.getText().toString().trim();
 	}
 
-	private String getUserDataErrorMessage() {
+	@Override
+	protected String getUserDataErrorMessage() {
 		if (routeName.isEmpty()) {
 			return getString(R.string.error_empty_route_name);
 		}
 
 		return new String();
+	}
+
+	@Override
+	protected void performSubmitAction() {
+		new UpdateRouteTask().execute();
 	}
 
 	private class UpdateRouteTask extends AsyncTask<Void, Void, String>
@@ -120,6 +86,19 @@ public class RouteRenamingActivity extends Activity
 			else {
 				UserAlerter.alert(activityContext, errorMessage);
 			}
+		}
+	}
+
+	private void processReceivedRoute() {
+		Bundle receivedData = this.getIntent().getExtras();
+
+		if (receivedData.containsKey(IntentFactory.MESSAGE_ID)) {
+			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
+		}
+		else {
+			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
+
+			finish();
 		}
 	}
 
