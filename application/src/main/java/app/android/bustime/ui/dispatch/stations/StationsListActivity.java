@@ -57,27 +57,29 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	}
 
 	private void initializeActionbar() {
-		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.item_creation_button);
+		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.button_item_creation);
 		itemCreationButton.setOnClickListener(stationCreationListener);
 
-		ImageButton stationsNearbyButton = (ImageButton) findViewById(R.id.stations_nearby_button);
+		ImageButton stationsNearbyButton = (ImageButton) findViewById(R.id.button_stations_nearby);
 		stationsNearbyButton.setOnClickListener(stationsNearbyListener);
 	}
 
-	private final OnClickListener stationCreationListener = new OnClickListener() {
+	private final OnClickListener stationCreationListener = new OnClickListener()
+	{
 		@Override
 		public void onClick(View view) {
 			callStationCreation();
 		}
 
 		private void callStationCreation() {
-			Intent callIntent = DispatchStationsIntentFactory
-				.createStationCreationIntent(activityContext);
+			Intent callIntent = DispatchStationsIntentFactory.createStationCreationIntent(
+				activityContext);
 			startActivity(callIntent);
 		}
 	};
 
-	private final OnClickListener stationsNearbyListener = new OnClickListener() {
+	private final OnClickListener stationsNearbyListener = new OnClickListener()
+	{
 		@Override
 		public void onClick(View view) {
 
@@ -87,8 +89,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 				stopLocationUpdates();
 
 				areLoadedStationsNearby = false;
-			}
-			else {
+			} else {
 				loadStationsNearby();
 
 				areLoadedStationsNearby = true;
@@ -98,16 +99,15 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		}
 
 		private void updateActionbarNearbyButtonIcon() {
-			ImageButton nearbyButton = (ImageButton) findViewById(R.id.stations_nearby_button);
+			ImageButton nearbyButton = (ImageButton) findViewById(R.id.button_stations_nearby);
 
 			if (areLoadedStationsNearby) {
-				nearbyButton.setImageDrawable(getResources().getDrawable(
-					R.drawable.ic_menu_location_enabled));
+				nearbyButton.setImageDrawable(
+					getResources().getDrawable(R.drawable.ic_menu_location_enabled));
 
-			}
-			else {
-				nearbyButton.setImageDrawable(getResources().getDrawable(
-					R.drawable.ic_menu_location_disabled));
+			} else {
+				nearbyButton.setImageDrawable(
+					getResources().getDrawable(R.drawable.ic_menu_location_disabled));
 			}
 		}
 
@@ -129,7 +129,8 @@ public class StationsListActivity extends SimpleAdapterListActivity
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 	}
 
-	private final LocationListener locationListener = new LocationListener() {
+	private final LocationListener locationListener = new LocationListener()
+	{
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
 		}
@@ -179,8 +180,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 			if (stations.isEmpty()) {
 				setEmptyListText(getString(R.string.empty_stations_nearby));
-			}
-			else {
+			} else {
 				fillList(stations);
 			}
 		}
@@ -193,7 +193,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter stationsAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.list_item_one_line, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
+			R.layout.list_item_one_line, new String[]{LIST_ITEM_TEXT_ID}, new int[]{R.id.text});
 
 		setListAdapter(stationsAdapter);
 
@@ -208,8 +208,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 		if (areLoadedStationsNearby) {
 			loadStationsNearby();
-		}
-		else {
+		} else {
 			loadStations();
 		}
 	}
@@ -242,8 +241,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 			if (stations.isEmpty()) {
 				setEmptyListText(getString(R.string.empty_stations));
-			}
-			else {
+			} else {
 				fillList(stations);
 			}
 		}
@@ -298,8 +296,9 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	private Station getStation(int stationPosition) {
 		SimpleAdapter listAdapter = (SimpleAdapter) getListAdapter();
 
-		@SuppressWarnings("unchecked")
-		Map<String, Object> adapterItem = (Map<String, Object>) listAdapter.getItem(stationPosition);
+		@SuppressWarnings(
+			"unchecked") Map<String, Object> adapterItem = (Map<String, Object>) listAdapter.getItem(
+			stationPosition);
 
 		return (Station) adapterItem.get(LIST_ITEM_OBJECT_ID);
 	}

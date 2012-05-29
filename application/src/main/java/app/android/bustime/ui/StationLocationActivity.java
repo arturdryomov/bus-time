@@ -68,7 +68,7 @@ public class StationLocationActivity extends MapActivity
 	}
 
 	private void initializeActionbar() {
-		ImageButton saveLocationButton = (ImageButton) findViewById(R.id.save_button);
+		ImageButton saveLocationButton = (ImageButton) findViewById(R.id.button_save);
 		saveLocationButton.setOnClickListener(saveLocationListener);
 	}
 

@@ -24,7 +24,7 @@
 		<LinearLayout style="@style/BodyLinearLayout" >
 
 			<TimePicker
-				android:id="@+id/departure_time_picker"
+				android:id="@+id/picker_departure_time"
 				style="@style/BodyLinearLayoutItem" />
 
 			<Button

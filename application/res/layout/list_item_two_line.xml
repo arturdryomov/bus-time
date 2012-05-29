@@ -15,7 +15,7 @@
 		android:id="@+id/text_first_line"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_above="@id/second_line"
+		android:layout_above="@id/text_second_line"
 		android:layout_alignParentTop="true"
 		android:singleLine="true"
 		android:textColor="?android:attr/textColorPrimary" />

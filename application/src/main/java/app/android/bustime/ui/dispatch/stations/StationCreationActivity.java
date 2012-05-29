@@ -43,7 +43,7 @@ public class StationCreationActivity extends Activity
 		Button confirmButton = (Button) findViewById(R.id.confirm_button);
 		confirmButton.setOnClickListener(confirmListener);
 
-		Button locationButton = (Button) findViewById(R.id.location_button);
+		Button locationButton = (Button) findViewById(R.id.button_location);
 		locationButton.setOnClickListener(locationListener);
 	}
 
@@ -68,7 +68,7 @@ public class StationCreationActivity extends Activity
 	};
 
 	private void readUserDataFromFields() {
-		EditText stationNameEdit = (EditText) findViewById(R.id.station_name_edit);
+		EditText stationNameEdit = (EditText) findViewById(R.id.edit_station_name);
 
 		stationName = stationNameEdit.getText().toString().trim();
 	}

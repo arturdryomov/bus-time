@@ -78,8 +78,7 @@ public class StationCreationActivity extends Activity
 
 		if (receivedData.containsKey(IntentFactory.MESSAGE_ID)) {
 			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
-		}
-		else {
+		} else {
 			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 			finish();
@@ -96,10 +95,10 @@ public class StationCreationActivity extends Activity
 		shiftTimePicker.setIs24HourView(true);
 		setUpNullTimeToShiftTimePicker();
 
-		CheckBox stationWasCreatedCheckbox = (CheckBox) findViewById(R.id.station_exists_checkbox);
+		CheckBox stationWasCreatedCheckbox = (CheckBox) findViewById(R.id.checkbox_station_exists);
 		stationWasCreatedCheckbox.setOnCheckedChangeListener(isStationExistListener);
 
-		Button stationLocationButton = (Button) findViewById(R.id.station_location_button);
+		Button stationLocationButton = (Button) findViewById(R.id.button_station_location);
 		stationLocationButton.setOnClickListener(stationLocationListener);
 	}
 
@@ -132,7 +131,7 @@ public class StationCreationActivity extends Activity
 	}
 
 	private void hidePossibilityToChooseExistingStation() {
-		CheckBox stationWasCreateBox = (CheckBox) findViewById(R.id.station_exists_checkbox);
+		CheckBox stationWasCreateBox = (CheckBox) findViewById(R.id.checkbox_station_exists);
 		stationWasCreateBox.setVisibility(View.GONE);
 	}
 
@@ -140,11 +139,11 @@ public class StationCreationActivity extends Activity
 		fillStationsData(stationsList);
 
 		SimpleAdapter stationsAdapter = new SimpleAdapter(activityContext, stationsData,
-			android.R.layout.simple_spinner_item, new String[] { SPINNER_ITEM_TEXT_ID },
-			new int[] { android.R.id.text1 });
+			android.R.layout.simple_spinner_item, new String[]{SPINNER_ITEM_TEXT_ID},
+			new int[]{android.R.id.text1});
 		stationsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-		Spinner stationsSpinner = (Spinner) findViewById(R.id.stations_spinner);
+		Spinner stationsSpinner = (Spinner) findViewById(R.id.spinner_stations);
 		stationsSpinner.setAdapter(stationsAdapter);
 	}
 
@@ -165,7 +164,8 @@ public class StationCreationActivity extends Activity
 		stationsData.add(stationItem);
 	}
 
-	private final OnClickListener confirmListener = new OnClickListener() {
+	private final OnClickListener confirmListener = new OnClickListener()
+	{
 		@Override
 		public void onClick(View view) {
 			readUserDataFromFields();
@@ -174,8 +174,7 @@ public class StationCreationActivity extends Activity
 
 			if (userDataErrorMessage.isEmpty()) {
 				callStationCreation();
-			}
-			else {
+			} else {
 				UserAlerter.alert(activityContext, userDataErrorMessage);
 			}
 		}
@@ -192,19 +191,17 @@ public class StationCreationActivity extends Activity
 
 		if (isStationExist) {
 			chosenExistingStation = getChosenStation();
-		}
-		else {
-			EditText stationNameEdit = (EditText) findViewById(R.id.station_name_edit);
+		} else {
+			EditText stationNameEdit = (EditText) findViewById(R.id.edit_station_name);
 			stationName = stationNameEdit.getText().toString().trim();
 		}
 	}
 
 	private Station getChosenStation() {
-		Spinner stationsSpinner = (Spinner) findViewById(R.id.stations_spinner);
+		Spinner stationsSpinner = (Spinner) findViewById(R.id.spinner_stations);
 
-		@SuppressWarnings("unchecked")
-		Map<String, Object> stationSpinnerItem = (Map<String, Object>) stationsSpinner
-			.getSelectedItem();
+		@SuppressWarnings(
+			"unchecked") Map<String, Object> stationSpinnerItem = (Map<String, Object>) stationsSpinner.getSelectedItem();
 
 		return (Station) stationSpinnerItem.get(SPINNER_ITEM_OBJECT_ID);
 	}
@@ -212,8 +209,7 @@ public class StationCreationActivity extends Activity
 	private String getUserDataErrorMessage() {
 		if (isStationExist) {
 			return new String();
-		}
-		else {
+		} else {
 			return getStationNameErrorMessage();
 		}
 	}
@@ -235,11 +231,10 @@ public class StationCreationActivity extends Activity
 
 			if (isStationExist) {
 				stationToInsertShiftTime = chosenExistingStation;
-			}
-			else {
+			} else {
 				try {
-					stationToInsertShiftTime = DbProvider.getInstance().getStations()
-						.createStation(stationName, stationLatitude, stationLongitude);
+					stationToInsertShiftTime = DbProvider.getInstance().getStations().createStation(
+						stationName, stationLatitude, stationLongitude);
 				}
 				catch (AlreadyExistsException e) {
 					return getString(R.string.error_station_exists);
@@ -250,8 +245,8 @@ public class StationCreationActivity extends Activity
 			}
 
 			try {
-				stationToInsertShiftTime.insertShiftTimeForRoute(route, new Time(shiftTimeHour,
-					shiftTimeMinute));
+				stationToInsertShiftTime.insertShiftTimeForRoute(route,
+					new Time(shiftTimeHour, shiftTimeMinute));
 			}
 			catch (AlreadyExistsException e) {
 				if (!isStationExist) {
@@ -270,8 +265,7 @@ public class StationCreationActivity extends Activity
 
 			if (errorMessage.isEmpty()) {
 				finish();
-			}
-			else {
+			} else {
 				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}
@@ -284,7 +278,8 @@ public class StationCreationActivity extends Activity
 		shiftTimePicker.setCurrentMinute(0);
 	}
 
-	private final OnCheckedChangeListener isStationExistListener = new OnCheckedChangeListener() {
+	private final OnCheckedChangeListener isStationExistListener = new OnCheckedChangeListener()
+	{
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 			isStationExist = isChecked;
@@ -294,23 +289,23 @@ public class StationCreationActivity extends Activity
 	};
 
 	private void updateBodyControls() {
-		EditText stationNameEdit = (EditText) findViewById(R.id.station_name_edit);
-		Button stationLocationButton = (Button) findViewById(R.id.station_location_button);
-		Spinner stationsListSpinner = (Spinner) findViewById(R.id.stations_spinner);
+		EditText stationNameEdit = (EditText) findViewById(R.id.edit_station_name);
+		Button stationLocationButton = (Button) findViewById(R.id.button_station_location);
+		Spinner stationsListSpinner = (Spinner) findViewById(R.id.spinner_stations);
 
 		if (isStationExist) {
 			stationNameEdit.setVisibility(View.GONE);
 			stationLocationButton.setVisibility(View.GONE);
 			stationsListSpinner.setVisibility(View.VISIBLE);
-		}
-		else {
+		} else {
 			stationNameEdit.setVisibility(View.VISIBLE);
 			stationLocationButton.setVisibility(View.VISIBLE);
 			stationsListSpinner.setVisibility(View.GONE);
 		}
 	}
 
-	private final OnClickListener stationLocationListener = new OnClickListener() {
+	private final OnClickListener stationLocationListener = new OnClickListener()
+	{
 		@Override
 		public void onClick(View view) {
 			callStationLocationActivity();

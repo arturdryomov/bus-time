@@ -34,7 +34,7 @@
 				android:singleLine="true" />
 
 			<Button
-				android:id="@+id/button_location_button"
+				android:id="@+id/button_location"
 				style="@style/BodyLinearLayoutItem"
 				android:layout_marginTop="@dimen/form_button_padding"
 				android:text="@string/button_set_location" />

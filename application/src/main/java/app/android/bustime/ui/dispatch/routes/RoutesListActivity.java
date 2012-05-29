@@ -42,11 +42,12 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	}
 
 	private void initializeActionbar() {
-		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.item_creation_button);
+		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.button_item_creation);
 		itemCreationButton.setOnClickListener(routeCreationListener);
 	}
 
-	private final OnClickListener routeCreationListener = new OnClickListener() {
+	private final OnClickListener routeCreationListener = new OnClickListener()
+	{
 		@Override
 		public void onClick(View view) {
 			callRouteCreation();
@@ -61,7 +62,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter routesAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.list_item_one_line, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
+			R.layout.list_item_one_line, new String[]{LIST_ITEM_TEXT_ID}, new int[]{R.id.text});
 
 		setListAdapter(routesAdapter);
 
@@ -105,8 +106,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 
 			if (routesList.isEmpty()) {
 				setEmptyListText(getString(R.string.empty_routes));
-			}
-			else {
+			} else {
 				fillList(routesList);
 			}
 		}
@@ -161,8 +161,9 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	private Route getRoute(int routePosition) {
 		SimpleAdapter routesAdapter = (SimpleAdapter) getListAdapter();
 
-		@SuppressWarnings("unchecked")
-		Map<String, Object> adapterItem = (Map<String, Object>) routesAdapter.getItem(routePosition);
+		@SuppressWarnings(
+			"unchecked") Map<String, Object> adapterItem = (Map<String, Object>) routesAdapter.getItem(
+			routePosition);
 
 		return (Route) adapterItem.get(LIST_ITEM_OBJECT_ID);
 	}
@@ -220,8 +221,8 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	private void callStationsList(int routePosition) {
 		Route route = getRoute(routePosition);
 
-		Intent callIntent = DispatchRoutesIntentFactory
-			.createStationsListIntent(activityContext, route);
+		Intent callIntent = DispatchRoutesIntentFactory.createStationsListIntent(activityContext,
+			route);
 		startActivity(callIntent);
 	}
 }

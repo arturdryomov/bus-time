@@ -165,7 +165,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	protected void initializeList() {
 		SimpleAdapter timetableAdapter = new SimpleAdapter(activityContext, listData,
 			R.layout.list_item_two_line, new String[] { LIST_ITEM_TIME_ID, LIST_ITEM_REMAINING_TIME_ID },
-			new int[] { R.id.first_line, R.id.second_line });
+			new int[] { R.id.text_first_line, R.id.text_second_line });
 
 		setListAdapter(timetableAdapter);
 
