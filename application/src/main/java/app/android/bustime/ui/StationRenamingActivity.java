@@ -1,85 +1,49 @@
 package app.android.bustime.ui;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import app.android.bustime.R;
 import app.android.bustime.db.AlreadyExistsException;
 import app.android.bustime.db.Station;
 
 
-public class StationRenamingActivity extends Activity
+public class StationRenamingActivity extends FormActivity
 {
-	private final Context activityContext = this;
-
 	private Station station;
 
 	private String stationName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_station_renaming);
+		super.onCreate(savedInstanceState);
 
 		processReceivedStation();
 
-		initializeBodyControls();
 		setUpReceivedStationData();
 	}
 
-	private void processReceivedStation() {
-		Bundle receivedData = this.getIntent().getExtras();
-
-		if (receivedData.containsKey(IntentFactory.MESSAGE_ID)) {
-			station = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
-		}
-		else {
-			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
-
-			finish();
-		}
-	}
-
-	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.button_confirm);
-		confirmButton.setOnClickListener(confirmListener);
-	}
-
-	private final OnClickListener confirmListener = new OnClickListener() {
-		@Override
-		public void onClick(View view) {
-			readUserDataFromFields();
-
-			String userDataErrorMessage = getUserDataErrorMessage();
-
-			if (userDataErrorMessage.isEmpty()) {
-				callStationUpdating();
-			}
-		}
-
-		private void callStationUpdating() {
-			new UpdateStationTask().execute();
-		}
-	};
-
-	private void readUserDataFromFields() {
+	@Override
+	protected void readUserDataFromFields() {
 		EditText stationNameEdit = (EditText) findViewById(R.id.edit_station_name);
 
 		stationName = stationNameEdit.getText().toString().trim();
 	}
 
-	private String getUserDataErrorMessage() {
+	@Override
+	protected String getUserDataErrorMessage() {
 		if (stationName.isEmpty()) {
 			return getString(R.string.error_empty_station_name);
 		}
 
 		return new String();
+	}
+
+	@Override
+	protected void performSubmitAction() {
+		new UpdateStationTask().execute();
 	}
 
 	private class UpdateStationTask extends AsyncTask<Void, Void, String>
@@ -106,6 +70,19 @@ public class StationRenamingActivity extends Activity
 			else {
 				UserAlerter.alert(activityContext, errorMessage);
 			}
+		}
+	}
+
+	private void processReceivedStation() {
+		Bundle receivedData = this.getIntent().getExtras();
+
+		if (receivedData.containsKey(IntentFactory.MESSAGE_ID)) {
+			station = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
+		}
+		else {
+			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
+
+			finish();
 		}
 	}
 

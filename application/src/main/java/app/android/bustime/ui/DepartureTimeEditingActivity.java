@@ -1,13 +1,8 @@
 package app.android.bustime.ui;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -17,24 +12,18 @@ import app.android.bustime.db.Route;
 import app.android.bustime.db.Time;
 
 
-public class DepartureTimeEditingActivity extends Activity
+public class DepartureTimeEditingActivity extends DepartureTimeCreationActivity
 {
-	private final Context activityContext = this;
-
 	private Route route;
 	private Time time;
 
-	private int departureTimeHour;
-	private int departureTimeMinute;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_departure_time_creation);
-
 		processReceivedRouteAndTime();
 
-		initializeBodyControls();
+		super.onCreate(savedInstanceState);
+
+		setActivityViewsInscriptions();
 	}
 
 	private void processReceivedRouteAndTime() {
@@ -54,41 +43,9 @@ public class DepartureTimeEditingActivity extends Activity
 		finish();
 	}
 
-	private void initializeBodyControls() {
-		setActivityViewsInscriptions();
-
-		Button confirmButton = (Button) findViewById(R.id.button_confirm);
-		confirmButton.setOnClickListener(confirmListener);
-
-		setSystemTimeFormatForTimePicker();
-		setUpReceivedTime();
-	}
-
-	private void setActivityViewsInscriptions() {
-		TextView actionBarTitle = (TextView) findViewById(R.id.text_action_bar);
-		actionBarTitle.setText(R.string.title_departure_time_editing);
-
-		Button confirmButton = (Button) findViewById(R.id.button_confirm);
-		confirmButton.setText(R.string.button_update_departure_time);
-	}
-
-	private final OnClickListener confirmListener = new OnClickListener() {
-		@Override
-		public void onClick(View view) {
-			readUserDataFromTimePicker();
-			callDepartureTimeUpdating();
-		}
-
-		private void callDepartureTimeUpdating() {
-			new UpdateDepartureTimeTask().execute();
-		}
-	};
-
-	private void readUserDataFromTimePicker() {
-		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.picker_departure_time);
-
-		departureTimeHour = departureTimePicker.getCurrentHour();
-		departureTimeMinute = departureTimePicker.getCurrentMinute();
+	@Override
+	protected void performSubmitAction() {
+		new UpdateDepartureTimeTask().execute();
 	}
 
 	private class UpdateDepartureTimeTask extends AsyncTask<Void, Void, String>
@@ -114,24 +71,27 @@ public class DepartureTimeEditingActivity extends Activity
 
 			if (errorMessage.isEmpty()) {
 				finish();
-			}
-			else {
+			} else {
 				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}
 	}
 
-	private void setSystemTimeFormatForTimePicker() {
-		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.picker_departure_time);
-		departureTimePicker.setIs24HourView(DateFormat.is24HourFormat(activityContext));
-	}
-
-	private void setUpReceivedTime() {
+	@Override
+	protected void setUpCurrentTime() {
 		departureTimeHour = time.getHours();
 		departureTimeMinute = time.getMinutes();
 
 		TimePicker departureTimePicker = (TimePicker) findViewById(R.id.picker_departure_time);
 		departureTimePicker.setCurrentHour(departureTimeHour);
 		departureTimePicker.setCurrentMinute(departureTimeMinute);
+	}
+
+	private void setActivityViewsInscriptions() {
+		TextView actionBarTitle = (TextView) findViewById(R.id.text_action_bar);
+		actionBarTitle.setText(R.string.title_departure_time_editing);
+
+		Button confirmButton = (Button) findViewById(R.id.button_confirm);
+		confirmButton.setText(R.string.button_update_departure_time);
 	}
 }
