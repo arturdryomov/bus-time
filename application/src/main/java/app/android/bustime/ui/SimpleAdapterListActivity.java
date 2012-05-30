@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public abstract class SimpleAdapterListActivity extends ListActivity
 {
-	protected List<HashMap<String, Object>> listData;
+	protected final List<HashMap<String, Object>> listData;
 
 	protected SimpleAdapterListActivity() {
 		super();

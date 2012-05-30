@@ -25,7 +25,7 @@ public abstract class FormActivity extends Activity
 		confirmButton.setOnClickListener(confirmListener);
 	}
 
-	protected final View.OnClickListener confirmListener = new View.OnClickListener()
+	private final View.OnClickListener confirmListener = new View.OnClickListener()
 	{
 		@Override
 		public void onClick(View view) {
