@@ -13,7 +13,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import app.android.bustime.R;
-
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
@@ -72,7 +71,8 @@ public class StationLocationActivity extends MapActivity
 		saveLocationButton.setOnClickListener(saveLocationListener);
 	}
 
-	private final OnClickListener saveLocationListener = new OnClickListener() {
+	private final OnClickListener saveLocationListener = new OnClickListener()
+	{
 		@Override
 		public void onClick(View view) {
 			savePinLocation();
@@ -131,7 +131,8 @@ public class StationLocationActivity extends MapActivity
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 	}
 
-	private final LocationListener locationListener = new LocationListener() {
+	private final LocationListener locationListener = new LocationListener()
+	{
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
 		}

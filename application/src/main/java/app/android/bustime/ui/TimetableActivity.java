@@ -164,8 +164,8 @@ public class TimetableActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter timetableAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.list_item_two_line, new String[] { LIST_ITEM_TIME_ID, LIST_ITEM_REMAINING_TIME_ID },
-			new int[] { R.id.text_first_line, R.id.text_second_line });
+			R.layout.list_item_two_line, new String[] {LIST_ITEM_TIME_ID, LIST_ITEM_REMAINING_TIME_ID},
+			new int[] {R.id.text_first_line, R.id.text_second_line});
 
 		setListAdapter(timetableAdapter);
 
@@ -186,8 +186,7 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		for (HashMap<String, Object> listDataElement : listData) {
 			Time listDataTime = (Time) listDataElement.get(LIST_ITEM_OBJECT_ID);
 
-			listDataElement.put(LIST_ITEM_REMAINING_TIME_ID,
-				constructRemainingTimeText(listDataTime));
+			listDataElement.put(LIST_ITEM_REMAINING_TIME_ID, constructRemainingTimeText(listDataTime));
 		}
 
 		updateList();
@@ -213,7 +212,8 @@ public class TimetableActivity extends SimpleAdapterListActivity
 		timer.removeCallbacks(timerTask);
 	}
 
-	private final Runnable timerTask = new Runnable() {
+	private final Runnable timerTask = new Runnable()
+	{
 		@Override
 		public void run() {
 			updateRemainingTimes();

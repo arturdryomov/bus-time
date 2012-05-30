@@ -62,7 +62,8 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 		if (receivedData.containsKey(IntentFactory.MESSAGE_ID)) {
 			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
-		} else {
+		}
+		else {
 			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 			finish();
@@ -106,7 +107,8 @@ public class StationsListActivity extends SimpleAdapterListActivity
 				stopLocationUpdates();
 
 				areLoadedStationsNearby = false;
-			} else {
+			}
+			else {
 				loadStationsNearby();
 
 				areLoadedStationsNearby = true;
@@ -121,13 +123,12 @@ public class StationsListActivity extends SimpleAdapterListActivity
 			if (areLoadedStationsNearby) {
 				nearbyButton.setImageDrawable(
 					getResources().getDrawable(R.drawable.ic_menu_location_enabled));
-
-			} else {
+			}
+			else {
 				nearbyButton.setImageDrawable(
 					getResources().getDrawable(R.drawable.ic_menu_location_disabled));
 			}
 		}
-
 	};
 
 	private void loadStationsNearby() {
@@ -197,7 +198,8 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 			if (stations.isEmpty()) {
 				setEmptyListText(getString(R.string.empty_stations_nearby));
-			} else {
+			}
+			else {
 				fillList(stations);
 			}
 		}
@@ -210,7 +212,7 @@ public class StationsListActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter stationsAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.list_item_one_line, new String[]{LIST_ITEM_TEXT_ID}, new int[]{R.id.text});
+			R.layout.list_item_one_line, new String[] {LIST_ITEM_TEXT_ID}, new int[] {R.id.text});
 
 		setListAdapter(stationsAdapter);
 
@@ -225,7 +227,8 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 		if (areLoadedStationsNearby) {
 			loadStationsNearby();
-		} else {
+		}
+		else {
 			loadStations();
 		}
 	}
@@ -258,7 +261,8 @@ public class StationsListActivity extends SimpleAdapterListActivity
 
 			if (stations.isEmpty()) {
 				setEmptyListText(getString(R.string.empty_stations));
-			} else {
+			}
+			else {
 				fillList(stations);
 			}
 		}

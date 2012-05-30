@@ -70,7 +70,8 @@ public class RouteCreationActivity extends FormActivity
 				callDepartureTimetable();
 
 				finish();
-			} else {
+			}
+			else {
 				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}

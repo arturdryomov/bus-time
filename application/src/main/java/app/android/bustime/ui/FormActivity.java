@@ -35,7 +35,8 @@ public abstract class FormActivity extends Activity
 
 			if (userDataErrorMessage.isEmpty()) {
 				performSubmitAction();
-			} else {
+			}
+			else {
 				UserAlerter.alert(activityContext, userDataErrorMessage);
 			}
 		}

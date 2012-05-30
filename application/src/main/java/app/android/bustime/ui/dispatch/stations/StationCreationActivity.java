@@ -92,7 +92,8 @@ public class StationCreationActivity extends FormActivity
 		locationButton.setOnClickListener(locationListener);
 	}
 
-	private final OnClickListener locationListener = new OnClickListener() {
+	private final OnClickListener locationListener = new OnClickListener()
+	{
 		@Override
 		public void onClick(View view) {
 			callStationLocationActivity();

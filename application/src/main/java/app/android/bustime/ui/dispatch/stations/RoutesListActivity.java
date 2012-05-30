@@ -63,7 +63,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter routesAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.list_item_one_line, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
+			R.layout.list_item_one_line, new String[] {LIST_ITEM_TEXT_ID}, new int[] {R.id.text});
 
 		setListAdapter(routesAdapter);
 

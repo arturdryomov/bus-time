@@ -71,7 +71,8 @@ public class DepartureTimeEditingActivity extends DepartureTimeCreationActivity
 
 			if (errorMessage.isEmpty()) {
 				finish();
-			} else {
+			}
+			else {
 				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}

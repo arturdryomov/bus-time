@@ -32,7 +32,8 @@ public class DashboardActivity extends Activity
 		syncButton.setOnClickListener(syncListener);
 	}
 
-	private final OnClickListener syncListener = new OnClickListener() {
+	private final OnClickListener syncListener = new OnClickListener()
+	{
 		@Override
 		public void onClick(View view) {
 			callSynchronizationActivity();
@@ -52,7 +53,8 @@ public class DashboardActivity extends Activity
 		stationsButton.setOnClickListener(stationsListener);
 	}
 
-	private final OnClickListener routesListener = new OnClickListener() {
+	private final OnClickListener routesListener = new OnClickListener()
+	{
 		@Override
 		public void onClick(View view) {
 			callRoutesList();
@@ -64,7 +66,8 @@ public class DashboardActivity extends Activity
 		}
 	};
 
-	private final OnClickListener stationsListener = new OnClickListener() {
+	private final OnClickListener stationsListener = new OnClickListener()
+	{
 		@Override
 		public void onClick(View view) {
 			callStationsList();

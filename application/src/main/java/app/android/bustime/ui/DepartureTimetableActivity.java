@@ -61,7 +61,8 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 		itemCreationButton.setOnClickListener(departureTimeCreationListener);
 	}
 
-	private final OnClickListener departureTimeCreationListener = new OnClickListener() {
+	private final OnClickListener departureTimeCreationListener = new OnClickListener()
+	{
 		@Override
 		public void onClick(View view) {
 			callDepartureTimeCreation();
@@ -76,7 +77,7 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 	@Override
 	protected void initializeList() {
 		SimpleAdapter departureTimesAdapter = new SimpleAdapter(activityContext, listData,
-			R.layout.list_item_one_line, new String[] { LIST_ITEM_TEXT_ID }, new int[] { R.id.text });
+			R.layout.list_item_one_line, new String[] {LIST_ITEM_TEXT_ID}, new int[] {R.id.text});
 
 		setListAdapter(departureTimesAdapter);
 
@@ -167,8 +168,8 @@ public class DepartureTimetableActivity extends SimpleAdapterListActivity
 	private void callDepartureTimeEditing(int timePosition) {
 		Time time = getTime(timePosition);
 
-		Intent callIntent = IntentFactory
-			.createDepartureTimeEditingIntent(activityContext, route, time);
+		Intent callIntent = IntentFactory.createDepartureTimeEditingIntent(activityContext, route,
+			time);
 		startActivity(callIntent);
 	}
 

@@ -78,7 +78,8 @@ public class StationCreationActivity extends FormActivity
 
 		if (isStationExist) {
 			chosenExistingStation = getChosenStation();
-		} else {
+		}
+		else {
 			EditText stationNameEdit = (EditText) findViewById(R.id.edit_station_name);
 			stationName = stationNameEdit.getText().toString().trim();
 		}
@@ -97,7 +98,8 @@ public class StationCreationActivity extends FormActivity
 	protected String getUserDataErrorMessage() {
 		if (isStationExist) {
 			return new String();
-		} else {
+		}
+		else {
 			return getStationNameErrorMessage();
 		}
 	}
@@ -124,7 +126,8 @@ public class StationCreationActivity extends FormActivity
 
 			if (isStationExist) {
 				stationToInsertShiftTime = chosenExistingStation;
-			} else {
+			}
+			else {
 				try {
 					stationToInsertShiftTime = DbProvider.getInstance().getStations().createStation(
 						stationName, stationLatitude, stationLongitude);
@@ -158,7 +161,8 @@ public class StationCreationActivity extends FormActivity
 
 			if (errorMessage.isEmpty()) {
 				finish();
-			} else {
+			}
+			else {
 				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}
@@ -169,7 +173,8 @@ public class StationCreationActivity extends FormActivity
 
 		if (receivedData.containsKey(IntentFactory.MESSAGE_ID)) {
 			route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
-		} else {
+		}
+		else {
 			UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
 
 			finish();
@@ -227,8 +232,8 @@ public class StationCreationActivity extends FormActivity
 		fillStationsData(stationsList);
 
 		SimpleAdapter stationsAdapter = new SimpleAdapter(activityContext, stationsData,
-			android.R.layout.simple_spinner_item, new String[]{SPINNER_ITEM_TEXT_ID},
-			new int[]{android.R.id.text1});
+			android.R.layout.simple_spinner_item, new String[] {SPINNER_ITEM_TEXT_ID},
+			new int[] {android.R.id.text1});
 		stationsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 		Spinner stationsSpinner = (Spinner) findViewById(R.id.spinner_stations);
@@ -278,7 +283,8 @@ public class StationCreationActivity extends FormActivity
 			stationNameEdit.setVisibility(View.GONE);
 			stationLocationButton.setVisibility(View.GONE);
 			stationsListSpinner.setVisibility(View.VISIBLE);
-		} else {
+		}
+		else {
 			stationNameEdit.setVisibility(View.VISIBLE);
 			stationLocationButton.setVisibility(View.VISIBLE);
 			stationsListSpinner.setVisibility(View.GONE);
