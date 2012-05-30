@@ -11,15 +11,12 @@ import app.android.bustime.db.AlreadyExistsException;
 import app.android.bustime.db.Route;
 
 
-public class RouteRenamingActivity extends FormActivity
+public class RouteRenamingActivity extends RouteCreationActivity
 {
 	private Route route;
 
-	private String routeName;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setContentView(R.layout.activity_route_creation);
 		super.onCreate(savedInstanceState);
 
 		setActivityViewsInscriptions();
@@ -34,27 +31,6 @@ public class RouteRenamingActivity extends FormActivity
 
 		Button confirmButton = (Button) findViewById(R.id.button_confirm);
 		confirmButton.setText(R.string.button_rename_route);
-	}
-
-	@Override
-	protected Button getConfirmButton() {
-		return (Button) findViewById(R.id.button_confirm);
-	}
-
-	@Override
-	protected void readUserDataFromFields() {
-		EditText routeNameEdit = (EditText) findViewById(R.id.edit_route_name);
-
-		routeName = routeNameEdit.getText().toString().trim();
-	}
-
-	@Override
-	protected String getUserDataErrorMessage() {
-		if (routeName.isEmpty()) {
-			return getString(R.string.error_empty_route_name);
-		}
-
-		return new String();
 	}
 
 	@Override

@@ -1,8 +1,6 @@
 package app.android.bustime.ui.dispatch.stations;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,14 +12,13 @@ import app.android.bustime.R;
 import app.android.bustime.db.AlreadyExistsException;
 import app.android.bustime.db.DbException;
 import app.android.bustime.db.DbProvider;
+import app.android.bustime.ui.FormActivity;
 import app.android.bustime.ui.IntentFactory;
 import app.android.bustime.ui.UserAlerter;
 
 
-public class StationCreationActivity extends Activity
+public class StationCreationActivity extends FormActivity
 {
-	private final Context activityContext = this;
-
 	private final static int LOCATION_REQUEST_CODE = 42;
 
 	private final static double DEFAULT_LATITUDE = 55.534229;
@@ -33,52 +30,31 @@ public class StationCreationActivity extends Activity
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_station_creation);
+		super.onCreate(savedInstanceState);
 
-		initializeBodyControls();
+		initializeLocationButton();
 	}
 
-	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.button_confirm);
-		confirmButton.setOnClickListener(confirmListener);
-
-		Button locationButton = (Button) findViewById(R.id.button_location);
-		locationButton.setOnClickListener(locationListener);
-	}
-
-	private final OnClickListener confirmListener = new OnClickListener() {
-		@Override
-		public void onClick(View view) {
-			readUserDataFromFields();
-
-			String userDataErrorMessage = getUserDataErrorMessage();
-
-			if (userDataErrorMessage.isEmpty()) {
-				callStationCreation();
-			}
-			else {
-				UserAlerter.alert(activityContext, userDataErrorMessage);
-			}
-		}
-
-		private void callStationCreation() {
-			new CreateStationTask().execute();
-		}
-	};
-
-	private void readUserDataFromFields() {
+	@Override
+	protected void readUserDataFromFields() {
 		EditText stationNameEdit = (EditText) findViewById(R.id.edit_station_name);
 
 		stationName = stationNameEdit.getText().toString().trim();
 	}
 
-	private String getUserDataErrorMessage() {
+	@Override
+	protected String getUserDataErrorMessage() {
 		if (stationName.isEmpty()) {
 			return getString(R.string.error_empty_station_name);
 		}
 
 		return new String();
+	}
+
+	@Override
+	protected void performSubmitAction() {
+		new CreateStationTask().execute();
 	}
 
 	private class CreateStationTask extends AsyncTask<Void, Void, String>
@@ -109,6 +85,11 @@ public class StationCreationActivity extends Activity
 				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}
+	}
+
+	private void initializeLocationButton() {
+		Button locationButton = (Button) findViewById(R.id.button_location);
+		locationButton.setOnClickListener(locationListener);
 	}
 
 	private final OnClickListener locationListener = new OnClickListener() {

@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,14 +26,13 @@ import app.android.bustime.db.DbProvider;
 import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
 import app.android.bustime.db.Time;
+import app.android.bustime.ui.FormActivity;
 import app.android.bustime.ui.IntentFactory;
 import app.android.bustime.ui.UserAlerter;
 
 
-public class StationCreationActivity extends Activity
+public class StationCreationActivity extends FormActivity
 {
-	private final Context activityContext = this;
-
 	private Route route;
 
 	private final static int LOCATION_REQUEST_CODE = 42;
@@ -65,12 +62,106 @@ public class StationCreationActivity extends Activity
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_station_with_shift_time_creation);
+		super.onCreate(savedInstanceState);
 
 		processReceivedRoute();
 
 		initializeBodyControls();
+	}
+
+	@Override
+	protected void readUserDataFromFields() {
+		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.picker_shift_time);
+		shiftTimeHour = shiftTimePicker.getCurrentHour();
+		shiftTimeMinute = shiftTimePicker.getCurrentMinute();
+
+		if (isStationExist) {
+			chosenExistingStation = getChosenStation();
+		} else {
+			EditText stationNameEdit = (EditText) findViewById(R.id.edit_station_name);
+			stationName = stationNameEdit.getText().toString().trim();
+		}
+	}
+
+	private Station getChosenStation() {
+		Spinner stationsSpinner = (Spinner) findViewById(R.id.spinner_stations);
+
+		@SuppressWarnings("unchecked")
+		Map<String, Object> stationSpinnerItem = (Map<String, Object>) stationsSpinner.getSelectedItem();
+
+		return (Station) stationSpinnerItem.get(SPINNER_ITEM_OBJECT_ID);
+	}
+
+	@Override
+	protected String getUserDataErrorMessage() {
+		if (isStationExist) {
+			return new String();
+		} else {
+			return getStationNameErrorMessage();
+		}
+	}
+
+	private String getStationNameErrorMessage() {
+		if (stationName.isEmpty()) {
+			return getString(R.string.error_empty_station_name);
+		}
+
+		return new String();
+	}
+
+	@Override
+	protected void performSubmitAction() {
+		new CreateStationTask().execute();
+	}
+
+	private class CreateStationTask extends AsyncTask<Void, Void, String>
+	{
+		@Override
+		protected String doInBackground(Void... params) {
+
+			Station stationToInsertShiftTime;
+
+			if (isStationExist) {
+				stationToInsertShiftTime = chosenExistingStation;
+			} else {
+				try {
+					stationToInsertShiftTime = DbProvider.getInstance().getStations().createStation(
+						stationName, stationLatitude, stationLongitude);
+				}
+				catch (AlreadyExistsException e) {
+					return getString(R.string.error_station_exists);
+				}
+				catch (DbException e) {
+					return getString(R.string.error_unspecified);
+				}
+			}
+
+			try {
+				stationToInsertShiftTime.insertShiftTimeForRoute(route,
+					new Time(shiftTimeHour, shiftTimeMinute));
+			}
+			catch (AlreadyExistsException e) {
+				if (!isStationExist) {
+					DbProvider.getInstance().getStations().deleteStation(stationToInsertShiftTime);
+				}
+
+				return getString(R.string.error_shift_time_or_station_exist);
+			}
+
+			return new String();
+		}
+
+		@Override
+		protected void onPostExecute(String errorMessage) {
+			super.onPostExecute(errorMessage);
+
+			if (errorMessage.isEmpty()) {
+				finish();
+			} else {
+				UserAlerter.alert(activityContext, errorMessage);
+			}
+		}
 	}
 
 	private void processReceivedRoute() {
@@ -87,9 +178,6 @@ public class StationCreationActivity extends Activity
 
 	private void initializeBodyControls() {
 		fillStationsSpinner();
-
-		Button confirmButton = (Button) findViewById(R.id.button_confirm);
-		confirmButton.setOnClickListener(confirmListener);
 
 		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.picker_shift_time);
 		shiftTimePicker.setIs24HourView(true);
@@ -162,113 +250,6 @@ public class StationCreationActivity extends Activity
 		stationItem.put(SPINNER_ITEM_OBJECT_ID, station);
 
 		stationsData.add(stationItem);
-	}
-
-	private final OnClickListener confirmListener = new OnClickListener()
-	{
-		@Override
-		public void onClick(View view) {
-			readUserDataFromFields();
-
-			String userDataErrorMessage = getUserDataErrorMessage();
-
-			if (userDataErrorMessage.isEmpty()) {
-				callStationCreation();
-			} else {
-				UserAlerter.alert(activityContext, userDataErrorMessage);
-			}
-		}
-
-		private void callStationCreation() {
-			new CreateStationTask().execute();
-		}
-	};
-
-	private void readUserDataFromFields() {
-		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.picker_shift_time);
-		shiftTimeHour = shiftTimePicker.getCurrentHour();
-		shiftTimeMinute = shiftTimePicker.getCurrentMinute();
-
-		if (isStationExist) {
-			chosenExistingStation = getChosenStation();
-		} else {
-			EditText stationNameEdit = (EditText) findViewById(R.id.edit_station_name);
-			stationName = stationNameEdit.getText().toString().trim();
-		}
-	}
-
-	private Station getChosenStation() {
-		Spinner stationsSpinner = (Spinner) findViewById(R.id.spinner_stations);
-
-		@SuppressWarnings(
-			"unchecked") Map<String, Object> stationSpinnerItem = (Map<String, Object>) stationsSpinner.getSelectedItem();
-
-		return (Station) stationSpinnerItem.get(SPINNER_ITEM_OBJECT_ID);
-	}
-
-	private String getUserDataErrorMessage() {
-		if (isStationExist) {
-			return new String();
-		} else {
-			return getStationNameErrorMessage();
-		}
-	}
-
-	private String getStationNameErrorMessage() {
-		if (stationName.isEmpty()) {
-			return getString(R.string.error_empty_station_name);
-		}
-
-		return new String();
-	}
-
-	private class CreateStationTask extends AsyncTask<Void, Void, String>
-	{
-		@Override
-		protected String doInBackground(Void... params) {
-
-			Station stationToInsertShiftTime;
-
-			if (isStationExist) {
-				stationToInsertShiftTime = chosenExistingStation;
-			} else {
-				try {
-					stationToInsertShiftTime = DbProvider.getInstance().getStations().createStation(
-						stationName, stationLatitude, stationLongitude);
-				}
-				catch (AlreadyExistsException e) {
-					return getString(R.string.error_station_exists);
-				}
-				catch (DbException e) {
-					return getString(R.string.error_unspecified);
-				}
-			}
-
-			try {
-				stationToInsertShiftTime.insertShiftTimeForRoute(route,
-					new Time(shiftTimeHour, shiftTimeMinute));
-			}
-			catch (AlreadyExistsException e) {
-				if (!isStationExist) {
-					DbProvider.getInstance().getStations().deleteStation(stationToInsertShiftTime);
-				}
-
-				return getString(R.string.error_shift_time_or_station_exist);
-			}
-
-			return new String();
-		}
-
-		@Override
-		protected void onPostExecute(String errorMessage) {
-			super.onPostExecute(errorMessage);
-
-			if (errorMessage.isEmpty()) {
-				finish();
-			} else {
-				UserAlerter.alert(activityContext, errorMessage);
-			}
-		}
 	}
 
 	private void setUpNullTimeToShiftTimePicker() {

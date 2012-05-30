@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import app.android.bustime.R;
 
 
 public abstract class FormActivity extends Activity
@@ -20,10 +21,9 @@ public abstract class FormActivity extends Activity
 	}
 
 	protected void initializeConfirmButton() {
-		getConfirmButton().setOnClickListener(confirmListener);
+		Button confirmButton = (Button) findViewById(R.id.button_confirm);
+		confirmButton.setOnClickListener(confirmListener);
 	}
-
-	protected abstract Button getConfirmButton();
 
 	protected final View.OnClickListener confirmListener = new View.OnClickListener()
 	{

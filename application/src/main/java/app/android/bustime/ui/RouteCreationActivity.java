@@ -4,7 +4,6 @@ package app.android.bustime.ui;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.EditText;
 import app.android.bustime.R;
 import app.android.bustime.db.AlreadyExistsException;
@@ -15,17 +14,12 @@ import app.android.bustime.db.Route;
 
 public class RouteCreationActivity extends FormActivity
 {
-	private String routeName;
+	protected String routeName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.activity_route_creation);
 		super.onCreate(savedInstanceState);
-	}
-
-	@Override
-	protected Button getConfirmButton() {
-		return (Button) findViewById(R.id.button_confirm);
 	}
 
 	@Override

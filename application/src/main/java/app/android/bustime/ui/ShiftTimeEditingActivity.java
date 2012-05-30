@@ -1,13 +1,8 @@
 package app.android.bustime.ui;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TimePicker;
 import app.android.bustime.R;
 import app.android.bustime.db.AlreadyExistsException;
@@ -16,10 +11,8 @@ import app.android.bustime.db.Station;
 import app.android.bustime.db.Time;
 
 
-public class ShiftTimeEditingActivity extends Activity
+public class ShiftTimeEditingActivity extends FormActivity
 {
-	private final Context activityContext = this;
-
 	private Route route;
 	private Station station;
 	private Time time;
@@ -29,57 +22,32 @@ public class ShiftTimeEditingActivity extends Activity
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_shift_time_editing);
+
+		super.onCreate(savedInstanceState);
 
 		processReceivedRouteAndStation();
 
-		initializeBodyControls();
+		initializeTimePicker();
 		setUpReceivedData();
 	}
 
-	private void processReceivedRouteAndStation() {
-		Bundle receivedData = this.getIntent().getExtras();
-
-		if (receivedData.containsKey(IntentFactory.MESSAGE_ID)) {
-			if (receivedData.containsKey(IntentFactory.EXTRA_MESSAGE_ID)) {
-				route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
-				station = receivedData.getParcelable(IntentFactory.EXTRA_MESSAGE_ID);
-
-				return;
-			}
-		}
-
-		UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
-
-		finish();
-	}
-
-	private void initializeBodyControls() {
-		Button confirmButton = (Button) findViewById(R.id.button_confirm);
-		confirmButton.setOnClickListener(confirmListener);
-
-		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.picker_shift_time);
-		shiftTimePicker.setIs24HourView(true);
-	}
-
-	private final OnClickListener confirmListener = new OnClickListener() {
-		@Override
-		public void onClick(View view) {
-			readUserDataFromTimePicker();
-			callShiftTimeUpdating();
-		}
-
-		private void callShiftTimeUpdating() {
-			new UpdateShiftTimeTask().execute();
-		}
-	};
-
-	private void readUserDataFromTimePicker() {
+	@Override
+	protected void readUserDataFromFields() {
 		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.picker_shift_time);
 
 		shiftTimeHour = shiftTimePicker.getCurrentHour();
 		shiftTimeMinute = shiftTimePicker.getCurrentMinute();
+	}
+
+	@Override
+	protected String getUserDataErrorMessage() {
+		return new String();
+	}
+
+	@Override
+	protected void performSubmitAction() {
+		new UpdateShiftTimeTask().execute();
 	}
 
 	private class UpdateShiftTimeTask extends AsyncTask<Void, Void, String>
@@ -110,6 +78,28 @@ public class ShiftTimeEditingActivity extends Activity
 				UserAlerter.alert(activityContext, errorMessage);
 			}
 		}
+	}
+
+	private void processReceivedRouteAndStation() {
+		Bundle receivedData = this.getIntent().getExtras();
+
+		if (receivedData.containsKey(IntentFactory.MESSAGE_ID)) {
+			if (receivedData.containsKey(IntentFactory.EXTRA_MESSAGE_ID)) {
+				route = receivedData.getParcelable(IntentFactory.MESSAGE_ID);
+				station = receivedData.getParcelable(IntentFactory.EXTRA_MESSAGE_ID);
+
+				return;
+			}
+		}
+
+		UserAlerter.alert(activityContext, getString(R.string.error_unspecified));
+
+		finish();
+	}
+
+	private void initializeTimePicker() {
+		TimePicker shiftTimePicker = (TimePicker) findViewById(R.id.picker_shift_time);
+		shiftTimePicker.setIs24HourView(true);
 	}
 
 	private void setUpReceivedData() {
