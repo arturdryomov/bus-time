@@ -1,7 +1,6 @@
 package app.android.bustime.ui;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,9 +10,10 @@ import android.widget.Button;
 import app.android.bustime.R;
 import app.android.bustime.ui.dispatch.routes.DispatchRoutesIntentFactory;
 import app.android.bustime.ui.dispatch.stations.DispatchStationsIntentFactory;
+import com.actionbarsherlock.app.SherlockActivity;
 
 
-public class DashboardActivity extends Activity
+public class DashboardActivity extends SherlockActivity
 {
 	private final Context activityContext = this;
 

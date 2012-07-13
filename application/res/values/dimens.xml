@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<dimen name="actionbar_height">45dp</dimen>
-	<dimen name="actionbar_title_text_size">16sp</dimen>
-	<dimen name="actionbar_title_text_left_padding">10dp</dimen>
-	<dimen name="actionbar_items_separator_width">1dp</dimen>
-
 	<dimen name="body_layout_padding">20dp</dimen>
 
 	<dimen name="list_item_vertical_padding">10dp</dimen>
@@ -13,5 +8,7 @@
 	<dimen name="one_line_list_item_text_size">18sp</dimen>
 
 	<dimen name="home_button_drawable_padding">2dp</dimen>
+
+	<dimen name="actionbar_height">45dp</dimen>
 
 </resources>

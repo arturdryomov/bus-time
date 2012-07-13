@@ -20,6 +20,13 @@
 			<groupId>com.google.android</groupId>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<artifactId>library</artifactId>
+			<version>4.1.0</version>
+			<groupId>com.actionbarsherlock</groupId>
+			<type>apklib</type>
+		</dependency>
 	</dependencies>
 
 	<build>

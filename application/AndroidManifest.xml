@@ -3,22 +3,20 @@
 	package="app.android.bustime"
 	android:versionCode="2"
 	android:versionName="0.5.1"
-	android:installLocation="auto" >
+	android:installLocation="auto">
 
 	<uses-sdk
 		android:minSdkVersion="8"
 		android:targetSdkVersion="14" />
 
 	<application
-		android:label="@string/application_name"
+		android:name="BusTimeApplication"
 		android:icon="@drawable/ic_launcher_bustime"
-		android:theme="@android:style/Theme.Light.NoTitleBar"
-		android:name="BusTimeApplication" >
-
-		<uses-library android:name="com.google.android.maps" />
+		android:label="@string/application_name"
+		android:theme="@style/Theme.BusTime">
 
 		<activity
-			android:name=".ui.DashboardActivity" >
+			android:name=".ui.DashboardActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
@@ -27,25 +25,32 @@
 		</activity>
 
 		<activity
-			android:name=".ui.TimetableActivity" >
+			android:name=".ui.TimetableActivity"
+			android:label="@string/title_timetable">
 		</activity>
 
 		<!-- Specific activities with routes dispatch -->
 
 		<activity
-			android:name=".ui.dispatch.routes.RoutesListActivity" >
+			android:name=".ui.dispatch.routes.RoutesListActivity"
+			android:label="@string/title_routes">
 		</activity>
+
 		<activity
-			android:name=".ui.dispatch.routes.StationsListActivity" >
+			android:name=".ui.dispatch.routes.StationsListActivity"
+			android:label="@string/title_stations">
 		</activity>
 
 		<!-- Specific activities with stations dispatch -->
 
 		<activity
-			android:name=".ui.dispatch.stations.RoutesListActivity" >
+			android:name=".ui.dispatch.stations.RoutesListActivity"
+			android:label="@string/title_routes">
 		</activity>
+
 		<activity
-			android:name=".ui.dispatch.stations.StationsListActivity" >
+			android:name=".ui.dispatch.stations.StationsListActivity"
+			android:label="@string/title_stations">
 		</activity>
 	</application>
 

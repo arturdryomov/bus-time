@@ -1,9 +1,12 @@
-# Application keys
+# Android
 
-keys.xml
+bin/
+gen*/
+
+project.properties
 
 # Maven
 
 target/
 
-# Use global .gitignore file for your IDE
+# Use global .gitignore for your IDE

@@ -33,7 +33,7 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_routes);
+		setContentView(R.layout.activity_list);
 
 		processReceivedStation();
 

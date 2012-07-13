@@ -1,38 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<app.android.bustime.ui.DashboardLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
-	android:layout_height="fill_parent" >
+	android:layout_height="fill_parent">
 
-	<!-- Actionbar -->
+	<Button
+		android:id="@+id/button_routes"
+		style="@style/DashboardButton"
+		android:drawableTop="@drawable/home_button_routes"
+		android:text="@string/title_routes" />
 
-	<RelativeLayout
-		android:id="@+id/action_bar"
-		style="@style/ActionBar" >
-
-		<TextView
-			style="@style/ActionBarTitle"
-			android:text="@string/application_name" />
-	</RelativeLayout>
-
-	<!-- Main view -->
-
-	<app.android.bustime.ui.DashboardLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:layout_below="@id/action_bar" >
-
-		<Button
-			android:id="@+id/button_routes"
-			style="@style/DashboardButton"
-			android:drawableTop="@drawable/home_button_routes"
-			android:text="@string/title_routes" />
-
-		<Button
-			android:id="@+id/button_stations"
-			style="@style/DashboardButton"
-			android:drawableTop="@drawable/home_button_stations"
-			android:text="@string/title_stations" />
-	</app.android.bustime.ui.DashboardLayout>
-
-</RelativeLayout>
+	<Button
+		android:id="@+id/button_stations"
+		style="@style/DashboardButton"
+		android:drawableTop="@drawable/home_button_stations"
+		android:text="@string/title_stations" />
+</app.android.bustime.ui.DashboardLayout>
