@@ -9,19 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
 import app.android.bustime.db.DbProvider;
 import app.android.bustime.db.Route;
-import app.android.bustime.ui.IntentFactory;
 import app.android.bustime.ui.SimpleAdapterListActivity;
 
 
@@ -37,27 +30,8 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_routes);
 
-		initializeActionBar();
 		initializeList();
 	}
-
-	private void initializeActionBar() {
-		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.button_item_creation);
-		itemCreationButton.setOnClickListener(routeCreationListener);
-	}
-
-	private final OnClickListener routeCreationListener = new OnClickListener()
-	{
-		@Override
-		public void onClick(View view) {
-			callRouteCreation();
-		}
-
-		private void callRouteCreation() {
-			Intent callIntent = IntentFactory.createRouteCreationIntent(activityContext);
-			activityContext.startActivity(callIntent);
-		}
-	};
 
 	@Override
 	protected void initializeList() {
@@ -125,40 +99,6 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 		listData.add(routeItem);
 	}
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, view, menuInfo);
-
-		getMenuInflater().inflate(R.menu.routes_context_menu_items, menu);
-	}
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo itemInfo = (AdapterContextMenuInfo) item.getMenuInfo();
-		int routePosition = itemInfo.position;
-
-		switch (item.getItemId()) {
-			case R.id.menu_rename:
-				callRouteRenaming(routePosition);
-				return true;
-			case R.id.menu_delete:
-				callRouteDeleting(routePosition);
-				return true;
-			case R.id.menu_edit_departure_timetable:
-				callDepartureTimetable(routePosition);
-				return true;
-			default:
-				return super.onContextItemSelected(item);
-		}
-	}
-
-	private void callRouteRenaming(int routePosition) {
-		Route route = getRoute(routePosition);
-
-		Intent callIntent = IntentFactory.createRouteRenamingIntent(activityContext, route);
-		startActivity(callIntent);
-	}
-
 	private Route getRoute(int routePosition) {
 		SimpleAdapter routesAdapter = (SimpleAdapter) getListAdapter();
 
@@ -167,49 +107,6 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 			routePosition);
 
 		return (Route) adapterItem.get(LIST_ITEM_OBJECT_ID);
-	}
-
-	private void callRouteDeleting(int routePosition) {
-		new DeleteRouteTask(routePosition).execute();
-	}
-
-	private class DeleteRouteTask extends AsyncTask<Void, Void, Void>
-	{
-		private final int routePosition;
-		private final Route route;
-
-		public DeleteRouteTask(int routePosition) {
-			super();
-
-			this.routePosition = routePosition;
-			this.route = getRoute(routePosition);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-
-			listData.remove(routePosition);
-			updateList();
-
-			if (listData.isEmpty()) {
-				setEmptyListText(getString(R.string.empty_routes));
-			}
-		}
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			DbProvider.getInstance().getRoutes().deleteRoute(route);
-
-			return null;
-		}
-	}
-
-	private void callDepartureTimetable(int routePosition) {
-		Route route = getRoute(routePosition);
-
-		Intent callIntent = IntentFactory.createDepartureTimetableIntent(activityContext, route);
-		startActivity(callIntent);
 	}
 
 	@Override

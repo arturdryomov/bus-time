@@ -4,73 +4,18 @@
 	<string name="application_name">Bus Time</string>
 
 	<string name="title_routes">Routes</string>
-	<string name="title_route_creation">Route Creation</string>
-	<string name="title_route_renaming">Route Renaming</string>
-	<string name="title_departure_timetable">Departure Timetable</string>
-	<string name="title_departure_time_creation">Departure Time Creation</string>
-	<string name="title_departure_time_editing">Departure Time Editing</string>
 	<string name="title_stations">Stations</string>
-	<string name="title_station_creation">Station Creation</string>
-	<string name="title_station_renaming">Station Renaming</string>
-	<string name="title_station_location">Station Location</string>
-	<string name="title_shift_time_editing">Shift Time Editing</string>
 	<string name="title_timetable">Timetable</string>
-	<string name="title_synchronization">Synchronization</string>
 
 	<string name="empty_routes">There are no routes.</string>
-	<string name="empty_departure_timetable">Departure timetable is empty.</string>
 	<string name="empty_stations">There are no stations.</string>
 	<string name="empty_timetable">Timetable is empty.</string>
-	<string name="empty_stations_nearby">There are no stations nearby.</string>
 
 	<string name="loading_routes">Loading routes…</string>
-	<string name="loading_departure_timetable">Loading departure timetable…</string>
 	<string name="loading_stations">Loading stations…</string>
 	<string name="loading_timetable">Loading timetable…</string>
-	<string name="loading_location">Obtaining current location…</string>
-	<string name="loading_sync">Synchronization in progress…</string>
 
 	<string name="error_unspecified">Ooops, some error just happened.</string>
-	<string name="error_route_exists">Route with such name already exists.</string>
-	<string name="error_empty_route_name">Enter route name.</string>
-	<string name="error_station_exists">Station with such name already exists.</string>
-	<string name="error_empty_station_name">Enter station name.</string>
-	<string name="error_departure_time_exists">Such departure time already exists.</string>
-	<string name="error_shift_time_or_station_exist">Such shift time or station for route already exist.</string>
-	<string name="error_shift_time_exists">Such shift time already exists.</string>
-	<string name="error_remote_database_does_not_exist">Remote database does not exist on
-		Dropbox.</string>
-
-	<string name="signature_route_name">Route name</string>
-	<string name="signature_station_name">Station name</string>
-	<string name="signature_departure_shift_time">Departure shift time</string>
-	<string name="signature_station_was_created">Station was already created.</string>
-
-	<string name="button_create_route">Create route</string>
-	<string name="button_rename_route">Rename route</string>
-	<string name="button_create_departure_time">Create departure time</string>
-	<string name="button_update_departure_time">Update departure time</string>
-	<string name="button_create_station">Create station</string>
-	<string name="button_rename_station">Rename station</string>
-	<string name="button_update_shift_time">Update shift time</string>
-	<string name="button_set_location">Set station location on map</string>
-	<string name="button_import_full">Full import</string>
-	<string name="button_import_with_updating">Import with updating</string>
-	<string name="button_import_without_updating">Import without updating</string>
-	<string name="button_export_full">Full export</string>
-
-	<string name="menu_rename">Rename</string>
-	<string name="menu_delete">Delete</string>
-	<string name="menu_edit">Edit</string>
-	<string name="menu_edit_departure_timetable">Edit departure timetable</string>
-	<string name="menu_change_shift_time">Change shift time</string>
-	<string name="menu_change_location">Change location</string>
-
-	<string name="description_item_creation">Creation of new item</string>
-	<string name="description_map_pin">Map pin</string>
-	<string name="description_save_location">Save location</string>
-	<string name="description_enable_location_detecting">Enable location detecting</string>
-	<string name="description_sync">Synchronization</string>
 
 	<string name="token_time_now">right now</string>
 

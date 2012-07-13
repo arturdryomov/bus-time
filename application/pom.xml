@@ -20,19 +20,6 @@
 			<groupId>com.google.android</groupId>
 			<scope>provided</scope>
 		</dependency>
-
-		<dependency>
-			<artifactId>maps</artifactId>
-			<version>10_r2</version>
-			<groupId>com.google.android.maps</groupId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<artifactId>dropbox-android</artifactId>
-			<version>1.3</version>
-			<groupId>com.dropbox</groupId>
-		</dependency>
 	</dependencies>
 
 	<build>

@@ -12,22 +12,6 @@
 		<TextView
 			style="@style/ActionBarTitle"
 			android:text="@string/title_stations" />
-
-		<LinearLayout
-			style="@style/ActionBarButtons" >
-
-			<ImageButton
-				android:id="@+id/button_stations_nearby"
-				style="@style/ActionBarButton"
-				android:contentDescription="@string/description_enable_location_detecting"
-				android:src="@drawable/ic_menu_location_disabled" />
-
-			<ImageButton
-				android:id="@+id/button_item_creation"
-				style="@style/ActionBarButton"
-				android:contentDescription="@string/description_item_creation"
-				android:src="@drawable/ic_menu_create_item" />
-		</LinearLayout>
 	</RelativeLayout>
 
 	<!-- Main view -->

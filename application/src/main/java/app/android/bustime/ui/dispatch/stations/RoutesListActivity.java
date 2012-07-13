@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
@@ -38,7 +37,6 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 
 		processReceivedStation();
 
-		initializeActionBar();
 		initializeList();
 	}
 
@@ -53,11 +51,6 @@ public class RoutesListActivity extends SimpleAdapterListActivity
 
 			finish();
 		}
-	}
-
-	private void initializeActionBar() {
-		ImageButton itemCreationButton = (ImageButton) findViewById(R.id.button_item_creation);
-		itemCreationButton.setVisibility(View.GONE);
 	}
 
 	@Override
