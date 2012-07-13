@@ -56,10 +56,10 @@ class DbOpenHelper extends SQLiteOpenHelper
 
 		queryBuilder.append("(");
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ID, DbFieldParameters.ID));
-		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ROUTE_ID,
-			DbFieldParameters.FOREIGN_ROUTE_ID));
-		queryBuilder
-			.append(String.format("%s %s", DbFieldNames.DEPARTURE_TIME, DbFieldParameters.TIME));
+		queryBuilder.append(
+			String.format("%s %s, ", DbFieldNames.ROUTE_ID, DbFieldParameters.FOREIGN_ROUTE_ID));
+		queryBuilder.append(
+			String.format("%s %s", DbFieldNames.DEPARTURE_TIME, DbFieldParameters.TIME));
 		queryBuilder.append(")");
 
 		return queryBuilder.toString();
@@ -73,10 +73,10 @@ class DbOpenHelper extends SQLiteOpenHelper
 		queryBuilder.append("(");
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ID, DbFieldParameters.ID));
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.NAME, DbFieldParameters.NAME));
-		queryBuilder.append(String.format("%s %s, ", DbFieldNames.LATITUDE,
-			DbFieldParameters.STATION_COORDINATE));
-		queryBuilder.append(String.format("%s %s", DbFieldNames.LONGITUDE,
-			DbFieldParameters.STATION_COORDINATE));
+		queryBuilder.append(
+			String.format("%s %s, ", DbFieldNames.LATITUDE, DbFieldParameters.STATION_COORDINATE));
+		queryBuilder.append(
+			String.format("%s %s", DbFieldNames.LONGITUDE, DbFieldParameters.STATION_COORDINATE));
 		queryBuilder.append(")");
 
 		return queryBuilder.toString();
@@ -85,15 +85,15 @@ class DbOpenHelper extends SQLiteOpenHelper
 	private String buildRoutesAndStationsTableCreationQuery() {
 		StringBuilder queryBuilder = new StringBuilder();
 
-		queryBuilder.append(String.format("create table if not exists %s ",
-			DbTableNames.ROUTES_AND_STATIONS));
+		queryBuilder.append(
+			String.format("create table if not exists %s ", DbTableNames.ROUTES_AND_STATIONS));
 
 		queryBuilder.append("(");
 		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ID, DbFieldParameters.ID));
-		queryBuilder.append(String.format("%s %s, ", DbFieldNames.ROUTE_ID,
-			DbFieldParameters.FOREIGN_ROUTE_ID));
-		queryBuilder.append(String.format("%s %s, ", DbFieldNames.STATION_ID,
-			DbFieldParameters.FOREIGN_STATION_ID));
+		queryBuilder.append(
+			String.format("%s %s, ", DbFieldNames.ROUTE_ID, DbFieldParameters.FOREIGN_ROUTE_ID));
+		queryBuilder.append(
+			String.format("%s %s, ", DbFieldNames.STATION_ID, DbFieldParameters.FOREIGN_STATION_ID));
 		queryBuilder.append(String.format("%s %s", DbFieldNames.TIME_SHIFT, DbFieldParameters.TIME));
 		queryBuilder.append(")");
 

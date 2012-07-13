@@ -14,16 +14,14 @@ import android.os.Parcelable;
 public class Station implements Parcelable
 {
 	private final SQLiteDatabase database;
-	private final Stations stations;
 
 	private long id;
 	private String name;
 	private double latitude;
 	private double longitude;
 
-	Station(SQLiteDatabase database, Stations stations, ContentValues databaseValues) {
-		this.database = database;
-		this.stations = stations;
+	Station(ContentValues databaseValues) {
+		database = DbProvider.getInstance().getDatabase();
 
 		setStationValues(databaseValues);
 	}
@@ -70,168 +68,6 @@ public class Station implements Parcelable
 		return longitude;
 	}
 
-	/**
-	 * @throws AlreadyExistsException if station with such name already exists.
-	 */
-	public void setName(String name) {
-		if (name.equals(this.name)) {
-			return;
-		}
-
-		database.beginTransaction();
-		try {
-			trySetName(name);
-			database.setTransactionSuccessful();
-		}
-		finally {
-			database.endTransaction();
-		}
-	}
-
-	private void trySetName(String name) {
-		if (stations.isStationExist(name)) {
-			throw new AlreadyExistsException();
-		}
-
-		updateName(name);
-		this.name = name;
-	}
-
-	private void updateName(String name) {
-		ContentValues databaseValues = new ContentValues();
-		databaseValues.put(DbFieldNames.NAME, name);
-
-		database.update(DbTableNames.STATIONS, databaseValues,
-			String.format("%s = %d", DbFieldNames.ID, id), null);
-	}
-
-	public void setLocation(double latitude, double longitude) {
-		database.beginTransaction();
-
-		try {
-			trySetLocation(latitude, longitude);
-			database.setTransactionSuccessful();
-		}
-		finally {
-			database.endTransaction();
-		}
-	}
-
-	private void trySetLocation(double latitude, double longitude) {
-		updateLocation(latitude, longitude);
-		this.latitude = latitude;
-		this.longitude = longitude;
-	}
-
-	private void updateLocation(double latitude, double longitude) {
-		ContentValues databaseValues = new ContentValues();
-		databaseValues.put(DbFieldNames.LATITUDE, latitude);
-		databaseValues.put(DbFieldNames.LONGITUDE, longitude);
-
-		database.update(DbTableNames.STATIONS, databaseValues,
-			String.format("%s = %d", DbFieldNames.ID, id), null);
-	}
-
-	/**
-	 * @throws AlreadyExistsException if such shift time for route and station already exists.
-	 */
-	public void insertShiftTimeForRoute(Route route, Time time) {
-		database.beginTransaction();
-
-		try {
-			tryInsertShiftTimeForRoute(route, time);
-			database.setTransactionSuccessful();
-		}
-		finally {
-			database.endTransaction();
-		}
-	}
-
-	private void tryInsertShiftTimeForRoute(Route route, Time time) {
-		if (isShiftTimeForRouteExist(route, time)) {
-			throw new AlreadyExistsException();
-		}
-		if (isStationForRouteExist(route)) {
-			throw new AlreadyExistsException();
-		}
-
-		ContentValues databaseValues = new ContentValues();
-
-		databaseValues.put(DbFieldNames.ROUTE_ID, route.getId());
-		databaseValues.put(DbFieldNames.STATION_ID, id);
-		databaseValues.put(DbFieldNames.TIME_SHIFT, time.toString());
-
-		database.insert(DbTableNames.ROUTES_AND_STATIONS, null, databaseValues);
-	}
-
-	private boolean isShiftTimeForRouteExist(Route route, Time time) {
-		Cursor databaseCursor = database.rawQuery(
-			buildShiftTimeForRouteCountQuery(route.getId(), time.toString()), null);
-		databaseCursor.moveToFirst();
-
-		final int SHIFT_TIMES_FOR_ROUTE_COLUMN_INDEX = 0;
-		int shiftTimesCount = databaseCursor.getInt(SHIFT_TIMES_FOR_ROUTE_COLUMN_INDEX);
-
-		boolean isShiftTimeExist = shiftTimesCount > 0;
-
-		databaseCursor.close();
-
-		return isShiftTimeExist;
-	}
-
-	private String buildShiftTimeForRouteCountQuery(long routeId, String timeAsString) {
-		StringBuilder queryBuilder = new StringBuilder();
-
-		queryBuilder.append("select count(*) ");
-		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES_AND_STATIONS));
-		queryBuilder.append(String.format("where %s = %d and %s = '%s'", DbFieldNames.ROUTE_ID,
-			routeId, DbFieldNames.TIME_SHIFT, timeAsString));
-
-		return queryBuilder.toString();
-	}
-
-	private boolean isStationForRouteExist(Route route) {
-		Cursor databaseCursor = database.rawQuery(buildStationForRouteCountQuery(route.getId()), null);
-		databaseCursor.moveToFirst();
-
-		final int STATIONS_FOR_ROUTE_COLUMN_INDEX = 0;
-		int stationsCount = databaseCursor.getInt(STATIONS_FOR_ROUTE_COLUMN_INDEX);
-
-		boolean isStationForRouteExist = stationsCount > 0;
-
-		databaseCursor.close();
-
-		return isStationForRouteExist;
-	}
-
-	private String buildStationForRouteCountQuery(long routeId) {
-		StringBuilder queryBuilder = new StringBuilder();
-
-		queryBuilder.append("select count(*) ");
-		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES_AND_STATIONS));
-		queryBuilder.append(String.format("where %s = %d and %s = %d", DbFieldNames.ROUTE_ID, routeId,
-			DbFieldNames.STATION_ID, id));
-
-		return queryBuilder.toString();
-	}
-
-	public void removeShiftTimeForRoute(Route route) {
-		database.beginTransaction();
-
-		try {
-			tryRemoveShiftTimeForRoute(route);
-			database.setTransactionSuccessful();
-		}
-		finally {
-			database.endTransaction();
-		}
-	}
-
-	private void tryRemoveShiftTimeForRoute(Route route) {
-		database.delete(DbTableNames.ROUTES_AND_STATIONS, String.format("%s = %d",
-			DbFieldNames.ROUTE_ID, route.getId()), null);
-	}
-
 	public Time getShiftTimeForRoute(Route route) {
 		Cursor databaseCursor = database.rawQuery(buildRouteShiftTimeSelectionQuery(route), null);
 
@@ -258,8 +94,9 @@ public class Station implements Parcelable
 		queryBuilder.append(String.format("%s ", DbFieldNames.TIME_SHIFT));
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES_AND_STATIONS));
-		queryBuilder.append(String.format("where %s = %d and %s = %d", DbFieldNames.STATION_ID, id,
-			DbFieldNames.ROUTE_ID, route.getId()));
+		queryBuilder.append(
+			String.format("where %s = %d and %s = %d", DbFieldNames.STATION_ID, id, DbFieldNames.ROUTE_ID,
+				route.getId()));
 
 		return queryBuilder.toString();
 	}
@@ -292,7 +129,8 @@ public class Station implements Parcelable
 		parcel.writeString(name);
 	}
 
-	public static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>() {
+	public static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>()
+	{
 		@Override
 		public Station createFromParcel(Parcel parcel) {
 			return new Station(parcel);
@@ -306,7 +144,6 @@ public class Station implements Parcelable
 
 	private Station(Parcel parcel) {
 		database = DbProvider.getInstance().getDatabase();
-		stations = DbProvider.getInstance().getStations();
 
 		readStationDataFromParcel(parcel);
 	}

@@ -168,7 +168,8 @@ public class Time implements Parcelable
 		parcel.writeInt(minutes);
 	}
 
-	public static final Parcelable.Creator<Time> CREATOR = new Parcelable.Creator<Time>() {
+	public static final Parcelable.Creator<Time> CREATOR = new Parcelable.Creator<Time>()
+	{
 		@Override
 		public Time createFromParcel(Parcel parcel) {
 			return new Time(parcel);
