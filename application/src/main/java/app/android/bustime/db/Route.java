@@ -13,6 +13,8 @@ import android.os.Parcelable;
 
 public class Route implements Parcelable
 {
+	private static final int SPECIAL_PARCELABLE_OBJECTS_BITMASK = 0;
+
 	private final SQLiteDatabase database;
 
 	private long id;
@@ -21,10 +23,10 @@ public class Route implements Parcelable
 	Route(ContentValues databaseValues) {
 		database = DbProvider.getInstance().getDatabase();
 
-		setRouteValues(databaseValues);
+		setValues(databaseValues);
 	}
 
-	private void setRouteValues(ContentValues databaseValues) {
+	private void setValues(ContentValues databaseValues) {
 		Long idAsLong = databaseValues.getAsLong(DbFieldNames.ID);
 		if (idAsLong == null) {
 			throw new DbException();
@@ -82,7 +84,7 @@ public class Route implements Parcelable
 
 	@Override
 	public int describeContents() {
-		return 0;
+		return SPECIAL_PARCELABLE_OBJECTS_BITMASK;
 	}
 
 	@Override

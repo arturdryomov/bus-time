@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 
@@ -54,19 +55,12 @@ public class Stations
 	private ContentValues extractStationDatabaseValuesFromCursor(Cursor databaseCursor) {
 		ContentValues databaseValues = new ContentValues();
 
-		long id = databaseCursor.getLong(databaseCursor.getColumnIndexOrThrow(DbFieldNames.ID));
-		databaseValues.put(DbFieldNames.ID, id);
-
-		String name = databaseCursor.getString(databaseCursor.getColumnIndexOrThrow(DbFieldNames.NAME));
-		databaseValues.put(DbFieldNames.NAME, name);
-
-		double latitude = databaseCursor.getDouble(
-			databaseCursor.getColumnIndexOrThrow(DbFieldNames.LATITUDE));
-		databaseValues.put(DbFieldNames.LATITUDE, latitude);
-
-		double longitude = databaseCursor.getDouble(
-			databaseCursor.getColumnIndexOrThrow(DbFieldNames.LONGITUDE));
-		databaseValues.put(DbFieldNames.LONGITUDE, longitude);
+		DatabaseUtils.cursorLongToContentValues(databaseCursor, DbFieldNames.ID, databaseValues);
+		DatabaseUtils.cursorStringToContentValues(databaseCursor, DbFieldNames.NAME, databaseValues);
+		DatabaseUtils.cursorDoubleToContentValues(databaseCursor, DbFieldNames.LATITUDE, databaseValues,
+			DbFieldNames.LATITUDE);
+		DatabaseUtils.cursorDoubleToContentValues(databaseCursor, DbFieldNames.LONGITUDE,
+			databaseValues, DbFieldNames.LONGITUDE);
 
 		return databaseValues;
 	}
@@ -138,13 +132,5 @@ public class Stations
 
 	public List<Station> getStationsList(Route route, double latitude, double longitude) {
 		return getClosestStations(latitude, longitude, getStationsList(route));
-	}
-
-	public void beginTransaction() {
-		database.beginTransaction();
-	}
-
-	public void endTransaction() {
-		database.endTransaction();
 	}
 }

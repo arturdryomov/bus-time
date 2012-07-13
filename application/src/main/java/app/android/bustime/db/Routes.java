@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 
@@ -49,11 +50,8 @@ public class Routes
 	private ContentValues extractRouteDatabaseValuesFromCursor(Cursor databaseCursor) {
 		ContentValues databaseValues = new ContentValues();
 
-		long id = databaseCursor.getLong(databaseCursor.getColumnIndexOrThrow(DbFieldNames.ID));
-		databaseValues.put(DbFieldNames.ID, id);
-
-		String name = databaseCursor.getString(databaseCursor.getColumnIndexOrThrow(DbFieldNames.NAME));
-		databaseValues.put(DbFieldNames.NAME, name);
+		DatabaseUtils.cursorLongToContentValues(databaseCursor, DbFieldNames.ID, databaseValues);
+		DatabaseUtils.cursorStringToContentValues(databaseCursor, DbFieldNames.NAME, databaseValues);
 
 		return databaseValues;
 	}
@@ -93,13 +91,5 @@ public class Routes
 		queryBuilder.append(String.format("order by %s.%s", DbTableNames.ROUTES, DbFieldNames.NAME));
 
 		return queryBuilder.toString();
-	}
-
-	public void beginTransaction() {
-		database.beginTransaction();
-	}
-
-	public void endTransaction() {
-		database.endTransaction();
 	}
 }
