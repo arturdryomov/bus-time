@@ -18,4 +18,16 @@ class IntentProcessor
 	public static Parcelable extractMessage(Bundle intentExtras) {
 		return intentExtras.getParcelable(IntentFactory.getMessageId());
 	}
+
+	public static boolean haveExtraMessage(Bundle intentExtras) {
+		if (intentExtras == null) {
+			return false;
+		}
+
+		return intentExtras.containsKey(IntentFactory.getExtraMessageId());
+	}
+
+	public static Parcelable extractExtraMessage(Bundle intentExtras) {
+		return intentExtras.getParcelable(IntentFactory.getExtraMessageId());
+	}
 }
