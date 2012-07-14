@@ -16,7 +16,7 @@ import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
 
 
-public class RoutesFragment extends AdaptedListFragment
+class RoutesFragment extends AdaptedListFragment
 {
 	private static final String LIST_ITEM_TEXT_ID = "text";
 
