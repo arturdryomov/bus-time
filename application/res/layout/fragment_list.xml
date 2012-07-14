@@ -5,6 +5,7 @@
 
 	<ListView
 		android:id="@android:id/list"
+		android:choiceMode="singleChoice"
 		style="@style/BodyListView" />
 
 	<TextView
