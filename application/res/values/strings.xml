@@ -7,15 +7,15 @@
 	<string name="title_stations">Stations</string>
 	<string name="title_timetable">Timetable</string>
 
-	<string name="empty_routes">There are no routes.</string>
-	<string name="empty_stations">There are no stations.</string>
+	<string name="empty_routes">No routes.</string>
+	<string name="empty_stations">No stations.</string>
 	<string name="empty_timetable">Timetable is empty.</string>
 
 	<string name="loading_routes">Loading routes…</string>
 	<string name="loading_stations">Loading stations…</string>
 	<string name="loading_timetable">Loading timetable…</string>
 
-	<string name="error_unspecified">Ooops, some error just happened.</string>
+	<string name="error_unspecified">Ooops, some error just happened!</string>
 
 	<string name="token_time_now">right now</string>
 
