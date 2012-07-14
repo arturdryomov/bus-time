@@ -13,4 +13,8 @@ target/
 
 assets/
 
+# API keys
+
+keys.xml
+
 # Use global .gitignore for your IDE
