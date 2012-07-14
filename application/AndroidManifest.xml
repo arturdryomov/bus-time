@@ -16,7 +16,7 @@
 		android:theme="@style/Theme.BusTime">
 
 		<activity
-			android:name=".ui.DashboardActivity">
+			android:name=".ui.HomeActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
