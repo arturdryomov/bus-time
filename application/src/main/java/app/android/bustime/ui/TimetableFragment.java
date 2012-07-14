@@ -17,7 +17,7 @@ import app.android.bustime.db.Station;
 import app.android.bustime.db.Time;
 
 
-class TimetableFragment extends AdaptedListFragment
+public class TimetableFragment extends AdaptedListFragment
 {
 	private static final String LIST_ITEM_TIME_ID = "time";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";

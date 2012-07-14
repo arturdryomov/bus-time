@@ -1,7 +1,6 @@
 package app.android.bustime.ui;
 
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -41,7 +40,7 @@ public class HomeActivity extends SherlockFragmentActivity
 		ActionBar.Tab tab = getSupportActionBar().newTab();
 
 		tab.setText(getString(R.string.title_routes));
-		tab.setTabListener(new TabListener<RoutesFragment>(this, RoutesFragment.class));
+		tab.setTabListener(new TabListener(FragmentFactory.createRoutesFragment(this)));
 
 		return tab;
 	}
@@ -50,37 +49,32 @@ public class HomeActivity extends SherlockFragmentActivity
 		ActionBar.Tab tab = getSupportActionBar().newTab();
 
 		tab.setText(getString(R.string.title_stations));
-		tab.setTabListener(new TabListener<StationsFragment>(this, StationsFragment.class));
+		tab.setTabListener(new TabListener(FragmentFactory.createStationsFragment(this)));
 
 		return tab;
 	}
 
-	public static class TabListener<T extends Fragment> implements ActionBar.TabListener
+	public static class TabListener implements ActionBar.TabListener
 	{
-		private final Activity activity;
-		private final Class<T> fragmentClass;
+		private final Fragment fragment;
 
-		private Fragment fragment;
-
-		public TabListener(Activity activity, Class<T> fragmentClass) {
-			this.activity = activity;
-			this.fragmentClass = fragmentClass;
+		public TabListener(Fragment fragment) {
+			this.fragment = fragment;
 		}
 
 		@Override
 		public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-			if (fragment == null) {
-				fragment = Fragment.instantiate(activity, fragmentClass.getName());
-				fragmentTransaction.replace(android.R.id.content, fragment);
+			if (fragment.isDetached()) {
+				fragmentTransaction.attach(fragment);
 			}
 			else {
-				fragmentTransaction.attach(fragment);
+				fragmentTransaction.replace(android.R.id.content, fragment);
 			}
 		}
 
 		@Override
 		public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-			if (fragment != null) {
+			if (!fragment.isDetached()) {
 				fragmentTransaction.detach(fragment);
 			}
 		}
