@@ -9,4 +9,8 @@ project.properties
 
 target/
 
+# Application assets
+
+assets/
+
 # Use global .gitignore for your IDE
