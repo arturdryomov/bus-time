@@ -47,7 +47,7 @@ public class StationsFragment extends AdaptedListFragment
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			setEmptyText(getString(R.string.loading_stations));
+			setEmptyListText(getString(R.string.loading_stations));
 		}
 
 		@Override
@@ -62,7 +62,7 @@ public class StationsFragment extends AdaptedListFragment
 			super.onPostExecute(result);
 
 			if (stations.isEmpty()) {
-				setEmptyText(getString(R.string.empty_stations));
+				setEmptyListText(getString(R.string.empty_stations));
 			}
 			else {
 				populateList(stations);

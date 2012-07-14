@@ -47,7 +47,7 @@ public class RoutesFragment extends AdaptedListFragment
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			setEmptyText(getString(R.string.loading_routes));
+			setEmptyListText(getString(R.string.loading_routes));
 		}
 
 		@Override
@@ -62,7 +62,7 @@ public class RoutesFragment extends AdaptedListFragment
 			super.onPostExecute(result);
 
 			if (routes.isEmpty()) {
-				setEmptyText(getString(R.string.empty_routes));
+				setEmptyListText(getString(R.string.empty_routes));
 			}
 			else {
 				populateList(routes);
