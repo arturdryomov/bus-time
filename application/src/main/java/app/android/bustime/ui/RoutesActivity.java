@@ -5,31 +5,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import app.android.bustime.R;
 import app.android.bustime.db.Station;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 
-public class RoutesActivity extends SherlockFragmentActivity
+public class RoutesActivity extends FragmentWrapperActivity
 {
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		setUpFragment();
-	}
-
-	private void setUpFragment() {
-		if (!isFragmentInstalled()) {
-			installFragment();
-		}
-	}
-
-	private boolean isFragmentInstalled() {
-		return getSupportFragmentManager().findFragmentById(android.R.id.content) != null;
-	}
-
-	private void installFragment() {
-		Fragment fragment = FragmentFactory.createRoutesFragment(this, extractReceivedStation());
-		getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
+	protected Fragment buildFragment() {
+		return FragmentFactory.createRoutesFragment(this, extractReceivedStation());
 	}
 
 	private Station extractReceivedStation() {
