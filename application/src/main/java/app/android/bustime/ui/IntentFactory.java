@@ -40,4 +40,11 @@ public class IntentFactory
 
 		return intent;
 	}
+
+	public static Intent createStationsIntent(Context context, Route route) {
+		Intent intent = new Intent(context, StationsActivity.class);
+		intent.putExtra(MESSAGE_ID, route);
+
+		return intent;
+	}
 }

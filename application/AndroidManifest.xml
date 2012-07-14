@@ -25,32 +25,18 @@
 		</activity>
 
 		<activity
+			android:name=".ui.RoutesActivity"
+			android:label="@string/title_routes">
+		</activity>
+
+		<activity
+			android:name=".ui.StationsActivity"
+			android:label="@string/title_stations">
+		</activity>
+
+		<activity
 			android:name=".ui.TimetableActivity"
 			android:label="@string/title_timetable">
-		</activity>
-
-		<!-- Specific activities with routes dispatch -->
-
-		<activity
-			android:name=".ui.dispatch.routes.RoutesListActivity"
-			android:label="@string/title_routes">
-		</activity>
-
-		<activity
-			android:name=".ui.dispatch.routes.StationsListActivity"
-			android:label="@string/title_stations">
-		</activity>
-
-		<!-- Specific activities with stations dispatch -->
-
-		<activity
-			android:name=".ui.dispatch.stations.RoutesListActivity"
-			android:label="@string/title_routes">
-		</activity>
-
-		<activity
-			android:name=".ui.dispatch.stations.StationsListActivity"
-			android:label="@string/title_stations">
 		</activity>
 	</application>
 

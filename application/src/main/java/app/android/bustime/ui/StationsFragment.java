@@ -5,10 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
 import app.android.bustime.db.DbProvider;
+import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
 
 
@@ -52,7 +56,13 @@ public class StationsFragment extends AdaptedListFragment
 
 		@Override
 		protected Void doInBackground(Void... parameters) {
-			stations = DbProvider.getInstance().getStations().getStationsList();
+			if (FragmentProcessor.haveMessage(getArguments())) {
+				Route route = (Route) FragmentProcessor.extractMessage(getArguments());
+				stations = DbProvider.getInstance().getStations().getStationsList(route);
+			}
+			else {
+				stations = DbProvider.getInstance().getStations().getStationsList();
+			}
 
 			return null;
 		}
@@ -68,5 +78,31 @@ public class StationsFragment extends AdaptedListFragment
 				populateList(stations);
 			}
 		}
+	}
+
+	@Override
+	public void onListItemClick(ListView listView, View view, int position, long id) {
+		super.onListItemClick(listView, view, position, id);
+
+		Station selectedStation = (Station) getListItemObject(position);
+
+		if (FragmentProcessor.haveMessage(getArguments())) {
+			callTimetableActivity(selectedStation);
+		}
+		else {
+			callRoutesActivity(selectedStation);
+		}
+	}
+
+	private void callTimetableActivity(Station station) {
+		Route route = (Route) FragmentProcessor.extractMessage(getArguments());
+
+		Intent callIntent = IntentFactory.createTimetableIntent(getActivity(), route, station);
+		startActivity(callIntent);
+	}
+
+	private void callRoutesActivity(Station station) {
+		Intent callIntent = IntentFactory.createRoutesIntent(getActivity(), station);
+		startActivity(callIntent);
 	}
 }
