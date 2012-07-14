@@ -8,7 +8,7 @@ import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
 
 
-class FragmentFactory
+final class FragmentFactory
 {
 	private static final String MESSAGE_ID;
 	private static final String EXTRA_MESSAGE_ID;
@@ -16,6 +16,9 @@ class FragmentFactory
 	static {
 		MESSAGE_ID = String.format("%s.message", FragmentFactory.class.getPackage().getName());
 		EXTRA_MESSAGE_ID = String.format("%s.extramessage", IntentFactory.class.getPackage().getName());
+	}
+
+	private FragmentFactory() {
 	}
 
 	public static String getMessageId() {

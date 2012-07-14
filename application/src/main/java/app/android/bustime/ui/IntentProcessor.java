@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.os.Parcelable;
 
 
-class IntentProcessor
+final class IntentProcessor
 {
+	private IntentProcessor() {
+	}
+
 	public static boolean haveMessage(Bundle intentExtras) {
 		if (intentExtras == null) {
 			return false;

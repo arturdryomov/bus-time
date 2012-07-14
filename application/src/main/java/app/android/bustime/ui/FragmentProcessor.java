@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.os.Parcelable;
 
 
-class FragmentProcessor
+final class FragmentProcessor
 {
+	private FragmentProcessor() {
+	}
+
 	public static boolean haveMessage(Bundle arguments) {
 		if (arguments == null) {
 			return false;
