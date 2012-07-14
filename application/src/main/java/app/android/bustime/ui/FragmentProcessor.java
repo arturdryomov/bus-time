@@ -1,0 +1,21 @@
+package app.android.bustime.ui;
+
+
+import android.os.Bundle;
+import android.os.Parcelable;
+
+
+class FragmentProcessor
+{
+	public static boolean haveMessage(Bundle arguments) {
+		if (arguments == null) {
+			return false;
+		}
+
+		return arguments.containsKey(FragmentFactory.getMessageId());
+	}
+
+	public static Parcelable extractMessage(Bundle arguments) {
+		return arguments.getParcelable(FragmentFactory.getMessageId());
+	}
+}
