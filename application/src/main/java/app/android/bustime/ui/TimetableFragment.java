@@ -68,7 +68,7 @@ public class TimetableFragment extends AdaptedListFragment
 	protected SimpleAdapter buildListAdapter() {
 		return new SimpleAdapter(getActivity(), list, R.layout.list_item_two_line,
 			new String[] {LIST_ITEM_TIME_ID, LIST_ITEM_REMAINING_TIME_ID},
-			new int[] {R.id.text_first_line, R.id.text_second_line});
+			new int[] {R.id.text_first_line, R.id.test_second_line});
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public class TimetableFragment extends AdaptedListFragment
 
 	private int getListViewHeight() {
 		int displayHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
-		int actionbarHeight = (int) getResources().getDimension(R.dimen.actionbar_height);
+		int actionbarHeight = (int) getResources().getDimension(R.dimen.height_actionbar);
 
 		return displayHeight - actionbarHeight;
 	}

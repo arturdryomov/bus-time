@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<dimen name="body_layout_padding">20dp</dimen>
+	<dimen name="padding_body_layout">20dp</dimen>
+	<dimen name="padding_vertical_list_item">10dp</dimen>
+	<dimen name="padding_horizontal_list_item">8dp</dimen>
 
-	<dimen name="list_item_vertical_padding">10dp</dimen>
-	<dimen name="list_item_horizontal_padding">8dp</dimen>
-	<dimen name="one_line_list_item_text_size">18sp</dimen>
+	<dimen name="height_actionbar">45dp</dimen>
 
-	<dimen name="actionbar_height">45dp</dimen>
+	<dimen name="text_size_one_line_list_item">18sp</dimen>
 
 </resources>
