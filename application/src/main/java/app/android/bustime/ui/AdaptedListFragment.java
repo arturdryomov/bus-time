@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import app.android.bustime.R;
 import com.actionbarsherlock.app.SherlockListFragment;
 
@@ -61,11 +60,6 @@ abstract class AdaptedListFragment extends SherlockListFragment
 	protected void refreshListContent() {
 		SimpleAdapter listAdapter = (SimpleAdapter) getListAdapter();
 		listAdapter.notifyDataSetChanged();
-	}
-
-	protected void setEmptyListText(String text) {
-		TextView emptyListTextView = (TextView) getListView().getEmptyView();
-		emptyListTextView.setText(text);
 	}
 
 	protected Object getListItemObject(int listPosition) {

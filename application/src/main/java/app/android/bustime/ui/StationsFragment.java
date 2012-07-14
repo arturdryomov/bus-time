@@ -9,10 +9,10 @@ import android.os.AsyncTask;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
 import app.android.bustime.db.DbProvider;
-import app.android.bustime.db.Route;
+import app.android.bustime.db.Station;
 
 
-public class RoutesFragment extends AdaptedListFragment
+public class StationsFragment extends AdaptedListFragment
 {
 	private static final String LIST_ITEM_TEXT_ID = "text";
 
@@ -24,12 +24,12 @@ public class RoutesFragment extends AdaptedListFragment
 
 	@Override
 	protected Map<String, Object> buildListItem(Object itemObject) {
-		Route route = (Route) itemObject;
+		Station station = (Station) itemObject;
 
 		Map<String, Object> listItem = new HashMap<String, Object>();
 
-		listItem.put(LIST_ITEM_OBJECT_ID, route);
-		listItem.put(LIST_ITEM_TEXT_ID, route.getName());
+		listItem.put(LIST_ITEM_OBJECT_ID, station);
+		listItem.put(LIST_ITEM_TEXT_ID, station.getName());
 
 		return listItem;
 	}
@@ -41,18 +41,18 @@ public class RoutesFragment extends AdaptedListFragment
 
 	private class PopulateListTask extends AsyncTask<Void, Void, Void>
 	{
-		private List<Route> routes;
+		private List<Station> stations;
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			setEmptyText(getString(R.string.loading_routes));
+			setEmptyText(getString(R.string.loading_stations));
 		}
 
 		@Override
 		protected Void doInBackground(Void... parameters) {
-			routes = DbProvider.getInstance().getRoutes().getRoutesList();
+			stations = DbProvider.getInstance().getStations().getStationsList();
 
 			return null;
 		}
@@ -61,11 +61,11 @@ public class RoutesFragment extends AdaptedListFragment
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 
-			if (routes.isEmpty()) {
-				setEmptyText(getString(R.string.empty_routes));
+			if (stations.isEmpty()) {
+				setEmptyText(getString(R.string.empty_stations));
 			}
 			else {
-				populateList(routes);
+				populateList(stations);
 			}
 		}
 	}
