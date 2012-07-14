@@ -7,8 +7,6 @@
 	<dimen name="list_item_horizontal_padding">8dp</dimen>
 	<dimen name="one_line_list_item_text_size">18sp</dimen>
 
-	<dimen name="home_button_drawable_padding">2dp</dimen>
-
 	<dimen name="actionbar_height">45dp</dimen>
 
 </resources>
