@@ -1,0 +1,62 @@
+package app.android.bustime.ui;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import android.graphics.drawable.Drawable;
+import android.view.MotionEvent;
+import com.google.android.maps.MapView;
+import com.google.android.maps.OverlayItem;
+import com.readystatesoftware.maps.OnSingleTapListener;
+import com.readystatesoftware.maps.TapControlledMapView;
+import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
+
+
+public class StationsOverlay extends BalloonItemizedOverlay<OverlayItem>
+{
+	private static final boolean SHOW_CLOSE_BUTTON_ON_BALLOON = false;
+	private static final boolean SHOW_DISCLOSURE_BUTTON_ON_BALLOON = true;
+
+	private List<OverlayItem> overlays;
+
+	public StationsOverlay(Drawable defaultMarker, MapView mapView) {
+		super(boundCenter(defaultMarker), mapView);
+
+		overlays = new ArrayList<OverlayItem>();
+
+		setUpOverlay();
+	}
+
+	private void setUpOverlay() {
+		setShowClose(SHOW_CLOSE_BUTTON_ON_BALLOON);
+		setShowDisclosure(SHOW_DISCLOSURE_BUTTON_ON_BALLOON);
+
+		TapControlledMapView mapView = (TapControlledMapView) getMapView();
+		mapView.setOnSingleTapListener(new OnSingleTapListener()
+		{
+			@Override
+			public boolean onSingleTap(MotionEvent motionEvent) {
+				hideAllBalloons();
+
+				return true;
+			}
+		});
+	}
+
+	@Override
+	protected OverlayItem createItem(int itemIndex) {
+		return overlays.get(itemIndex);
+	}
+
+	@Override
+	public int size() {
+		return overlays.size();
+	}
+
+	public void addOverlay(OverlayItem overlay) {
+		overlays.add(overlay);
+
+		populate();
+	}
+}
