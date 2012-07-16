@@ -4,6 +4,7 @@ package app.android.bustime.ui;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -133,7 +134,8 @@ public class StationsMapActivity extends SherlockMapActivity
 		}
 
 		private void callRoutesActivity(Station station) {
-			activity.startActivity(IntentFactory.createRoutesIntent(activity, station));
+			Intent callIntent = IntentFactory.createRoutesIntent(activity, station);
+			activity.startActivity(callIntent);
 		}
 	}
 }
