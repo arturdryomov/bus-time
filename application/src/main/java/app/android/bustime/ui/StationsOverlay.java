@@ -20,6 +20,12 @@ public class StationsOverlay extends BalloonItemizedOverlay<OverlayItem>
 	private static final boolean SHOW_DISCLOSURE_BUTTON_ON_BALLOON = true;
 	private static final boolean DRAW_SHADOW_FOR_ITEMS = false;
 
+	public interface OnBalloonTapListener
+	{
+		public void onBalloonTap(StationOverlayItem stationOverlayItem);
+	}
+
+	private OnBalloonTapListener onBalloonTapListener;
 	private List<OverlayItem> overlays;
 
 	public StationsOverlay(Drawable defaultMarker, MapView mapView) {
@@ -65,5 +71,24 @@ public class StationsOverlay extends BalloonItemizedOverlay<OverlayItem>
 		overlays.add(overlay);
 
 		populate();
+	}
+
+	public void setOnBalloonTapListener(OnBalloonTapListener onBalloonTapListener) {
+		this.onBalloonTapListener = onBalloonTapListener;
+	}
+
+	@Override
+	protected boolean onBalloonTap(int itemIndex, OverlayItem overlayItem) {
+		if (!isOnBalloonTapListenerSet()) {
+			return false;
+		}
+
+		onBalloonTapListener.onBalloonTap((StationOverlayItem) overlayItem);
+
+		return true;
+	}
+
+	private boolean isOnBalloonTapListenerSet() {
+		return onBalloonTapListener != null;
 	}
 }
