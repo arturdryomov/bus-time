@@ -42,6 +42,10 @@ final class IntentFactory
 		return intent;
 	}
 
+	public static Intent createStationsMapIntent(Context context) {
+		return new Intent(context, StationsMapActivity.class);
+	}
+
 	public static Intent createTimetableIntent(Context context, Route route, Station station) {
 		Intent intent = new Intent(context, TimetableActivity.class);
 		intent.putExtra(MESSAGE_ID, route);

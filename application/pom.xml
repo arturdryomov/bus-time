@@ -13,6 +13,13 @@
 		<groupId>app.android</groupId>
 	</parent>
 
+	<repositories>
+		<repository>
+			<id>com.jakewharton</id>
+			<url>http://r.jakewharton.com/maven/release</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<artifactId>android</artifactId>
@@ -25,6 +32,26 @@
 			<artifactId>library</artifactId>
 			<version>4.1.0</version>
 			<groupId>com.actionbarsherlock</groupId>
+			<type>apklib</type>
+		</dependency>
+
+		<dependency>
+			<artifactId>plugin-maps</artifactId>
+			<version>4.1.0</version>
+			<groupId>com.actionbarsherlock</groupId>
+		</dependency>
+
+		<dependency>
+			<artifactId>maps</artifactId>
+			<version>15_r2</version>
+			<groupId>com.google.android.maps</groupId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<artifactId>map-view-baloons</artifactId>
+			<version>1.5.1</version>
+			<groupId>com.github.jgilfelt</groupId>
 			<type>apklib</type>
 		</dependency>
 

@@ -1,12 +1,15 @@
 package app.android.bustime.ui;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import app.android.bustime.R;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 
 public class HomeActivity extends SherlockFragmentActivity
@@ -82,5 +85,29 @@ public class HomeActivity extends SherlockFragmentActivity
 		@Override
 		public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.menu_action_bar_home, menu);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		switch (menuItem.getItemId()) {
+			case R.id.menu_map:
+				callStationsMapActivity();
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(menuItem);
+		}
+	}
+
+	private void callStationsMapActivity() {
+		Intent callIntent = IntentFactory.createStationsMapIntent(this);
+		startActivity(callIntent);
 	}
 }

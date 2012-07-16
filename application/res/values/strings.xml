@@ -11,6 +11,8 @@
 	<string name="empty_stations">No stations.</string>
 	<string name="empty_timetable">Timetable is empty.</string>
 
+	<string name="menu_stations_map">Stations map</string>
+
 	<string name="loading_routes">Loading routes…</string>
 	<string name="loading_stations">Loading stations…</string>
 	<string name="loading_timetable">Loading timetable…</string>

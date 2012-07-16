@@ -9,11 +9,16 @@
 		android:minSdkVersion="8"
 		android:targetSdkVersion="14" />
 
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
 	<application
 		android:name="BusTimeApplication"
 		android:icon="@drawable/ic_launcher_bustime"
 		android:label="@string/application_name"
 		android:theme="@style/Theme.BusTime">
+
+		<uses-library android:name="com.google.android.maps" />
 
 		<activity
 			android:name=".ui.HomeActivity">
@@ -31,6 +36,11 @@
 
 		<activity
 			android:name=".ui.StationsActivity"
+			android:label="@string/title_stations">
+		</activity>
+
+		<activity
+			android:name=".ui.StationsMapActivity"
 			android:label="@string/title_stations">
 		</activity>
 
