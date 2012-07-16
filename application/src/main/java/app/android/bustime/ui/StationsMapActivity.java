@@ -24,7 +24,7 @@ public class StationsMapActivity extends SherlockMapActivity
 {
 	private static final double MICRODEGREES_IN_DEGREE = 1E6;
 
-	private static final int DEFAULT_MAP_ZOOM = 20;
+	private static final int DEFAULT_MAP_ZOOM = 15;
 	private static final boolean ZOOM_CONTROLS_ENABLED = true;
 
 	private static final double DEFAULT_MAP_POSITION_LATITUDE = 55.533185;
