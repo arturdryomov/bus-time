@@ -9,7 +9,7 @@
 
 	<parent>
 		<artifactId>bus-time-parent</artifactId>
-		<version>0.5.1</version>
+		<version>0.6.0</version>
 		<groupId>app.android</groupId>
 	</parent>
 
