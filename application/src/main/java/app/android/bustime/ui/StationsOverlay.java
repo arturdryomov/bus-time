@@ -4,6 +4,7 @@ package app.android.bustime.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import com.google.android.maps.MapView;
@@ -17,6 +18,7 @@ public class StationsOverlay extends BalloonItemizedOverlay<OverlayItem>
 {
 	private static final boolean SHOW_CLOSE_BUTTON_ON_BALLOON = false;
 	private static final boolean SHOW_DISCLOSURE_BUTTON_ON_BALLOON = true;
+	private static final boolean DRAW_SHADOW_FOR_ITEMS = false;
 
 	private List<OverlayItem> overlays;
 
@@ -42,6 +44,11 @@ public class StationsOverlay extends BalloonItemizedOverlay<OverlayItem>
 				return true;
 			}
 		});
+	}
+
+	@Override
+	public void draw(Canvas canvas, MapView mapView, boolean drawShadow) {
+		super.draw(canvas, mapView, DRAW_SHADOW_FOR_ITEMS);
 	}
 
 	@Override
