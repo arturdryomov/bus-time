@@ -27,6 +27,9 @@ public class StationsMapActivity extends SherlockMapActivity
 	private static final int DEFAULT_MAP_ZOOM = 20;
 	private static final boolean ZOOM_CONTROLS_ENABLED = true;
 
+	private static final double DEFAULT_MAP_POSITION_LATITUDE = 55.533185;
+	private static final double DEFAULT_MAP_POSITION_LONGITUDE = 28.655477;
+
 	private MyLocationOverlay myLocationOverlay;
 
 	@Override
@@ -67,7 +70,28 @@ public class StationsMapActivity extends SherlockMapActivity
 			}
 		});
 
+		if (!isLastFixKnown()) {
+			animateToDefaultPosition();
+		}
+
 		getMapView().getOverlays().add(myLocationOverlay);
+	}
+
+	private boolean isLastFixKnown() {
+		return myLocationOverlay.getLastFix() != null;
+	}
+
+	private void animateToDefaultPosition() {
+		GeoPoint defaultPoint = buildGeoPoint(DEFAULT_MAP_POSITION_LATITUDE,
+			DEFAULT_MAP_POSITION_LONGITUDE);
+		getMapView().getController().animateTo(defaultPoint);
+	}
+
+	private GeoPoint buildGeoPoint(double latitude, double longitude) {
+		int latitudeE6 = (int) (latitude * MICRODEGREES_IN_DEGREE);
+		int longitudeE6 = (int) (longitude * MICRODEGREES_IN_DEGREE);
+
+		return new GeoPoint(latitudeE6, longitudeE6);
 	}
 
 	@Override
@@ -115,8 +139,7 @@ public class StationsMapActivity extends SherlockMapActivity
 		StationsOverlay stationsOverlay = buildStationsOverlay();
 
 		for (Station station : stations) {
-			OverlayItem stationOverlayItem = new StationOverlayItem(buildGeoPoint(station),
-				station);
+			OverlayItem stationOverlayItem = new StationOverlayItem(buildGeoPoint(station), station);
 			stationsOverlay.addOverlay(stationOverlayItem);
 		}
 
@@ -134,10 +157,7 @@ public class StationsMapActivity extends SherlockMapActivity
 	}
 
 	private GeoPoint buildGeoPoint(Station station) {
-		int latitudeE6 = (int) (station.getLatitude() * MICRODEGREES_IN_DEGREE);
-		int longitudeE6 = (int) (station.getLongitude() * MICRODEGREES_IN_DEGREE);
-
-		return new GeoPoint(latitudeE6, longitudeE6);
+		return buildGeoPoint(station.getLatitude(), station.getLongitude());
 	}
 
 	private static class StationTapListener implements StationsOverlay.OnBalloonTapListener
