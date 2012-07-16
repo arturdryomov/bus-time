@@ -83,6 +83,7 @@ public class StationsOverlay extends BalloonItemizedOverlay<OverlayItem>
 			return false;
 		}
 
+		hideAllBalloons();
 		onBalloonTapListener.onBalloonTap((StationOverlayItem) overlayItem);
 
 		return true;
