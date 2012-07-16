@@ -8,13 +8,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 
 
-public class Time implements Parcelable
+public class Time
 {
 	private static final int MAXIMUM_HOURS_COUNT = 23;
 	private static final int MINIMUM_HOURS_COUNT = 0;
@@ -150,39 +148,5 @@ public class Time implements Parcelable
 		Time otherTime = (Time) otherObject;
 
 		return (otherTime.hours == this.hours) && (otherTime.minutes == this.minutes);
-	}
-
-	@Override
-	public int hashCode() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel parcel, int flags) {
-		parcel.writeInt(hours);
-		parcel.writeInt(minutes);
-	}
-
-	public static final Parcelable.Creator<Time> CREATOR = new Parcelable.Creator<Time>()
-	{
-		@Override
-		public Time createFromParcel(Parcel parcel) {
-			return new Time(parcel);
-		}
-
-		@Override
-		public Time[] newArray(int size) {
-			return new Time[size];
-		}
-	};
-
-	private Time(Parcel parcel) {
-		hours = parcel.readInt();
-		minutes = parcel.readInt();
 	}
 }
