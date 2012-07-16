@@ -18,18 +18,7 @@ public class HomeActivity extends SherlockFragmentActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setUpActionBar();
 		setUpTabs();
-	}
-
-	private void setUpActionBar() {
-		// TODO: Move to xls
-
-		ActionBar actionBar = getSupportActionBar();
-
-		actionBar.setDisplayShowHomeEnabled(true);
-
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 	}
 
 	private void setUpTabs() {

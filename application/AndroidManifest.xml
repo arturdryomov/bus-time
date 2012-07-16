@@ -21,7 +21,8 @@
 		<uses-library android:name="com.google.android.maps" />
 
 		<activity
-			android:name=".ui.HomeActivity">
+			android:name=".ui.HomeActivity"
+			android:theme="@style/Theme.BusTime.Home">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 

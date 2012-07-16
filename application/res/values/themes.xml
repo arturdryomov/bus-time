@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="Theme.BusTime" parent="Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
+		<item name="android:actionBarStyle">@style/Theme.BusTime.ActionBar</item>
+		<item name="actionBarStyle">@style/Theme.BusTime.ActionBar</item>
+	</style>
+
+	<style name="Theme.BusTime.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+		<item name="android:background">@color/background_action_bar</item>
+		<item name="background">@color/background_action_bar</item>
+
+		<item name="android:displayOptions">showTitle</item>
+		<item name="displayOptions">showTitle</item>
+	</style>
+
+	<style name="Theme.BusTime.Home" parent="Theme.BusTime">
+		<item name="android:actionBarStyle">@style/Theme.BusTime.ActionBar.Home</item>
+		<item name="actionBarStyle">@style/Theme.BusTime.ActionBar.Home</item>
+	</style>
+
+	<style name="Theme.BusTime.ActionBar.Home" parent="Theme.BusTime.ActionBar">
+		<item name="android:displayOptions">showHome|showTitle</item>
+		<item name="displayOptions">showHome|showTitle</item>
+
+		<item name="android:navigationMode">tabMode</item>
+		<item name="navigationMode">tabMode</item>
+	</style>
+
+</resources>
