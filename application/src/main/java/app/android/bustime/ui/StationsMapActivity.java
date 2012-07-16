@@ -16,6 +16,7 @@ import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
 
 
@@ -26,6 +27,8 @@ public class StationsMapActivity extends SherlockMapActivity
 	private static final int DEFAULT_MAP_ZOOM = 20;
 	private static final boolean ZOOM_CONTROLS_ENABLED = true;
 
+	private MyLocationOverlay myLocationOverlay;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,6 +37,7 @@ public class StationsMapActivity extends SherlockMapActivity
 		setContentView(R.layout.activity_map);
 
 		setUpMapView();
+		setUpMyLocationOverlay();
 	}
 
 	@Override
@@ -52,11 +56,27 @@ public class StationsMapActivity extends SherlockMapActivity
 		return (MapView) findViewById(R.id.map);
 	}
 
+	private void setUpMyLocationOverlay() {
+		myLocationOverlay = new MyLocationOverlay(this, getMapView());
+
+		myLocationOverlay.runOnFirstFix(new Runnable()
+		{
+			@Override
+			public void run() {
+				getMapView().getController().animateTo(myLocationOverlay.getMyLocation());
+			}
+		});
+
+		getMapView().getOverlays().add(myLocationOverlay);
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 
 		populateMap();
+
+		myLocationOverlay.enableMyLocation();
 	}
 
 	private void populateMap() {
@@ -137,5 +157,12 @@ public class StationsMapActivity extends SherlockMapActivity
 			Intent callIntent = IntentFactory.createRoutesIntent(activity, station);
 			activity.startActivity(callIntent);
 		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		myLocationOverlay.disableMyLocation();
 	}
 }
