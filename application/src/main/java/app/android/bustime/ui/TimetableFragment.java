@@ -21,9 +21,9 @@ public class TimetableFragment extends AdaptedListFragment
 	private static final String LIST_ITEM_TIME_ID = "time";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
 
-	private static final int CENTER_TIME_TOP_PADDING_PROPORTION = 3;
+	private static final int PREVIOUS_TIMES_DISPLAYED_COUNT = 1;
 
-	private final Handler timer;
+	private final Handler remainingTimeTextUpdateTimer;
 	private static final int AUTO_UPDATE_MILLISECONDS_PERIOD = 60000;
 
 	private Route route;
@@ -34,18 +34,18 @@ public class TimetableFragment extends AdaptedListFragment
 	public TimetableFragment() {
 		super();
 
-		timer = new Handler();
+		remainingTimeTextUpdateTimer = new Handler();
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		route = extractRoute();
-		station = extractStation();
+		route = extractRouteArgument();
+		station = extractStationArgument();
 	}
 
-	private Route extractRoute() {
+	private Route extractRouteArgument() {
 		if (!FragmentProcessor.haveMessage(getArguments())) {
 			UserAlerter.alert(getActivity(), getString(R.string.error_unspecified));
 			getActivity().finish();
@@ -54,7 +54,7 @@ public class TimetableFragment extends AdaptedListFragment
 		return (Route) FragmentProcessor.extractMessage(getArguments());
 	}
 
-	private Station extractStation() {
+	private Station extractStationArgument() {
 		if (!FragmentProcessor.haveExtraMessage(getArguments())) {
 			UserAlerter.alert(getActivity(), getString(R.string.error_unspecified));
 			getActivity().finish();
@@ -65,9 +65,11 @@ public class TimetableFragment extends AdaptedListFragment
 
 	@Override
 	protected SimpleAdapter buildListAdapter() {
-		return new SimpleAdapter(getActivity(), list, R.layout.list_item_two_line,
-			new String[] {LIST_ITEM_TIME_ID, LIST_ITEM_REMAINING_TIME_ID},
-			new int[] {R.id.text_first_line, R.id.test_second_line});
+		String[] listColumnNames = {LIST_ITEM_TIME_ID, LIST_ITEM_REMAINING_TIME_ID};
+		int[] columnCorrespondingResources = {R.id.text_first_line, R.id.test_second_line};
+
+		return new SimpleAdapter(getActivity(), list, R.layout.list_item_two_line, listColumnNames,
+			columnCorrespondingResources);
 	}
 
 	@Override
@@ -78,12 +80,12 @@ public class TimetableFragment extends AdaptedListFragment
 
 		listItem.put(LIST_ITEM_OBJECT_ID, time);
 		listItem.put(LIST_ITEM_TIME_ID, time.toSystemFormattedString(getActivity()));
-		listItem.put(LIST_ITEM_REMAINING_TIME_ID, constructRemainingTimeText(time));
+		listItem.put(LIST_ITEM_REMAINING_TIME_ID, buildRemainingTimeText(time));
 
 		return listItem;
 	}
 
-	private String constructRemainingTimeText(Time busTime) {
+	private String buildRemainingTimeText(Time busTime) {
 		if (busTime.isNow()) {
 			return getString(R.string.token_time_now);
 		}
@@ -124,39 +126,29 @@ public class TimetableFragment extends AdaptedListFragment
 			else {
 				populateList(timetable);
 
-				placeClosestTimeOnCenter();
+				placeClosestTimeOnTop();
 			}
 		}
 	}
 
-	private void placeClosestTimeOnCenter() {
-		int timePosition = getClosestTimePosition();
-		int topPadding = getListViewHeight() / CENTER_TIME_TOP_PADDING_PROPORTION;
-
-		getListView().setSelectionFromTop(timePosition, topPadding);
+	private void placeClosestTimeOnTop() {
+		setSelection(getClosestTimeListPosition() - PREVIOUS_TIMES_DISPLAYED_COUNT);
 	}
 
-	private int getClosestTimePosition() {
-		int closestTimePosition = 0;
+	private int getClosestTimeListPosition() {
+		int closestTimeListPosition = 0;
 
-		for (int adapterPosition = 0; adapterPosition < list.size(); adapterPosition++) {
-			Time listDataTime = (Time) getListItemObject(adapterPosition);
+		for (int listPosition = 0; listPosition < list.size(); listPosition++) {
+			Time listDataTime = (Time) getListItemObject(listPosition);
 
 			if (listDataTime.isAfter(currentTime)) {
-				closestTimePosition = adapterPosition;
+				closestTimeListPosition = listPosition;
 
 				break;
 			}
 		}
 
-		return closestTimePosition;
-	}
-
-	private int getListViewHeight() {
-		int displayHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
-		int actionbarHeight = (int) getResources().getDimension(R.dimen.height_actionbar);
-
-		return displayHeight - actionbarHeight;
+		return closestTimeListPosition;
 	}
 
 	@Override
@@ -173,7 +165,7 @@ public class TimetableFragment extends AdaptedListFragment
 		for (Map<String, Object> listDataElement : list) {
 			Time listDataTime = (Time) listDataElement.get(LIST_ITEM_OBJECT_ID);
 
-			listDataElement.put(LIST_ITEM_REMAINING_TIME_ID, constructRemainingTimeText(listDataTime));
+			listDataElement.put(LIST_ITEM_REMAINING_TIME_ID, buildRemainingTimeText(listDataTime));
 		}
 
 		refreshListContent();
@@ -182,7 +174,12 @@ public class TimetableFragment extends AdaptedListFragment
 	private void startUpdatingRemainingTimeText() {
 		stopUpdatingRemainingTimeText();
 
-		timer.postDelayed(timerTask, calculateMillisecondsForNextMinute());
+		remainingTimeTextUpdateTimer.postDelayed(remainingTimeTextUpdateTask,
+			calculateMillisecondsForNextMinute());
+	}
+
+	private void stopUpdatingRemainingTimeText() {
+		remainingTimeTextUpdateTimer.removeCallbacks(remainingTimeTextUpdateTask);
 	}
 
 	private long calculateMillisecondsForNextMinute() {
@@ -195,11 +192,7 @@ public class TimetableFragment extends AdaptedListFragment
 		return nextMinuteTime.getTimeInMillis() - currentTime.getTimeInMillis();
 	}
 
-	private void stopUpdatingRemainingTimeText() {
-		timer.removeCallbacks(timerTask);
-	}
-
-	private final Runnable timerTask = new Runnable()
+	private final Runnable remainingTimeTextUpdateTask = new Runnable()
 	{
 		@Override
 		public void run() {
@@ -210,7 +203,8 @@ public class TimetableFragment extends AdaptedListFragment
 	};
 
 	private void continueUpdatingRemainingTimeText() {
-		timer.postDelayed(timerTask, AUTO_UPDATE_MILLISECONDS_PERIOD);
+		remainingTimeTextUpdateTimer.postDelayed(remainingTimeTextUpdateTask,
+			AUTO_UPDATE_MILLISECONDS_PERIOD);
 	}
 
 	@Override
