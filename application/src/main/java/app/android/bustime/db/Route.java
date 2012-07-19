@@ -54,8 +54,8 @@ public class Route implements Parcelable
 		Cursor databaseCursor = database.rawQuery(buildDepartureTimetableSelectionQuery(), null);
 
 		while (databaseCursor.moveToNext()) {
-			String timeAsString = extractTimeFromCursor(databaseCursor);
-			departureTimetable.add(new Time(timeAsString));
+			String departureTimeAsString = extractDepartureTimeFromCursor(databaseCursor);
+			departureTimetable.add(new Time(departureTimeAsString));
 		}
 
 		databaseCursor.close();
@@ -67,19 +67,20 @@ public class Route implements Parcelable
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select ");
-
 		queryBuilder.append(String.format("%s ", DbFieldNames.DEPARTURE_TIME));
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.TRIPS));
+
 		queryBuilder.append(String.format("where %s = %d ", DbFieldNames.ROUTE_ID, id));
+
 		queryBuilder.append(String.format("order by %s", DbFieldNames.DEPARTURE_TIME));
 
 		return queryBuilder.toString();
 	}
 
-	private String extractTimeFromCursor(Cursor databaseCursor) {
-		return databaseCursor.getString(
-			databaseCursor.getColumnIndexOrThrow(DbFieldNames.DEPARTURE_TIME));
+	private String extractDepartureTimeFromCursor(Cursor databaseCursor) {
+		int departureTimeColumnIndex = databaseCursor.getColumnIndex(DbFieldNames.DEPARTURE_TIME);
+		return databaseCursor.getString(departureTimeColumnIndex);
 	}
 
 	@Override
