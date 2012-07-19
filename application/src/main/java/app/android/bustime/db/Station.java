@@ -70,54 +70,46 @@ public class Station implements Parcelable
 		return longitude;
 	}
 
-	public Time getShiftTimeForRoute(Route route) {
-		Cursor databaseCursor = database.rawQuery(buildRouteShiftTimeSelectionQuery(route), null);
+	public Time getRouteTimeShift(Route route) {
+		Cursor databaseCursor = database.rawQuery(buildRouteTimeShiftSelectionQuery(route), null);
 
-		Time shiftTime;
-
-		if (databaseCursor.getCount() == 0) {
-			throw new NotExistsException();
-		}
-		else {
-			databaseCursor.moveToFirst();
-			shiftTime = new Time(extractTimeFromCursor(databaseCursor));
-		}
+		databaseCursor.moveToFirst();
+		Time shiftTime = new Time(extractTimeShiftFromCursor(databaseCursor));
 
 		databaseCursor.close();
 
 		return shiftTime;
 	}
 
-	private String buildRouteShiftTimeSelectionQuery(Route route) {
+	private String buildRouteTimeShiftSelectionQuery(Route route) {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select ");
-
 		queryBuilder.append(String.format("%s ", DbFieldNames.TIME_SHIFT));
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES_AND_STATIONS));
-		queryBuilder.append(
-			String.format("where %s = %d and %s = %d", DbFieldNames.STATION_ID, id, DbFieldNames.ROUTE_ID,
-				route.getId()));
+
+		queryBuilder.append(String.format("where %s = %d and ", DbFieldNames.STATION_ID, id));
+		queryBuilder.append(String.format("%s = %d", DbFieldNames.ROUTE_ID, route.getId()));
 
 		return queryBuilder.toString();
 	}
 
-	private String extractTimeFromCursor(Cursor databaseCursor) {
-		return databaseCursor.getString(databaseCursor.getColumnIndexOrThrow(DbFieldNames.TIME_SHIFT));
+	private String extractTimeShiftFromCursor(Cursor databaseCursor) {
+		int timeShiftColumnIndex = databaseCursor.getColumnIndex(DbFieldNames.TIME_SHIFT);
+		return databaseCursor.getString(timeShiftColumnIndex);
 	}
 
-	public List<Time> getTimetableForRoute(Route route) {
-		List<Time> timetable = new ArrayList<Time>();
+	public List<Time> getRouteTimetable(Route route) {
+		List<Time> routeTimetable = new ArrayList<Time>();
 
-		Time shiftTimeForRoute = getShiftTimeForRoute(route);
+		Time routeTimeShift = getRouteTimeShift(route);
 
 		for (Time departureTime : route.getDepartureTimetable()) {
-			Time routeTime = departureTime.sum(shiftTimeForRoute);
-			timetable.add(routeTime);
+			routeTimetable.add(departureTime.sum(routeTimeShift));
 		}
 
-		return timetable;
+		return routeTimetable;
 	}
 
 	@Override
