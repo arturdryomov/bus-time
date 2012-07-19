@@ -85,9 +85,7 @@ public class TimetableFragment extends AdaptedListFragment
 	}
 
 	private String constructRemainingTimeText(Time busTime) {
-		currentTime = Time.getCurrentTime();
-
-		if (busTime.equals(currentTime)) {
+		if (busTime.isNow()) {
 			return getString(R.string.token_time_now);
 		}
 

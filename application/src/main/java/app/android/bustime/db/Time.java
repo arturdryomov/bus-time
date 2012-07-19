@@ -95,14 +95,6 @@ public class Time
 		return DateFormat.getTimeFormat(activityContext).format(getTime());
 	}
 
-	public int getHours() {
-		return hours;
-	}
-
-	public int getMinutes() {
-		return minutes;
-	}
-
 	public long getMilliseconds() {
 		return hours * DateUtils.HOUR_IN_MILLIS + minutes * DateUtils.MINUTE_IN_MILLIS;
 	}
@@ -126,27 +118,14 @@ public class Time
 	}
 
 	public static Time getCurrentTime() {
-		final Calendar calendar = Calendar.getInstance();
+		final Calendar calendar = GregorianCalendar.getInstance();
 
 		return new Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
 	}
 
-	@Override
-	public boolean equals(Object otherObject) {
-		if (otherObject == null) {
-			return false;
-		}
+	public boolean isNow() {
+		Time now = getCurrentTime();
 
-		if (otherObject == this) {
-			return true;
-		}
-
-		if (otherObject.getClass() != otherObject.getClass()) {
-			return false;
-		}
-
-		Time otherTime = (Time) otherObject;
-
-		return (otherTime.hours == this.hours) && (otherTime.minutes == this.minutes);
+		return now.hours == hours && now.minutes == minutes;
 	}
 }
