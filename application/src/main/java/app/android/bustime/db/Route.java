@@ -55,7 +55,7 @@ public class Route implements Parcelable
 
 		while (databaseCursor.moveToNext()) {
 			String departureTimeAsString = extractDepartureTimeFromCursor(databaseCursor);
-			departureTimetable.add(new Time(departureTimeAsString));
+			departureTimetable.add(Time.parse(departureTimeAsString));
 		}
 
 		databaseCursor.close();

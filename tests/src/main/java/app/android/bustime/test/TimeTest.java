@@ -3,93 +3,36 @@ package app.android.bustime.test;
 
 import android.test.AndroidTestCase;
 import app.android.bustime.db.Time;
-import app.android.bustime.db.TimeException;
 
 
 public class TimeTest extends AndroidTestCase
 {
-	public void testNormalCreatingFromNumbers() {
-		Time firstTime = new Time(10, 40);
-		assertEquals("10:40", firstTime.toString());
+	public void testParse() {
+		Time time = Time.parse("10:00");
+		assertEquals("10:00", time.toDatabaseString());
 
-		Time secondTime = new Time(0, 0);
-		assertEquals("00:00", secondTime.toString());
+		time = Time.parse("11:20");
+		assertEquals("11:20", time.toDatabaseString());
 
-		Time thirdTime = new Time(23, 59);
-		assertEquals("23:59", thirdTime.toString());
-	}
-
-	public void testCreatingFromNumbersWithNegativeHours() {
-		try {
-			new Time(-10, 40);
-
-			fail();
-		}
-		catch (TimeException e) {
-		}
-	}
-
-	public void testCreatingFromNumbersWithHugeHours() {
-		try {
-			new Time(25, 40);
-
-			fail();
-		}
-		catch (TimeException e) {
-		}
-	}
-
-	public void testCreatingFromNumbersWithHugeMinutes() {
-		try {
-			new Time(10, 65);
-
-			fail();
-		}
-		catch (TimeException e) {
-		}
-	}
-
-	public void testNormalCreatingFromString() {
-		Time firstTime = new Time("10:40");
-		assertEquals("10:40", firstTime.toString());
-
-		Time secondTime = new Time("00:00");
-		assertEquals("00:00", secondTime.toString());
-
-		Time thirdTime = new Time("23:59");
-		assertEquals("23:59", thirdTime.toString());
-	}
-
-	public void testGetHours() {
-		Time time = new Time("10:40");
-
-		assertEquals(10, time.getHours());
-	}
-
-	public void testGetMinutes() {
-		Time time = new Time("10:40");
-
-		assertEquals(40, time.getMinutes());
+		time =  Time.parse("23:59");
+		assertEquals("23:59", time.toDatabaseString());
 	}
 
 	public void testSum() {
-		Time firstTime = new Time("10:40");
-		Time secondTime = new Time("00:30");
+		Time firstTime = Time.parse("10:00");
+		Time secondTime = Time.parse("00:20");
+		assertEquals("10:20", firstTime.sum(secondTime).toDatabaseString());
 
-		assertEquals("11:10", firstTime.sum(secondTime).toString());
+		firstTime = Time.parse("12:53");
+		secondTime = Time.parse("00:29");
+		assertEquals("13:22", firstTime.sum(secondTime).toDatabaseString());
 	}
 
 	public void testIsAfter() {
-		Time firstTime = new Time("10:40");
-		Time secondTime = new Time("10:30");
+		Time timeBefore = Time.parse("10:00");
+		Time timeAfter = Time.parse("23:00");
 
-		assertTrue(firstTime.isAfter(secondTime));
-	}
-
-	public void testEquals() {
-		Time firstTime = new Time("10:40");
-		Time secondTime = new Time("10:40");
-
-		assertTrue(firstTime.equals(secondTime));
+		assertTrue(timeAfter.isAfter(timeBefore));
+		assertFalse(timeBefore.isAfter(timeAfter));
 	}
 }
