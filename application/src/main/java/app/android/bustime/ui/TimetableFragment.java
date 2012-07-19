@@ -9,7 +9,6 @@ import java.util.Map;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.text.format.DateUtils;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
 import app.android.bustime.db.Route;
@@ -78,7 +77,7 @@ public class TimetableFragment extends AdaptedListFragment
 		Map<String, Object> listItem = new HashMap<String, Object>();
 
 		listItem.put(LIST_ITEM_OBJECT_ID, time);
-		listItem.put(LIST_ITEM_TIME_ID, time.toString(getActivity()));
+		listItem.put(LIST_ITEM_TIME_ID, time.toSystemFormattedString(getActivity()));
 		listItem.put(LIST_ITEM_REMAINING_TIME_ID, constructRemainingTimeText(time));
 
 		return listItem;
@@ -89,8 +88,7 @@ public class TimetableFragment extends AdaptedListFragment
 			return getString(R.string.token_time_now);
 		}
 
-		return DateUtils.getRelativeTimeSpanString(busTime.getMilliseconds(),
-			currentTime.getMilliseconds(), DateUtils.MINUTE_IN_MILLIS).toString();
+		return busTime.toRelativeToNowSpanString();
 	}
 
 	@Override
@@ -170,7 +168,7 @@ public class TimetableFragment extends AdaptedListFragment
 	}
 
 	private void updateRemainingTimes() {
-		currentTime = Time.getCurrentTime();
+		currentTime = Time.getInstance();
 
 		for (Map<String, Object> listDataElement : list) {
 			Time listDataTime = (Time) listDataElement.get(LIST_ITEM_OBJECT_ID);

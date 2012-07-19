@@ -86,7 +86,7 @@ public class Station implements Parcelable
 		Cursor databaseCursor = database.rawQuery(buildRouteTimeShiftSelectionQuery(route), null);
 
 		databaseCursor.moveToFirst();
-		Time shiftTime = new Time(extractTimeShiftFromCursor(databaseCursor));
+		Time shiftTime = Time.parse(extractTimeShiftFromCursor(databaseCursor));
 
 		databaseCursor.close();
 

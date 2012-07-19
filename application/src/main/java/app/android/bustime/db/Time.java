@@ -1,6 +1,7 @@
 package app.android.bustime.db;
 
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -8,124 +9,106 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.content.Context;
-import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 
 
 public class Time
 {
-	private static final int MAXIMUM_HOURS_COUNT = 23;
-	private static final int MINIMUM_HOURS_COUNT = 0;
-	private static final int MAXIMUM_MINUTES_COUNT = 59;
-	private static final int MINIMUM_MINUTES_COUNT = 0;
-
-	private final int hours;
-	private final int minutes;
-
-	private static final SimpleDateFormat timeFormatter;
+	private static final DateFormat timeFormatter;
 
 	static {
 		timeFormatter = new SimpleDateFormat("HH:mm");
 	}
 
-	public Time(String timeAsString) {
-		Date time = getTime(timeAsString);
+	private final int hours;
+	private final int minutes;
 
-		int hours = time.getHours();
-		int minutes = time.getMinutes();
-
-		if (!isTimeCorrect(hours, minutes)) {
-			throw new TimeException();
-		}
-
-		this.hours = hours;
-		this.minutes = minutes;
+	public static Time parse(String timeStringRepresentation) {
+		return new Time(timeStringRepresentation);
 	}
 
-	private Date getTime(String timeAsString) {
+	private Time(String timeStringRepresentation) {
+		Calendar calendar = parseTime(timeStringRepresentation);
+
+		hours = calendar.get(Calendar.HOUR_OF_DAY);
+		minutes = calendar.get(Calendar.MINUTE);
+	}
+
+	private Calendar parseTime(String timeStringRepresentation) {
 		try {
-			Date time = timeFormatter.parse(timeAsString);
+			Date date = timeFormatter.parse(timeStringRepresentation);
 
-			if (time == null) {
-				throw new TimeException();
-			}
-
-			return time;
+			return convertDateToCalendar(date);
 		}
 		catch (ParseException e) {
 			throw new TimeException();
 		}
 	}
 
-	private boolean isTimeCorrect(int hours, int minutes) {
-		if ((hours > MAXIMUM_HOURS_COUNT) || (hours < MINIMUM_HOURS_COUNT)) {
-			return false;
-		}
+	private Calendar convertDateToCalendar(Date date) {
+		Calendar calendar = GregorianCalendar.getInstance();
+		calendar.setTime(date);
 
-		if ((minutes > MAXIMUM_MINUTES_COUNT) || (minutes < MINIMUM_MINUTES_COUNT)) {
-			return false;
-		}
-
-		return true;
+		return calendar;
 	}
 
-	public Time(int hours, int minutes) {
-		if (!isTimeCorrect(hours, minutes)) {
-			throw new TimeException();
-		}
-
-		this.hours = hours;
-		this.minutes = minutes;
+	private Time(Calendar calendar) {
+		hours = calendar.get(Calendar.HOUR_OF_DAY);
+		minutes = calendar.get(Calendar.MINUTE);
 	}
 
-	@Override
-	public String toString() {
-		return timeFormatter.format(getTime());
-	}
+	public static Time getInstance() {
+		Calendar calendar = GregorianCalendar.getInstance();
 
-	private Date getTime() {
-		Calendar calendar = new GregorianCalendar();
-		calendar.set(Calendar.HOUR_OF_DAY, hours);
-		calendar.set(Calendar.MINUTE, minutes);
-
-		return calendar.getTime();
-	}
-
-	public String toString(Context activityContext) {
-		return DateFormat.getTimeFormat(activityContext).format(getTime());
-	}
-
-	public long getMilliseconds() {
-		return hours * DateUtils.HOUR_IN_MILLIS + minutes * DateUtils.MINUTE_IN_MILLIS;
+		return new Time(calendar);
 	}
 
 	public Time sum(Time timeToSum) {
-		Calendar calendar = new GregorianCalendar();
-		calendar.set(Calendar.HOUR_OF_DAY, hours);
-		calendar.set(Calendar.MINUTE, minutes);
-
+		Calendar calendar = convertTimeToCalendar(timeToSum);
 		calendar.add(Calendar.HOUR_OF_DAY, timeToSum.hours);
 		calendar.add(Calendar.MINUTE, timeToSum.minutes);
 
-		int resultHours = calendar.get(Calendar.HOUR_OF_DAY);
-		int resultMinutes = calendar.get(Calendar.MINUTE);
-
-		return new Time(resultHours, resultMinutes);
+		return new Time(calendar);
 	}
 
-	public boolean isAfter(Time time) {
-		return getTime().after(time.getTime());
-	}
+	private Calendar convertTimeToCalendar(Time time) {
+		Calendar calendar = GregorianCalendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, time.hours);
+		calendar.set(Calendar.MILLISECOND, time.minutes);
 
-	public static Time getCurrentTime() {
-		final Calendar calendar = GregorianCalendar.getInstance();
-
-		return new Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+		return calendar;
 	}
 
 	public boolean isNow() {
-		Time now = getCurrentTime();
+		Time now = Time.getInstance();
 
 		return now.hours == hours && now.minutes == minutes;
+	}
+
+	public boolean isAfter(Time timeToCompare) {
+		return getCalendar().after(convertTimeToCalendar(timeToCompare));
+	}
+
+	private Calendar getCalendar() {
+		return convertTimeToCalendar(this);
+	}
+
+	public String toSystemFormattedString(Context context) {
+		DateFormat systemTimeFormat = android.text.format.DateFormat.getTimeFormat(context);
+
+		return systemTimeFormat.format(getDate());
+	}
+
+	private Date getDate() {
+		return getCalendar().getTime();
+	}
+
+	public String toRelativeToNowSpanString() {
+		long timeInMilliseconds = getCalendar().getTimeInMillis();
+		long nowInMilliseconds = Time.getInstance().getCalendar().getTimeInMillis();
+
+		// TODO: Check adding flags as forth parameter
+		return DateUtils.getRelativeTimeSpanString(timeInMilliseconds, nowInMilliseconds,
+			DateUtils.MINUTE_IN_MILLIS).toString();
 	}
 }
