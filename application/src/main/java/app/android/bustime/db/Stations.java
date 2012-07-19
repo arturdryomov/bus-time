@@ -8,13 +8,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Location;
 
 
 public class Stations
 {
-	private final static int CLOSE_DISTANCE_IN_METERS = 500;
-
 	private final SQLiteDatabase database;
 
 	Stations() {
@@ -40,13 +37,13 @@ public class Stations
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select ");
-
 		queryBuilder.append(String.format("%s, ", DbFieldNames.ID));
 		queryBuilder.append(String.format("%s, ", DbFieldNames.NAME));
 		queryBuilder.append(String.format("%s, ", DbFieldNames.LATITUDE));
 		queryBuilder.append(String.format("%s ", DbFieldNames.LONGITUDE));
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.STATIONS));
+
 		queryBuilder.append(String.format("order by %s", DbFieldNames.NAME));
 
 		return queryBuilder.toString();
@@ -68,7 +65,7 @@ public class Stations
 	public List<Station> getStationsList(Route route) {
 		List<Station> stationsList = new ArrayList<Station>();
 
-		Cursor databaseCursor = database.rawQuery(buildStationsByRouteSelectionQuery(route), null);
+		Cursor databaseCursor = database.rawQuery(buildRoutesStationsSelectionQuery(route), null);
 
 		while (databaseCursor.moveToNext()) {
 			ContentValues databaseValues = extractStationDatabaseValuesFromCursor(databaseCursor);
@@ -78,17 +75,17 @@ public class Stations
 		return stationsList;
 	}
 
-	private String buildStationsByRouteSelectionQuery(Route route) {
+	private String buildRoutesStationsSelectionQuery(Route route) {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select distinct ");
-
 		queryBuilder.append(String.format("%s.%s, ", DbTableNames.STATIONS, DbFieldNames.ID));
 		queryBuilder.append(String.format("%s.%s, ", DbTableNames.STATIONS, DbFieldNames.NAME));
 		queryBuilder.append(String.format("%s.%s, ", DbTableNames.STATIONS, DbFieldNames.LATITUDE));
 		queryBuilder.append(String.format("%s.%s ", DbTableNames.STATIONS, DbFieldNames.LONGITUDE));
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.STATIONS));
+
 		queryBuilder.append(String.format("inner join %s ", DbTableNames.ROUTES_AND_STATIONS));
 		queryBuilder.append(String.format("on %s.%s = %s.%s ", DbTableNames.STATIONS, DbFieldNames.ID,
 			DbTableNames.ROUTES_AND_STATIONS, DbFieldNames.STATION_ID));
@@ -100,37 +97,5 @@ public class Stations
 		queryBuilder.append(String.format("order by %s.%s", DbTableNames.STATIONS, DbFieldNames.NAME));
 
 		return queryBuilder.toString();
-	}
-
-	public List<Station> getStationsList(double latitude, double longitude) {
-		return getClosestStations(latitude, longitude, getStationsList());
-	}
-
-	private List<Station> getClosestStations(double latitude, double longitude, List<Station> stations) {
-		List<Station> closestStations = new ArrayList<Station>();
-
-		Location currentLocation = constructLocation(latitude, longitude);
-
-		for (Station station : stations) {
-			Location stationLocation = constructLocation(station.getLatitude(), station.getLongitude());
-
-			if (currentLocation.distanceTo(stationLocation) <= CLOSE_DISTANCE_IN_METERS) {
-				closestStations.add(station);
-			}
-		}
-
-		return closestStations;
-	}
-
-	private Location constructLocation(double latitude, double longitude) {
-		Location location = new Location(new String());
-		location.setLatitude(latitude);
-		location.setLongitude(longitude);
-
-		return location;
-	}
-
-	public List<Station> getStationsList(Route route, double latitude, double longitude) {
-		return getClosestStations(latitude, longitude, getStationsList(route));
 	}
 }
