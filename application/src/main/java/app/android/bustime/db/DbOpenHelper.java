@@ -30,8 +30,13 @@ class DbOpenHelper extends SQLiteOpenHelper
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		removeFile(getDatabaseFile(db));
-		copyData(getSourceDatabaseStream(), getDatabaseStream(db));
+		// TODO: Change this to downloading file instead of copying from assets
+		importDatabaseFromAssets(db);
+	}
+
+	private void importDatabaseFromAssets(SQLiteDatabase localDatabase) {
+		removeFile(getDatabaseFile(localDatabase));
+		copyData(getSourceDatabaseStream(), getDatabaseStream(localDatabase));
 	}
 
 	private void removeFile(File file) {
