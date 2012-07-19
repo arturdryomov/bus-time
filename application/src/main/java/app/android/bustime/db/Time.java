@@ -79,6 +79,8 @@ public class Time
 		Calendar calendar = GregorianCalendar.getInstance();
 		calendar.set(Calendar.HOUR_OF_DAY, time.hours);
 		calendar.set(Calendar.MINUTE, time.minutes);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
 
 		return calendar;
 	}
