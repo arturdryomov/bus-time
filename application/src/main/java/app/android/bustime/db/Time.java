@@ -107,7 +107,6 @@ public class Time
 		long timeInMilliseconds = getCalendar().getTimeInMillis();
 		long nowInMilliseconds = Time.getInstance().getCalendar().getTimeInMillis();
 
-		// TODO: Check adding flags as forth parameter
 		return DateUtils.getRelativeTimeSpanString(timeInMilliseconds, nowInMilliseconds,
 			DateUtils.MINUTE_IN_MILLIS).toString();
 	}
