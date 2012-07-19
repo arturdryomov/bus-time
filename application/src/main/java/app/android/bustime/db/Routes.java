@@ -37,11 +37,11 @@ public class Routes
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select ");
-
 		queryBuilder.append(String.format("%s, ", DbFieldNames.ID));
 		queryBuilder.append(String.format("%s ", DbFieldNames.NAME));
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES));
+
 		queryBuilder.append(String.format("order by %s", DbFieldNames.NAME));
 
 		return queryBuilder.toString();
@@ -59,7 +59,7 @@ public class Routes
 	public List<Route> getRoutesList(Station station) {
 		List<Route> routesList = new ArrayList<Route>();
 
-		Cursor databaseCursor = database.rawQuery(buildRoutesByStationSelectionQuery(station), null);
+		Cursor databaseCursor = database.rawQuery(buildStationsRoutesSelectionQuery(station), null);
 
 		while (databaseCursor.moveToNext()) {
 			ContentValues databaseValues = extractRouteDatabaseValuesFromCursor(databaseCursor);
@@ -71,15 +71,15 @@ public class Routes
 		return routesList;
 	}
 
-	private String buildRoutesByStationSelectionQuery(Station station) {
+	private String buildStationsRoutesSelectionQuery(Station station) {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select distinct ");
-
 		queryBuilder.append(String.format("%s.%s, ", DbTableNames.ROUTES, DbFieldNames.ID));
 		queryBuilder.append(String.format("%s.%s ", DbTableNames.ROUTES, DbFieldNames.NAME));
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES));
+
 		queryBuilder.append(String.format("inner join %s ", DbTableNames.ROUTES_AND_STATIONS));
 		queryBuilder.append(String.format("on %s.%s = %s.%s ", DbTableNames.ROUTES, DbFieldNames.ID,
 			DbTableNames.ROUTES_AND_STATIONS, DbFieldNames.ROUTE_ID));
