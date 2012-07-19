@@ -64,17 +64,21 @@ public class Time
 	}
 
 	public Time sum(Time timeToSum) {
-		Calendar calendar = convertTimeToCalendar(timeToSum);
+		Calendar calendar = getCalendar();
 		calendar.add(Calendar.HOUR_OF_DAY, timeToSum.hours);
 		calendar.add(Calendar.MINUTE, timeToSum.minutes);
 
 		return new Time(calendar);
 	}
 
+	private Calendar getCalendar() {
+		return convertTimeToCalendar(this);
+	}
+
 	private Calendar convertTimeToCalendar(Time time) {
 		Calendar calendar = GregorianCalendar.getInstance();
 		calendar.set(Calendar.HOUR_OF_DAY, time.hours);
-		calendar.set(Calendar.MILLISECOND, time.minutes);
+		calendar.set(Calendar.MINUTE, time.minutes);
 
 		return calendar;
 	}
@@ -87,10 +91,6 @@ public class Time
 
 	public boolean isAfter(Time timeToCompare) {
 		return getCalendar().after(convertTimeToCalendar(timeToCompare));
-	}
-
-	private Calendar getCalendar() {
-		return convertTimeToCalendar(this);
 	}
 
 	public String toSystemFormattedString(Context context) {
@@ -110,5 +110,9 @@ public class Time
 		// TODO: Check adding flags as forth parameter
 		return DateUtils.getRelativeTimeSpanString(timeInMilliseconds, nowInMilliseconds,
 			DateUtils.MINUTE_IN_MILLIS).toString();
+	}
+
+	public String toDatabaseString() {
+		return timeFormatter.format(getDate());
 	}
 }
