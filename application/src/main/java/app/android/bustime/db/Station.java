@@ -70,7 +70,19 @@ public class Station implements Parcelable
 		return longitude;
 	}
 
-	public Time getRouteTimeShift(Route route) {
+	public List<Time> getRouteTimetable(Route route) {
+		List<Time> routeTimetable = new ArrayList<Time>();
+
+		Time routeTimeShift = getRouteTimeShift(route);
+
+		for (Time departureTime : route.getDepartureTimetable()) {
+			routeTimetable.add(departureTime.sum(routeTimeShift));
+		}
+
+		return routeTimetable;
+	}
+
+	private Time getRouteTimeShift(Route route) {
 		Cursor databaseCursor = database.rawQuery(buildRouteTimeShiftSelectionQuery(route), null);
 
 		databaseCursor.moveToFirst();
@@ -98,18 +110,6 @@ public class Station implements Parcelable
 	private String extractTimeShiftFromCursor(Cursor databaseCursor) {
 		int timeShiftColumnIndex = databaseCursor.getColumnIndex(DbFieldNames.TIME_SHIFT);
 		return databaseCursor.getString(timeShiftColumnIndex);
-	}
-
-	public List<Time> getRouteTimetable(Route route) {
-		List<Time> routeTimetable = new ArrayList<Time>();
-
-		Time routeTimeShift = getRouteTimeShift(route);
-
-		for (Time departureTime : route.getDepartureTimetable()) {
-			routeTimetable.add(departureTime.sum(routeTimeShift));
-		}
-
-		return routeTimetable;
 	}
 
 	@Override
