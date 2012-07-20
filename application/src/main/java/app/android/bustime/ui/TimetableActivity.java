@@ -12,7 +12,7 @@ public class TimetableActivity extends FragmentWrapperActivity
 {
 	@Override
 	protected Fragment buildFragment() {
-		return FragmentFactory.createTimetableFragment(this, extractReceivedRoute(),
+		return FragmentFactory.createFullWeekTimetableFragment(this, extractReceivedRoute(),
 			extractReceivedStation());
 	}
 

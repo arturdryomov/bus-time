@@ -51,11 +51,27 @@ final class FragmentFactory
 		return Fragment.instantiate(context, StationsFragment.class.getName(), arguments);
 	}
 
-	public static Fragment createTimetableFragment(Context context, Route route, Station station) {
+	public static Fragment createFullWeekTimetableFragment(Context context, Route route, Station station) {
 		Bundle arguments = new Bundle();
 		arguments.putParcelable(MESSAGE_ID, route);
 		arguments.putParcelable(EXTRA_MESSAGE_ID, station);
 
-		return Fragment.instantiate(context, TimetableFragment.class.getName(), arguments);
+		return Fragment.instantiate(context, FullWeekTimetableFragment.class.getName(), arguments);
+	}
+
+	public static Fragment createWorkdaysTimetableFragment(Context context, Route route, Station station) {
+		Bundle arguments = new Bundle();
+		arguments.putParcelable(MESSAGE_ID, route);
+		arguments.putParcelable(EXTRA_MESSAGE_ID, station);
+
+		return Fragment.instantiate(context, WorkdaysTimetableFragment.class.getName(), arguments);
+	}
+
+	public static Fragment createWeekendTimetableFragment(Context context, Route route, Station station) {
+		Bundle arguments = new Bundle();
+		arguments.putParcelable(MESSAGE_ID, route);
+		arguments.putParcelable(EXTRA_MESSAGE_ID, station);
+
+		return Fragment.instantiate(context, WeekendTimetableFragment.class.getName(), arguments);
 	}
 }
