@@ -70,16 +70,11 @@ public class Station implements Parcelable
 		return longitude;
 	}
 
-	public List<Time> getRouteTimetable(Route route) {
-		List<Time> routeTimetable = new ArrayList<Time>();
-
+	public List<Time> getRouteFullWeekTimetable(Route route) {
 		Time routeTimeShift = getRouteTimeShift(route);
+		List<Time> routeDepartureTimetable = route.getFullWeekDepartureTimetable();
 
-		for (Time departureTime : route.getFullWeekDepartureTimetable()) {
-			routeTimetable.add(departureTime.sum(routeTimeShift));
-		}
-
-		return routeTimetable;
+		return getRouteTimetable(routeTimeShift, routeDepartureTimetable);
 	}
 
 	private Time getRouteTimeShift(Route route) {
@@ -110,6 +105,30 @@ public class Station implements Parcelable
 	private String extractTimeShiftFromCursor(Cursor databaseCursor) {
 		int timeShiftColumnIndex = databaseCursor.getColumnIndex(DbFieldNames.TIME_SHIFT);
 		return databaseCursor.getString(timeShiftColumnIndex);
+	}
+
+	private List<Time> getRouteTimetable(Time routeTimeShift, List<Time> routeDepartureTimetable) {
+		List<Time> routeTimetable = new ArrayList<Time>();
+
+		for (Time departureTime : routeDepartureTimetable) {
+			routeTimetable.add(departureTime.sum(routeTimeShift));
+		}
+
+		return routeTimetable;
+	}
+
+	public List<Time> getRouteWorkdaysDepartureTimetable(Route route) {
+		Time routeTimeShift = getRouteTimeShift(route);
+		List<Time> routeDepartureTimetable = route.getWorkdaysDepartureTimetable();
+
+		return getRouteTimetable(routeTimeShift, routeDepartureTimetable);
+	}
+
+	public List<Time> getRouteWeekendDepartureTimetable(Route route) {
+		Time routeTimeShift = getRouteTimeShift(route);
+		List<Time> routeDepartureTimetable = route.getWeekendDepartureTimetable();
+
+		return getRouteTimetable(routeTimeShift, routeDepartureTimetable);
 	}
 
 	@Override

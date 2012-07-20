@@ -111,7 +111,7 @@ public class TimetableFragment extends AdaptedListFragment
 
 		@Override
 		protected Void doInBackground(Void... parameters) {
-			timetable = station.getRouteTimetable(route);
+			timetable = station.getRouteFullWeekTimetable(route);
 
 			return null;
 		}
