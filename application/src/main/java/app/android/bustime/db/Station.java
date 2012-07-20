@@ -75,7 +75,7 @@ public class Station implements Parcelable
 
 		Time routeTimeShift = getRouteTimeShift(route);
 
-		for (Time departureTime : route.getDepartureTimetable()) {
+		for (Time departureTime : route.getFullWeekDepartureTimetable()) {
 			routeTimetable.add(departureTime.sum(routeTimeShift));
 		}
 
