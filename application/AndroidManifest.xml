@@ -48,7 +48,7 @@
 
 		<activity
 			android:name=".ui.TimetableActivity"
-			android:label="@string/title_timetable">
+			android:label="@string/title_timetable_full_week">
 		</activity>
 	</application>
 

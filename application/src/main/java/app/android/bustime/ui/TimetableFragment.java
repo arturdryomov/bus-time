@@ -16,7 +16,7 @@ import app.android.bustime.db.Station;
 import app.android.bustime.db.Time;
 
 
-public class TimetableFragment extends AdaptedListFragment
+abstract class TimetableFragment extends AdaptedListFragment
 {
 	private static final String LIST_ITEM_TIME_ID = "time";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
@@ -26,8 +26,8 @@ public class TimetableFragment extends AdaptedListFragment
 	private final Handler remainingTimeTextUpdateTimer;
 	private static final int AUTO_UPDATE_MILLISECONDS_PERIOD = 60000;
 
-	private Route route;
-	private Station station;
+	protected Route route;
+	protected Station station;
 
 	private Time currentTime;
 
@@ -95,25 +95,20 @@ public class TimetableFragment extends AdaptedListFragment
 
 	@Override
 	protected void callListPopulation() {
-		new LoadTimetableTask().execute();
+		buildLoadTimetableTask().execute();
 	}
 
-	private class LoadTimetableTask extends AsyncTask<Void, Void, Void>
+	protected abstract LoadTimetableTask buildLoadTimetableTask();
+
+	protected abstract class LoadTimetableTask extends AsyncTask<Void, Void, Void>
 	{
-		private List<Time> timetable;
+		protected List<Time> timetable;
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 
 			setEmptyListText(getString(R.string.loading_timetable));
-		}
-
-		@Override
-		protected Void doInBackground(Void... parameters) {
-			timetable = station.getRouteTimetable(route);
-
-			return null;
 		}
 
 		@Override
