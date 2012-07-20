@@ -95,6 +95,12 @@ public class Time
 		return getCalendar().after(convertTimeToCalendar(timeToCompare));
 	}
 
+	public boolean isWeekend() {
+		int dayOfWeek = getCalendar().get(Calendar.DAY_OF_WEEK);
+
+		return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
+	}
+
 	public String toSystemFormattedString(Context context) {
 		DateFormat systemTimeFormat = android.text.format.DateFormat.getTimeFormat(context);
 
