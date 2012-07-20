@@ -5,7 +5,15 @@
 
 	<string name="title_routes">Routes</string>
 	<string name="title_stations">Stations</string>
-	<string name="title_timetable">Timetable</string>
+
+	<string name="title_timetable_full_week">Timetable</string>
+	<string name="title_timetable_workdays">Workdays timetable</string>
+	<string name="title_timetable_weekend">Weekend timetable</string>
+
+	<string-array name="week_part_dependent_timetable">
+		<item>@string/title_timetable_workdays</item>
+		<item>@string/title_timetable_weekend</item>
+	</string-array>
 
 	<string name="empty_routes">No routes.</string>
 	<string name="empty_stations">No stations.</string>
