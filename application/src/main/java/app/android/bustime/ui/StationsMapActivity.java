@@ -1,8 +1,6 @@
 package app.android.bustime.ui;
 
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -14,6 +12,7 @@ import app.android.bustime.db.Station;
 import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
@@ -29,6 +28,9 @@ public class StationsMapActivity extends SherlockMapActivity
 
 	private static final double DEFAULT_MAP_POSITION_LATITUDE = 55.533185;
 	private static final double DEFAULT_MAP_POSITION_LONGITUDE = 28.655477;
+
+	private static final String STATION_NAME_REMARK_BEGIN_SIGN = "(";
+	private static final String STATION_NAME_REMARK_END_SIGN = ")";
 
 	private MyLocationOverlay myLocationOverlay;
 
@@ -109,18 +111,23 @@ public class StationsMapActivity extends SherlockMapActivity
 
 	private class PopulateMapTask extends AsyncTask<Void, Void, Void>
 	{
-		private List<Station> stations;
+		private StationsOverlay stationsOverlay;
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			setSupportProgressBarIndeterminateVisibility(true);
+			showProgressInActionBar();
+
+			stationsOverlay = buildStationsOverlay();
 		}
 
 		@Override
 		protected Void doInBackground(Void... parameters) {
-			stations = DbProvider.getInstance().getStations().getStationsList();
+			for (Station station : DbProvider.getInstance().getStations().getStationsList()) {
+				OverlayItem stationOverlayItem = buildStationOverlayItem(station);
+				stationsOverlay.addOverlayItem(stationOverlayItem);
+			}
 
 			return null;
 		}
@@ -129,21 +136,14 @@ public class StationsMapActivity extends SherlockMapActivity
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 
-			setSupportProgressBarIndeterminateVisibility(false);
+			addOverlayToMap(stationsOverlay);
 
-			setUpStationsOnMap(stations);
+			hideProgressInActionBar();
 		}
 	}
 
-	private void setUpStationsOnMap(List<Station> stations) {
-		StationsOverlay stationsOverlay = buildStationsOverlay();
-
-		for (Station station : stations) {
-			OverlayItem stationOverlayItem = new StationOverlayItem(buildGeoPoint(station), station);
-			stationsOverlay.addOverlay(stationOverlayItem);
-		}
-
-		getMapView().getOverlays().add(stationsOverlay);
+	private void showProgressInActionBar() {
+		setSupportProgressBarIndeterminateVisibility(true);
 	}
 
 	private StationsOverlay buildStationsOverlay() {
@@ -156,8 +156,61 @@ public class StationsMapActivity extends SherlockMapActivity
 		return stationsOverlay;
 	}
 
+	private StationOverlayItem buildStationOverlayItem(Station station) {
+		if (hasStationNameRemark(station.getName())) {
+			return buildStationOverlayItemWithRemark(station);
+		}
+		else {
+			return buildStationOverlayItemWithoutRemark(station);
+		}
+	}
+
+	private boolean hasStationNameRemark(String stationName) {
+		if (!stationName.contains(STATION_NAME_REMARK_BEGIN_SIGN)) {
+			return false;
+		}
+
+		return stationName.contains(STATION_NAME_REMARK_END_SIGN);
+	}
+
+	private StationOverlayItem buildStationOverlayItemWithRemark(Station station) {
+		GeoPoint stationGeoPoint = buildGeoPoint(station);
+		String pureStationName = extractPureStationName(station.getName());
+		String stationNameRemark = extractStationNameRemark(station.getName());
+
+		return new StationOverlayItem(station, stationGeoPoint, pureStationName, stationNameRemark);
+	}
+
 	private GeoPoint buildGeoPoint(Station station) {
 		return buildGeoPoint(station.getLatitude(), station.getLongitude());
+	}
+
+	private String extractPureStationName(String stationName) {
+		int stationRemarkBeginPosition = stationName.indexOf(STATION_NAME_REMARK_BEGIN_SIGN);
+
+		return stationName.substring(0, stationRemarkBeginPosition - 1);
+	}
+
+	private String extractStationNameRemark(String stationName) {
+		int stationRemarkBeginPosition = stationName.indexOf(STATION_NAME_REMARK_BEGIN_SIGN);
+		int stationRemarkEndPosition = stationName.indexOf(STATION_NAME_REMARK_END_SIGN);
+
+		return stationName.substring(stationRemarkBeginPosition + 1, stationRemarkEndPosition);
+	}
+
+	private StationOverlayItem buildStationOverlayItemWithoutRemark(Station station) {
+		GeoPoint stationGeoPoint = buildGeoPoint(station);
+
+		return new StationOverlayItem(station, stationGeoPoint);
+	}
+
+	private void addOverlayToMap(ItemizedOverlay overlay) {
+		getMapView().getOverlays().add(overlay);
+		getMapView().invalidate();
+	}
+
+	private void hideProgressInActionBar() {
+		setSupportProgressBarIndeterminateVisibility(false);
 	}
 
 	private static class StationTapListener implements StationsOverlay.OnBalloonTapListener
