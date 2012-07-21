@@ -7,9 +7,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.zip.GZIPInputStream;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import app.android.bustime.R;
 import org.apache.commons.io.IOUtils;
 
 
@@ -52,13 +56,13 @@ public class DbImporter
 	}
 
 	private void copyAssetsDatabaseToLocalDatabase() {
-		InputStream assetsDatabaseStream = getAssetsDatabaseStream();
-		OutputStream localDatabaseStream = getLocalDatabaseStream();
+		InputStream assetsDatabaseStream = buildAssetsDatabaseStream();
+		OutputStream localDatabaseStream = buildLocalDatabaseStream();
 
 		copyData(assetsDatabaseStream, localDatabaseStream);
 	}
 
-	private InputStream getAssetsDatabaseStream() {
+	private InputStream buildAssetsDatabaseStream() {
 		AssetManager assetManager = context.getAssets();
 
 		try {
@@ -69,7 +73,7 @@ public class DbImporter
 		}
 	}
 
-	private OutputStream getLocalDatabaseStream() {
+	private OutputStream buildLocalDatabaseStream() {
 		try {
 			return new FileOutputStream(getLocalDatabaseFile());
 		}
@@ -88,6 +92,35 @@ public class DbImporter
 			inputStream.close();
 		}
 		catch (IOException e) {
+			throw new DbImportException();
+		}
+	}
+
+	public void importFromServer() {
+		copyServerDatabaseToLocalDatabase();
+	}
+
+	private void copyServerDatabaseToLocalDatabase() {
+		InputStream serverDatabaseStream = buildServerDatabaseStream();
+		OutputStream localDatabaseStream = buildLocalDatabaseStream();
+
+		copyData(serverDatabaseStream, localDatabaseStream);
+	}
+
+	private InputStream buildServerDatabaseStream() {
+		try {
+			return new GZIPInputStream(buildServerDatabaseUrl().openStream());
+		}
+		catch (IOException e) {
+			throw new DbImportException();
+		}
+	}
+
+	private URL buildServerDatabaseUrl() {
+		try {
+			return new URL(context.getString(R.string.url_server_database_file));
+		}
+		catch (MalformedURLException e) {
 			throw new DbImportException();
 		}
 	}
