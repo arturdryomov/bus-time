@@ -17,8 +17,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class TimetableActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener
 {
-	private static final boolean IS_TIMETABLE_WEEK_PART_DEPENDENT_DEFAULT_VALUE = false;
-
 	private static final int LIST_NAVIGATION_WORKDAYS_ITEM_INDEX = 0;
 	private static final int LIST_NAVIGATION_WEEKEND_ITEM_INDEX = 1;
 
@@ -28,8 +26,6 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	private Fragment fullWeekTimetableFragment;
 	private Fragment workdaysTimetableFragment;
 	private Fragment weekendTimetableFragment;
-
-	private boolean isTimetableWeekPartDependent = IS_TIMETABLE_WEEK_PART_DEPENDENT_DEFAULT_VALUE;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,8 +87,6 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		protected void onPostExecute(Boolean isRouteWeekPartDependent) {
 			super.onPostExecute(isRouteWeekPartDependent);
 
-			isTimetableWeekPartDependent = isRouteWeekPartDependent.booleanValue();
-
 			if (isRouteWeekPartDependent) {
 				setUpWeekPartDependentTimetable();
 			}
@@ -147,10 +141,13 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 
 	private void setUpWeekPartDependentFragments() {
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
 		fragmentTransaction.add(android.R.id.content, workdaysTimetableFragment);
 		fragmentTransaction.add(android.R.id.content, weekendTimetableFragment);
+
 		fragmentTransaction.detach(workdaysTimetableFragment);
 		fragmentTransaction.detach(weekendTimetableFragment);
+
 		fragmentTransaction.commit();
 	}
 
@@ -167,32 +164,6 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		getSupportActionBar().setSelectedNavigationItem(listNavigationIndex);
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		if (isTimetableWeekPartDependent) {
-			setUpWeekPartDependentFragments();
-			setCurrentWeekPartListNavigationItem();
-		}
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-
-		if (isTimetableWeekPartDependent) {
-			tearDownWeekPartDependentFragments();
-		}
-	}
-
-	private void tearDownWeekPartDependentFragments() {
-		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-		fragmentTransaction.remove(workdaysTimetableFragment);
-		fragmentTransaction.remove(weekendTimetableFragment);
-		fragmentTransaction.commit();
-	}
-
 	private void setUpWeekPartIndependentTimetable() {
 		if (!isFragmentSetUp()) {
 			setUpFragment(fullWeekTimetableFragment);
@@ -205,7 +176,9 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 
 	private void setUpFragment(Fragment fragment) {
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
 		fragmentTransaction.add(android.R.id.content, fragment);
+
 		fragmentTransaction.commit();
 	}
 }
