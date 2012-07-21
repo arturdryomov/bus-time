@@ -10,8 +10,14 @@ public class StationOverlayItem extends OverlayItem
 {
 	private Station station;
 
-	public StationOverlayItem(GeoPoint geoPoint, Station station) {
+	public StationOverlayItem(Station station, GeoPoint geoPoint) {
 		super(geoPoint, station.getName(), null);
+
+		this.station = station;
+	}
+
+	public StationOverlayItem(Station station, GeoPoint geoPoint, String title, String remark) {
+		super(geoPoint, title, remark);
 
 		this.station = station;
 	}
