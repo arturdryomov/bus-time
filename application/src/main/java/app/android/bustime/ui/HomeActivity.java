@@ -2,10 +2,13 @@ package app.android.bustime.ui;
 
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import app.android.bustime.R;
+import app.android.bustime.db.DbImportException;
+import app.android.bustime.db.DbImporter;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -86,6 +89,10 @@ public class HomeActivity extends SherlockFragmentActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
+			case R.id.menu_download:
+				callDatabaseImport();
+				return true;
+
 			case R.id.menu_map:
 				callStationsMapActivity();
 				return true;
@@ -93,6 +100,69 @@ public class HomeActivity extends SherlockFragmentActivity
 			default:
 				return super.onOptionsItemSelected(menuItem);
 		}
+	}
+
+	private void callDatabaseImport() {
+		new ImportDatabaseTask().execute();
+	}
+
+	private class ImportDatabaseTask extends AsyncTask<Void, Void, String>
+	{
+		private ProgressDialogHelper progressDialogHelper;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+
+			progressDialogHelper = new ProgressDialogHelper();
+			progressDialogHelper.show(HomeActivity.this, R.string.loading_import);
+		}
+
+		@Override
+		protected String doInBackground(Void... voids) {
+			try {
+				DbImporter dbImporter = new DbImporter(HomeActivity.this);
+				dbImporter.importFromServer();
+			}
+			catch (DbImportException e) {
+				return getString(R.string.error_unspecified);
+			}
+
+			return new String();
+		}
+
+		@Override
+		protected void onPostExecute(String errorMessage) {
+			super.onPostExecute(errorMessage);
+
+			if (errorMessage.isEmpty()) {
+				reSetUpTabs();
+			}
+			else {
+				UserAlerter.alert(HomeActivity.this, errorMessage);
+			}
+
+			progressDialogHelper.hide();
+		}
+	}
+
+	private void reSetUpTabs() {
+		ActionBar actionBar = getSupportActionBar();
+
+		int selectedTabPosition = getSelectedTabPosition();
+
+		tearDownTabs();
+		setUpTabs();
+
+		actionBar.selectTab(actionBar.getTabAt(selectedTabPosition));
+	}
+
+	private void tearDownTabs() {
+		getSupportActionBar().removeAllTabs();
+	}
+
+	private int getSelectedTabPosition() {
+		return getSupportActionBar().getSelectedTab().getPosition();
 	}
 
 	private void callStationsMapActivity() {
