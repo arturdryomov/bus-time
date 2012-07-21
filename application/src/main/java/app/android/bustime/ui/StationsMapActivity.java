@@ -1,8 +1,6 @@
 package app.android.bustime.ui;
 
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -14,6 +12,7 @@ import app.android.bustime.db.Station;
 import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
@@ -112,18 +111,23 @@ public class StationsMapActivity extends SherlockMapActivity
 
 	private class PopulateMapTask extends AsyncTask<Void, Void, Void>
 	{
-		private List<Station> stations;
+		private StationsOverlay stationsOverlay;
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			setSupportProgressBarIndeterminateVisibility(true);
+			showProgressInActionBar();
+
+			stationsOverlay = buildStationsOverlay();
 		}
 
 		@Override
 		protected Void doInBackground(Void... parameters) {
-			stations = DbProvider.getInstance().getStations().getStationsList();
+			for (Station station : DbProvider.getInstance().getStations().getStationsList()) {
+				OverlayItem stationOverlayItem = buildStationOverlayItem(station);
+				stationsOverlay.addOverlayItem(stationOverlayItem);
+			}
 
 			return null;
 		}
@@ -132,22 +136,14 @@ public class StationsMapActivity extends SherlockMapActivity
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 
-			setUpStationsOnMap(stations);
+			addOverlayToMap(stationsOverlay);
 
-			setSupportProgressBarIndeterminateVisibility(false);
+			hideProgressInActionBar();
 		}
 	}
 
-	private void setUpStationsOnMap(List<Station> stations) {
-		StationsOverlay stationsOverlay = buildStationsOverlay();
-
-		for (Station station : stations) {
-			OverlayItem stationOverlayItem = buildStationOverlayItem(station);
-			stationsOverlay.addOverlay(stationOverlayItem);
-		}
-
-		getMapView().getOverlays().add(stationsOverlay);
-		getMapView().invalidate();
+	private void showProgressInActionBar() {
+		setSupportProgressBarIndeterminateVisibility(true);
 	}
 
 	private StationsOverlay buildStationsOverlay() {
@@ -206,6 +202,15 @@ public class StationsMapActivity extends SherlockMapActivity
 		GeoPoint stationGeoPoint = buildGeoPoint(station);
 
 		return new StationOverlayItem(station, stationGeoPoint);
+	}
+
+	private void addOverlayToMap(ItemizedOverlay overlay) {
+		getMapView().getOverlays().add(overlay);
+		getMapView().invalidate();
+	}
+
+	private void hideProgressInActionBar() {
+		setSupportProgressBarIndeterminateVisibility(false);
 	}
 
 	private static class StationTapListener implements StationsOverlay.OnBalloonTapListener
