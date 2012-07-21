@@ -17,4 +17,8 @@ assets/
 
 keys.xml
 
+# URLs
+
+urls.xml
+
 # Use global .gitignore for your IDE
