@@ -30,20 +30,47 @@ class DbOpenHelper extends SQLiteOpenHelper
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// TODO: Change this to downloading file instead of copying from assets
-		importDatabaseFromAssets(db);
 	}
 
-	private void importDatabaseFromAssets(SQLiteDatabase localDatabase) {
-		removeFile(getDatabaseFile(localDatabase));
-		copyData(getSourceDatabaseStream(), getDatabaseStream(localDatabase));
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldDatabaseVersion, int newDatabaseVersion) {
 	}
 
-	private void removeFile(File file) {
-		file.delete();
+	@Override
+	public synchronized SQLiteDatabase getWritableDatabase() {
+		if (!isLocalDatabaseExist()) {
+			importDatabaseFromAssets();
+		}
+
+		return super.getWritableDatabase();
 	}
 
-	private InputStream getSourceDatabaseStream() {
+	private boolean isLocalDatabaseExist() {
+		return getLocalDatabaseFile().exists();
+	}
+
+	private File getLocalDatabaseFile() {
+		return context.getDatabasePath(DATABASE_NAME).getAbsoluteFile();
+	}
+
+	private void importDatabaseFromAssets() {
+		createDatabasesDirectory();
+
+		InputStream assetsDatabaseStream = getAssetsDatabaseStream();
+		OutputStream localDatabaseStream = getLocalDatabaseStream();
+
+		copyData(assetsDatabaseStream, localDatabaseStream);
+	}
+
+	private void createDatabasesDirectory() {
+		File databasesDirectory = getLocalDatabaseFile().getParentFile();
+
+		if (!databasesDirectory.exists()) {
+			databasesDirectory.mkdirs();
+		}
+	}
+
+	private InputStream getAssetsDatabaseStream() {
 		AssetManager assetManager = context.getAssets();
 
 		try {
@@ -54,29 +81,26 @@ class DbOpenHelper extends SQLiteOpenHelper
 		}
 	}
 
-	private OutputStream getDatabaseStream(SQLiteDatabase db) {
+	private OutputStream getLocalDatabaseStream() {
 		try {
-			return new FileOutputStream(getDatabaseFile(db));
+			return new FileOutputStream(getLocalDatabaseFile());
 		}
 		catch (FileNotFoundException e) {
 			throw new DbException();
 		}
 	}
 
-	private File getDatabaseFile(SQLiteDatabase db) {
-		return new File(db.getPath());
-	}
-
 	private void copyData(InputStream inputStream, OutputStream outputStream) {
 		try {
 			IOUtils.copy(inputStream, outputStream);
+
+			outputStream.flush();
+			outputStream.close();
+
+			inputStream.close();
 		}
 		catch (IOException e) {
 			throw new DbException();
 		}
-	}
-
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldDatabaseVersion, int newDatabaseVersion) {
 	}
 }
