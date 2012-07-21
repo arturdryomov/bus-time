@@ -72,18 +72,18 @@ public class StationsMapActivity extends SherlockMapActivity
 			}
 		});
 
-		if (!isLastFixKnown()) {
-			animateToDefaultPosition();
+		if (!isLastLocationKnown()) {
+			animateToDefaultLocation();
 		}
 
 		getMapView().getOverlays().add(myLocationOverlay);
 	}
 
-	private boolean isLastFixKnown() {
-		return myLocationOverlay.getLastFix() != null;
+	private boolean isLastLocationKnown() {
+		return myLocationOverlay.getLastFix() != null && myLocationOverlay.getMyLocation() != null;
 	}
 
-	private void animateToDefaultPosition() {
+	private void animateToDefaultLocation() {
 		GeoPoint defaultPoint = buildGeoPoint(DEFAULT_MAP_POSITION_LATITUDE,
 			DEFAULT_MAP_POSITION_LONGITUDE);
 		getMapView().getController().animateTo(defaultPoint);
