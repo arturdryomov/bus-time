@@ -147,6 +147,7 @@ public class StationsMapActivity extends SherlockMapActivity
 		}
 
 		getMapView().getOverlays().add(stationsOverlay);
+		getMapView().invalidate();
 	}
 
 	private StationsOverlay buildStationsOverlay() {
