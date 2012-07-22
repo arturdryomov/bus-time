@@ -149,20 +149,16 @@ public class HomeActivity extends SherlockFragmentActivity
 	private void reSetUpTabs() {
 		ActionBar actionBar = getSupportActionBar();
 
-		int selectedTabPosition = getSelectedTabPosition();
+		int selectedTabPosition = actionBar.getSelectedNavigationIndex();
 
 		tearDownTabs();
 		setUpTabs();
 
-		actionBar.selectTab(actionBar.getTabAt(selectedTabPosition));
+		actionBar.setSelectedNavigationItem(selectedTabPosition);
 	}
 
 	private void tearDownTabs() {
 		getSupportActionBar().removeAllTabs();
-	}
-
-	private int getSelectedTabPosition() {
-		return getSupportActionBar().getSelectedTab().getPosition();
 	}
 
 	private void callStationsMapActivity() {
