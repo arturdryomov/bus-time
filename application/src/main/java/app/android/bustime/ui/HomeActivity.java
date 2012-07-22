@@ -17,11 +17,17 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class HomeActivity extends SherlockFragmentActivity
 {
+	private static final String SAVED_INSTANCE_KEY_SELECTED_TAB = "selected_tab";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setUpTabs();
+
+		if (savedInstanceState != null) {
+			setSelectedTab(savedInstanceState.getInt(SAVED_INSTANCE_KEY_SELECTED_TAB, 0));
+		}
 	}
 
 	private void setUpTabs() {
@@ -79,6 +85,10 @@ public class HomeActivity extends SherlockFragmentActivity
 		}
 	}
 
+	private void setSelectedTab(int tabPosition) {
+		getSupportActionBar().setSelectedNavigationItem(tabPosition);
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.menu_action_bar_home, menu);
@@ -89,7 +99,7 @@ public class HomeActivity extends SherlockFragmentActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
-			case R.id.menu_download:
+			case R.id.menu_update:
 				callDatabaseImport();
 				return true;
 
@@ -147,14 +157,16 @@ public class HomeActivity extends SherlockFragmentActivity
 	}
 
 	private void reSetUpTabs() {
-		ActionBar actionBar = getSupportActionBar();
-
-		int selectedTabPosition = actionBar.getSelectedNavigationIndex();
+		int selectedTabPosition = getSelectedTabPosition();
 
 		tearDownTabs();
 		setUpTabs();
 
-		actionBar.setSelectedNavigationItem(selectedTabPosition);
+		setSelectedTab(selectedTabPosition);
+	}
+
+	private int getSelectedTabPosition() {
+		return getSupportActionBar().getSelectedNavigationIndex();
 	}
 
 	private void tearDownTabs() {
@@ -164,5 +176,12 @@ public class HomeActivity extends SherlockFragmentActivity
 	private void callStationsMapActivity() {
 		Intent callIntent = IntentFactory.createStationsMapIntent(this);
 		startActivity(callIntent);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		outState.putInt(SAVED_INSTANCE_KEY_SELECTED_TAB, getSelectedTabPosition());
 	}
 }
