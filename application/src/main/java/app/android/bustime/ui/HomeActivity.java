@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import app.android.bustime.R;
 import app.android.bustime.db.DbImportException;
 import app.android.bustime.db.DbImporter;
@@ -145,7 +146,7 @@ public class HomeActivity extends SherlockFragmentActivity
 		protected void onPostExecute(String errorMessage) {
 			super.onPostExecute(errorMessage);
 
-			if (errorMessage.isEmpty()) {
+			if (TextUtils.isEmpty(errorMessage)) {
 				reSetUpTabs();
 			}
 			else {
