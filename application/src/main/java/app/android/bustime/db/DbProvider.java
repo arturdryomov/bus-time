@@ -11,7 +11,7 @@ public class DbProvider
 	{
 	}
 
-	private final DbOpenHelper databaseOpenHelper;
+	private DbOpenHelper databaseOpenHelper;
 
 	private Routes routes;
 	private Stations stations;
@@ -43,6 +43,13 @@ public class DbProvider
 		}
 
 		return getInstance();
+	}
+
+	public void refreshDatabase(Context context) {
+		databaseOpenHelper = new DbOpenHelper(context);
+
+		routes = new Routes();
+		stations = new Stations();
 	}
 
 	SQLiteDatabase getDatabase() {

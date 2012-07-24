@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import app.android.bustime.R;
 import app.android.bustime.db.DbImportException;
 import app.android.bustime.db.DbImporter;
+import app.android.bustime.db.DbProvider;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -134,6 +135,7 @@ public class HomeActivity extends SherlockFragmentActivity
 			try {
 				DbImporter dbImporter = new DbImporter(HomeActivity.this);
 				dbImporter.importFromServer();
+				DbProvider.getInstance().refreshDatabase(HomeActivity.this);
 			}
 			catch (DbImportException e) {
 				return getString(R.string.error_unspecified);
