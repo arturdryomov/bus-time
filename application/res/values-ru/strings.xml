@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="title_routes">Маршруты</string>
+	<string name="title_stations">Остановки</string>
+
+	<string name="title_timetable_full_week">Расписание</string>
+	<string name="title_timetable_workdays">Расписание: рабочие дни</string>
+	<string name="title_timetable_weekend">Расписание: выходные дни</string>
+
+	<string-array name="week_part_dependent_timetable">
+		<item>@string/title_timetable_workdays</item>
+		<item>@string/title_timetable_weekend</item>
+	</string-array>
+
+	<string name="empty_routes">Маршрутов нет.</string>
+	<string name="empty_stations">Остановок нет.</string>
+	<string name="empty_timetable">Расписание пусто.</string>
+
+	<string name="menu_stations_map">Карта остановок</string>
+	<string name="menu_update_database">Обновить информацию</string>
+
+	<string name="loading_routes">Загрузка маршрутов…</string>
+	<string name="loading_stations">Загрузка остановок…</string>
+	<string name="loading_timetable">Загрузка расписания…</string>
+	<string name="loading_import">Обновление…</string>
+
+	<string name="error_unspecified">Ой, какая-то ошибка!</string>
+
+	<string name="token_time_now">прямо сейчас</string>
+
+</resources>
