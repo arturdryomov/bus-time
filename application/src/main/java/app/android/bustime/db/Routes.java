@@ -75,8 +75,10 @@ public class Routes
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select distinct ");
-		queryBuilder.append(String.format("%s.%s, ", DbTableNames.ROUTES, DbFieldNames.ID));
-		queryBuilder.append(String.format("%s.%s ", DbTableNames.ROUTES, DbFieldNames.NAME));
+		queryBuilder.append(
+			String.format("%s.%s as %s, ", DbTableNames.ROUTES, DbFieldNames.ID, DbFieldNames.ID));
+		queryBuilder.append(
+			String.format("%s.%s as %s ", DbTableNames.ROUTES, DbFieldNames.NAME, DbFieldNames.NAME));
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES));
 

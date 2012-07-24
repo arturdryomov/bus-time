@@ -79,10 +79,14 @@ public class Stations
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select distinct ");
-		queryBuilder.append(String.format("%s.%s, ", DbTableNames.STATIONS, DbFieldNames.ID));
-		queryBuilder.append(String.format("%s.%s, ", DbTableNames.STATIONS, DbFieldNames.NAME));
-		queryBuilder.append(String.format("%s.%s, ", DbTableNames.STATIONS, DbFieldNames.LATITUDE));
-		queryBuilder.append(String.format("%s.%s ", DbTableNames.STATIONS, DbFieldNames.LONGITUDE));
+		queryBuilder.append(
+			String.format("%s.%s as %s, ", DbTableNames.STATIONS, DbFieldNames.ID, DbFieldNames.ID));
+		queryBuilder.append(
+			String.format("%s.%s as %s, ", DbTableNames.STATIONS, DbFieldNames.NAME, DbFieldNames.NAME));
+		queryBuilder.append(String.format("%s.%s as %s, ", DbTableNames.STATIONS, DbFieldNames.LATITUDE,
+			DbFieldNames.LATITUDE));
+		queryBuilder.append(String.format("%s.%s %s ", DbTableNames.STATIONS, DbFieldNames.LONGITUDE,
+			DbFieldNames.LONGITUDE));
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.STATIONS));
 
