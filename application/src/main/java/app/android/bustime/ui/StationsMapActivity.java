@@ -80,7 +80,7 @@ public class StationsMapActivity extends SherlockMapActivity
 	}
 
 	private boolean isLastLocationKnown() {
-		return myLocationOverlay.getLastFix() != null && myLocationOverlay.getMyLocation() != null;
+		return myLocationOverlay.getLastFix() != null || myLocationOverlay.getMyLocation() != null;
 	}
 
 	private void animateToDefaultLocation() {
