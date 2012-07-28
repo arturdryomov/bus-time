@@ -95,6 +95,8 @@ public class DbImporter
 
 	public void importFromServer() {
 		copyServerDatabaseToLocalDatabase();
+
+		DbProvider.getInstance().refreshDatabase(context);
 	}
 
 	private void copyServerDatabaseToLocalDatabase() {
