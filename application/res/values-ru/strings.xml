@@ -23,7 +23,7 @@
 	<string name="loading_routes">Загрузка маршрутов…</string>
 	<string name="loading_stations">Загрузка остановок…</string>
 	<string name="loading_timetable">Загрузка расписания…</string>
-	<string name="loading_import">Обновление…</string>
+	<string name="loading_update">Обновление…</string>
 
 	<string name="error_unspecified">Ой, какая-то ошибка!</string>
 

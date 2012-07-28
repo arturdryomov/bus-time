@@ -101,7 +101,7 @@ public class HomeActivity extends SherlockFragmentActivity
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 			case R.id.menu_update:
-				callDatabaseImport();
+				callDatabaseUpdating();
 				return true;
 
 			case R.id.menu_map:
@@ -113,11 +113,11 @@ public class HomeActivity extends SherlockFragmentActivity
 		}
 	}
 
-	private void callDatabaseImport() {
-		new ImportDatabaseTask().execute();
+	private void callDatabaseUpdating() {
+		new UpdateDatabaseTask().execute();
 	}
 
-	private class ImportDatabaseTask extends AsyncTask<Void, Void, String>
+	private class UpdateDatabaseTask extends AsyncTask<Void, Void, String>
 	{
 		private ProgressDialogHelper progressDialogHelper;
 
@@ -126,7 +126,7 @@ public class HomeActivity extends SherlockFragmentActivity
 			super.onPreExecute();
 
 			progressDialogHelper = new ProgressDialogHelper();
-			progressDialogHelper.show(HomeActivity.this, R.string.loading_import);
+			progressDialogHelper.show(HomeActivity.this, R.string.loading_update);
 		}
 
 		@Override

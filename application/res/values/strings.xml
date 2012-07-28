@@ -25,7 +25,7 @@
 	<string name="loading_routes">Loading routes…</string>
 	<string name="loading_stations">Loading stations…</string>
 	<string name="loading_timetable">Loading timetable…</string>
-	<string name="loading_import">Updating…</string>
+	<string name="loading_update">Updating…</string>
 
 	<string name="error_unspecified">Ooops, some error just happened!</string>
 
