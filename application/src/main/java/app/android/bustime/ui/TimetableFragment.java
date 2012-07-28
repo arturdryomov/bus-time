@@ -95,12 +95,10 @@ abstract class TimetableFragment extends AdaptedListFragment
 
 	@Override
 	protected void callListPopulation() {
-		buildLoadTimetableTask().execute();
+		new LoadTimetableTask().execute();
 	}
 
-	protected abstract LoadTimetableTask buildLoadTimetableTask();
-
-	protected abstract class LoadTimetableTask extends AsyncTask<Void, Void, Void>
+	protected class LoadTimetableTask extends AsyncTask<Void, Void, Void>
 	{
 		protected List<Time> timetable;
 
@@ -109,6 +107,13 @@ abstract class TimetableFragment extends AdaptedListFragment
 			super.onPreExecute();
 
 			setEmptyListText(getString(R.string.loading_timetable));
+		}
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+			timetable = buildTimetable();
+
+			return null;
 		}
 
 		@Override
@@ -125,6 +130,8 @@ abstract class TimetableFragment extends AdaptedListFragment
 			}
 		}
 	}
+
+	protected abstract List<Time> buildTimetable();
 
 	private void placeClosestTimeOnTop() {
 		setSelection(getClosestTimeListPosition() - PREVIOUS_TIMES_DISPLAYED_COUNT);

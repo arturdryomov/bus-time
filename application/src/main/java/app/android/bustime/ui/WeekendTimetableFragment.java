@@ -1,20 +1,15 @@
 package app.android.bustime.ui;
 
 
+import java.util.List;
+
+import app.android.bustime.db.Time;
+
+
 public class WeekendTimetableFragment extends TimetableFragment
 {
 	@Override
-	protected LoadTimetableTask buildLoadTimetableTask() {
-		return new LoadWeekendTimetableTask();
-	}
-
-	private class LoadWeekendTimetableTask extends LoadTimetableTask
-	{
-		@Override
-		protected Void doInBackground(Void... parameters) {
-			timetable = station.getRouteWeekendDepartureTimetable(route);
-
-			return null;
-		}
+	protected List<Time> buildTimetable() {
+		return station.getRouteWeekendDepartureTimetable(route);
 	}
 }
