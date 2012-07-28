@@ -156,6 +156,25 @@ public class StationsMapActivity extends SherlockMapActivity
 		return stationsOverlay;
 	}
 
+	private static class StationTapListener implements StationsOverlay.OnBalloonTapListener
+	{
+		private final Activity activity;
+
+		public StationTapListener(Activity activity) {
+			this.activity = activity;
+		}
+
+		@Override
+		public void onBalloonTap(StationOverlayItem stationOverlayItem) {
+			callRoutesActivity(stationOverlayItem.getStation());
+		}
+
+		private void callRoutesActivity(Station station) {
+			Intent callIntent = IntentFactory.createRoutesIntent(activity, station);
+			activity.startActivity(callIntent);
+		}
+	}
+
 	private StationOverlayItem buildStationOverlayItem(Station station) {
 		if (hasStationNameRemark(station.getName())) {
 			return buildStationOverlayItemWithRemark(station);
@@ -211,25 +230,6 @@ public class StationsMapActivity extends SherlockMapActivity
 
 	private void hideProgressInActionBar() {
 		setSupportProgressBarIndeterminateVisibility(false);
-	}
-
-	private static class StationTapListener implements StationsOverlay.OnBalloonTapListener
-	{
-		private final Activity activity;
-
-		public StationTapListener(Activity activity) {
-			this.activity = activity;
-		}
-
-		@Override
-		public void onBalloonTap(StationOverlayItem stationOverlayItem) {
-			callRoutesActivity(stationOverlayItem.getStation());
-		}
-
-		private void callRoutesActivity(Station station) {
-			Intent callIntent = IntentFactory.createRoutesIntent(activity, station);
-			activity.startActivity(callIntent);
-		}
 	}
 
 	@Override
