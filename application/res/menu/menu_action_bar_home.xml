@@ -5,12 +5,12 @@
 		android:id="@+id/menu_update"
 		android:icon="@drawable/ic_menu_update"
 		android:title="@string/menu_update_database"
-		android:showAsAction="always" />
+		android:showAsAction="ifRoom" />
 
 	<item
 		android:id="@+id/menu_map"
 		android:icon="@drawable/ic_menu_map"
 		android:title="@string/menu_stations_map"
-		android:showAsAction="always" />
+		android:showAsAction="ifRoom" />
 
 </menu>
