@@ -26,7 +26,7 @@ class StationsOverlay extends BalloonItemizedOverlay<OverlayItem>
 	}
 
 	private OnBalloonTapListener onBalloonTapListener;
-	private List<OverlayItem> overlays;
+	private final List<OverlayItem> overlays;
 
 	public StationsOverlay(Drawable defaultMarker, MapView mapView) {
 		super(boundCenter(defaultMarker), mapView);
