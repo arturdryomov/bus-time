@@ -66,7 +66,7 @@ abstract class TimetableFragment extends AdaptedListFragment
 	@Override
 	protected SimpleAdapter buildListAdapter() {
 		String[] listColumnNames = {LIST_ITEM_TIME_ID, LIST_ITEM_REMAINING_TIME_ID};
-		int[] columnCorrespondingResources = {R.id.text_first_line, R.id.test_second_line};
+		int[] columnCorrespondingResources = {R.id.text_first_line, R.id.text_second_line};
 
 		return new SimpleAdapter(getActivity(), list, R.layout.list_item_two_line, listColumnNames,
 			columnCorrespondingResources);
