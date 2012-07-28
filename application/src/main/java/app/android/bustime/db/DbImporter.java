@@ -49,10 +49,7 @@ public class DbImporter
 
 	private void createDatabasesDirectory() {
 		File databasesDirectory = getLocalDatabaseFile().getParentFile();
-
-		if (!databasesDirectory.exists()) {
-			databasesDirectory.mkdirs();
-		}
+		databasesDirectory.mkdirs();
 	}
 
 	private void copyAssetsDatabaseToLocalDatabase() {
