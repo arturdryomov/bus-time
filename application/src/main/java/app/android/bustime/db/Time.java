@@ -52,15 +52,15 @@ public class Time
 		return calendar;
 	}
 
-	private Time(Calendar calendar) {
-		hours = calendar.get(Calendar.HOUR_OF_DAY);
-		minutes = calendar.get(Calendar.MINUTE);
-	}
-
 	public static Time getInstance() {
 		Calendar calendar = GregorianCalendar.getInstance();
 
 		return new Time(calendar);
+	}
+
+	private Time(Calendar calendar) {
+		hours = calendar.get(Calendar.HOUR_OF_DAY);
+		minutes = calendar.get(Calendar.MINUTE);
 	}
 
 	public Time sum(Time timeToSum) {
