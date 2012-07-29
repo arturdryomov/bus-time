@@ -6,6 +6,7 @@
 	<ListView
 		android:id="@android:id/list"
 		android:choiceMode="singleChoice"
+		android:fastScrollEnabled="true"
 		android:orientation="vertical"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent" />
