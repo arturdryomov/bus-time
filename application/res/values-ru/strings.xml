@@ -25,6 +25,8 @@
 	<string name="loading_timetable">Загрузка расписания…</string>
 	<string name="loading_update">Обновление…</string>
 
+	<string name="warning_update_available">Доступно обновление</string>
+
 	<string name="error_unspecified">Ой, какая-то ошибка!</string>
 
 	<string name="token_time_now">прямо сейчас</string>

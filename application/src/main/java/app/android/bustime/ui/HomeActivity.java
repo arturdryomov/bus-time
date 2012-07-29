@@ -29,6 +29,8 @@ public class HomeActivity extends SherlockFragmentActivity
 		if (savedInstanceState != null) {
 			setSelectedTab(savedInstanceState.getInt(SAVED_INSTANCE_KEY_SELECTED_TAB, 0));
 		}
+
+		checkDatabaseUpdates();
 	}
 
 	private void setUpTabs() {
@@ -90,26 +92,51 @@ public class HomeActivity extends SherlockFragmentActivity
 		getSupportActionBar().setSelectedNavigationItem(tabPosition);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.menu_action_bar_home, menu);
-
-		return true;
+	private void checkDatabaseUpdates() {
+		new DatabaseUpdateCheckTask().execute();
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem menuItem) {
-		switch (menuItem.getItemId()) {
-			case R.id.menu_update:
+	private class DatabaseUpdateCheckTask extends AsyncTask<Void, Void, Void>
+	{
+		private boolean isLocalDatabaseEverUpdated;
+		private boolean isLocalDatabaseUpdateAvailable;
+
+		@Override
+		protected Void doInBackground(Void... parameters) {
+			isLocalDatabaseEverUpdated = false;
+			isLocalDatabaseUpdateAvailable = false;
+
+			try {
+				DbImporter dbImporter = new DbImporter(HomeActivity.this);
+
+				isLocalDatabaseEverUpdated = dbImporter.isLocalDatabaseEverUpdated();
+
+				if (!isLocalDatabaseEverUpdated) {
+					return null;
+				}
+
+				isLocalDatabaseUpdateAvailable = dbImporter.isLocalDatabaseUpdateAvailable();
+			}
+			catch (DbImportException e) {
+				// Skip exceptions, this update check is optional
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+
+			if (!isLocalDatabaseEverUpdated) {
 				callDatabaseUpdating();
-				return true;
 
-			case R.id.menu_map:
-				callStationsMapActivity();
-				return true;
+				return;
+			}
 
-			default:
-				return super.onOptionsItemSelected(menuItem);
+			if (isLocalDatabaseUpdateAvailable) {
+				showActionBarUpdateSign();
+			}
 		}
 	}
 
@@ -148,6 +175,7 @@ public class HomeActivity extends SherlockFragmentActivity
 
 			if (TextUtils.isEmpty(errorMessage)) {
 				reSetUpTabs();
+				hideActionBarUpdateSign();
 			}
 			else {
 				UserAlerter.alert(HomeActivity.this, errorMessage);
@@ -172,6 +200,37 @@ public class HomeActivity extends SherlockFragmentActivity
 
 	private void tearDownTabs() {
 		getSupportActionBar().removeAllTabs();
+	}
+
+	private void hideActionBarUpdateSign() {
+		getSupportActionBar().setSubtitle(null);
+	}
+
+	private void showActionBarUpdateSign() {
+		getSupportActionBar().setSubtitle(R.string.warning_update_available);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.menu_action_bar_home, menu);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		switch (menuItem.getItemId()) {
+			case R.id.menu_update:
+				callDatabaseUpdating();
+				return true;
+
+			case R.id.menu_map:
+				callStationsMapActivity();
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(menuItem);
+		}
 	}
 
 	private void callStationsMapActivity() {
