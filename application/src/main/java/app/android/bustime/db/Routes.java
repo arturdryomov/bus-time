@@ -42,7 +42,7 @@ public class Routes
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES));
 
-		queryBuilder.append(String.format("order by %s", DbFieldNames.NAME));
+		queryBuilder.append(String.format("order by %s", DbFieldNames.ID));
 
 		return queryBuilder.toString();
 	}
