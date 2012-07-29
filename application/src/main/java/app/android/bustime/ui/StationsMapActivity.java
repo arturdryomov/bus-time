@@ -4,6 +4,8 @@ package app.android.bustime.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import app.android.bustime.R;
@@ -72,7 +74,10 @@ public class StationsMapActivity extends SherlockMapActivity
 			}
 		});
 
-		if (!isLastLocationKnown()) {
+		if (isLastLocationKnown()) {
+			getMapView().getController().animateTo(getLastKnownLocation());
+		}
+		else {
 			animateToDefaultLocation();
 		}
 
@@ -80,13 +85,26 @@ public class StationsMapActivity extends SherlockMapActivity
 	}
 
 	private boolean isLastLocationKnown() {
-		return myLocationOverlay.getLastFix() != null || myLocationOverlay.getMyLocation() != null;
+		return getLastKnownLocation() != null;
 	}
 
-	private void animateToDefaultLocation() {
-		GeoPoint defaultPoint = buildGeoPoint(DEFAULT_MAP_POSITION_LATITUDE,
-			DEFAULT_MAP_POSITION_LONGITUDE);
-		getMapView().getController().animateTo(defaultPoint);
+	private GeoPoint getLastKnownLocation() {
+		LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+		Location gpsLastKnownLocation = locationManager.getLastKnownLocation(
+			LocationManager.GPS_PROVIDER);
+		if (gpsLastKnownLocation != null) {
+			return buildGeoPoint(gpsLastKnownLocation.getLatitude(), gpsLastKnownLocation.getLongitude());
+		}
+
+		Location networkLastKnownLocation = locationManager.getLastKnownLocation(
+			LocationManager.NETWORK_PROVIDER);
+		if (networkLastKnownLocation != null) {
+			return buildGeoPoint(networkLastKnownLocation.getLatitude(),
+				networkLastKnownLocation.getLongitude());
+		}
+
+		return null;
 	}
 
 	private GeoPoint buildGeoPoint(double latitude, double longitude) {
@@ -94,6 +112,12 @@ public class StationsMapActivity extends SherlockMapActivity
 		int longitudeE6 = (int) (longitude * MICRODEGREES_IN_DEGREE);
 
 		return new GeoPoint(latitudeE6, longitudeE6);
+	}
+
+	private void animateToDefaultLocation() {
+		GeoPoint defaultPoint = buildGeoPoint(DEFAULT_MAP_POSITION_LATITUDE,
+			DEFAULT_MAP_POSITION_LONGITUDE);
+		getMapView().getController().animateTo(defaultPoint);
 	}
 
 	@Override
