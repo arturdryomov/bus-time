@@ -158,7 +158,7 @@ public class DbImporter
 
 		if (!isServerDatabaseEtagEqualsLocalDatabaseEtag()) {
 			storeLocalDatabaseUpdateAvailable();
-			
+
 			return true;
 		}
 

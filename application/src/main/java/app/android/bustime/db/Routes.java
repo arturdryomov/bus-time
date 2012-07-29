@@ -42,7 +42,7 @@ public class Routes
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES));
 
-		queryBuilder.append(String.format("order by %s", DbFieldNames.ID));
+		queryBuilder.append(String.format("order by cast (%s as integer)", DbFieldNames.ID));
 
 		return queryBuilder.toString();
 	}
@@ -90,7 +90,8 @@ public class Routes
 			String.format("where %s.%s = %d ", DbTableNames.ROUTES_AND_STATIONS, DbFieldNames.STATION_ID,
 				station.getId()));
 
-		queryBuilder.append(String.format("order by %s.%s", DbTableNames.ROUTES, DbFieldNames.NAME));
+		queryBuilder.append(
+			String.format("order by cast (%s.%s as integer)", DbTableNames.ROUTES, DbFieldNames.NAME));
 
 		return queryBuilder.toString();
 	}
