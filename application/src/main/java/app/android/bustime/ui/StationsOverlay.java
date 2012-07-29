@@ -70,7 +70,9 @@ class StationsOverlay extends BalloonItemizedOverlay<OverlayItem>
 
 	public void addOverlayItem(OverlayItem overlay) {
 		overlays.add(overlay);
+	}
 
+	public void refresh() {
 		populate();
 	}
 

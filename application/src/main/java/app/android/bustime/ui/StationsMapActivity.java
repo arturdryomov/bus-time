@@ -152,6 +152,7 @@ public class StationsMapActivity extends SherlockMapActivity
 				OverlayItem stationOverlayItem = buildStationOverlayItem(station);
 				stationsOverlay.addOverlayItem(stationOverlayItem);
 			}
+			stationsOverlay.refresh();
 
 			return null;
 		}
