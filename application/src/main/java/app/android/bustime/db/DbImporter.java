@@ -179,7 +179,13 @@ public class DbImporter
 	private String getServerDatabaseEtag() {
 		URLConnection urlConnection = buildServerDatabaseConnection();
 
-		return urlConnection.getHeaderField(HTTP_ETAG_HEADER_FIELD);
+		String serverDatabaseEtag = urlConnection.getHeaderField(HTTP_ETAG_HEADER_FIELD);
+
+		if (serverDatabaseEtag == null) {
+			throw new DbImportException();
+		}
+
+		return serverDatabaseEtag;
 	}
 
 	private URLConnection buildServerDatabaseConnection() {
