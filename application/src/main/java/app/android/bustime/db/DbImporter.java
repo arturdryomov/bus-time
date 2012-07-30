@@ -140,6 +140,30 @@ public class DbImporter
 		Preferences.set(context, Preferences.PREFERENCE_DATABASE_ETAG, serverDatabaseEtag);
 	}
 
+	private String getServerDatabaseEtag() {
+		URLConnection urlConnection = buildServerDatabaseConnection();
+
+		String serverDatabaseEtag = urlConnection.getHeaderField(HTTP_ETAG_HEADER_FIELD);
+
+		if (serverDatabaseEtag == null) {
+			throw new DbImportException();
+		}
+
+		return serverDatabaseEtag;
+	}
+
+	private URLConnection buildServerDatabaseConnection() {
+		try {
+			HttpURLConnection httpURLConnection = (HttpURLConnection) buildServerDatabaseUrl().openConnection();
+			httpURLConnection.setRequestMethod(HTTP_HEAD_REQUEST_TYPE);
+
+			return httpURLConnection;
+		}
+		catch (IOException e) {
+			throw new DbImportException();
+		}
+	}
+
 	private void removeLocalDatabaseUpdateAvailableStored() {
 		Preferences.remove(context, Preferences.PREFERENCE_UPDATE_AVAILABLE);
 	}
@@ -176,30 +200,6 @@ public class DbImporter
 		String localDatabaseEtag = getLocalDatabaseEtag();
 
 		return serverDatabaseEtag.equals(localDatabaseEtag);
-	}
-
-	private String getServerDatabaseEtag() {
-		URLConnection urlConnection = buildServerDatabaseConnection();
-
-		String serverDatabaseEtag = urlConnection.getHeaderField(HTTP_ETAG_HEADER_FIELD);
-
-		if (serverDatabaseEtag == null) {
-			throw new DbImportException();
-		}
-
-		return serverDatabaseEtag;
-	}
-
-	private URLConnection buildServerDatabaseConnection() {
-		try {
-			HttpURLConnection httpURLConnection = (HttpURLConnection) buildServerDatabaseUrl().openConnection();
-			httpURLConnection.setRequestMethod(HTTP_HEAD_REQUEST_TYPE);
-
-			return httpURLConnection;
-		}
-		catch (IOException e) {
-			throw new DbImportException();
-		}
 	}
 
 	private void storeLocalDatabaseUpdateAvailable() {
