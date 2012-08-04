@@ -45,6 +45,8 @@ public class StationsMapActivity extends SherlockMapActivity
 
 		setUpMapView();
 		setUpMyLocationOverlay();
+
+		populateMap();
 	}
 
 	@Override
@@ -118,15 +120,6 @@ public class StationsMapActivity extends SherlockMapActivity
 		GeoPoint defaultPoint = buildGeoPoint(DEFAULT_MAP_POSITION_LATITUDE,
 			DEFAULT_MAP_POSITION_LONGITUDE);
 		getMapView().getController().animateTo(defaultPoint);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		populateMap();
-
-		myLocationOverlay.enableMyLocation();
 	}
 
 	private void populateMap() {
@@ -255,6 +248,13 @@ public class StationsMapActivity extends SherlockMapActivity
 
 	private void hideProgressInActionBar() {
 		setSupportProgressBarIndeterminateVisibility(false);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		myLocationOverlay.enableMyLocation();
 	}
 
 	@Override
