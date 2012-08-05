@@ -2,7 +2,6 @@ package app.android.bustime.ui;
 
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +19,9 @@ public class HomeActivity extends SherlockFragmentActivity
 {
 	private static final String SAVED_INSTANCE_KEY_SELECTED_TAB = "selected_tab";
 
+	private RotationSafeTask<HomeActivity> checkDatabaseUpdateWithServerTask;
+	private RotationSafeTask<HomeActivity> updateDatabaseWithServerTask;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -31,6 +33,8 @@ public class HomeActivity extends SherlockFragmentActivity
 		}
 
 		checkDatabaseUpdates();
+
+		updateRunningTasks();
 	}
 
 	private void setUpTabs() {
@@ -93,21 +97,27 @@ public class HomeActivity extends SherlockFragmentActivity
 	}
 
 	private void checkDatabaseUpdates() {
-		new DatabaseUpdateCheckTask().execute();
+		checkDatabaseUpdateWithServerTask = new CheckDatabaseUpdateWithServerTask();
+		checkDatabaseUpdateWithServerTask.setHostActivity(this);
+
+		checkDatabaseUpdateWithServerTask.execute();
 	}
 
-	private class DatabaseUpdateCheckTask extends AsyncTask<Void, Void, Void>
+	private static class CheckDatabaseUpdateWithServerTask extends RotationSafeTask<HomeActivity>
 	{
 		private boolean isLocalDatabaseEverUpdated;
 		private boolean isLocalDatabaseUpdateAvailable;
 
 		@Override
-		protected Void doInBackground(Void... parameters) {
+		protected void onBeforeExecution() {
 			isLocalDatabaseEverUpdated = false;
 			isLocalDatabaseUpdateAvailable = false;
+		}
 
+		@Override
+		protected String doInBackground(Void... voids) {
 			try {
-				DbImporter dbImporter = new DbImporter(HomeActivity.this);
+				DbImporter dbImporter = new DbImporter(getHostActivity());
 
 				isLocalDatabaseEverUpdated = dbImporter.isLocalDatabaseEverUpdated();
 
@@ -125,63 +135,86 @@ public class HomeActivity extends SherlockFragmentActivity
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-
+		protected void onAfterExecution(String errorMessage) {
 			if (!isLocalDatabaseEverUpdated) {
-				callDatabaseUpdating();
+				getHostActivity().callDatabaseUpdating();
 
 				return;
 			}
 
 			if (isLocalDatabaseUpdateAvailable) {
-				showActionBarUpdateSign();
+				getHostActivity().showActionBarUpdateSign();
 			}
+		}
+
+		@Override
+		protected void onSettingHostActivity() {
+		}
+
+		@Override
+		protected void onResettingHostActivity() {
 		}
 	}
 
 	private void callDatabaseUpdating() {
-		new UpdateDatabaseTask().execute();
+		updateDatabaseWithServerTask = new UpdateDatabaseWithServerTask();
+		updateDatabaseWithServerTask.setHostActivity(this);
+
+		updateDatabaseWithServerTask.execute();
 	}
 
-	private class UpdateDatabaseTask extends AsyncTask<Void, Void, String>
+	private static class UpdateDatabaseWithServerTask extends RotationSafeTask<HomeActivity>
 	{
 		private ProgressDialogHelper progressDialogHelper;
 
 		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
+		protected void onBeforeExecution() {
+			showProgressDialog();
+		}
 
+		private void showProgressDialog() {
 			progressDialogHelper = new ProgressDialogHelper();
-			progressDialogHelper.show(HomeActivity.this, R.string.loading_update);
+			progressDialogHelper.show(getHostActivity(), R.string.loading_update);
 		}
 
 		@Override
-		protected String doInBackground(Void... voids) {
+		protected String doInBackground(Void... parameters) {
 			try {
-				DbImporter dbImporter = new DbImporter(HomeActivity.this);
+				DbImporter dbImporter = new DbImporter(getHostActivity());
 				dbImporter.importFromServer();
 			}
 			catch (DbImportException e) {
-				return getString(R.string.error_unspecified);
+				return getHostActivity().getString(R.string.error_unspecified);
 			}
 
 			return new String();
 		}
 
 		@Override
-		protected void onPostExecute(String errorMessage) {
-			super.onPostExecute(errorMessage);
-
+		protected void onAfterExecution(String errorMessage) {
 			if (TextUtils.isEmpty(errorMessage)) {
-				reSetUpTabs();
-				hideActionBarUpdateSign();
+				getHostActivity().reSetUpTabs();
+				getHostActivity().hideActionBarUpdateSign();
 			}
 			else {
-				UserAlerter.alert(HomeActivity.this, errorMessage);
+				UserAlerter.alert(getHostActivity(), errorMessage);
 			}
 
+			hideProgressDialog();
+		}
+
+		private void hideProgressDialog() {
 			progressDialogHelper.hide();
+		}
+
+		@Override
+		protected void onResettingHostActivity() {
+			hideProgressDialog();
+		}
+
+		@Override
+		protected void onSettingHostActivity() {
+			showProgressDialog();
 		}
 	}
 
@@ -208,6 +241,10 @@ public class HomeActivity extends SherlockFragmentActivity
 
 	private void showActionBarUpdateSign() {
 		getSupportActionBar().setSubtitle(R.string.warning_update_available);
+	}
+
+	private void updateRunningTasks() {
+		RotationHelper.setHostActivity(this, getLastCustomNonConfigurationInstance());
 	}
 
 	@Override
@@ -243,5 +280,14 @@ public class HomeActivity extends SherlockFragmentActivity
 		super.onSaveInstanceState(outState);
 
 		outState.putInt(SAVED_INSTANCE_KEY_SELECTED_TAB, getSelectedTabPosition());
+	}
+
+	@Override
+	public Object onRetainCustomNonConfigurationInstance() {
+		RotationHelper.resetHostActivity(updateDatabaseWithServerTask,
+			checkDatabaseUpdateWithServerTask);
+
+		return RotationHelper.buildRetainTasks(updateDatabaseWithServerTask,
+			checkDatabaseUpdateWithServerTask);
 	}
 }
