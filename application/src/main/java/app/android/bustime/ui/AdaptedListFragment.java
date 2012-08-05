@@ -28,6 +28,13 @@ abstract class AdaptedListFragment extends SherlockListFragment
 	}
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setRetainInstance(true);
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View fragmentView = inflateFragment(inflater, container);
 
@@ -81,7 +88,9 @@ abstract class AdaptedListFragment extends SherlockListFragment
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		callListPopulation();
+		if (list.isEmpty()) {
+			callListPopulation();
+		}
 	}
 
 	protected abstract void callListPopulation();
