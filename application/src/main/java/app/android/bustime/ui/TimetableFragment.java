@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
-import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
 import app.android.bustime.db.Route;
@@ -16,8 +19,10 @@ import app.android.bustime.db.Station;
 import app.android.bustime.db.Time;
 
 
-abstract class TimetableFragment extends AdaptedListFragment
+abstract class TimetableFragment extends AdaptedListFragment implements LoaderManager.LoaderCallbacks<List<Time>>
 {
+	private static final int TIMETABLE_LOADER_ID = 10;
+
 	private static final String LIST_ITEM_TIME_ID = "time";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
 
@@ -95,43 +100,35 @@ abstract class TimetableFragment extends AdaptedListFragment
 
 	@Override
 	protected void callListPopulation() {
-		new LoadTimetableTask().execute();
+		setEmptyListText(getString(R.string.loading_timetable));
+
+		getLoaderManager().initLoader(TIMETABLE_LOADER_ID, null, this);
 	}
 
-	protected class LoadTimetableTask extends AsyncTask<Void, Void, Void>
-	{
-		protected List<Time> timetable;
+	@Override
+	public Loader<List<Time>> onCreateLoader(int loaderId, Bundle loaderArguments) {
+		switch (loaderId) {
+			case TIMETABLE_LOADER_ID:
+				return buildTimetableLoader();
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-
-			setEmptyListText(getString(R.string.loading_timetable));
-		}
-
-		@Override
-		protected Void doInBackground(Void... voids) {
-			timetable = buildTimetable();
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-
-			if (timetable.isEmpty()) {
-				setEmptyListText(getString(R.string.empty_timetable));
-			}
-			else {
-				populateList(timetable);
-
-				placeClosestTimeOnTop();
-			}
+			default:
+				throw new LoaderException();
 		}
 	}
 
-	protected abstract List<Time> buildTimetable();
+	protected abstract AsyncTaskLoader<List<Time>> buildTimetableLoader();
+
+	@Override
+	public void onLoadFinished(Loader<List<Time>> timetableLoader, List<Time> timetable) {
+		if (timetable.isEmpty()) {
+			setEmptyListText(getString(R.string.empty_timetable));
+		}
+		else {
+			populateList(timetable);
+
+			placeClosestTimeOnTop();
+		}
+	}
 
 	private void placeClosestTimeOnTop() {
 		setSelection(getClosestTimeListPosition() - PREVIOUS_TIMES_DISPLAYED_COUNT);
@@ -151,6 +148,10 @@ abstract class TimetableFragment extends AdaptedListFragment
 		}
 
 		return closestTimeListPosition;
+	}
+
+	@Override
+	public void onLoaderReset(Loader<List<Time>> listLoader) {
 	}
 
 	@Override
