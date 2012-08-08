@@ -5,8 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -16,9 +20,11 @@ import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
 
 
-public class RoutesFragment extends AdaptedListFragment
+public class RoutesFragment extends AdaptedListFragment implements LoaderManager.LoaderCallbacks<List<Route>>
 {
 	private static final String LIST_ITEM_TEXT_ID = "text";
+
+	private static final int ROUTES_LOADER_ID = 1;
 
 	@Override
 	protected SimpleAdapter buildListAdapter() {
@@ -40,44 +46,64 @@ public class RoutesFragment extends AdaptedListFragment
 
 	@Override
 	protected void callListPopulation() {
-		new PopulateListTask().execute();
+		setEmptyListText(getString(R.string.loading_routes));
+
+		getLoaderManager().initLoader(ROUTES_LOADER_ID, getArguments(), this);
 	}
 
-	private class PopulateListTask extends AsyncTask<Void, Void, Void>
+	@Override
+	public Loader<List<Route>> onCreateLoader(int loaderId, Bundle loaderArguments) {
+		switch (loaderId) {
+			case ROUTES_LOADER_ID:
+				return new RoutesLoader(getActivity(), loaderArguments);
+
+			default:
+				throw new LoaderException();
+		}
+	}
+
+	private static class RoutesLoader extends AsyncTaskLoader<List<Route>>
 	{
-		private List<Route> routes;
+		private final Bundle fragmentArguments;
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
+		public RoutesLoader(Context context, Bundle fragmentArguments) {
+			super(context);
 
-			setEmptyListText(getString(R.string.loading_routes));
+			this.fragmentArguments = fragmentArguments;
 		}
 
 		@Override
-		protected Void doInBackground(Void... parameters) {
-			if (FragmentProcessor.haveMessage(getArguments())) {
-				Station station = (Station) FragmentProcessor.extractMessage(getArguments());
-				routes = DbProvider.getInstance().getRoutes().getRoutesList(station);
+		protected void onStartLoading() {
+			super.onStartLoading();
+
+			forceLoad();
+		}
+
+		@Override
+		public List<Route> loadInBackground() {
+			if (FragmentProcessor.haveMessage(fragmentArguments)) {
+				Station station = (Station) FragmentProcessor.extractMessage(fragmentArguments);
+
+				return DbProvider.getInstance().getRoutes().getRoutesList(station);
 			}
 			else {
-				routes = DbProvider.getInstance().getRoutes().getRoutesList();
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-
-			if (routes.isEmpty()) {
-				setEmptyListText(getString(R.string.empty_routes));
-			}
-			else {
-				populateList(routes);
+				return DbProvider.getInstance().getRoutes().getRoutesList();
 			}
 		}
+	}
+
+	@Override
+	public void onLoadFinished(Loader<List<Route>> routesLoader, List<Route> routes) {
+		if (routes.isEmpty()) {
+			setEmptyListText(getString(R.string.empty_routes));
+		}
+		else {
+			populateList(routes);
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<List<Route>> routesLoader) {
 	}
 
 	@Override

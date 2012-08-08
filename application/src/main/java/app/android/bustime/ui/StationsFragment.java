@@ -5,8 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -16,9 +20,11 @@ import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
 
 
-public class StationsFragment extends AdaptedListFragment
+public class StationsFragment extends AdaptedListFragment implements LoaderManager.LoaderCallbacks<List<Station>>
 {
 	private static final String LIST_ITEM_TEXT_ID = "text";
+
+	private static final int STATIONS_LOADER_ID = 0;
 
 	@Override
 	protected SimpleAdapter buildListAdapter() {
@@ -40,44 +46,64 @@ public class StationsFragment extends AdaptedListFragment
 
 	@Override
 	protected void callListPopulation() {
-		new PopulateListTask().execute();
+		setEmptyListText(getString(R.string.loading_stations));
+
+		getLoaderManager().initLoader(STATIONS_LOADER_ID, getArguments(), this);
 	}
 
-	private class PopulateListTask extends AsyncTask<Void, Void, Void>
+	@Override
+	public Loader<List<Station>> onCreateLoader(int loaderId, Bundle loaderArguments) {
+		switch (loaderId) {
+			case STATIONS_LOADER_ID:
+				return new StationsLoader(getActivity(), loaderArguments);
+
+			default:
+				throw new LoaderException();
+		}
+	}
+
+	private static class StationsLoader extends AsyncTaskLoader<List<Station>>
 	{
-		private List<Station> stations;
+		private final Bundle fragmentArguments;
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
+		public StationsLoader(Context context, Bundle fragmentArguments) {
+			super(context);
 
-			setEmptyListText(getString(R.string.loading_stations));
+			this.fragmentArguments = fragmentArguments;
 		}
 
 		@Override
-		protected Void doInBackground(Void... parameters) {
-			if (FragmentProcessor.haveMessage(getArguments())) {
-				Route route = (Route) FragmentProcessor.extractMessage(getArguments());
-				stations = DbProvider.getInstance().getStations().getStationsList(route);
+		protected void onStartLoading() {
+			super.onStartLoading();
+
+			forceLoad();
+		}
+
+		@Override
+		public List<Station> loadInBackground() {
+			if (FragmentProcessor.haveMessage(fragmentArguments)) {
+				Route route = (Route) FragmentProcessor.extractMessage(fragmentArguments);
+
+				return DbProvider.getInstance().getStations().getStationsList(route);
 			}
 			else {
-				stations = DbProvider.getInstance().getStations().getStationsList();
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-
-			if (stations.isEmpty()) {
-				setEmptyListText(getString(R.string.empty_stations));
-			}
-			else {
-				populateList(stations);
+				return DbProvider.getInstance().getStations().getStationsList();
 			}
 		}
+	}
+
+	@Override
+	public void onLoadFinished(Loader<List<Station>> stationsLoader, List<Station> stations) {
+		if (stations.isEmpty()) {
+			setEmptyListText(getString(R.string.empty_stations));
+		}
+		else {
+			populateList(stations);
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<List<Station>> stationsLoader) {
 	}
 
 	@Override
