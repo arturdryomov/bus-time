@@ -27,14 +27,11 @@ public class HomeActivity extends SherlockFragmentActivity
 		super.onCreate(savedInstanceState);
 
 		setUpTabs();
-
-		if (savedInstanceState != null) {
-			setSelectedTab(savedInstanceState.getInt(SAVED_INSTANCE_KEY_SELECTED_TAB, 0));
-		}
+		restorePreviousSelectedTab(savedInstanceState);
 
 		checkDatabaseUpdates();
 
-		updateRunningTasks();
+		restorePreviousRunTasks();
 	}
 
 	private void setUpTabs() {
@@ -49,15 +46,6 @@ public class HomeActivity extends SherlockFragmentActivity
 
 		tab.setText(getString(R.string.title_routes));
 		tab.setTabListener(new TabListener(FragmentFactory.createRoutesFragment(this)));
-
-		return tab;
-	}
-
-	private ActionBar.Tab buildStationsTab() {
-		ActionBar.Tab tab = getSupportActionBar().newTab();
-
-		tab.setText(getString(R.string.title_stations));
-		tab.setTabListener(new TabListener(FragmentFactory.createStationsFragment(this)));
 
 		return tab;
 	}
@@ -89,6 +77,21 @@ public class HomeActivity extends SherlockFragmentActivity
 
 		@Override
 		public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+		}
+	}
+
+	private ActionBar.Tab buildStationsTab() {
+		ActionBar.Tab tab = getSupportActionBar().newTab();
+
+		tab.setText(getString(R.string.title_stations));
+		tab.setTabListener(new TabListener(FragmentFactory.createStationsFragment(this)));
+
+		return tab;
+	}
+
+	private void restorePreviousSelectedTab(Bundle savedInstanceState) {
+		if (savedInstanceState != null) {
+			setSelectedTab(savedInstanceState.getInt(SAVED_INSTANCE_KEY_SELECTED_TAB, 0));
 		}
 	}
 
@@ -143,7 +146,7 @@ public class HomeActivity extends SherlockFragmentActivity
 			}
 
 			if (isLocalDatabaseUpdateAvailable) {
-				getHostActivity().showActionBarUpdateSign();
+				getHostActivity().showUpdateAvailableSign();
 			}
 		}
 
@@ -194,17 +197,21 @@ public class HomeActivity extends SherlockFragmentActivity
 		protected void onAfterExecution(String errorMessage) {
 			if (TextUtils.isEmpty(errorMessage)) {
 				getHostActivity().reSetUpTabs();
-				getHostActivity().hideActionBarUpdateSign();
+				getHostActivity().hideUpdateAvailableSign();
 			}
 			else {
 				UserAlerter.alert(getHostActivity(), errorMessage);
 			}
 
 			hideProgressDialog();
+
+			getHostActivity().updateDatabaseWithServerTask = null;
 		}
 
 		private void hideProgressDialog() {
 			progressDialogHelper.hide();
+
+			progressDialogHelper = null;
 		}
 
 		@Override
@@ -214,7 +221,10 @@ public class HomeActivity extends SherlockFragmentActivity
 
 		@Override
 		protected void onSettingHostActivity() {
-			showProgressDialog();
+			// Show progress dialog again only when it was shown before
+			if (progressDialogHelper != null) {
+				showProgressDialog();
+			}
 		}
 	}
 
@@ -235,15 +245,15 @@ public class HomeActivity extends SherlockFragmentActivity
 		getSupportActionBar().removeAllTabs();
 	}
 
-	private void hideActionBarUpdateSign() {
+	private void hideUpdateAvailableSign() {
 		getSupportActionBar().setSubtitle(null);
 	}
 
-	private void showActionBarUpdateSign() {
+	private void showUpdateAvailableSign() {
 		getSupportActionBar().setSubtitle(R.string.warning_update_available);
 	}
 
-	private void updateRunningTasks() {
+	private void restorePreviousRunTasks() {
 		RotationHelper.setHostActivity(this, getLastCustomNonConfigurationInstance());
 	}
 
