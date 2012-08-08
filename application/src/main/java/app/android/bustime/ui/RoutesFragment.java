@@ -5,19 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
-import app.android.bustime.db.DbProvider;
 import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
+import app.android.bustime.ui.loader.RoutesLoader;
 
 
 public class RoutesFragment extends AdaptedListFragment implements LoaderManager.LoaderCallbacks<List<Route>>
@@ -48,47 +46,19 @@ public class RoutesFragment extends AdaptedListFragment implements LoaderManager
 	protected void callListPopulation() {
 		setEmptyListText(getString(R.string.loading_routes));
 
-		getLoaderManager().initLoader(ROUTES_LOADER_ID, getArguments(), this);
+		getLoaderManager().initLoader(ROUTES_LOADER_ID, null, this);
 	}
 
 	@Override
 	public Loader<List<Route>> onCreateLoader(int loaderId, Bundle loaderArguments) {
-		switch (loaderId) {
-			case ROUTES_LOADER_ID:
-				return new RoutesLoader(getActivity(), loaderArguments);
-
-			default:
-				throw new LoaderException();
+		if (!FragmentProcessor.haveMessage(getArguments())) {
+			return new RoutesLoader(getActivity());
 		}
-	}
+		else {
+			// TODO: Extract message on fragment creation
+			Station station = (Station) FragmentProcessor.extractMessage(getArguments());
 
-	private static class RoutesLoader extends AsyncTaskLoader<List<Route>>
-	{
-		private final Bundle fragmentArguments;
-
-		public RoutesLoader(Context context, Bundle fragmentArguments) {
-			super(context);
-
-			this.fragmentArguments = fragmentArguments;
-		}
-
-		@Override
-		protected void onStartLoading() {
-			super.onStartLoading();
-
-			forceLoad();
-		}
-
-		@Override
-		public List<Route> loadInBackground() {
-			if (FragmentProcessor.haveMessage(fragmentArguments)) {
-				Station station = (Station) FragmentProcessor.extractMessage(fragmentArguments);
-
-				return DbProvider.getInstance().getRoutes().getRoutesList(station);
-			}
-			else {
-				return DbProvider.getInstance().getRoutes().getRoutesList();
-			}
+			return new RoutesLoader(getActivity(), station);
 		}
 	}
 

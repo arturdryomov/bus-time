@@ -1,19 +1,17 @@
 package app.android.bustime.ui;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import app.android.bustime.R;
-import app.android.bustime.db.DbImportException;
-import app.android.bustime.db.DbImporter;
+import app.android.bustime.ui.loader.DatabaseUpdateCheckLoader;
+import app.android.bustime.ui.loader.DatabaseUpdateLoader;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -134,16 +132,22 @@ public class HomeActivity extends SherlockFragmentActivity
 		}
 
 		@Override
-		public void onLoadFinished(Loader<Bundle> bundleLoader, Bundle bundle) {
+		public void onLoadFinished(Loader<Bundle> databaseUpdateCheckLoader, Bundle databaseUpdateCheckResult) {
 			getSupportLoaderManager().destroyLoader(DATABASE_UPDATE_CHECK_LOADER_ID);
 
-			if (bundle.containsKey(DatabaseUpdateCheckLoader.RESULT_DATABASE_NOT_EVER_UPDATED_ID)) {
+			boolean isDatabaseEverUpdated = databaseUpdateCheckResult.getBoolean(
+				DatabaseUpdateCheckLoader.RESULT_DATABASE_EVER_UPDATED_KEY);
+
+			if (!isDatabaseEverUpdated) {
 				callDatabaseUpdating();
 
 				return;
 			}
 
-			if (bundle.containsKey(DatabaseUpdateCheckLoader.RESULT_DATABASE_UPDATE_AVAILABLE_ID)) {
+			boolean isDatabaseUpdateAvailable = databaseUpdateCheckResult.getBoolean(
+				DatabaseUpdateCheckLoader.RESULT_DATABASE_UPDATE_AVAILABLE_KEY);
+
+			if (isDatabaseUpdateAvailable) {
 				showMessageUpdateAvailable();
 			}
 		}
@@ -152,51 +156,6 @@ public class HomeActivity extends SherlockFragmentActivity
 		public void onLoaderReset(Loader<Bundle> bundleLoader) {
 		}
 	};
-
-	private static class DatabaseUpdateCheckLoader extends AsyncTaskLoader<Bundle>
-	{
-		public static final String RESULT_DATABASE_NOT_EVER_UPDATED_ID = "database_not_ever_updated";
-		public static final String RESULT_DATABASE_UPDATE_AVAILABLE_ID = "database_updata_available";
-
-		private final Context context;
-
-		public DatabaseUpdateCheckLoader(Context context) {
-			super(context);
-
-			this.context = context;
-		}
-
-		@Override
-		protected void onStartLoading() {
-			super.onStartLoading();
-
-			forceLoad();
-		}
-
-		@Override
-		public Bundle loadInBackground() {
-			Bundle result = new Bundle();
-
-			try {
-				DbImporter dbImporter = new DbImporter(context);
-
-				if (!dbImporter.isLocalDatabaseEverUpdated()) {
-					result.putString(RESULT_DATABASE_NOT_EVER_UPDATED_ID, new String());
-
-					return result;
-				}
-
-				if (dbImporter.isLocalDatabaseUpdateAvailable()) {
-					result.putString(RESULT_DATABASE_UPDATE_AVAILABLE_ID, new String());
-				}
-			}
-			catch (DbImportException e) {
-				// Skip exceptions, this update check is optional
-			}
-
-			return result;
-		}
-	}
 
 	private void callDatabaseUpdating() {
 		getSupportLoaderManager().initLoader(DATABASE_UPDATE_LOADER_ID, null, databaseUpdateCallback);
@@ -240,33 +199,6 @@ public class HomeActivity extends SherlockFragmentActivity
 		public void onLoaderReset(Loader<String> databaseUpdateLoader) {
 		}
 	};
-
-	private static class DatabaseUpdateLoader extends AsyncTaskLoader<String>
-	{
-		public DatabaseUpdateLoader(Context context) {
-			super(context);
-		}
-
-		@Override
-		protected void onStartLoading() {
-			super.onStartLoading();
-
-			forceLoad();
-		}
-
-		@Override
-		public String loadInBackground() {
-			try {
-				DbImporter dbImporter = new DbImporter(getContext());
-				dbImporter.importFromServer();
-			}
-			catch (DbImportException e) {
-				return getContext().getString(R.string.error_unspecified);
-			}
-
-			return new String();
-		}
-	}
 
 	private void showUpdateProgressDialog() {
 		updateProgressDialogHelper = new ProgressDialogHelper();

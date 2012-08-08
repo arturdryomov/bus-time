@@ -107,13 +107,7 @@ abstract class TimetableFragment extends AdaptedListFragment implements LoaderMa
 
 	@Override
 	public Loader<List<Time>> onCreateLoader(int loaderId, Bundle loaderArguments) {
-		switch (loaderId) {
-			case TIMETABLE_LOADER_ID:
-				return buildTimetableLoader();
-
-			default:
-				throw new LoaderException();
-		}
+		return buildTimetableLoader();
 	}
 
 	protected abstract AsyncTaskLoader<List<Time>> buildTimetableLoader();

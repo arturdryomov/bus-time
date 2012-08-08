@@ -5,19 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
-import app.android.bustime.db.DbProvider;
 import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
+import app.android.bustime.ui.loader.StationsLoader;
 
 
 public class StationsFragment extends AdaptedListFragment implements LoaderManager.LoaderCallbacks<List<Station>>
@@ -53,44 +51,17 @@ public class StationsFragment extends AdaptedListFragment implements LoaderManag
 
 	@Override
 	public Loader<List<Station>> onCreateLoader(int loaderId, Bundle loaderArguments) {
-		switch (loaderId) {
-			case STATIONS_LOADER_ID:
-				return new StationsLoader(getActivity(), loaderArguments);
+		if (!FragmentProcessor.haveMessage(getArguments())) {
+			return new StationsLoader(getActivity());
+		}
+		else {
+			// TODO: Extract message on fragment creation
+			Route route = (Route) FragmentProcessor.extractMessage(getArguments());
 
-			default:
-				throw new LoaderException();
+			return new StationsLoader(getActivity(), route);
 		}
 	}
 
-	private static class StationsLoader extends AsyncTaskLoader<List<Station>>
-	{
-		private final Bundle fragmentArguments;
-
-		public StationsLoader(Context context, Bundle fragmentArguments) {
-			super(context);
-
-			this.fragmentArguments = fragmentArguments;
-		}
-
-		@Override
-		protected void onStartLoading() {
-			super.onStartLoading();
-
-			forceLoad();
-		}
-
-		@Override
-		public List<Station> loadInBackground() {
-			if (FragmentProcessor.haveMessage(fragmentArguments)) {
-				Route route = (Route) FragmentProcessor.extractMessage(fragmentArguments);
-
-				return DbProvider.getInstance().getStations().getStationsList(route);
-			}
-			else {
-				return DbProvider.getInstance().getStations().getStationsList();
-			}
-		}
-	}
 
 	@Override
 	public void onLoadFinished(Loader<List<Station>> stationsLoader, List<Station> stations) {

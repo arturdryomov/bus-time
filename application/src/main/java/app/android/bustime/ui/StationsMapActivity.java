@@ -126,6 +126,7 @@ public class StationsMapActivity extends SherlockMapActivity
 		new PopulateMapTask().execute();
 	}
 
+	// TODO: Move to loader
 	private class PopulateMapTask extends AsyncTask<Void, Void, Void>
 	{
 		private StationsOverlay stationsOverlay;
@@ -145,6 +146,7 @@ public class StationsMapActivity extends SherlockMapActivity
 				OverlayItem stationOverlayItem = buildStationOverlayItem(station);
 				stationsOverlay.addOverlayItem(stationOverlayItem);
 			}
+			// TODO: Rename method
 			stationsOverlay.refresh();
 
 			return null;
