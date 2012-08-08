@@ -1,6 +1,9 @@
 package app.android.bustime.ui;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -126,7 +129,6 @@ public class StationsMapActivity extends SherlockMapActivity
 		new PopulateMapTask().execute();
 	}
 
-	// TODO: Move to loader
 	private class PopulateMapTask extends AsyncTask<Void, Void, Void>
 	{
 		private StationsOverlay stationsOverlay;
@@ -142,12 +144,13 @@ public class StationsMapActivity extends SherlockMapActivity
 
 		@Override
 		protected Void doInBackground(Void... parameters) {
+			List<OverlayItem> stationOverlayItems = new ArrayList<OverlayItem>();
+
 			for (Station station : DbProvider.getInstance().getStations().getStationsList()) {
-				OverlayItem stationOverlayItem = buildStationOverlayItem(station);
-				stationsOverlay.addOverlayItem(stationOverlayItem);
+				stationOverlayItems.add(buildStationOverlayItem(station));
 			}
-			// TODO: Rename method
-			stationsOverlay.refresh();
+
+			stationsOverlay.populate(stationOverlayItems);
 
 			return null;
 		}
