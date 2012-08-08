@@ -15,14 +15,13 @@ import android.widget.SimpleAdapter;
 import app.android.bustime.R;
 import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
+import app.android.bustime.ui.loader.Loaders;
 import app.android.bustime.ui.loader.RoutesLoader;
 
 
 public class RoutesFragment extends AdaptedListFragment implements LoaderManager.LoaderCallbacks<List<Route>>
 {
 	private static final String LIST_ITEM_TEXT_ID = "text";
-
-	private static final int ROUTES_LOADER_ID = 1;
 
 	@Override
 	protected SimpleAdapter buildListAdapter() {
@@ -46,7 +45,7 @@ public class RoutesFragment extends AdaptedListFragment implements LoaderManager
 	protected void callListPopulation() {
 		setEmptyListText(getString(R.string.loading_routes));
 
-		getLoaderManager().initLoader(ROUTES_LOADER_ID, null, this);
+		getLoaderManager().initLoader(Loaders.ROUTES_ID, null, this);
 	}
 
 	@Override

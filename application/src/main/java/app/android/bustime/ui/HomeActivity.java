@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import app.android.bustime.R;
 import app.android.bustime.ui.loader.DatabaseUpdateCheckLoader;
 import app.android.bustime.ui.loader.DatabaseUpdateLoader;
+import app.android.bustime.ui.loader.Loaders;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -21,9 +22,6 @@ import com.actionbarsherlock.view.MenuItem;
 public class HomeActivity extends SherlockFragmentActivity
 {
 	private static final String SAVED_INSTANCE_KEY_SELECTED_TAB = "selected_tab";
-
-	private static final int DATABASE_UPDATE_LOADER_ID = 2;
-	private static final int DATABASE_UPDATE_CHECK_LOADER_ID = 3;
 
 	private ProgressDialogHelper updateProgressDialogHelper;
 
@@ -44,12 +42,12 @@ public class HomeActivity extends SherlockFragmentActivity
 	private void initRunningLoaders() {
 		LoaderManager loaderManager = getSupportLoaderManager();
 
-		if (loaderManager.getLoader(DATABASE_UPDATE_LOADER_ID) != null) {
-			loaderManager.initLoader(DATABASE_UPDATE_LOADER_ID, null, databaseUpdateCallback);
+		if (loaderManager.getLoader(Loaders.DATABASE_UPDATE_ID) != null) {
+			loaderManager.initLoader(Loaders.DATABASE_UPDATE_ID, null, databaseUpdateCallback);
 		}
 
-		if (loaderManager.getLoader(DATABASE_UPDATE_CHECK_LOADER_ID) != null) {
-			loaderManager.initLoader(DATABASE_UPDATE_CHECK_LOADER_ID, null, databaseUpdateCheckCallback);
+		if (loaderManager.getLoader(Loaders.DATABASE_UPDATE_CHECK_ID) != null) {
+			loaderManager.initLoader(Loaders.DATABASE_UPDATE_CHECK_ID, null, databaseUpdateCheckCallback);
 		}
 	}
 
@@ -121,7 +119,7 @@ public class HomeActivity extends SherlockFragmentActivity
 	private void checkDatabaseUpdates() {
 		LoaderManager loaderManager = getSupportLoaderManager();
 
-		loaderManager.initLoader(DATABASE_UPDATE_CHECK_LOADER_ID, null, databaseUpdateCheckCallback);
+		loaderManager.initLoader(Loaders.DATABASE_UPDATE_CHECK_ID, null, databaseUpdateCheckCallback);
 	}
 
 	private final LoaderManager.LoaderCallbacks<Bundle> databaseUpdateCheckCallback = new LoaderManager.LoaderCallbacks<Bundle>()
@@ -133,7 +131,7 @@ public class HomeActivity extends SherlockFragmentActivity
 
 		@Override
 		public void onLoadFinished(Loader<Bundle> databaseUpdateCheckLoader, Bundle databaseUpdateCheckResult) {
-			getSupportLoaderManager().destroyLoader(DATABASE_UPDATE_CHECK_LOADER_ID);
+			getSupportLoaderManager().destroyLoader(Loaders.DATABASE_UPDATE_CHECK_ID);
 
 			boolean isDatabaseEverUpdated = databaseUpdateCheckResult.getBoolean(
 				DatabaseUpdateCheckLoader.RESULT_DATABASE_EVER_UPDATED_KEY);
@@ -158,7 +156,7 @@ public class HomeActivity extends SherlockFragmentActivity
 	};
 
 	private void callDatabaseUpdating() {
-		getSupportLoaderManager().initLoader(DATABASE_UPDATE_LOADER_ID, null, databaseUpdateCallback);
+		getSupportLoaderManager().initLoader(Loaders.DATABASE_UPDATE_ID, null, databaseUpdateCallback);
 	}
 
 	private final LoaderManager.LoaderCallbacks<String> databaseUpdateCallback = new LoaderManager.LoaderCallbacks<String>()
@@ -172,7 +170,7 @@ public class HomeActivity extends SherlockFragmentActivity
 
 		@Override
 		public void onLoadFinished(Loader<String> databaseUpdateLoader, String errorMessage) {
-			getSupportLoaderManager().destroyLoader(DATABASE_UPDATE_LOADER_ID);
+			getSupportLoaderManager().destroyLoader(Loaders.DATABASE_UPDATE_ID);
 
 			if (TextUtils.isEmpty(errorMessage)) {
 				// We should put actions to handler to allow run fragment transaction in onLoadFinished

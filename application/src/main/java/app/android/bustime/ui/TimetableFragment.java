@@ -17,12 +17,11 @@ import app.android.bustime.R;
 import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
 import app.android.bustime.db.Time;
+import app.android.bustime.ui.loader.Loaders;
 
 
 abstract class TimetableFragment extends AdaptedListFragment implements LoaderManager.LoaderCallbacks<List<Time>>
 {
-	private static final int TIMETABLE_LOADER_ID = 10;
-
 	private static final String LIST_ITEM_TIME_ID = "time";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
 
@@ -102,7 +101,7 @@ abstract class TimetableFragment extends AdaptedListFragment implements LoaderMa
 	protected void callListPopulation() {
 		setEmptyListText(getString(R.string.loading_timetable));
 
-		getLoaderManager().initLoader(TIMETABLE_LOADER_ID, null, this);
+		getLoaderManager().initLoader(Loaders.TIMETABLE_ID, null, this);
 	}
 
 	@Override
