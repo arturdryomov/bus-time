@@ -1,7 +1,7 @@
-package app.android.bustime.db;
+package app.android.bustime.db.sqlite;
 
 
-class DbFieldNames
+public class DbFieldNames
 {
 	public static final String ID = "_id";
 	public static final String NAME = "name";

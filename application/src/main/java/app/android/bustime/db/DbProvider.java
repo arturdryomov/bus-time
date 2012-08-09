@@ -3,6 +3,9 @@ package app.android.bustime.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import app.android.bustime.db.model.Routes;
+import app.android.bustime.db.model.Stations;
+import app.android.bustime.db.sqlite.DbOpenHelper;
 
 
 public class DbProvider
@@ -52,7 +55,7 @@ public class DbProvider
 		stations = new Stations();
 	}
 
-	SQLiteDatabase getDatabase() {
+	public SQLiteDatabase getDatabase() {
 		return databaseOpenHelper.getWritableDatabase();
 	}
 

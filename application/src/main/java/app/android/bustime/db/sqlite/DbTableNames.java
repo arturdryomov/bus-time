@@ -1,7 +1,7 @@
-package app.android.bustime.db;
+package app.android.bustime.db.sqlite;
 
 
-class DbTableNames
+public class DbTableNames
 {
 	public static final String ROUTES = "Routes";
 	public static final String TRIPS = "Trips";

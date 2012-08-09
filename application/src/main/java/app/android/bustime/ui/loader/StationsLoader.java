@@ -6,8 +6,8 @@ import java.util.List;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import app.android.bustime.db.DbProvider;
-import app.android.bustime.db.Route;
-import app.android.bustime.db.Station;
+import app.android.bustime.db.model.Route;
+import app.android.bustime.db.model.Station;
 
 
 public class StationsLoader extends AsyncTaskLoader<List<Station>>

@@ -3,8 +3,8 @@ package app.android.bustime.ui.intent;
 
 import android.content.Context;
 import android.content.Intent;
-import app.android.bustime.db.Route;
-import app.android.bustime.db.Station;
+import app.android.bustime.db.model.Route;
+import app.android.bustime.db.model.Station;
 import app.android.bustime.ui.activity.RoutesActivity;
 import app.android.bustime.ui.activity.StationsActivity;
 import app.android.bustime.ui.activity.StationsMapActivity;

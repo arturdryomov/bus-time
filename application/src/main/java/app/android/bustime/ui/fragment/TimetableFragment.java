@@ -12,9 +12,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
-import app.android.bustime.db.Route;
-import app.android.bustime.db.Station;
-import app.android.bustime.db.Time;
+import app.android.bustime.db.model.Route;
+import app.android.bustime.db.model.Station;
+import app.android.bustime.db.time.Time;
 import app.android.bustime.ui.loader.Loaders;
 import app.android.bustime.ui.loader.TimetableLoader;
 

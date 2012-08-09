@@ -1,7 +1,7 @@
-package app.android.bustime.db;
+package app.android.bustime.db.sqlite;
 
 
-class DbFieldValues
+public class DbFieldValues
 {
 	public static final int TRIP_FULL_WEEK_ID = 0;
 	public static final int TRIP_WORKDAY_ID = 1;

@@ -1,7 +1,7 @@
 package app.android.bustime.ui.map;
 
 
-import app.android.bustime.db.Station;
+import app.android.bustime.db.model.Station;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
 

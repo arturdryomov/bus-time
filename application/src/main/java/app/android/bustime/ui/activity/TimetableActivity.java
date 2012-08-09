@@ -8,12 +8,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.ArrayAdapter;
 import app.android.bustime.R;
-import app.android.bustime.db.Route;
-import app.android.bustime.db.Station;
-import app.android.bustime.db.Time;
+import app.android.bustime.db.model.Route;
+import app.android.bustime.db.model.Station;
+import app.android.bustime.db.time.Time;
+import app.android.bustime.ui.fragment.TimetableFragment;
 import app.android.bustime.ui.intent.IntentException;
 import app.android.bustime.ui.intent.IntentExtras;
-import app.android.bustime.ui.fragment.TimetableFragment;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 

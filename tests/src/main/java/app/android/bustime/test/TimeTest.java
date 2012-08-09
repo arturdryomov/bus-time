@@ -2,7 +2,7 @@ package app.android.bustime.test;
 
 
 import android.test.AndroidTestCase;
-import app.android.bustime.db.Time;
+import app.android.bustime.db.time.Time;
 
 
 public class TimeTest extends AndroidTestCase

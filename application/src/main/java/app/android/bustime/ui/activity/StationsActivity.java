@@ -2,10 +2,10 @@ package app.android.bustime.ui.activity;
 
 
 import android.support.v4.app.Fragment;
-import app.android.bustime.db.Route;
+import app.android.bustime.db.model.Route;
+import app.android.bustime.ui.fragment.StationsFragment;
 import app.android.bustime.ui.intent.IntentException;
 import app.android.bustime.ui.intent.IntentExtras;
-import app.android.bustime.ui.fragment.StationsFragment;
 
 
 public class StationsActivity extends FragmentWrapperActivity

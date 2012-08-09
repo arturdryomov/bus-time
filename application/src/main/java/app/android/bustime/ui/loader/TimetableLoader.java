@@ -5,9 +5,9 @@ import java.util.List;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
-import app.android.bustime.db.Route;
-import app.android.bustime.db.Station;
-import app.android.bustime.db.Time;
+import app.android.bustime.db.model.Route;
+import app.android.bustime.db.model.Station;
+import app.android.bustime.db.time.Time;
 
 
 public class TimetableLoader extends AsyncTaskLoader<List<Time>>

@@ -1,4 +1,4 @@
-package app.android.bustime.db;
+package app.android.bustime.db.model;
 
 
 import java.util.ArrayList;
@@ -10,6 +10,12 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
+import app.android.bustime.db.DbException;
+import app.android.bustime.db.DbProvider;
+import app.android.bustime.db.sqlite.DbFieldNames;
+import app.android.bustime.db.sqlite.DbFieldValues;
+import app.android.bustime.db.sqlite.DbTableNames;
+import app.android.bustime.db.time.Time;
 
 
 public class Route implements Parcelable

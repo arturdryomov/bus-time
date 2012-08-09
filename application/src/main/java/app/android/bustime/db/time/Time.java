@@ -1,4 +1,4 @@
-package app.android.bustime.db;
+package app.android.bustime.db.time;
 
 
 import java.text.DateFormat;

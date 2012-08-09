@@ -1,12 +1,13 @@
-package app.android.bustime.db;
+package app.android.bustime.db.sqlite;
 
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import app.android.bustime.db.content.DbImporter;
 
 
-class DbOpenHelper extends SQLiteOpenHelper
+public class DbOpenHelper extends SQLiteOpenHelper
 {
 	private static final String DATABASE_NAME = "bustime.db";
 	private static final int DATABASE_VERSION = 3;

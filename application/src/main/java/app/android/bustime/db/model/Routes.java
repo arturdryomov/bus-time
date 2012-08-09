@@ -1,4 +1,4 @@
-package app.android.bustime.db;
+package app.android.bustime.db.model;
 
 
 import java.util.ArrayList;
@@ -8,13 +8,16 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import app.android.bustime.db.DbProvider;
+import app.android.bustime.db.sqlite.DbFieldNames;
+import app.android.bustime.db.sqlite.DbTableNames;
 
 
 public class Routes
 {
 	private final SQLiteDatabase database;
 
-	Routes() {
+	public Routes() {
 		database = DbProvider.getInstance().getDatabase();
 	}
 

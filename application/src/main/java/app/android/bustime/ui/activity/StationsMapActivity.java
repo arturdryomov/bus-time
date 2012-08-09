@@ -13,7 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import app.android.bustime.R;
 import app.android.bustime.db.DbProvider;
-import app.android.bustime.db.Station;
+import app.android.bustime.db.model.Station;
 import app.android.bustime.ui.intent.IntentFactory;
 import app.android.bustime.ui.map.StationOverlayItem;
 import app.android.bustime.ui.map.StationsOverlay;

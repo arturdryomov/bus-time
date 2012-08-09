@@ -4,8 +4,8 @@ package app.android.bustime.ui.loader;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import app.android.bustime.R;
-import app.android.bustime.db.DbImportException;
-import app.android.bustime.db.DbImporter;
+import app.android.bustime.db.content.DbImportException;
+import app.android.bustime.db.content.DbImporter;
 
 
 public class DatabaseUpdateLoader extends AsyncTaskLoader<String>
