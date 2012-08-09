@@ -29,15 +29,15 @@ public class TimetableLoader extends AsyncTaskLoader<List<Time>>
 		this.mode = mode;
 	}
 
-	public static TimetableLoader buildFullWeekLoader(Context context, Route route, Station station) {
+	public static TimetableLoader newFullWeekLoader(Context context, Route route, Station station) {
 		return new TimetableLoader(context, route, station, Mode.FULL_WEEK);
 	}
 
-	public static TimetableLoader buildWorkdaysLoader(Context context, Route route, Station station) {
+	public static TimetableLoader newWorkdaysLoader(Context context, Route route, Station station) {
 		return new TimetableLoader(context, route, station, Mode.WORKDAYS);
 	}
 
-	public static TimetableLoader buildWeekendLoader(Context context, Route route, Station station) {
+	public static TimetableLoader newWeekendLoader(Context context, Route route, Station station) {
 		return new TimetableLoader(context, route, station, Mode.WEEKEND);
 	}
 
