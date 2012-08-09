@@ -11,12 +11,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import ru.ming13.bustime.R;
-import ru.ming13.bustime.db.DbProvider;
-import ru.ming13.bustime.db.model.Station;
-import ru.ming13.bustime.ui.intent.IntentFactory;
-import ru.ming13.bustime.ui.map.StationOverlayItem;
-import ru.ming13.bustime.ui.map.StationsOverlay;
 import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
@@ -24,6 +18,12 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import ru.ming13.bustime.R;
+import ru.ming13.bustime.db.DbProvider;
+import ru.ming13.bustime.db.model.Station;
+import ru.ming13.bustime.ui.intent.IntentFactory;
+import ru.ming13.bustime.ui.map.StationOverlayItem;
+import ru.ming13.bustime.ui.map.StationsOverlay;
 
 
 public class StationsMapActivity extends SherlockMapActivity

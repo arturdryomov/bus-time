@@ -24,7 +24,8 @@ public class StationsFragment extends AdaptedListFragment implements LoaderManag
 {
 	private static final String LIST_ITEM_TEXT_ID = "text";
 
-	private static enum Mode {
+	private static enum Mode
+	{
 		ALL, FOR_ROUTE
 	}
 

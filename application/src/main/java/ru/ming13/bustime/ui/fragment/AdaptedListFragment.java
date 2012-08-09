@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import ru.ming13.bustime.R;
 import com.actionbarsherlock.app.SherlockListFragment;
+import ru.ming13.bustime.R;
 
 
 abstract class AdaptedListFragment extends SherlockListFragment
@@ -60,7 +60,6 @@ abstract class AdaptedListFragment extends SherlockListFragment
 	protected abstract SimpleAdapter buildListAdapter();
 
 	protected void populateList(List<?> listContent) {
-
 
 		list.clear();
 

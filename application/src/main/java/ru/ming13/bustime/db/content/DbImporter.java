@@ -16,10 +16,10 @@ import java.util.zip.GZIPInputStream;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.text.TextUtils;
+import org.apache.commons.io.IOUtils;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.db.DbProvider;
 import ru.ming13.bustime.ui.util.Preferences;
-import org.apache.commons.io.IOUtils;
 
 
 public class DbImporter
@@ -192,8 +192,7 @@ public class DbImporter
 	}
 
 	private boolean isLocalDatabaseUpdateAvailableStored() {
-		return !TextUtils.isEmpty(
-			Preferences.getString(context, Preferences.Keys.UPDATE_AVAILABLE));
+		return !TextUtils.isEmpty(Preferences.getString(context, Preferences.Keys.UPDATE_AVAILABLE));
 	}
 
 	private boolean isServerDatabaseEtagEqualsLocalDatabaseEtag() {
@@ -204,7 +203,6 @@ public class DbImporter
 	}
 
 	private void storeLocalDatabaseUpdateAvailable() {
-		Preferences.set(context, Preferences.Keys.UPDATE_AVAILABLE,
-			Preferences.Keys.UPDATE_AVAILABLE);
+		Preferences.set(context, Preferences.Keys.UPDATE_AVAILABLE, Preferences.Keys.UPDATE_AVAILABLE);
 	}
 }

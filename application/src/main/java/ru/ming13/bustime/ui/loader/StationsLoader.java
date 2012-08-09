@@ -12,7 +12,8 @@ import ru.ming13.bustime.db.model.Station;
 
 public class StationsLoader extends AsyncTaskLoader<List<Station>>
 {
-	private static enum Mode {
+	private static enum Mode
+	{
 		ALL, FOR_ROUTE
 	}
 

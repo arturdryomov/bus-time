@@ -1,9 +1,9 @@
 package ru.ming13.bustime.ui.map;
 
 
-import ru.ming13.bustime.db.model.Station;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
+import ru.ming13.bustime.db.model.Station;
 
 
 public class StationOverlayItem extends OverlayItem
