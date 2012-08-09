@@ -50,6 +50,7 @@ public class StationsMapActivity extends SherlockMapActivity
 
 		setUpMapView();
 		setUpMyLocationOverlay();
+		setUpDefaultLocation();
 
 		populateMap();
 	}
@@ -81,14 +82,16 @@ public class StationsMapActivity extends SherlockMapActivity
 			}
 		});
 
+		getMapView().getOverlays().add(myLocationOverlay);
+	}
+
+	private void setUpDefaultLocation() {
 		if (isLastLocationKnown()) {
 			getMapView().getController().animateTo(getLastKnownLocation());
 		}
 		else {
 			animateToDefaultLocation();
 		}
-
-		getMapView().getOverlays().add(myLocationOverlay);
 	}
 
 	private boolean isLastLocationKnown() {
