@@ -5,9 +5,9 @@ import java.util.List;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
-import app.android.bustime.db.Route;
-import app.android.bustime.db.Station;
-import app.android.bustime.db.Time;
+import app.android.bustime.db.model.Route;
+import app.android.bustime.db.model.Station;
+import app.android.bustime.db.time.Time;
 
 
 public class TimetableLoader extends AsyncTaskLoader<List<Time>>
@@ -29,15 +29,15 @@ public class TimetableLoader extends AsyncTaskLoader<List<Time>>
 		this.mode = mode;
 	}
 
-	public static TimetableLoader buildFullWeekLoader(Context context, Route route, Station station) {
+	public static TimetableLoader newFullWeekLoader(Context context, Route route, Station station) {
 		return new TimetableLoader(context, route, station, Mode.FULL_WEEK);
 	}
 
-	public static TimetableLoader buildWorkdaysLoader(Context context, Route route, Station station) {
+	public static TimetableLoader newWorkdaysLoader(Context context, Route route, Station station) {
 		return new TimetableLoader(context, route, station, Mode.WORKDAYS);
 	}
 
-	public static TimetableLoader buildWeekendLoader(Context context, Route route, Station station) {
+	public static TimetableLoader newWeekendLoader(Context context, Route route, Station station) {
 		return new TimetableLoader(context, route, station, Mode.WEEKEND);
 	}
 
@@ -52,14 +52,13 @@ public class TimetableLoader extends AsyncTaskLoader<List<Time>>
 	public List<Time> loadInBackground() {
 		switch (mode) {
 			case FULL_WEEK:
-				return station.getRouteFullWeekTimetable(route);
+				return station.getFullWeekTimetable(route);
 
 			case WORKDAYS:
-				// TODO: Rename to getWorkdaysDepartureTimetable (and other methods similar way)
-				return station.getRouteWorkdaysDepartureTimetable(route);
+				return station.getWorkdaysTimetable(route);
 
 			case WEEKEND:
-				return station.getRouteWeekendDepartureTimetable(route);
+				return station.getWeekendTimetable(route);
 
 			default:
 				throw new LoaderException();
