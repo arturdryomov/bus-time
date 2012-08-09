@@ -12,7 +12,7 @@ import android.text.TextUtils;
 import app.android.bustime.R;
 import app.android.bustime.ui.intent.IntentFactory;
 import app.android.bustime.ui.ProgressDialogHelper;
-import app.android.bustime.ui.UserAlerter;
+import app.android.bustime.ui.util.UserAlerter;
 import app.android.bustime.ui.fragment.RoutesFragment;
 import app.android.bustime.ui.fragment.StationsFragment;
 import app.android.bustime.ui.loader.DatabaseUpdateCheckLoader;

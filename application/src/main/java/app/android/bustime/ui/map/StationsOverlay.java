@@ -1,4 +1,4 @@
-package app.android.bustime.ui;
+package app.android.bustime.ui.map;
 
 
 import java.util.ArrayList;

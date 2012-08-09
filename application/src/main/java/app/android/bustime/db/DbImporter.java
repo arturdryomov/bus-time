@@ -17,7 +17,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.text.TextUtils;
 import app.android.bustime.R;
-import app.android.bustime.ui.Preferences;
+import app.android.bustime.ui.util.Preferences;
 import org.apache.commons.io.IOUtils;
 
 
