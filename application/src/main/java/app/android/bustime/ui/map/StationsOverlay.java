@@ -8,13 +8,12 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.maps.OnSingleTapListener;
 import com.readystatesoftware.maps.TapControlledMapView;
 import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
 
 
-public class StationsOverlay extends BalloonItemizedOverlay<OverlayItem>
+public class StationsOverlay extends BalloonItemizedOverlay<StationOverlayItem>
 {
 	private static final boolean SHOW_CLOSE_BUTTON_ON_BALLOON = false;
 	private static final boolean SHOW_DISCLOSURE_BUTTON_ON_BALLOON = true;
@@ -26,12 +25,13 @@ public class StationsOverlay extends BalloonItemizedOverlay<OverlayItem>
 	}
 
 	private OnBalloonTapListener onBalloonTapListener;
-	private final List<OverlayItem> overlays;
+
+	private final List<StationOverlayItem> stationOverlayItems;
 
 	public StationsOverlay(Drawable defaultMarker, MapView mapView) {
 		super(boundCenter(defaultMarker), mapView);
 
-		overlays = new ArrayList<OverlayItem>();
+		stationOverlayItems = new ArrayList<StationOverlayItem>();
 
 		setUpOverlay();
 	}
@@ -58,21 +58,21 @@ public class StationsOverlay extends BalloonItemizedOverlay<OverlayItem>
 	}
 
 	@Override
-	protected OverlayItem createItem(int itemIndex) {
-		return overlays.get(itemIndex);
+	protected StationOverlayItem createItem(int itemIndex) {
+		return stationOverlayItems.get(itemIndex);
 	}
 
 	@Override
 	public int size() {
-		return overlays.size();
+		return stationOverlayItems.size();
 	}
 
-	public void addOverlayItem(OverlayItem overlay) {
-		overlays.add(overlay);
+	public void addOverlayItem(StationOverlayItem overlay) {
+		stationOverlayItems.add(overlay);
 	}
 
-	public void populate(List<OverlayItem> overlayItems) {
-		for (OverlayItem overlayItem : overlayItems) {
+	public void populate(List<StationOverlayItem> overlayItems) {
+		for (StationOverlayItem overlayItem : overlayItems) {
 			addOverlayItem(overlayItem);
 		}
 
@@ -84,13 +84,13 @@ public class StationsOverlay extends BalloonItemizedOverlay<OverlayItem>
 	}
 
 	@Override
-	protected boolean onBalloonTap(int itemIndex, OverlayItem overlayItem) {
+	protected boolean onBalloonTap(int itemIndex, StationOverlayItem stationOverlayItem) {
 		if (!isOnBalloonTapListenerSet()) {
 			return false;
 		}
 
 		hideAllBalloons();
-		onBalloonTapListener.onBalloonTap((StationOverlayItem) overlayItem);
+		onBalloonTapListener.onBalloonTap(stationOverlayItem);
 
 		return true;
 	}

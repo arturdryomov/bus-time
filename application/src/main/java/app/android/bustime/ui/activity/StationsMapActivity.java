@@ -24,7 +24,6 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
-import com.google.android.maps.OverlayItem;
 
 
 public class StationsMapActivity extends SherlockMapActivity
@@ -147,7 +146,7 @@ public class StationsMapActivity extends SherlockMapActivity
 
 		@Override
 		protected Void doInBackground(Void... parameters) {
-			List<OverlayItem> stationOverlayItems = new ArrayList<OverlayItem>();
+			List<StationOverlayItem> stationOverlayItems = new ArrayList<StationOverlayItem>();
 
 			for (Station station : DbProvider.getInstance().getStations().getStationsList()) {
 				stationOverlayItems.add(buildStationOverlayItem(station));
