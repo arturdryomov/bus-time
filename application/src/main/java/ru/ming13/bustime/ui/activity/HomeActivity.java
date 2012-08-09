@@ -62,7 +62,7 @@ public class HomeActivity extends SherlockFragmentActivity
 	private ActionBar.Tab buildRoutesTab() {
 		ActionBar.Tab tab = getSupportActionBar().newTab();
 
-		tab.setText(getString(R.string.title_routes));
+		tab.setText(R.string.title_routes);
 		tab.setTabListener(new TabListener(RoutesFragment.newInstance()));
 
 		return tab;
@@ -101,7 +101,7 @@ public class HomeActivity extends SherlockFragmentActivity
 	private ActionBar.Tab buildStationsTab() {
 		ActionBar.Tab tab = getSupportActionBar().newTab();
 
-		tab.setText(getString(R.string.title_stations));
+		tab.setText(R.string.title_stations);
 		tab.setTabListener(new TabListener(StationsFragment.newInstance()));
 
 		return tab;
