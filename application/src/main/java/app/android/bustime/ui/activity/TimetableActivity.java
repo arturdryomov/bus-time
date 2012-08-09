@@ -2,10 +2,12 @@ package app.android.bustime.ui.activity;
 
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.widget.ArrayAdapter;
 import app.android.bustime.R;
 import app.android.bustime.db.model.Route;
@@ -14,11 +16,13 @@ import app.android.bustime.db.time.Time;
 import app.android.bustime.ui.fragment.TimetableFragment;
 import app.android.bustime.ui.intent.IntentException;
 import app.android.bustime.ui.intent.IntentExtras;
+import app.android.bustime.ui.loader.Loaders;
+import app.android.bustime.ui.loader.TimetableTypeCheckLoader;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 
-public class TimetableActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener
+public class TimetableActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener, LoaderManager.LoaderCallbacks<Bundle>
 {
 	private static final int LIST_NAVIGATION_WORKDAYS_ITEM_INDEX = 0;
 	private static final int LIST_NAVIGATION_WEEKEND_ITEM_INDEX = 1;
@@ -57,30 +61,43 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	}
 
 	private void setUpTimetable() {
-		new SetUpTimetableTask().execute();
+		getSupportLoaderManager().initLoader(Loaders.TIMETABLE_TYPE_CHECK_ID, null, this);
 	}
 
-	// TODO: Move to loader
-	private class SetUpTimetableTask extends AsyncTask<Void, Void, Boolean>
-	{
-		@Override
-		protected Boolean doInBackground(Void... voids) {
-			return Boolean.valueOf(route.isWeekPartDependent());
-		}
+	@Override
+	public Loader<Bundle> onCreateLoader(int i, Bundle bundle) {
+		return new TimetableTypeCheckLoader(this, route);
+	}
 
-		@Override
-		protected void onPostExecute(Boolean isRouteWeekPartDependent) {
-			super.onPostExecute(isRouteWeekPartDependent);
+	@Override
+	public void onLoadFinished(Loader<Bundle> timetableTypeCheckLoader, Bundle timetableTypeCheckResult) {
+		buildTimetableFragments();
 
-			buildTimetableFragments();
+		boolean isTimetableWeekPartDependent = timetableTypeCheckResult.getBoolean(
+			TimetableTypeCheckLoader.RESULT_TIMETABLE_WEEK_PART_DEPENDENT_KEY);
 
-			if (isRouteWeekPartDependent) {
-				setUpWeekPartDependentTimetable();
+		setUpTimetableLoaderSafe(isTimetableWeekPartDependent);
+	}
+
+	private void setUpTimetableLoaderSafe(final boolean isTimetableWeekPartDependent) {
+		Handler handler = new Handler();
+
+		handler.post(new Runnable()
+		{
+			@Override
+			public void run() {
+				if (isTimetableWeekPartDependent) {
+					setUpWeekPartDependentTimetable();
+				}
+				else {
+					setUpWeekPartIndependentTimetable();
+				}
 			}
-			else {
-				setUpWeekPartIndependentTimetable();
-			}
-		}
+		});
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Bundle> bundleLoader) {
 	}
 
 	private void buildTimetableFragments() {
