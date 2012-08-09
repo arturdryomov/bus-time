@@ -175,7 +175,7 @@ public class TimetableFragment extends AdaptedListFragment implements LoaderMana
 	}
 
 	private void updateRemainingTimes() {
-		currentTime = Time.getInstance();
+		currentTime = Time.newInstance();
 
 		for (Map<String, Object> listDataElement : list) {
 			Time listDataTime = (Time) listDataElement.get(LIST_ITEM_OBJECT_ID);

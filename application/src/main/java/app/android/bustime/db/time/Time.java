@@ -52,7 +52,7 @@ public class Time
 		return calendar;
 	}
 
-	public static Time getInstance() {
+	public static Time newInstance() {
 		Calendar calendar = GregorianCalendar.getInstance();
 
 		return new Time(calendar);
@@ -86,7 +86,7 @@ public class Time
 	}
 
 	public boolean isNow() {
-		Time now = Time.getInstance();
+		Time now = Time.newInstance();
 
 		return now.hours == hours && now.minutes == minutes;
 	}
@@ -113,7 +113,7 @@ public class Time
 
 	public String toRelativeToNowSpanString() {
 		long timeInMilliseconds = getCalendar().getTimeInMillis();
-		long nowInMilliseconds = Time.getInstance().getCalendar().getTimeInMillis();
+		long nowInMilliseconds = Time.newInstance().getCalendar().getTimeInMillis();
 
 		return DateUtils.getRelativeTimeSpanString(timeInMilliseconds, nowInMilliseconds,
 			DateUtils.MINUTE_IN_MILLIS).toString();

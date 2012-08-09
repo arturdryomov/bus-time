@@ -67,6 +67,7 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		new SetUpTimetableTask().execute();
 	}
 
+	// TODO: Move to loader
 	private class SetUpTimetableTask extends AsyncTask<Void, Void, Boolean>
 	{
 		@Override
@@ -90,7 +91,6 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	private void setUpWeekPartDependentTimetable() {
 		setUpActionBarListNavigation();
 
-		setUpWeekPartDependentFragments();
 		setCurrentWeekPartListNavigationItem();
 	}
 
@@ -117,12 +117,8 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
 		if (itemPosition == LIST_NAVIGATION_WORKDAYS_ITEM_INDEX) {
-			fragmentTransaction.detach(weekendTimetableFragment);
-			fragmentTransaction.attach(workdaysTimetableFragment);
 		}
 		else {
-			fragmentTransaction.detach(workdaysTimetableFragment);
-			fragmentTransaction.attach(weekendTimetableFragment);
 		}
 
 		fragmentTransaction.commit();
@@ -130,22 +126,10 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		return true;
 	}
 
-	private void setUpWeekPartDependentFragments() {
-		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-		fragmentTransaction.add(android.R.id.content, workdaysTimetableFragment);
-		fragmentTransaction.add(android.R.id.content, weekendTimetableFragment);
-
-		fragmentTransaction.detach(workdaysTimetableFragment);
-		fragmentTransaction.detach(weekendTimetableFragment);
-
-		fragmentTransaction.commit();
-	}
-
 	private void setCurrentWeekPartListNavigationItem() {
 		int listNavigationIndex;
 
-		if (Time.getInstance().isWeekend()) {
+		if (Time.newInstance().isWeekend()) {
 			listNavigationIndex = LIST_NAVIGATION_WEEKEND_ITEM_INDEX;
 		}
 		else {
@@ -168,7 +152,7 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	private void setUpFragment(Fragment fragment) {
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-		fragmentTransaction.add(android.R.id.content, fragment);
+		fragmentTransaction.replace(android.R.id.content, fragment);
 
 		fragmentTransaction.commit();
 	}
