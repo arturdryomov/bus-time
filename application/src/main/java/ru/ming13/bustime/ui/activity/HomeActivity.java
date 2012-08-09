@@ -151,7 +151,7 @@ public class HomeActivity extends SherlockFragmentActivity
 						DatabaseUpdateCheckLoader.RESULT_DATABASE_UPDATE_AVAILABLE_KEY);
 
 					if (isDatabaseUpdateAvailable) {
-						showMessageUpdateAvailable();
+						showUpdateAvailableMessage();
 					}
 				}
 			};
@@ -187,7 +187,7 @@ public class HomeActivity extends SherlockFragmentActivity
 				public void run() {
 					if (TextUtils.isEmpty(errorMessage)) {
 						reSetUpTabs();
-						hideUpdateAvailableSign();
+						hideUpdateAvailableMessage();
 					}
 					else {
 						UserAlerter.alert(HomeActivity.this, errorMessage);
@@ -229,7 +229,7 @@ public class HomeActivity extends SherlockFragmentActivity
 		getSupportActionBar().removeAllTabs();
 	}
 
-	private void hideUpdateAvailableSign() {
+	private void hideUpdateAvailableMessage() {
 		getSupportActionBar().setSubtitle(null);
 	}
 
@@ -243,7 +243,7 @@ public class HomeActivity extends SherlockFragmentActivity
 		}
 	}
 
-	private void showMessageUpdateAvailable() {
+	private void showUpdateAvailableMessage() {
 		getSupportActionBar().setSubtitle(R.string.warning_update_available);
 	}
 
