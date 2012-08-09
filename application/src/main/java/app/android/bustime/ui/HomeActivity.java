@@ -10,6 +10,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import app.android.bustime.R;
+import app.android.bustime.ui.fragment.RoutesFragment;
+import app.android.bustime.ui.fragment.StationsFragment;
 import app.android.bustime.ui.loader.DatabaseUpdateCheckLoader;
 import app.android.bustime.ui.loader.DatabaseUpdateLoader;
 import app.android.bustime.ui.loader.Loaders;
@@ -62,7 +64,7 @@ public class HomeActivity extends SherlockFragmentActivity
 		ActionBar.Tab tab = getSupportActionBar().newTab();
 
 		tab.setText(getString(R.string.title_routes));
-		tab.setTabListener(new TabListener(FragmentFactory.createRoutesFragment(this)));
+		tab.setTabListener(new TabListener(RoutesFragment.newInstance()));
 
 		return tab;
 	}
@@ -101,7 +103,7 @@ public class HomeActivity extends SherlockFragmentActivity
 		ActionBar.Tab tab = getSupportActionBar().newTab();
 
 		tab.setText(getString(R.string.title_stations));
-		tab.setTabListener(new TabListener(FragmentFactory.createStationsFragment(this)));
+		tab.setTabListener(new TabListener(StationsFragment.newInstance()));
 
 		return tab;
 	}

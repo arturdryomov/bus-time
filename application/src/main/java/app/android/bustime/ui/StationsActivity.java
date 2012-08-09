@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import app.android.bustime.R;
 import app.android.bustime.db.Route;
+import app.android.bustime.ui.fragment.StationsFragment;
 
 
 public class StationsActivity extends FragmentWrapperActivity
 {
 	@Override
 	protected Fragment buildFragment() {
-		return FragmentFactory.createStationsFragment(this, extractReceivedRoute());
+		return StationsFragment.newInstance(extractReceivedRoute());
 	}
 
 	private Route extractReceivedRoute() {

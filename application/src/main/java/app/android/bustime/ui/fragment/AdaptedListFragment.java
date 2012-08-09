@@ -1,4 +1,4 @@
-package app.android.bustime.ui;
+package app.android.bustime.ui.fragment;
 
 
 import java.util.ArrayList;

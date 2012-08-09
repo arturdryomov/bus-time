@@ -1,4 +1,4 @@
-package app.android.bustime.ui;
+package app.android.bustime.ui.fragment;
 
 
 import java.util.HashMap;
@@ -15,6 +15,7 @@ import android.widget.SimpleAdapter;
 import app.android.bustime.R;
 import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
+import app.android.bustime.ui.IntentFactory;
 import app.android.bustime.ui.loader.Loaders;
 import app.android.bustime.ui.loader.RoutesLoader;
 
@@ -22,6 +23,31 @@ import app.android.bustime.ui.loader.RoutesLoader;
 public class RoutesFragment extends AdaptedListFragment implements LoaderManager.LoaderCallbacks<List<Route>>
 {
 	private static final String LIST_ITEM_TEXT_ID = "text";
+
+	private static enum Mode {
+		ALL, FOR_STATION
+	}
+
+	private Mode mode;
+
+	private Station station;
+
+	public static RoutesFragment newInstance() {
+		RoutesFragment routesFragment = new RoutesFragment();
+
+		routesFragment.mode = Mode.ALL;
+
+		return routesFragment;
+	}
+
+	public static RoutesFragment newInstance(Station station) {
+		RoutesFragment routesFragment = new RoutesFragment();
+
+		routesFragment.mode = Mode.FOR_STATION;
+		routesFragment.station = station;
+
+		return routesFragment;
+	}
 
 	@Override
 	protected SimpleAdapter buildListAdapter() {
@@ -50,14 +76,15 @@ public class RoutesFragment extends AdaptedListFragment implements LoaderManager
 
 	@Override
 	public Loader<List<Route>> onCreateLoader(int loaderId, Bundle loaderArguments) {
-		if (!FragmentProcessor.haveMessage(getArguments())) {
-			return new RoutesLoader(getActivity());
-		}
-		else {
-			// TODO: Extract message on fragment creation
-			Station station = (Station) FragmentProcessor.extractMessage(getArguments());
+		switch (mode) {
+			case ALL:
+				return new RoutesLoader(getActivity());
 
-			return new RoutesLoader(getActivity(), station);
+			case FOR_STATION:
+				return new RoutesLoader(getActivity(), station);
+
+			default:
+				return new RoutesLoader(getActivity());
 		}
 	}
 
@@ -81,17 +108,17 @@ public class RoutesFragment extends AdaptedListFragment implements LoaderManager
 
 		Route selectedRoute = (Route) getListItemObject(position);
 
-		if (FragmentProcessor.haveMessage(getArguments())) {
-			callTimetableActivity(selectedRoute);
-		}
-		else {
-			callStationsActivity(selectedRoute);
+		switch (mode) {
+			case ALL:
+				callStationsActivity(selectedRoute);
+				return;
+
+			case FOR_STATION:
+				callTimetableActivity(selectedRoute);
 		}
 	}
 
 	private void callTimetableActivity(Route route) {
-		Station station = (Station) FragmentProcessor.extractMessage(getArguments());
-
 		Intent callIntent = IntentFactory.createTimetableIntent(getActivity(), route, station);
 		startActivity(callIntent);
 	}

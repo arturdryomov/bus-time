@@ -7,7 +7,7 @@ import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
 
 
-final class IntentFactory
+public final class IntentFactory
 {
 	private static final String MESSAGE_ID;
 	private static final String EXTRA_MESSAGE_ID;

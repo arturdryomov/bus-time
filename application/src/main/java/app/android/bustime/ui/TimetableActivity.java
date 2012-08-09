@@ -11,6 +11,7 @@ import app.android.bustime.R;
 import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
 import app.android.bustime.db.Time;
+import app.android.bustime.ui.fragment.TimetableFragment;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
@@ -65,11 +66,9 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	}
 
 	private void buildTimetableFragments() {
-		fullWeekTimetableFragment = FragmentFactory.createFullWeekTimetableFragment(this, route,
-			station);
-		workdaysTimetableFragment = FragmentFactory.createWorkdaysTimetableFragment(this, route,
-			station);
-		weekendTimetableFragment = FragmentFactory.createWeekendTimetableFragment(this, route, station);
+		fullWeekTimetableFragment = TimetableFragment.newFullWeekInstance(route, station);
+		workdaysTimetableFragment = TimetableFragment.newWorkdaysInstance(route, station);
+		weekendTimetableFragment = TimetableFragment.newWeekendInstance(route, station);
 	}
 
 	private void setUpTimetable() {

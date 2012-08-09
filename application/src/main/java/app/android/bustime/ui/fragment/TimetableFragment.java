@@ -1,4 +1,4 @@
-package app.android.bustime.ui;
+package app.android.bustime.ui.fragment;
 
 
 import java.util.Calendar;
@@ -6,11 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.widget.SimpleAdapter;
 import app.android.bustime.R;
@@ -18,53 +16,64 @@ import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
 import app.android.bustime.db.Time;
 import app.android.bustime.ui.loader.Loaders;
+import app.android.bustime.ui.loader.TimetableLoader;
 
 
-abstract class TimetableFragment extends AdaptedListFragment implements LoaderManager.LoaderCallbacks<List<Time>>
+public class TimetableFragment extends AdaptedListFragment implements LoaderManager.LoaderCallbacks<List<Time>>
 {
+	private static enum Mode
+	{
+		FULL_WEEK, WORKDAYS, WEEKEND
+	}
+
 	private static final String LIST_ITEM_TIME_ID = "time";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
 
 	private static final int PREVIOUS_TIMES_DISPLAYED_COUNT = 1;
 
-	private final Handler remainingTimeTextUpdateTimer;
+	private Handler remainingTimeTextUpdateTimer;
 	private static final int AUTO_UPDATE_MILLISECONDS_PERIOD = 60000;
+
+	private Mode mode;
 
 	protected Route route;
 	protected Station station;
 
 	private Time currentTime;
 
-	public TimetableFragment() {
-		super();
+	public static TimetableFragment newFullWeekInstance(Route route, Station station) {
+		TimetableFragment timetableFragment = newInstance(route, station);
 
-		remainingTimeTextUpdateTimer = new Handler();
+		timetableFragment.mode = Mode.FULL_WEEK;
+
+		return timetableFragment;
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+	private static TimetableFragment newInstance(Route route, Station station) {
+		TimetableFragment timetableFragment = new TimetableFragment();
 
-		route = extractRouteArgument();
-		station = extractStationArgument();
+		timetableFragment.route = route;
+		timetableFragment.station = station;
+
+		timetableFragment.remainingTimeTextUpdateTimer = new Handler();
+
+		return timetableFragment;
 	}
 
-	private Route extractRouteArgument() {
-		if (!FragmentProcessor.haveMessage(getArguments())) {
-			UserAlerter.alert(getActivity(), getString(R.string.error_unspecified));
-			getActivity().finish();
-		}
+	public static TimetableFragment newWorkdaysInstance(Route route, Station station) {
+		TimetableFragment timetableFragment = newInstance(route, station);
 
-		return (Route) FragmentProcessor.extractMessage(getArguments());
+		timetableFragment.mode = Mode.WORKDAYS;
+
+		return timetableFragment;
 	}
 
-	private Station extractStationArgument() {
-		if (!FragmentProcessor.haveExtraMessage(getArguments())) {
-			UserAlerter.alert(getActivity(), getString(R.string.error_unspecified));
-			getActivity().finish();
-		}
+	public static TimetableFragment newWeekendInstance(Route route, Station station) {
+		TimetableFragment timetableFragment = newInstance(route, station);
 
-		return (Station) FragmentProcessor.extractExtraMessage(getArguments());
+		timetableFragment.mode = Mode.WEEKEND;
+
+		return timetableFragment;
 	}
 
 	@Override
@@ -106,10 +115,20 @@ abstract class TimetableFragment extends AdaptedListFragment implements LoaderMa
 
 	@Override
 	public Loader<List<Time>> onCreateLoader(int loaderId, Bundle loaderArguments) {
-		return buildTimetableLoader();
-	}
+		switch (mode) {
+			case FULL_WEEK:
+				return TimetableLoader.newFullWeekLoader(getActivity(), route, station);
 
-	protected abstract AsyncTaskLoader<List<Time>> buildTimetableLoader();
+			case WORKDAYS:
+				return TimetableLoader.newWorkdaysLoader(getActivity(), route, station);
+
+			case WEEKEND:
+				return TimetableLoader.newWeekendLoader(getActivity(), route, station);
+
+			default:
+				return TimetableLoader.newFullWeekLoader(getActivity(), route, station);
+		}
+	}
 
 	@Override
 	public void onLoadFinished(Loader<List<Time>> timetableLoader, List<Time> timetable) {
