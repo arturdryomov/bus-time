@@ -37,7 +37,7 @@ public class HomeActivity extends SherlockFragmentActivity
 		setUpTabs();
 		restorePreviousSelectedTab(savedInstanceState);
 
-		checkDatabaseUpdates();
+		checkDatabaseUpdate();
 	}
 
 	private void initRunningLoaders() {
@@ -117,7 +117,7 @@ public class HomeActivity extends SherlockFragmentActivity
 		getSupportActionBar().setSelectedNavigationItem(tabPosition);
 	}
 
-	private void checkDatabaseUpdates() {
+	private void checkDatabaseUpdate() {
 		LoaderManager loaderManager = getSupportLoaderManager();
 
 		loaderManager.initLoader(Loaders.DATABASE_UPDATE_CHECK, null, databaseUpdateCheckCallback);
