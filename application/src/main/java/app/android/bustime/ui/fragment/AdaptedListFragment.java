@@ -19,19 +19,25 @@ abstract class AdaptedListFragment extends SherlockListFragment
 {
 	protected static final String LIST_ITEM_OBJECT_ID = "object";
 
-	protected final List<Map<String, Object>> list;
-
-	public AdaptedListFragment() {
-		super();
-
-		list = new ArrayList<Map<String, Object>>();
-	}
+	protected List<Map<String, Object>> list;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setRetainInstance(true);
+
+		if (!isListInitialized()) {
+			initializeList();
+		}
+	}
+
+	private boolean isListInitialized() {
+		return list != null;
+	}
+
+	private void initializeList() {
+		list = new ArrayList<Map<String, Object>>();
 	}
 
 	@Override
@@ -47,13 +53,15 @@ abstract class AdaptedListFragment extends SherlockListFragment
 		return layoutInflater.inflate(R.layout.fragment_list, fragmentContainer, false);
 	}
 
-	protected void setUpListAdapter() {
+	private void setUpListAdapter() {
 		setListAdapter(buildListAdapter());
 	}
 
 	protected abstract SimpleAdapter buildListAdapter();
 
 	protected void populateList(List<?> listContent) {
+
+
 		list.clear();
 
 		for (Object listItemContent : listContent) {

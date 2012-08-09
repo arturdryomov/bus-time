@@ -36,8 +36,8 @@ public class TimetableFragment extends AdaptedListFragment implements LoaderMana
 
 	private Mode mode;
 
-	protected Route route;
-	protected Station station;
+	private Route route;
+	private Station station;
 
 	private Time currentTime;
 

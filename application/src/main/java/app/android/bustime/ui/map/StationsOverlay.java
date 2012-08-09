@@ -67,16 +67,16 @@ public class StationsOverlay extends BalloonItemizedOverlay<StationOverlayItem>
 		return stationOverlayItems.size();
 	}
 
-	public void addOverlayItem(StationOverlayItem overlay) {
-		stationOverlayItems.add(overlay);
-	}
-
 	public void populate(List<StationOverlayItem> overlayItems) {
 		for (StationOverlayItem overlayItem : overlayItems) {
 			addOverlayItem(overlayItem);
 		}
 
 		populate();
+	}
+
+	private void addOverlayItem(StationOverlayItem overlay) {
+		stationOverlayItems.add(overlay);
 	}
 
 	public void setOnBalloonTapListener(OnBalloonTapListener onBalloonTapListener) {

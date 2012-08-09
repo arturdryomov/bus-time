@@ -16,17 +16,17 @@ abstract class FragmentWrapperActivity extends SherlockFragmentActivity
 		setUpFragment();
 	}
 
-	protected void setUpFragment() {
+	private void setUpFragment() {
 		if (!isFragmentInstalled()) {
 			installFragment();
 		}
 	}
 
-	protected boolean isFragmentInstalled() {
+	private boolean isFragmentInstalled() {
 		return getSupportFragmentManager().findFragmentById(R.id.content) != null;
 	}
 
-	protected void installFragment() {
+	private void installFragment() {
 		getSupportFragmentManager().beginTransaction().add(R.id.content, buildFragment()).commit();
 	}
 
