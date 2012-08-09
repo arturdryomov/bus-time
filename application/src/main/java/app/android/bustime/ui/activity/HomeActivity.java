@@ -10,14 +10,14 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import app.android.bustime.R;
-import app.android.bustime.ui.intent.IntentFactory;
-import app.android.bustime.ui.ProgressDialogHelper;
-import app.android.bustime.ui.util.UserAlerter;
+import app.android.bustime.ui.dialog.IntermediateProgressDialog;
 import app.android.bustime.ui.fragment.RoutesFragment;
 import app.android.bustime.ui.fragment.StationsFragment;
+import app.android.bustime.ui.intent.IntentFactory;
 import app.android.bustime.ui.loader.DatabaseUpdateCheckLoader;
 import app.android.bustime.ui.loader.DatabaseUpdateLoader;
 import app.android.bustime.ui.loader.Loaders;
+import app.android.bustime.ui.util.UserAlerter;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -27,8 +27,6 @@ import com.actionbarsherlock.view.MenuItem;
 public class HomeActivity extends SherlockFragmentActivity
 {
 	private static final String SAVED_INSTANCE_KEY_SELECTED_TAB = "selected_tab";
-
-	private ProgressDialogHelper updateProgressDialogHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +38,6 @@ public class HomeActivity extends SherlockFragmentActivity
 		restorePreviousSelectedTab(savedInstanceState);
 
 		checkDatabaseUpdates();
-
-		showRunningUpdateProgressDialog();
 	}
 
 	private void initRunningLoaders() {
@@ -204,8 +200,10 @@ public class HomeActivity extends SherlockFragmentActivity
 	};
 
 	private void showUpdateProgressDialog() {
-		updateProgressDialogHelper = new ProgressDialogHelper();
-		updateProgressDialogHelper.show(this, R.string.loading_update);
+		IntermediateProgressDialog progressDialog = IntermediateProgressDialog.newInstance(
+			getString(R.string.loading_update));
+
+		progressDialog.show(getSupportFragmentManager(), IntermediateProgressDialog.TAG);
 	}
 
 	private void reSetUpTabs() {
@@ -230,26 +228,17 @@ public class HomeActivity extends SherlockFragmentActivity
 	}
 
 	private void hideUpdateProgressDialog() {
-		if (updateProgressDialogHelper != null) {
-			updateProgressDialogHelper.hide();
-		}
+		Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+			IntermediateProgressDialog.TAG);
 
-		updateProgressDialogHelper = null;
+		if (fragment != null) {
+			IntermediateProgressDialog progressDialog = (IntermediateProgressDialog) fragment;
+			progressDialog.getDialog().dismiss();
+		}
 	}
 
 	private void showMessageUpdateAvailable() {
 		getSupportActionBar().setSubtitle(R.string.warning_update_available);
-	}
-
-	private void showRunningUpdateProgressDialog() {
-		if (getLastCustomNonConfigurationInstance() != null) {
-			showUpdateProgressDialog();
-		}
-	}
-
-	@Override
-	public Object onRetainCustomNonConfigurationInstance() {
-		return updateProgressDialogHelper;
 	}
 
 	@Override
