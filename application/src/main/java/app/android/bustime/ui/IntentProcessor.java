@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 
 
-final class IntentProcessor
+public final class IntentProcessor
 {
 	private IntentProcessor() {
 	}

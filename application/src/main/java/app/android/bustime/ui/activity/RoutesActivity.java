@@ -1,10 +1,12 @@
-package app.android.bustime.ui;
+package app.android.bustime.ui.activity;
 
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import app.android.bustime.R;
 import app.android.bustime.db.Station;
+import app.android.bustime.ui.IntentProcessor;
+import app.android.bustime.ui.UserAlerter;
 import app.android.bustime.ui.fragment.RoutesFragment;
 
 

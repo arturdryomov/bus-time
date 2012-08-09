@@ -1,4 +1,4 @@
-package app.android.bustime.ui;
+package app.android.bustime.ui.activity;
 
 
 import java.util.ArrayList;
@@ -14,6 +14,9 @@ import android.os.Bundle;
 import app.android.bustime.R;
 import app.android.bustime.db.DbProvider;
 import app.android.bustime.db.Station;
+import app.android.bustime.ui.IntentFactory;
+import app.android.bustime.ui.StationOverlayItem;
+import app.android.bustime.ui.StationsOverlay;
 import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;

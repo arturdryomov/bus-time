@@ -6,7 +6,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
 
 
-class StationOverlayItem extends OverlayItem
+public class StationOverlayItem extends OverlayItem
 {
 	private final Station station;
 

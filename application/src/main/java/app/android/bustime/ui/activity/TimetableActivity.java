@@ -1,4 +1,4 @@
-package app.android.bustime.ui;
+package app.android.bustime.ui.activity;
 
 
 import android.content.Context;
@@ -11,6 +11,8 @@ import app.android.bustime.R;
 import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
 import app.android.bustime.db.Time;
+import app.android.bustime.ui.IntentProcessor;
+import app.android.bustime.ui.UserAlerter;
 import app.android.bustime.ui.fragment.TimetableFragment;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;

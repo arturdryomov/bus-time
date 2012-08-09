@@ -14,7 +14,7 @@ import com.readystatesoftware.maps.TapControlledMapView;
 import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
 
 
-class StationsOverlay extends BalloonItemizedOverlay<OverlayItem>
+public class StationsOverlay extends BalloonItemizedOverlay<OverlayItem>
 {
 	private static final boolean SHOW_CLOSE_BUTTON_ON_BALLOON = false;
 	private static final boolean SHOW_DISCLOSURE_BUTTON_ON_BALLOON = true;

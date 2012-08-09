@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
+import app.android.bustime.ui.activity.RoutesActivity;
+import app.android.bustime.ui.activity.StationsActivity;
+import app.android.bustime.ui.activity.StationsMapActivity;
+import app.android.bustime.ui.activity.TimetableActivity;
 
 
 public final class IntentFactory

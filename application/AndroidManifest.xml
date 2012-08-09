@@ -22,7 +22,7 @@
 		<uses-library android:name="com.google.android.maps" />
 
 		<activity
-			android:name=".ui.HomeActivity"
+			android:name=".ui.activity.HomeActivity"
 			android:theme="@style/Theme.BusTime.Home">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -32,22 +32,22 @@
 		</activity>
 
 		<activity
-			android:name=".ui.RoutesActivity"
+			android:name=".ui.activity.RoutesActivity"
 			android:label="@string/title_routes">
 		</activity>
 
 		<activity
-			android:name=".ui.StationsActivity"
+			android:name=".ui.activity.StationsActivity"
 			android:label="@string/title_stations">
 		</activity>
 
 		<activity
-			android:name=".ui.StationsMapActivity"
+			android:name=".ui.activity.StationsMapActivity"
 			android:label="@string/title_stations">
 		</activity>
 
 		<activity
-			android:name=".ui.TimetableActivity"
+			android:name=".ui.activity.TimetableActivity"
 			android:label="@string/title_timetable_full_week"
 			android:configChanges="keyboardHidden|orientation|screenSize">
 		</activity>

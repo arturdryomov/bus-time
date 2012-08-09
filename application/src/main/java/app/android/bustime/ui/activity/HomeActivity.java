@@ -1,4 +1,4 @@
-package app.android.bustime.ui;
+package app.android.bustime.ui.activity;
 
 
 import android.content.Intent;
@@ -10,6 +10,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import app.android.bustime.R;
+import app.android.bustime.ui.IntentFactory;
+import app.android.bustime.ui.ProgressDialogHelper;
+import app.android.bustime.ui.UserAlerter;
 import app.android.bustime.ui.fragment.RoutesFragment;
 import app.android.bustime.ui.fragment.StationsFragment;
 import app.android.bustime.ui.loader.DatabaseUpdateCheckLoader;
