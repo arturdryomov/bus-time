@@ -8,8 +8,14 @@ import android.preference.PreferenceManager;
 
 public final class Preferences
 {
-	public static final String PREFERENCE_DATABASE_ETAG = "database_etag";
-	public static final String PREFERENCE_UPDATE_AVAILABLE = "update_available";
+	public final class Keys
+	{
+		private Keys() {
+		}
+
+		public static final String DATABASE_ETAG = "database_etag";
+		public static final String UPDATE_AVAILABLE = "update_available";
+	}
 
 	private Preferences() {
 	}

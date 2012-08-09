@@ -138,7 +138,7 @@ public class DbImporter
 	private void updateLocalDatabaseEtag() {
 		String serverDatabaseEtag = getServerDatabaseEtag();
 
-		Preferences.set(context, Preferences.PREFERENCE_DATABASE_ETAG, serverDatabaseEtag);
+		Preferences.set(context, Preferences.Keys.DATABASE_ETAG, serverDatabaseEtag);
 	}
 
 	private String getServerDatabaseEtag() {
@@ -166,7 +166,7 @@ public class DbImporter
 	}
 
 	private void removeLocalDatabaseUpdateAvailableStored() {
-		Preferences.remove(context, Preferences.PREFERENCE_UPDATE_AVAILABLE);
+		Preferences.remove(context, Preferences.Keys.UPDATE_AVAILABLE);
 	}
 
 	public boolean isLocalDatabaseEverUpdated() {
@@ -174,7 +174,7 @@ public class DbImporter
 	}
 
 	private String getLocalDatabaseEtag() {
-		return Preferences.getString(context, Preferences.PREFERENCE_DATABASE_ETAG);
+		return Preferences.getString(context, Preferences.Keys.DATABASE_ETAG);
 	}
 
 	public boolean isLocalDatabaseUpdateAvailable() {
@@ -193,7 +193,7 @@ public class DbImporter
 
 	private boolean isLocalDatabaseUpdateAvailableStored() {
 		return !TextUtils.isEmpty(
-			Preferences.getString(context, Preferences.PREFERENCE_UPDATE_AVAILABLE));
+			Preferences.getString(context, Preferences.Keys.UPDATE_AVAILABLE));
 	}
 
 	private boolean isServerDatabaseEtagEqualsLocalDatabaseEtag() {
@@ -204,7 +204,7 @@ public class DbImporter
 	}
 
 	private void storeLocalDatabaseUpdateAvailable() {
-		Preferences.set(context, Preferences.PREFERENCE_UPDATE_AVAILABLE,
-			Preferences.PREFERENCE_UPDATE_AVAILABLE);
+		Preferences.set(context, Preferences.Keys.UPDATE_AVAILABLE,
+			Preferences.Keys.UPDATE_AVAILABLE);
 	}
 }
