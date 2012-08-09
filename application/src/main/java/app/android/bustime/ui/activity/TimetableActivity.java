@@ -37,7 +37,6 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		readReceivedRoute();
 		readReceivedStation();
 
-		buildTimetableFragments();
 		setUpTimetable();
 	}
 
@@ -57,12 +56,6 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		}
 	}
 
-	private void buildTimetableFragments() {
-		fullWeekTimetableFragment = TimetableFragment.newFullWeekInstance(route, station);
-		workdaysTimetableFragment = TimetableFragment.newWorkdaysInstance(route, station);
-		weekendTimetableFragment = TimetableFragment.newWeekendInstance(route, station);
-	}
-
 	private void setUpTimetable() {
 		new SetUpTimetableTask().execute();
 	}
@@ -79,6 +72,8 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		protected void onPostExecute(Boolean isRouteWeekPartDependent) {
 			super.onPostExecute(isRouteWeekPartDependent);
 
+			buildTimetableFragments();
+
 			if (isRouteWeekPartDependent) {
 				setUpWeekPartDependentTimetable();
 			}
@@ -86,6 +81,12 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 				setUpWeekPartIndependentTimetable();
 			}
 		}
+	}
+
+	private void buildTimetableFragments() {
+		fullWeekTimetableFragment = TimetableFragment.newFullWeekInstance(route, station);
+		workdaysTimetableFragment = TimetableFragment.newWorkdaysInstance(route, station);
+		weekendTimetableFragment = TimetableFragment.newWeekendInstance(route, station);
 	}
 
 	private void setUpWeekPartDependentTimetable() {
@@ -114,16 +115,41 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
 		if (itemPosition == LIST_NAVIGATION_WORKDAYS_ITEM_INDEX) {
+			tearDownFragment(weekendTimetableFragment);
+			setUpFragment(workdaysTimetableFragment);
 		}
 		else {
+			tearDownFragment(workdaysTimetableFragment);
+			setUpFragment(weekendTimetableFragment);
+		}
+
+		return true;
+	}
+
+	private void tearDownFragment(Fragment fragment) {
+		if (!fragment.isAdded()) {
+			return;
+		}
+
+		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+		fragmentTransaction.detach(fragment);
+
+		fragmentTransaction.commit();
+	}
+
+	private void setUpFragment(Fragment fragment) {
+		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+		if (fragment.isDetached()) {
+			fragmentTransaction.attach(fragment);
+		}
+		else {
+			fragmentTransaction.replace(android.R.id.content, fragment);
 		}
 
 		fragmentTransaction.commit();
-
-		return true;
 	}
 
 	private void setCurrentWeekPartListNavigationItem() {
@@ -140,20 +166,6 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	}
 
 	private void setUpWeekPartIndependentTimetable() {
-		if (!isFragmentSetUp()) {
-			setUpFragment(fullWeekTimetableFragment);
-		}
-	}
-
-	private boolean isFragmentSetUp() {
-		return getSupportFragmentManager().findFragmentById(android.R.id.content) != null;
-	}
-
-	private void setUpFragment(Fragment fragment) {
-		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-		fragmentTransaction.replace(android.R.id.content, fragment);
-
-		fragmentTransaction.commit();
+		setUpFragment(fullWeekTimetableFragment);
 	}
 }
