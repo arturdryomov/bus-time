@@ -61,7 +61,7 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	}
 
 	private void setUpTimetable() {
-		getSupportLoaderManager().initLoader(Loaders.TIMETABLE_TYPE_CHECK_ID, null, this);
+		getSupportLoaderManager().initLoader(Loaders.TIMETABLE_TYPE_CHECK, null, this);
 	}
 
 	@Override

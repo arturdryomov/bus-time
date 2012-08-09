@@ -110,7 +110,7 @@ public class TimetableFragment extends AdaptedListFragment implements LoaderMana
 	protected void callListPopulation() {
 		setEmptyListText(getString(R.string.loading_timetable));
 
-		getLoaderManager().initLoader(Loaders.TIMETABLE_ID, null, this);
+		getLoaderManager().initLoader(Loaders.TIMETABLE, null, this);
 	}
 
 	@Override

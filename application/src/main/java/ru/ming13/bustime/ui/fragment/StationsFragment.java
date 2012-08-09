@@ -71,7 +71,7 @@ public class StationsFragment extends AdaptedListFragment implements LoaderManag
 	protected void callListPopulation() {
 		setEmptyListText(getString(R.string.loading_stations));
 
-		getLoaderManager().initLoader(Loaders.STATIONS_ID, getArguments(), this);
+		getLoaderManager().initLoader(Loaders.STATIONS, getArguments(), this);
 	}
 
 	@Override

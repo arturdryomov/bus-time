@@ -43,12 +43,12 @@ public class HomeActivity extends SherlockFragmentActivity
 	private void initRunningLoaders() {
 		LoaderManager loaderManager = getSupportLoaderManager();
 
-		if (loaderManager.getLoader(Loaders.DATABASE_UPDATE_ID) != null) {
-			loaderManager.initLoader(Loaders.DATABASE_UPDATE_ID, null, databaseUpdateCallback);
+		if (loaderManager.getLoader(Loaders.DATABASE_UPDATE) != null) {
+			loaderManager.initLoader(Loaders.DATABASE_UPDATE, null, databaseUpdateCallback);
 		}
 
-		if (loaderManager.getLoader(Loaders.DATABASE_UPDATE_CHECK_ID) != null) {
-			loaderManager.initLoader(Loaders.DATABASE_UPDATE_CHECK_ID, null, databaseUpdateCheckCallback);
+		if (loaderManager.getLoader(Loaders.DATABASE_UPDATE_CHECK) != null) {
+			loaderManager.initLoader(Loaders.DATABASE_UPDATE_CHECK, null, databaseUpdateCheckCallback);
 		}
 	}
 
@@ -120,7 +120,7 @@ public class HomeActivity extends SherlockFragmentActivity
 	private void checkDatabaseUpdates() {
 		LoaderManager loaderManager = getSupportLoaderManager();
 
-		loaderManager.initLoader(Loaders.DATABASE_UPDATE_CHECK_ID, null, databaseUpdateCheckCallback);
+		loaderManager.initLoader(Loaders.DATABASE_UPDATE_CHECK, null, databaseUpdateCheckCallback);
 	}
 
 	private final LoaderManager.LoaderCallbacks<Bundle> databaseUpdateCheckCallback = new LoaderManager.LoaderCallbacks<Bundle>()
@@ -132,7 +132,7 @@ public class HomeActivity extends SherlockFragmentActivity
 
 		@Override
 		public void onLoadFinished(Loader<Bundle> databaseUpdateCheckLoader, final Bundle databaseUpdateCheckResult) {
-			getSupportLoaderManager().destroyLoader(Loaders.DATABASE_UPDATE_CHECK_ID);
+			getSupportLoaderManager().destroyLoader(Loaders.DATABASE_UPDATE_CHECK);
 
 			Runnable loaderRunnable = new Runnable()
 			{
@@ -165,7 +165,7 @@ public class HomeActivity extends SherlockFragmentActivity
 	};
 
 	private void callDatabaseUpdating() {
-		getSupportLoaderManager().initLoader(Loaders.DATABASE_UPDATE_ID, null, databaseUpdateCallback);
+		getSupportLoaderManager().initLoader(Loaders.DATABASE_UPDATE, null, databaseUpdateCallback);
 	}
 
 	private final LoaderManager.LoaderCallbacks<String> databaseUpdateCallback = new LoaderManager.LoaderCallbacks<String>()
@@ -179,7 +179,7 @@ public class HomeActivity extends SherlockFragmentActivity
 
 		@Override
 		public void onLoadFinished(Loader<String> databaseUpdateLoader, final String errorMessage) {
-			getSupportLoaderManager().destroyLoader(Loaders.DATABASE_UPDATE_ID);
+			getSupportLoaderManager().destroyLoader(Loaders.DATABASE_UPDATE);
 
 			Runnable loaderRunnable = new Runnable()
 			{

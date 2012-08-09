@@ -71,7 +71,7 @@ public class RoutesFragment extends AdaptedListFragment implements LoaderManager
 	protected void callListPopulation() {
 		setEmptyListText(getString(R.string.loading_routes));
 
-		getLoaderManager().initLoader(Loaders.ROUTES_ID, null, this);
+		getLoaderManager().initLoader(Loaders.ROUTES, null, this);
 	}
 
 	@Override
