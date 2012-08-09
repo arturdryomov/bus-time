@@ -13,7 +13,7 @@ import ru.ming13.bustime.db.model.Station;
 public class RoutesLoader extends AsyncTaskLoader<List<Route>>
 {
 	private static enum Mode {
-		LOAD_ALL, LOAD_FOR_STATION
+		ALL, FOR_STATION
 	}
 
 	private final Mode mode;
@@ -23,7 +23,7 @@ public class RoutesLoader extends AsyncTaskLoader<List<Route>>
 	public RoutesLoader(Context context) {
 		super(context);
 
-		mode = Mode.LOAD_ALL;
+		mode = Mode.ALL;
 	}
 
 	public RoutesLoader(Context context, Station station) {
@@ -31,7 +31,7 @@ public class RoutesLoader extends AsyncTaskLoader<List<Route>>
 
 		this.station = station;
 
-		mode = Mode.LOAD_FOR_STATION;
+		mode = Mode.FOR_STATION;
 	}
 
 	@Override
@@ -44,10 +44,10 @@ public class RoutesLoader extends AsyncTaskLoader<List<Route>>
 	@Override
 	public List<Route> loadInBackground() {
 		switch (mode) {
-			case LOAD_ALL:
+			case ALL:
 				return DbProvider.getInstance().getRoutes().getRoutesList();
 
-			case LOAD_FOR_STATION:
+			case FOR_STATION:
 				return DbProvider.getInstance().getRoutes().getRoutesList(station);
 
 			default:
