@@ -52,14 +52,13 @@ public class TimetableLoader extends AsyncTaskLoader<List<Time>>
 	public List<Time> loadInBackground() {
 		switch (mode) {
 			case FULL_WEEK:
-				return station.getRouteFullWeekTimetable(route);
+				return station.getFullWeekTimetable(route);
 
 			case WORKDAYS:
-				// TODO: Rename to getWorkdaysDepartureTimetable (and other methods similar way)
-				return station.getRouteWorkdaysDepartureTimetable(route);
+				return station.getWorkdaysTimetable(route);
 
 			case WEEKEND:
-				return station.getRouteWeekendDepartureTimetable(route);
+				return station.getWeekendTimetable(route);
 
 			default:
 				throw new LoaderException();

@@ -70,7 +70,7 @@ public class Station implements Parcelable
 		return longitude;
 	}
 
-	public List<Time> getRouteFullWeekTimetable(Route route) {
+	public List<Time> getFullWeekTimetable(Route route) {
 		Time routeTimeShift = getRouteTimeShift(route);
 		List<Time> routeDepartureTimetable = route.getFullWeekDepartureTimetable();
 
@@ -117,14 +117,14 @@ public class Station implements Parcelable
 		return routeTimetable;
 	}
 
-	public List<Time> getRouteWorkdaysDepartureTimetable(Route route) {
+	public List<Time> getWorkdaysTimetable(Route route) {
 		Time routeTimeShift = getRouteTimeShift(route);
 		List<Time> routeDepartureTimetable = route.getWorkdaysDepartureTimetable();
 
 		return getRouteTimetable(routeTimeShift, routeDepartureTimetable);
 	}
 
-	public List<Time> getRouteWeekendDepartureTimetable(Route route) {
+	public List<Time> getWeekendTimetable(Route route) {
 		Time routeTimeShift = getRouteTimeShift(route);
 		List<Time> routeDepartureTimetable = route.getWeekendDepartureTimetable();
 
