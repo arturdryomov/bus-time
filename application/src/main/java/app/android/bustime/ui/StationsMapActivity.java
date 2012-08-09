@@ -1,6 +1,9 @@
 package app.android.bustime.ui;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -141,11 +144,13 @@ public class StationsMapActivity extends SherlockMapActivity
 
 		@Override
 		protected Void doInBackground(Void... parameters) {
+			List<OverlayItem> stationOverlayItems = new ArrayList<OverlayItem>();
+
 			for (Station station : DbProvider.getInstance().getStations().getStationsList()) {
-				OverlayItem stationOverlayItem = buildStationOverlayItem(station);
-				stationsOverlay.addOverlayItem(stationOverlayItem);
+				stationOverlayItems.add(buildStationOverlayItem(station));
 			}
-			stationsOverlay.refresh();
+
+			stationsOverlay.populate(stationOverlayItems);
 
 			return null;
 		}

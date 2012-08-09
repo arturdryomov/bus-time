@@ -3,12 +3,16 @@ package app.android.bustime.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import app.android.bustime.R;
-import app.android.bustime.db.DbImportException;
-import app.android.bustime.db.DbImporter;
+import app.android.bustime.ui.loader.DatabaseUpdateCheckLoader;
+import app.android.bustime.ui.loader.DatabaseUpdateLoader;
+import app.android.bustime.ui.loader.Loaders;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -19,19 +23,32 @@ public class HomeActivity extends SherlockFragmentActivity
 {
 	private static final String SAVED_INSTANCE_KEY_SELECTED_TAB = "selected_tab";
 
-	private RotationSafeTask<HomeActivity> checkDatabaseUpdateWithServerTask;
-	private RotationSafeTask<HomeActivity> updateDatabaseWithServerTask;
+	private ProgressDialogHelper updateProgressDialogHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		initRunningLoaders();
 
 		setUpTabs();
 		restorePreviousSelectedTab(savedInstanceState);
 
 		checkDatabaseUpdates();
 
-		restorePreviousRunTasks();
+		showRunningUpdateProgressDialog();
+	}
+
+	private void initRunningLoaders() {
+		LoaderManager loaderManager = getSupportLoaderManager();
+
+		if (loaderManager.getLoader(Loaders.DATABASE_UPDATE_ID) != null) {
+			loaderManager.initLoader(Loaders.DATABASE_UPDATE_ID, null, databaseUpdateCallback);
+		}
+
+		if (loaderManager.getLoader(Loaders.DATABASE_UPDATE_CHECK_ID) != null) {
+			loaderManager.initLoader(Loaders.DATABASE_UPDATE_CHECK_ID, null, databaseUpdateCheckCallback);
+		}
 	}
 
 	private void setUpTabs() {
@@ -100,132 +117,90 @@ public class HomeActivity extends SherlockFragmentActivity
 	}
 
 	private void checkDatabaseUpdates() {
-		checkDatabaseUpdateWithServerTask = new CheckDatabaseUpdateWithServerTask();
-		checkDatabaseUpdateWithServerTask.setHostActivity(this);
+		LoaderManager loaderManager = getSupportLoaderManager();
 
-		checkDatabaseUpdateWithServerTask.execute();
+		loaderManager.initLoader(Loaders.DATABASE_UPDATE_CHECK_ID, null, databaseUpdateCheckCallback);
 	}
 
-	private static class CheckDatabaseUpdateWithServerTask extends RotationSafeTask<HomeActivity>
+	private final LoaderManager.LoaderCallbacks<Bundle> databaseUpdateCheckCallback = new LoaderManager.LoaderCallbacks<Bundle>()
 	{
-		private boolean isLocalDatabaseEverUpdated;
-		private boolean isLocalDatabaseUpdateAvailable;
-
 		@Override
-		protected void onBeforeExecution() {
-			isLocalDatabaseEverUpdated = false;
-			isLocalDatabaseUpdateAvailable = false;
+		public Loader<Bundle> onCreateLoader(int i, Bundle bundle) {
+			return new DatabaseUpdateCheckLoader(HomeActivity.this);
 		}
 
 		@Override
-		protected String doInBackground(Void... voids) {
-			try {
-				DbImporter dbImporter = new DbImporter(getHostActivity());
+		public void onLoadFinished(Loader<Bundle> databaseUpdateCheckLoader, Bundle databaseUpdateCheckResult) {
+			getSupportLoaderManager().destroyLoader(Loaders.DATABASE_UPDATE_CHECK_ID);
 
-				isLocalDatabaseEverUpdated = dbImporter.isLocalDatabaseEverUpdated();
+			boolean isDatabaseEverUpdated = databaseUpdateCheckResult.getBoolean(
+				DatabaseUpdateCheckLoader.RESULT_DATABASE_EVER_UPDATED_KEY);
 
-				if (!isLocalDatabaseEverUpdated) {
-					return null;
-				}
-
-				isLocalDatabaseUpdateAvailable = dbImporter.isLocalDatabaseUpdateAvailable();
-			}
-			catch (DbImportException e) {
-				// Skip exceptions, this update check is optional
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onAfterExecution(String errorMessage) {
-			if (!isLocalDatabaseEverUpdated) {
-				getHostActivity().callDatabaseUpdating();
+			if (!isDatabaseEverUpdated) {
+				callDatabaseUpdating();
 
 				return;
 			}
 
-			if (isLocalDatabaseUpdateAvailable) {
-				getHostActivity().showUpdateAvailableSign();
+			boolean isDatabaseUpdateAvailable = databaseUpdateCheckResult.getBoolean(
+				DatabaseUpdateCheckLoader.RESULT_DATABASE_UPDATE_AVAILABLE_KEY);
+
+			if (isDatabaseUpdateAvailable) {
+				showMessageUpdateAvailable();
 			}
 		}
 
 		@Override
-		protected void onSettingHostActivity() {
+		public void onLoaderReset(Loader<Bundle> bundleLoader) {
 		}
-
-		@Override
-		protected void onResettingHostActivity() {
-		}
-	}
+	};
 
 	private void callDatabaseUpdating() {
-		updateDatabaseWithServerTask = new UpdateDatabaseWithServerTask();
-		updateDatabaseWithServerTask.setHostActivity(this);
-
-		updateDatabaseWithServerTask.execute();
+		getSupportLoaderManager().initLoader(Loaders.DATABASE_UPDATE_ID, null, databaseUpdateCallback);
 	}
 
-	private static class UpdateDatabaseWithServerTask extends RotationSafeTask<HomeActivity>
+	private final LoaderManager.LoaderCallbacks<String> databaseUpdateCallback = new LoaderManager.LoaderCallbacks<String>()
 	{
-		private ProgressDialogHelper progressDialogHelper;
-
 		@Override
-		protected void onBeforeExecution() {
-			showProgressDialog();
-		}
+		public Loader<String> onCreateLoader(int loaderId, Bundle loaderArguments) {
+			showUpdateProgressDialog();
 
-		private void showProgressDialog() {
-			progressDialogHelper = new ProgressDialogHelper();
-			progressDialogHelper.show(getHostActivity(), R.string.loading_update);
+			return new DatabaseUpdateLoader(HomeActivity.this);
 		}
 
 		@Override
-		protected String doInBackground(Void... parameters) {
-			try {
-				DbImporter dbImporter = new DbImporter(getHostActivity());
-				dbImporter.importFromServer();
-			}
-			catch (DbImportException e) {
-				return getHostActivity().getString(R.string.error_unspecified);
-			}
+		public void onLoadFinished(Loader<String> databaseUpdateLoader, String errorMessage) {
+			getSupportLoaderManager().destroyLoader(Loaders.DATABASE_UPDATE_ID);
 
-			return new String();
-		}
-
-		@Override
-		protected void onAfterExecution(String errorMessage) {
 			if (TextUtils.isEmpty(errorMessage)) {
-				getHostActivity().reSetUpTabs();
-				getHostActivity().hideUpdateAvailableSign();
+				// We should put actions to handler to allow run fragment transaction in onLoadFinished
+				Handler handler = new Handler();
+
+				handler.post(new Runnable()
+				{
+					@Override
+					public void run() {
+						reSetUpTabs();
+					}
+				});
+
+				hideUpdateAvailableSign();
 			}
 			else {
-				UserAlerter.alert(getHostActivity(), errorMessage);
+				UserAlerter.alert(HomeActivity.this, errorMessage);
 			}
 
-			hideProgressDialog();
-
-			getHostActivity().updateDatabaseWithServerTask = null;
-		}
-
-		private void hideProgressDialog() {
-			progressDialogHelper.hide();
-
-			progressDialogHelper = null;
+			hideUpdateProgressDialog();
 		}
 
 		@Override
-		protected void onResettingHostActivity() {
-			hideProgressDialog();
+		public void onLoaderReset(Loader<String> databaseUpdateLoader) {
 		}
+	};
 
-		@Override
-		protected void onSettingHostActivity() {
-			// Show progress dialog again only when it was shown before
-			if (progressDialogHelper != null) {
-				showProgressDialog();
-			}
-		}
+	private void showUpdateProgressDialog() {
+		updateProgressDialogHelper = new ProgressDialogHelper();
+		updateProgressDialogHelper.show(this, R.string.loading_update);
 	}
 
 	private void reSetUpTabs() {
@@ -249,12 +224,27 @@ public class HomeActivity extends SherlockFragmentActivity
 		getSupportActionBar().setSubtitle(null);
 	}
 
-	private void showUpdateAvailableSign() {
+	private void hideUpdateProgressDialog() {
+		if (updateProgressDialogHelper != null) {
+			updateProgressDialogHelper.hide();
+		}
+
+		updateProgressDialogHelper = null;
+	}
+
+	private void showMessageUpdateAvailable() {
 		getSupportActionBar().setSubtitle(R.string.warning_update_available);
 	}
 
-	private void restorePreviousRunTasks() {
-		RotationHelper.setHostActivity(this, getLastCustomNonConfigurationInstance());
+	private void showRunningUpdateProgressDialog() {
+		if (getLastCustomNonConfigurationInstance() != null) {
+			showUpdateProgressDialog();
+		}
+	}
+
+	@Override
+	public Object onRetainCustomNonConfigurationInstance() {
+		return updateProgressDialogHelper;
 	}
 
 	@Override
@@ -290,14 +280,5 @@ public class HomeActivity extends SherlockFragmentActivity
 		super.onSaveInstanceState(outState);
 
 		outState.putInt(SAVED_INSTANCE_KEY_SELECTED_TAB, getSelectedTabPosition());
-	}
-
-	@Override
-	public Object onRetainCustomNonConfigurationInstance() {
-		RotationHelper.resetHostActivity(updateDatabaseWithServerTask,
-			checkDatabaseUpdateWithServerTask);
-
-		return RotationHelper.buildRetainTasks(updateDatabaseWithServerTask,
-			checkDatabaseUpdateWithServerTask);
 	}
 }
