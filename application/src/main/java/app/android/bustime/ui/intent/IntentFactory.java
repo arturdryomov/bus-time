@@ -1,4 +1,4 @@
-package app.android.bustime.ui;
+package app.android.bustime.ui.intent;
 
 
 import android.content.Context;
@@ -13,35 +13,19 @@ import app.android.bustime.ui.activity.TimetableActivity;
 
 public final class IntentFactory
 {
-	private static final String MESSAGE_ID;
-	private static final String EXTRA_MESSAGE_ID;
-
-	static {
-		MESSAGE_ID = String.format("%s.message", IntentFactory.class.getPackage().getName());
-		EXTRA_MESSAGE_ID = String.format("%s.extramessage", IntentFactory.class.getPackage().getName());
-	}
-
 	private IntentFactory() {
-	}
-
-	public static String getMessageId() {
-		return MESSAGE_ID;
-	}
-
-	public static String getExtraMessageId() {
-		return EXTRA_MESSAGE_ID;
 	}
 
 	public static Intent createRoutesIntent(Context context, Station station) {
 		Intent intent = new Intent(context, RoutesActivity.class);
-		intent.putExtra(MESSAGE_ID, station);
+		intent.putExtra(IntentExtras.STATION, station);
 
 		return intent;
 	}
 
 	public static Intent createStationsIntent(Context context, Route route) {
 		Intent intent = new Intent(context, StationsActivity.class);
-		intent.putExtra(MESSAGE_ID, route);
+		intent.putExtra(IntentExtras.ROUTE, route);
 
 		return intent;
 	}
@@ -52,8 +36,8 @@ public final class IntentFactory
 
 	public static Intent createTimetableIntent(Context context, Route route, Station station) {
 		Intent intent = new Intent(context, TimetableActivity.class);
-		intent.putExtra(MESSAGE_ID, route);
-		intent.putExtra(EXTRA_MESSAGE_ID, station);
+		intent.putExtra(IntentExtras.ROUTE, route);
+		intent.putExtra(IntentExtras.STATION, station);
 
 		return intent;
 	}

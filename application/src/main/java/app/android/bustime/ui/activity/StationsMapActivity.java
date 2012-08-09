@@ -14,7 +14,7 @@ import android.os.Bundle;
 import app.android.bustime.R;
 import app.android.bustime.db.DbProvider;
 import app.android.bustime.db.Station;
-import app.android.bustime.ui.IntentFactory;
+import app.android.bustime.ui.intent.IntentFactory;
 import app.android.bustime.ui.StationOverlayItem;
 import app.android.bustime.ui.StationsOverlay;
 import com.actionbarsherlock.app.SherlockMapActivity;

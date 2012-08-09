@@ -11,8 +11,8 @@ import app.android.bustime.R;
 import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
 import app.android.bustime.db.Time;
-import app.android.bustime.ui.IntentProcessor;
-import app.android.bustime.ui.UserAlerter;
+import app.android.bustime.ui.intent.IntentException;
+import app.android.bustime.ui.intent.IntentExtras;
 import app.android.bustime.ui.fragment.TimetableFragment;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -34,37 +34,27 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		extractReceivedRouteAndStation();
+		readReceivedRoute();
+		readReceivedStation();
 
 		buildTimetableFragments();
 		setUpTimetable();
 	}
 
-	private void extractReceivedRouteAndStation() {
-		route = extractReceivedRoute();
-		station = extractReceivedStation();
+	private void readReceivedRoute() {
+		route = getIntent().getParcelableExtra(IntentExtras.ROUTE);
+
+		if (route == null) {
+			throw new IntentException();
+		}
 	}
 
-	private Route extractReceivedRoute() {
-		Bundle intentExtras = getIntent().getExtras();
+	private void readReceivedStation() {
+		station = getIntent().getParcelableExtra(IntentExtras.STATION);
 
-		if (!IntentProcessor.haveMessage(intentExtras)) {
-			UserAlerter.alert(this, getString(R.string.error_unspecified));
-			finish();
+		if (route == null) {
+			throw new IntentException();
 		}
-
-		return (Route) IntentProcessor.extractMessage(intentExtras);
-	}
-
-	private Station extractReceivedStation() {
-		Bundle intentExtras = getIntent().getExtras();
-
-		if (!IntentProcessor.haveExtraMessage(intentExtras)) {
-			UserAlerter.alert(this, getString(R.string.error_unspecified));
-			finish();
-		}
-
-		return (Station) IntentProcessor.extractExtraMessage(intentExtras);
 	}
 
 	private void buildTimetableFragments() {

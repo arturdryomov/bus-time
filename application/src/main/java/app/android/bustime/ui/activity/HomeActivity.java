@@ -10,7 +10,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import app.android.bustime.R;
-import app.android.bustime.ui.IntentFactory;
+import app.android.bustime.ui.intent.IntentFactory;
 import app.android.bustime.ui.ProgressDialogHelper;
 import app.android.bustime.ui.UserAlerter;
 import app.android.bustime.ui.fragment.RoutesFragment;

@@ -15,7 +15,7 @@ import android.widget.SimpleAdapter;
 import app.android.bustime.R;
 import app.android.bustime.db.Route;
 import app.android.bustime.db.Station;
-import app.android.bustime.ui.IntentFactory;
+import app.android.bustime.ui.intent.IntentFactory;
 import app.android.bustime.ui.loader.Loaders;
 import app.android.bustime.ui.loader.RoutesLoader;
 

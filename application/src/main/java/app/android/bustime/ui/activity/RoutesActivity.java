@@ -1,12 +1,10 @@
 package app.android.bustime.ui.activity;
 
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import app.android.bustime.R;
 import app.android.bustime.db.Station;
-import app.android.bustime.ui.IntentProcessor;
-import app.android.bustime.ui.UserAlerter;
+import app.android.bustime.ui.intent.IntentException;
+import app.android.bustime.ui.intent.IntentExtras;
 import app.android.bustime.ui.fragment.RoutesFragment;
 
 
@@ -18,13 +16,12 @@ public class RoutesActivity extends FragmentWrapperActivity
 	}
 
 	private Station extractReceivedStation() {
-		Bundle intentExtras = getIntent().getExtras();
+		Station station = getIntent().getParcelableExtra(IntentExtras.STATION);
 
-		if (!IntentProcessor.haveMessage(intentExtras)) {
-			UserAlerter.alert(this, getString(R.string.error_unspecified));
-			finish();
+		if (station == null) {
+			throw new IntentException();
 		}
 
-		return (Station) IntentProcessor.extractMessage(intentExtras);
+		return station;
 	}
 }
