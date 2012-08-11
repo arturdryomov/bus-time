@@ -26,12 +26,14 @@ public class StationsFragment extends AdaptedListFragment implements LoaderManag
 
 	private static enum Mode
 	{
-		ALL, FOR_ROUTE
+		ALL, FOR_ROUTE, SEARCH
 	}
 
 	private Mode mode;
 
 	private Route route;
+
+	private String searchStationName;
 
 	public static StationsFragment newInstance() {
 		StationsFragment stationsFragment = new StationsFragment();
@@ -46,6 +48,15 @@ public class StationsFragment extends AdaptedListFragment implements LoaderManag
 
 		stationsFragment.mode = Mode.FOR_ROUTE;
 		stationsFragment.route = route;
+
+		return stationsFragment;
+	}
+
+	public static StationsFragment newInstance(String searchStationName) {
+		StationsFragment stationsFragment = new StationsFragment();
+
+		stationsFragment.mode = Mode.SEARCH;
+		stationsFragment.searchStationName = searchStationName;
 
 		return stationsFragment;
 	}
@@ -84,6 +95,9 @@ public class StationsFragment extends AdaptedListFragment implements LoaderManag
 			case FOR_ROUTE:
 				return new StationsLoader(getActivity(), route);
 
+			case SEARCH:
+				return new StationsLoader(getActivity(), searchStationName);
+
 			default:
 				return new StationsLoader(getActivity());
 		}
@@ -116,6 +130,10 @@ public class StationsFragment extends AdaptedListFragment implements LoaderManag
 
 			case FOR_ROUTE:
 				callTimetableActivity(selectedStation);
+				return;
+
+			case SEARCH:
+				callRoutesActivity(selectedStation);
 		}
 	}
 
