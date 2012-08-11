@@ -14,12 +14,14 @@ public class StationsLoader extends AsyncTaskLoader<List<Station>>
 {
 	private static enum Mode
 	{
-		ALL, FOR_ROUTE
+		ALL, FOR_ROUTE, SEARCH
 	}
 
 	private final Mode mode;
 
 	private Route route;
+
+	private String searchStationName;
 
 	public StationsLoader(Context context) {
 		super(context);
@@ -33,6 +35,14 @@ public class StationsLoader extends AsyncTaskLoader<List<Station>>
 		this.route = route;
 
 		mode = Mode.FOR_ROUTE;
+	}
+
+	public StationsLoader(Context context, String searchStationName) {
+		super(context);
+
+		this.searchStationName = searchStationName;
+
+		mode = Mode.SEARCH;
 	}
 
 	@Override
@@ -50,6 +60,9 @@ public class StationsLoader extends AsyncTaskLoader<List<Station>>
 
 			case FOR_ROUTE:
 				return DbProvider.getInstance().getStations().getStationsList(route);
+
+			case SEARCH:
+				return DbProvider.getInstance().getStations().getStationsList(searchStationName);
 
 			default:
 				throw new LoaderException();
