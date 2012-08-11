@@ -257,6 +257,10 @@ public class HomeActivity extends SherlockFragmentActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
+			case R.id.menu_search:
+				callStationsSearch();
+				return true;
+
 			case R.id.menu_update:
 				callDatabaseUpdating();
 				return true;
@@ -268,6 +272,10 @@ public class HomeActivity extends SherlockFragmentActivity
 			default:
 				return super.onOptionsItemSelected(menuItem);
 		}
+	}
+
+	private void callStationsSearch() {
+		onSearchRequested();
 	}
 
 	private void callStationsMapActivity() {

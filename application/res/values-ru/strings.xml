@@ -19,6 +19,9 @@
 
 	<string name="menu_stations_map">Карта остановок</string>
 	<string name="menu_update_database">Обновить информацию</string>
+	<string name="menu_search">Поиск остановок</string>
+
+	<string name="search_hint">Поиск остановок</string>
 
 	<string name="loading_routes">Загрузка маршрутов…</string>
 	<string name="loading_stations">Загрузка остановок…</string>
