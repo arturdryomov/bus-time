@@ -32,7 +32,7 @@
 
 			<meta-data
 				android:name="android.app.default_searchable"
-				android:value=".ui.activity.StationsActivity" />
+				android:value=".ui.activity.StationsSearchActivity" />
 		</activity>
 
 		<activity
@@ -43,6 +43,16 @@
 		<activity
 			android:name=".ui.activity.StationsActivity"
 			android:label="@string/title_stations">
+		</activity>
+
+		<activity
+			android:name=".ui.activity.StationsMapActivity"
+			android:label="@string/title_stations">
+		</activity>
+
+		<activity
+			android:name=".ui.activity.StationsSearchActivity"
+			android:label="@string/title_stations">
 
 			<intent-filter>
 				<action android:name="android.intent.action.SEARCH" />
@@ -51,11 +61,6 @@
 			<meta-data
 				android:name="android.app.searchable"
 				android:resource="@xml/search" />
-		</activity>
-
-		<activity
-			android:name=".ui.activity.StationsMapActivity"
-			android:label="@string/title_stations">
 		</activity>
 
 		<activity
