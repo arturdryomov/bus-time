@@ -105,4 +105,24 @@ public class Stations
 
 		return queryBuilder.toString();
 	}
+
+	public List<Station> getStationsList(String searchQuery) {
+		List<Station> stationsList = new ArrayList<Station>();
+
+		searchQuery = buildUniformStationName(searchQuery);
+
+		for (Station station : getStationsList()) {
+			String currentStationName = buildUniformStationName(station.getName());
+
+			if (currentStationName.contains(searchQuery)) {
+				stationsList.add(station);
+			}
+		}
+
+		return stationsList;
+	}
+
+	private String buildUniformStationName(String stationName) {
+		return stationName.toLowerCase().trim();
+	}
 }
