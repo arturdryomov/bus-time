@@ -21,7 +21,7 @@ public class StationsLoader extends AsyncTaskLoader<List<Station>>
 
 	private Route route;
 
-	private String searchStationName;
+	private String searchQuery;
 
 	public StationsLoader(Context context) {
 		super(context);
@@ -37,10 +37,10 @@ public class StationsLoader extends AsyncTaskLoader<List<Station>>
 		mode = Mode.FOR_ROUTE;
 	}
 
-	public StationsLoader(Context context, String searchStationName) {
+	public StationsLoader(Context context, String searchQuery) {
 		super(context);
 
-		this.searchStationName = searchStationName;
+		this.searchQuery = searchQuery;
 
 		mode = Mode.SEARCH;
 	}
@@ -62,7 +62,7 @@ public class StationsLoader extends AsyncTaskLoader<List<Station>>
 				return DbProvider.getInstance().getStations().getStationsList(route);
 
 			case SEARCH:
-				return DbProvider.getInstance().getStations().getStationsList(searchStationName);
+				return DbProvider.getInstance().getStations().getStationsList(searchQuery);
 
 			default:
 				throw new LoaderException();

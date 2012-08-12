@@ -106,15 +106,15 @@ public class Stations
 		return queryBuilder.toString();
 	}
 
-	public List<Station> getStationsList(String searchStationName) {
+	public List<Station> getStationsList(String searchQuery) {
 		List<Station> stationsList = new ArrayList<Station>();
 
-		searchStationName = buildUniformStationName(searchStationName);
+		searchQuery = buildUniformStationName(searchQuery);
 
 		for (Station station : getStationsList()) {
 			String currentStationName = buildUniformStationName(station.getName());
 
-			if (currentStationName.contains(searchStationName)) {
+			if (currentStationName.contains(searchQuery)) {
 				stationsList.add(station);
 			}
 		}

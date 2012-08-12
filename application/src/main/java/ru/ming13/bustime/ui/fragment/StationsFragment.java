@@ -33,7 +33,7 @@ public class StationsFragment extends AdaptedListFragment implements LoaderManag
 
 	private Route route;
 
-	private String searchStationName;
+	private String searchQuery;
 
 	public static StationsFragment newInstance() {
 		StationsFragment stationsFragment = new StationsFragment();
@@ -52,11 +52,11 @@ public class StationsFragment extends AdaptedListFragment implements LoaderManag
 		return stationsFragment;
 	}
 
-	public static StationsFragment newInstance(String searchStationName) {
+	public static StationsFragment newInstance(String searchQuery) {
 		StationsFragment stationsFragment = new StationsFragment();
 
 		stationsFragment.mode = Mode.SEARCH;
-		stationsFragment.searchStationName = searchStationName;
+		stationsFragment.searchQuery = searchQuery;
 
 		return stationsFragment;
 	}
@@ -96,7 +96,7 @@ public class StationsFragment extends AdaptedListFragment implements LoaderManag
 				return new StationsLoader(getActivity(), route);
 
 			case SEARCH:
-				return new StationsLoader(getActivity(), searchStationName);
+				return new StationsLoader(getActivity(), searchQuery);
 
 			default:
 				return new StationsLoader(getActivity());
