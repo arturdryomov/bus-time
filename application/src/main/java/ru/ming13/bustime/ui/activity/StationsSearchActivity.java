@@ -10,6 +10,8 @@ import ru.ming13.bustime.ui.intent.IntentException;
 
 public class StationsSearchActivity extends FragmentWrapperActivity
 {
+	private static final boolean USE_SEARCH_IN_SEARCH_ACTIVITY = false;
+
 	@Override
 	protected Fragment buildFragment() {
 		return StationsFragment.newInstance(extractReceivedSearchStationName());
@@ -21,5 +23,10 @@ public class StationsSearchActivity extends FragmentWrapperActivity
 		}
 
 		return getIntent().getStringExtra(SearchManager.QUERY);
+	}
+
+	@Override
+	public boolean onSearchRequested() {
+		return USE_SEARCH_IN_SEARCH_ACTIVITY;
 	}
 }
