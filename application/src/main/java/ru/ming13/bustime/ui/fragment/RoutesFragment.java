@@ -20,7 +20,7 @@ import ru.ming13.bustime.ui.loader.Loaders;
 import ru.ming13.bustime.ui.loader.RoutesLoader;
 
 
-public class RoutesFragment extends AdaptedListFragment implements LoaderManager.LoaderCallbacks<List<Route>>
+public class RoutesFragment extends AdaptedListFragment<Route> implements LoaderManager.LoaderCallbacks<List<Route>>
 {
 	private static final String LIST_ITEM_TEXT_ID = "text";
 
@@ -57,9 +57,7 @@ public class RoutesFragment extends AdaptedListFragment implements LoaderManager
 	}
 
 	@Override
-	protected Map<String, Object> buildListItem(Object itemObject) {
-		Route route = (Route) itemObject;
-
+	protected Map<String, Object> buildListItem(Route route) {
 		Map<String, Object> listItem = new HashMap<String, Object>();
 
 		listItem.put(LIST_ITEM_OBJECT_ID, route);
@@ -70,7 +68,7 @@ public class RoutesFragment extends AdaptedListFragment implements LoaderManager
 
 	@Override
 	protected void callListPopulation() {
-		setEmptyListText(getString(R.string.loading_routes));
+		setEmptyListText(R.string.loading_routes);
 
 		getLoaderManager().initLoader(Loaders.ROUTES, null, this);
 	}
@@ -92,7 +90,7 @@ public class RoutesFragment extends AdaptedListFragment implements LoaderManager
 	@Override
 	public void onLoadFinished(Loader<List<Route>> routesLoader, List<Route> routes) {
 		if (routes.isEmpty()) {
-			setEmptyListText(getString(R.string.empty_routes));
+			setEmptyListText(R.string.empty_routes);
 		}
 		else {
 			populateList(routes);
@@ -107,7 +105,7 @@ public class RoutesFragment extends AdaptedListFragment implements LoaderManager
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 
-		Route selectedRoute = (Route) getListItemObject(position);
+		Route selectedRoute = getListItemObject(position);
 
 		switch (mode) {
 			case ALL:

@@ -19,7 +19,7 @@ import ru.ming13.bustime.ui.loader.Loaders;
 import ru.ming13.bustime.ui.loader.TimetableLoader;
 
 
-public class TimetableFragment extends AdaptedListFragment implements LoaderManager.LoaderCallbacks<List<Time>>
+public class TimetableFragment extends AdaptedListFragment<Time> implements LoaderManager.LoaderCallbacks<List<Time>>
 {
 	private static enum Mode
 	{
@@ -86,9 +86,7 @@ public class TimetableFragment extends AdaptedListFragment implements LoaderMana
 	}
 
 	@Override
-	protected Map<String, Object> buildListItem(Object itemObject) {
-		Time time = (Time) itemObject;
-
+	protected Map<String, Object> buildListItem(Time time) {
 		Map<String, Object> listItem = new HashMap<String, Object>();
 
 		listItem.put(LIST_ITEM_OBJECT_ID, time);
@@ -108,7 +106,7 @@ public class TimetableFragment extends AdaptedListFragment implements LoaderMana
 
 	@Override
 	protected void callListPopulation() {
-		setEmptyListText(getString(R.string.loading_timetable));
+		setEmptyListText(R.string.loading_timetable);
 
 		getLoaderManager().initLoader(Loaders.TIMETABLE, null, this);
 	}
@@ -133,7 +131,7 @@ public class TimetableFragment extends AdaptedListFragment implements LoaderMana
 	@Override
 	public void onLoadFinished(Loader<List<Time>> timetableLoader, List<Time> timetable) {
 		if (timetable.isEmpty()) {
-			setEmptyListText(getString(R.string.empty_timetable));
+			setEmptyListText(R.string.empty_timetable);
 		}
 		else {
 			populateList(timetable);

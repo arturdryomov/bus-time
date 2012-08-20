@@ -15,7 +15,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import ru.ming13.bustime.R;
 
 
-abstract class AdaptedListFragment extends SherlockListFragment
+abstract class AdaptedListFragment<ListItemType> extends SherlockListFragment
 {
 	protected static final String LIST_ITEM_OBJECT_ID = "object";
 
@@ -59,36 +59,36 @@ abstract class AdaptedListFragment extends SherlockListFragment
 
 	protected abstract SimpleAdapter buildListAdapter();
 
-	protected void populateList(List<?> listContent) {
-
+	protected void populateList(List<ListItemType> listContent) {
 		list.clear();
 
-		for (Object listItemContent : listContent) {
+		for (ListItemType listItemContent : listContent) {
 			list.add(buildListItem(listItemContent));
 		}
 
 		refreshListContent();
 	}
 
-	protected abstract Map<String, Object> buildListItem(Object itemObject);
+	protected abstract Map<String, Object> buildListItem(ListItemType itemObject);
 
 	protected void refreshListContent() {
 		SimpleAdapter listAdapter = (SimpleAdapter) getListAdapter();
 		listAdapter.notifyDataSetChanged();
 	}
 
-	protected void setEmptyListText(String text) {
+	protected void setEmptyListText(int textResourceId) {
 		TextView emptyListTextView = (TextView) getListView().getEmptyView();
-		emptyListTextView.setText(text);
+
+		emptyListTextView.setText(getString(textResourceId));
 	}
 
-	protected Object getListItemObject(int listPosition) {
+	protected ListItemType getListItemObject(int listPosition) {
 		SimpleAdapter listAdapter = (SimpleAdapter) getListAdapter();
 
 		@SuppressWarnings("unchecked")
 		Map<String, Object> listItem = (Map<String, Object>) listAdapter.getItem(listPosition);
 
-		return listItem.get(LIST_ITEM_OBJECT_ID);
+		return (ListItemType) listItem.get(LIST_ITEM_OBJECT_ID);
 	}
 
 	@Override

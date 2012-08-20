@@ -20,7 +20,7 @@ import ru.ming13.bustime.ui.loader.Loaders;
 import ru.ming13.bustime.ui.loader.StationsLoader;
 
 
-public class StationsFragment extends AdaptedListFragment implements LoaderManager.LoaderCallbacks<List<Station>>
+public class StationsFragment extends AdaptedListFragment<Station> implements LoaderManager.LoaderCallbacks<List<Station>>
 {
 	private static final String LIST_ITEM_TEXT_ID = "text";
 
@@ -68,9 +68,7 @@ public class StationsFragment extends AdaptedListFragment implements LoaderManag
 	}
 
 	@Override
-	protected Map<String, Object> buildListItem(Object itemObject) {
-		Station station = (Station) itemObject;
-
+	protected Map<String, Object> buildListItem(Station station) {
 		Map<String, Object> listItem = new HashMap<String, Object>();
 
 		listItem.put(LIST_ITEM_OBJECT_ID, station);
@@ -81,7 +79,7 @@ public class StationsFragment extends AdaptedListFragment implements LoaderManag
 
 	@Override
 	protected void callListPopulation() {
-		setEmptyListText(getString(R.string.loading_stations));
+		setEmptyListText(R.string.loading_stations);
 
 		getLoaderManager().initLoader(Loaders.STATIONS, getArguments(), this);
 	}
@@ -106,7 +104,7 @@ public class StationsFragment extends AdaptedListFragment implements LoaderManag
 	@Override
 	public void onLoadFinished(Loader<List<Station>> stationsLoader, List<Station> stations) {
 		if (stations.isEmpty()) {
-			setEmptyListText(getString(R.string.empty_stations));
+			setEmptyListText(R.string.empty_stations);
 		}
 		else {
 			populateList(stations);
@@ -121,7 +119,7 @@ public class StationsFragment extends AdaptedListFragment implements LoaderManag
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 
-		Station selectedStation = (Station) getListItemObject(position);
+		Station selectedStation = getListItemObject(position);
 
 		switch (mode) {
 			case ALL:
