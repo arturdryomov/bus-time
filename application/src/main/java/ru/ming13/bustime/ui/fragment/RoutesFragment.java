@@ -36,18 +36,34 @@ public class RoutesFragment extends AdaptedListFragment<Route> implements Loader
 	public static RoutesFragment newInstance() {
 		RoutesFragment routesFragment = new RoutesFragment();
 
-		routesFragment.mode = Mode.ALL;
+		routesFragment.setArguments(buildArguments(Mode.ALL, null));
 
 		return routesFragment;
+	}
+
+	private static Bundle buildArguments(Mode mode, Station station) {
+		Bundle arguments = new Bundle();
+
+		arguments.putSerializable(FragmentArguments.MODE, mode);
+		arguments.putParcelable(FragmentArguments.STATION, station);
+
+		return arguments;
 	}
 
 	public static RoutesFragment newInstance(Station station) {
 		RoutesFragment routesFragment = new RoutesFragment();
 
-		routesFragment.mode = Mode.FOR_STATION;
-		routesFragment.station = station;
+		routesFragment.setArguments(buildArguments(Mode.FOR_STATION, station));
 
 		return routesFragment;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		mode = (Mode) getArguments().getSerializable(FragmentArguments.MODE);
+		station = getArguments().getParcelable(FragmentArguments.STATION);
 	}
 
 	@Override

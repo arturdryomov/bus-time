@@ -31,7 +31,7 @@ public class TimetableFragment extends AdaptedListFragment<Time> implements Load
 
 	private static final int PREVIOUS_TIMES_DISPLAYED_COUNT = 1;
 
-	private Handler remainingTimeTextUpdateTimer;
+	private Handler remainingTimeTextUpdateTimer = new Handler();
 	private static final int AUTO_UPDATE_MILLISECONDS_PERIOD = 60000;
 
 	private Mode mode;
@@ -42,38 +42,46 @@ public class TimetableFragment extends AdaptedListFragment<Time> implements Load
 	private Time currentTime;
 
 	public static TimetableFragment newFullWeekInstance(Route route, Station station) {
-		TimetableFragment timetableFragment = newInstance(route, station);
+		TimetableFragment timetableFragment = new TimetableFragment();
 
-		timetableFragment.mode = Mode.FULL_WEEK;
+		timetableFragment.setArguments(buildArguments(Mode.FULL_WEEK, route, station));
 
 		return timetableFragment;
 	}
 
-	private static TimetableFragment newInstance(Route route, Station station) {
-		TimetableFragment timetableFragment = new TimetableFragment();
+	private static Bundle buildArguments(Mode mode, Route route, Station station) {
+		Bundle arguments = new Bundle();
 
-		timetableFragment.route = route;
-		timetableFragment.station = station;
+		arguments.putSerializable(FragmentArguments.MODE, mode);
+		arguments.putParcelable(FragmentArguments.ROUTE, route);
+		arguments.putParcelable(FragmentArguments.STATION, station);
 
-		timetableFragment.remainingTimeTextUpdateTimer = new Handler();
-
-		return timetableFragment;
+		return arguments;
 	}
 
 	public static TimetableFragment newWorkdaysInstance(Route route, Station station) {
-		TimetableFragment timetableFragment = newInstance(route, station);
+		TimetableFragment timetableFragment = new TimetableFragment();
 
-		timetableFragment.mode = Mode.WORKDAYS;
+		timetableFragment.setArguments(buildArguments(Mode.WORKDAYS, route, station));
 
 		return timetableFragment;
 	}
 
 	public static TimetableFragment newWeekendInstance(Route route, Station station) {
-		TimetableFragment timetableFragment = newInstance(route, station);
+		TimetableFragment timetableFragment = new TimetableFragment();
 
-		timetableFragment.mode = Mode.WEEKEND;
+		timetableFragment.setArguments(buildArguments(Mode.WEEKEND, route, station));
 
 		return timetableFragment;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		mode = (Mode) getArguments().getSerializable(FragmentArguments.MODE);
+		route = getArguments().getParcelable(FragmentArguments.ROUTE);
+		station = getArguments().getParcelable(FragmentArguments.STATION);
 	}
 
 	@Override
@@ -148,7 +156,7 @@ public class TimetableFragment extends AdaptedListFragment<Time> implements Load
 		int closestTimeListPosition = 0;
 
 		for (int listPosition = 0; listPosition < list.size(); listPosition++) {
-			Time listDataTime = (Time) getListItemObject(listPosition);
+			Time listDataTime = getListItemObject(listPosition);
 
 			if (listDataTime.isAfter(currentTime)) {
 				closestTimeListPosition = listPosition;

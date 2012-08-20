@@ -38,16 +38,25 @@ public class StationsFragment extends AdaptedListFragment<Station> implements Lo
 	public static StationsFragment newInstance() {
 		StationsFragment stationsFragment = new StationsFragment();
 
-		stationsFragment.mode = Mode.ALL;
+		stationsFragment.setArguments(buildArguments(Mode.ALL, null, null));
 
 		return stationsFragment;
+	}
+
+	private static Bundle buildArguments(Mode mode, Route route, String searchQuery) {
+		Bundle arguments = new Bundle();
+
+		arguments.putSerializable(FragmentArguments.MODE, mode);
+		arguments.putParcelable(FragmentArguments.ROUTE, route);
+		arguments.putString(FragmentArguments.SEARCH_QUERY, searchQuery);
+
+		return arguments;
 	}
 
 	public static StationsFragment newInstance(Route route) {
 		StationsFragment stationsFragment = new StationsFragment();
 
-		stationsFragment.mode = Mode.FOR_ROUTE;
-		stationsFragment.route = route;
+		stationsFragment.setArguments(buildArguments(Mode.FOR_ROUTE, route, null));
 
 		return stationsFragment;
 	}
@@ -55,10 +64,18 @@ public class StationsFragment extends AdaptedListFragment<Station> implements Lo
 	public static StationsFragment newInstance(String searchQuery) {
 		StationsFragment stationsFragment = new StationsFragment();
 
-		stationsFragment.mode = Mode.SEARCH;
-		stationsFragment.searchQuery = searchQuery;
+		stationsFragment.setArguments(buildArguments(Mode.SEARCH, null, searchQuery));
 
 		return stationsFragment;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		mode = (Mode) getArguments().getSerializable(FragmentArguments.MODE);
+		route = getArguments().getParcelable(FragmentArguments.ROUTE);
+		searchQuery = getArguments().getString(FragmentArguments.SEARCH_QUERY);
 	}
 
 	@Override
