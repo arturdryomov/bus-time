@@ -11,6 +11,10 @@ public class BusTimeApplication extends Application
 	public void onCreate() {
 		super.onCreate();
 
+		setUpDatabase();
+	}
+
+	private void setUpDatabase() {
 		DbProvider.getInstance(this);
 	}
 }
