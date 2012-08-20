@@ -13,7 +13,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import ru.ming13.bustime.R;
-import ru.ming13.bustime.ui.dialog.IntermediateProgressDialog;
+import ru.ming13.bustime.ui.fragment.IntermediateProgressDialog;
 import ru.ming13.bustime.ui.fragment.RoutesFragment;
 import ru.ming13.bustime.ui.fragment.StationsFragment;
 import ru.ming13.bustime.ui.intent.IntentFactory;
