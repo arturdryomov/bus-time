@@ -14,9 +14,12 @@ import ru.ming13.bustime.ui.fragment.IntermediateProgressDialog;
 import ru.ming13.bustime.ui.fragment.RoutesFragment;
 import ru.ming13.bustime.ui.fragment.StationsFragment;
 import ru.ming13.bustime.ui.intent.IntentFactory;
+import ru.ming13.bustime.ui.task.DatabaseUpdateCheckTask;
+import ru.ming13.bustime.ui.task.DatabaseUpdateTask;
+import ru.ming13.bustime.ui.util.UserAlerter;
 
 
-public class HomeActivity extends SherlockFragmentActivity
+public class HomeActivity extends SherlockFragmentActivity implements DatabaseUpdateCheckTask.DatabaseUpdateCheckCallback, DatabaseUpdateTask.DatabaseUpdateCallback
 {
 	private static final String SAVED_INSTANCE_KEY_SELECTED_TAB = "selected_tab";
 
@@ -26,6 +29,8 @@ public class HomeActivity extends SherlockFragmentActivity
 
 		setUpTabs();
 		restorePreviousStateSelectedTab(savedInstanceState);
+
+		callDatabaseUpdateCheck();
 	}
 
 	private void setUpTabs() {
@@ -101,12 +106,32 @@ public class HomeActivity extends SherlockFragmentActivity
 		getSupportActionBar().setSelectedNavigationItem(tabPosition);
 	}
 
+	private void callDatabaseUpdateCheck() {
+		DatabaseUpdateCheckTask.newInstance(this, this).execute();
+	}
+
+	@Override
+	public void onAvailableUpdate() {
+		showUpdatingAvailableMessage();
+	}
+
 	private void showUpdatingAvailableMessage() {
 		getSupportActionBar().setSubtitle(R.string.warning_update_available);
 	}
 
-	private void hideUpdatingAvailableMessage() {
-		getSupportActionBar().setSubtitle(null);
+	@Override
+	public void onFailedUpdateCheck() {
+	}
+
+	@Override
+	public void onNoUpdatesEver() {
+		callDatabaseUpdate();
+	}
+
+	private void callDatabaseUpdate() {
+		showUpdatingProgressDialog();
+
+		DatabaseUpdateTask.newInstance(this, this).execute();
 	}
 
 	private void showUpdatingProgressDialog() {
@@ -116,13 +141,17 @@ public class HomeActivity extends SherlockFragmentActivity
 		progressDialog.show(getSupportFragmentManager(), IntermediateProgressDialog.TAG);
 	}
 
-	private void hideUpdatingProgressDialog() {
-		IntermediateProgressDialog intermediateProgressDialog = (IntermediateProgressDialog)
-			getSupportFragmentManager().findFragmentByTag(IntermediateProgressDialog.TAG);
+	@Override
+	public void onSuccessUpdate() {
+		hideUpdatingAvailableMessage();
 
-		if (intermediateProgressDialog != null) {
-			intermediateProgressDialog.dismiss();
-		}
+		reSetUpTabs();
+
+		hideUpdatingProgressDialog();
+	}
+
+	private void hideUpdatingAvailableMessage() {
+		getSupportActionBar().setSubtitle(null);
 	}
 
 	private void reSetUpTabs() {
@@ -142,6 +171,22 @@ public class HomeActivity extends SherlockFragmentActivity
 		getSupportActionBar().removeAllTabs();
 	}
 
+	private void hideUpdatingProgressDialog() {
+		IntermediateProgressDialog intermediateProgressDialog = (IntermediateProgressDialog) getSupportFragmentManager().findFragmentByTag(
+			IntermediateProgressDialog.TAG);
+
+		if (intermediateProgressDialog != null) {
+			intermediateProgressDialog.dismiss();
+		}
+	}
+
+	@Override
+	public void onFailedUpdate() {
+		hideUpdatingProgressDialog();
+
+		UserAlerter.alert(this, getString(R.string.error_unspecified));
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.menu_action_bar_home, menu);
@@ -157,6 +202,7 @@ public class HomeActivity extends SherlockFragmentActivity
 				return true;
 
 			case R.id.menu_update:
+				callDatabaseUpdate();
 				return true;
 
 			case R.id.menu_map:
