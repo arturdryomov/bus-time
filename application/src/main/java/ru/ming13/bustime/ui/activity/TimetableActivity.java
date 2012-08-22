@@ -3,6 +3,7 @@ package ru.ming13.bustime.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
@@ -19,13 +20,18 @@ import ru.ming13.bustime.ui.intent.IntentException;
 import ru.ming13.bustime.ui.intent.IntentExtras;
 import ru.ming13.bustime.ui.loader.Loaders;
 import ru.ming13.bustime.ui.loader.TimetableTypeCheckLoader;
-import ru.ming13.bustime.ui.util.LoaderSafeRunner;
 
 
-public class TimetableActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener, LoaderManager.LoaderCallbacks<Bundle>
+public class TimetableActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener, LoaderManager.LoaderCallbacks<Boolean>
 {
-	private static final int LIST_NAVIGATION_WORKDAYS_ITEM_INDEX = 0;
-	private static final int LIST_NAVIGATION_WEEKEND_ITEM_INDEX = 1;
+	private static final class ListNavigationIndices
+	{
+		private ListNavigationIndices() {
+		}
+
+		public static final int WORKDAYS = 0;
+		public static final int WEEKEND = 1;
+	}
 
 	private Route route;
 	private Station station;
@@ -38,26 +44,30 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		readReceivedRoute();
-		readReceivedStation();
+		route = extractReceivedRoute();
+		station = extractReceivedStation();
 
 		setUpTimetable();
 	}
 
-	private void readReceivedRoute() {
-		route = getIntent().getParcelableExtra(IntentExtras.ROUTE);
+	private Route extractReceivedRoute() {
+		Route route = getIntent().getParcelableExtra(IntentExtras.ROUTE);
 
 		if (route == null) {
 			throw new IntentException();
 		}
+
+		return route;
 	}
 
-	private void readReceivedStation() {
-		station = getIntent().getParcelableExtra(IntentExtras.STATION);
+	private Station extractReceivedStation() {
+		Station station = getIntent().getParcelableExtra(IntentExtras.STATION);
 
-		if (route == null) {
+		if (station == null) {
 			throw new IntentException();
 		}
+
+		return station;
 	}
 
 	private void setUpTimetable() {
@@ -65,21 +75,26 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	}
 
 	@Override
-	public Loader<Bundle> onCreateLoader(int i, Bundle bundle) {
+	public Loader<Boolean> onCreateLoader(int i, Bundle bundle) {
 		return new TimetableTypeCheckLoader(this, route);
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Bundle> timetableTypeCheckLoader, Bundle timetableTypeCheckResult) {
+	public void onLoadFinished(Loader<Boolean> timetableTypeCheckLoader, Boolean isTimetableWeekPartDependent) {
 		buildTimetableFragments();
-
-		boolean isTimetableWeekPartDependent = timetableTypeCheckResult.getBoolean(
-			TimetableTypeCheckLoader.RESULT_TIMETABLE_WEEK_PART_DEPENDENT_KEY);
 
 		setUpTimetableLoaderSafe(isTimetableWeekPartDependent);
 	}
 
+	private void buildTimetableFragments() {
+		fullWeekTimetableFragment = TimetableFragment.newFullWeekInstance(route, station);
+		workdaysTimetableFragment = TimetableFragment.newWorkdaysInstance(route, station);
+		weekendTimetableFragment = TimetableFragment.newWeekendInstance(route, station);
+	}
+
 	private void setUpTimetableLoaderSafe(final boolean isTimetableWeekPartDependent) {
+		// Loaders don’t allow to run transactions on load finished
+
 		Runnable loaderRunnable = new Runnable()
 		{
 			@Override
@@ -93,17 +108,11 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 			}
 		};
 
-		LoaderSafeRunner.run(loaderRunnable);
+		new Handler().post(loaderRunnable);
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Bundle> bundleLoader) {
-	}
-
-	private void buildTimetableFragments() {
-		fullWeekTimetableFragment = TimetableFragment.newFullWeekInstance(route, station);
-		workdaysTimetableFragment = TimetableFragment.newWorkdaysInstance(route, station);
-		weekendTimetableFragment = TimetableFragment.newWeekendInstance(route, station);
+	public void onLoaderReset(Loader<Boolean> timetableTypeCheckLoader) {
 	}
 
 	private void setUpWeekPartDependentTimetable() {
@@ -132,16 +141,20 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		if (itemPosition == LIST_NAVIGATION_WORKDAYS_ITEM_INDEX) {
-			tearDownFragment(weekendTimetableFragment);
-			setUpFragment(workdaysTimetableFragment);
-		}
-		else {
-			tearDownFragment(workdaysTimetableFragment);
-			setUpFragment(weekendTimetableFragment);
-		}
+		switch (itemPosition) {
+			case ListNavigationIndices.WORKDAYS:
+				tearDownFragment(weekendTimetableFragment);
+				setUpFragment(workdaysTimetableFragment);
+				return true;
 
-		return true;
+			case ListNavigationIndices.WEEKEND:
+				tearDownFragment(workdaysTimetableFragment);
+				setUpFragment(weekendTimetableFragment);
+				return true;
+
+			default:
+				return false;
+		}
 	}
 
 	private void tearDownFragment(Fragment fragment) {
@@ -173,10 +186,10 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		int listNavigationIndex;
 
 		if (Time.newInstance().isWeekend()) {
-			listNavigationIndex = LIST_NAVIGATION_WEEKEND_ITEM_INDEX;
+			listNavigationIndex = ListNavigationIndices.WEEKEND;
 		}
 		else {
-			listNavigationIndex = LIST_NAVIGATION_WORKDAYS_ITEM_INDEX;
+			listNavigationIndex = ListNavigationIndices.WORKDAYS;
 		}
 
 		getSupportActionBar().setSelectedNavigationItem(listNavigationIndex);
