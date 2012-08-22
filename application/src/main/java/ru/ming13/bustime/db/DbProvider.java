@@ -10,7 +10,7 @@ import ru.ming13.bustime.db.sqlite.DbOpenHelper;
 
 public class DbProvider
 {
-	private class AlreadyInstantiatedException extends RuntimeException
+	private static class AlreadyInstantiatedException extends RuntimeException
 	{
 	}
 

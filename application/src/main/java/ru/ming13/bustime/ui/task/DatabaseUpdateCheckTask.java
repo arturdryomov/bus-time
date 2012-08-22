@@ -90,6 +90,9 @@ public class DatabaseUpdateCheckTask extends AsyncTask<Void, Void, Void>
 			case FAIL:
 				databaseUpdateCheckCallback.onFailedUpdateCheck();
 				break;
+
+			default:
+				break;
 		}
 	}
 }
