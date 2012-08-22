@@ -101,4 +101,6 @@ abstract class AdaptedListFragment<ListItemType> extends SherlockListFragment
 	}
 
 	protected abstract void callListPopulation();
+
+	public abstract void callListRepopulation();
 }

@@ -1,13 +1,13 @@
 package ru.ming13.bustime.ui.activity;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.text.TextUtils;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -17,39 +17,43 @@ import ru.ming13.bustime.ui.fragment.IntermediateProgressDialog;
 import ru.ming13.bustime.ui.fragment.RoutesFragment;
 import ru.ming13.bustime.ui.fragment.StationsFragment;
 import ru.ming13.bustime.ui.intent.IntentFactory;
-import ru.ming13.bustime.ui.loader.DatabaseUpdateCheckLoader;
-import ru.ming13.bustime.ui.loader.DatabaseUpdateLoader;
-import ru.ming13.bustime.ui.loader.Loaders;
-import ru.ming13.bustime.ui.util.LoaderSafeRunner;
+import ru.ming13.bustime.ui.task.DatabaseUpdateCheckTask;
+import ru.ming13.bustime.ui.task.DatabaseUpdateTask;
 import ru.ming13.bustime.ui.util.UserAlerter;
 
 
-public class HomeActivity extends SherlockFragmentActivity
+public class HomeActivity extends SherlockFragmentActivity implements DatabaseUpdateCheckTask.DatabaseUpdateCheckCallback, DatabaseUpdateTask.DatabaseUpdateCallback
 {
-	private static final String SAVED_INSTANCE_KEY_SELECTED_TAB = "selected_tab";
+	private static final class LastInstanceKeys
+	{
+		private LastInstanceKeys() {
+		}
+
+		public static final String SELECTED_TAB = "selected_tab";
+
+		public static final String DATABASE_UPDATE_CHECK_TASK = "update_check_task";
+		public static final String DATABASE_UPDATE_TASK = "update_task";
+	}
+
+	private DatabaseUpdateCheckTask databaseUpdateCheckTask;
+	private DatabaseUpdateTask databaseUpdateTask;
+
+	private RoutesFragment routesFragment;
+	private StationsFragment stationsFragment;
+
+	private boolean isPaused;
+
+	private boolean isUpdatingDialogHidingOnResumeRequested;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		initRunningLoaders();
-
 		setUpTabs();
-		restorePreviousSelectedTab(savedInstanceState);
 
-		checkDatabaseUpdate();
-	}
+		callDatabaseUpdateCheck();
 
-	private void initRunningLoaders() {
-		LoaderManager loaderManager = getSupportLoaderManager();
-
-		if (loaderManager.getLoader(Loaders.DATABASE_UPDATE) != null) {
-			loaderManager.initLoader(Loaders.DATABASE_UPDATE, null, databaseUpdateCallback);
-		}
-
-		if (loaderManager.getLoader(Loaders.DATABASE_UPDATE_CHECK) != null) {
-			loaderManager.initLoader(Loaders.DATABASE_UPDATE_CHECK, null, databaseUpdateCheckCallback);
-		}
+		restoreLastInstanceState();
 	}
 
 	private void setUpTabs() {
@@ -62,8 +66,10 @@ public class HomeActivity extends SherlockFragmentActivity
 	private ActionBar.Tab buildRoutesTab() {
 		ActionBar.Tab tab = getSupportActionBar().newTab();
 
+		routesFragment = RoutesFragment.newInstance();
+
 		tab.setText(R.string.title_routes);
-		tab.setTabListener(new TabListener(RoutesFragment.newInstance()));
+		tab.setTabListener(new TabListener(routesFragment));
 
 		return tab;
 	}
@@ -101,150 +107,215 @@ public class HomeActivity extends SherlockFragmentActivity
 	private ActionBar.Tab buildStationsTab() {
 		ActionBar.Tab tab = getSupportActionBar().newTab();
 
+		stationsFragment = StationsFragment.newInstance();
+
 		tab.setText(R.string.title_stations);
-		tab.setTabListener(new TabListener(StationsFragment.newInstance()));
+		tab.setTabListener(new TabListener(stationsFragment));
 
 		return tab;
 	}
 
-	private void restorePreviousSelectedTab(Bundle savedInstanceState) {
-		if (savedInstanceState != null) {
-			setSelectedTab(savedInstanceState.getInt(SAVED_INSTANCE_KEY_SELECTED_TAB, 0));
-		}
+	private void callDatabaseUpdateCheck() {
+		databaseUpdateCheckTask = DatabaseUpdateCheckTask.newInstance(this, this);
+		databaseUpdateCheckTask.execute();
 	}
 
-	private void setSelectedTab(int tabPosition) {
-		getSupportActionBar().setSelectedNavigationItem(tabPosition);
+	@Override
+	public void onAvailableUpdate() {
+		showUpdatingAvailableMessage();
 	}
 
-	private void checkDatabaseUpdate() {
-		LoaderManager loaderManager = getSupportLoaderManager();
-
-		loaderManager.initLoader(Loaders.DATABASE_UPDATE_CHECK, null, databaseUpdateCheckCallback);
+	private void showUpdatingAvailableMessage() {
+		getSupportActionBar().setSubtitle(R.string.warning_update_available);
 	}
 
-	private final LoaderManager.LoaderCallbacks<Bundle> databaseUpdateCheckCallback = new LoaderManager.LoaderCallbacks<Bundle>()
-	{
-		@Override
-		public Loader<Bundle> onCreateLoader(int i, Bundle bundle) {
-			return new DatabaseUpdateCheckLoader(HomeActivity.this);
-		}
-
-		@Override
-		public void onLoadFinished(Loader<Bundle> databaseUpdateCheckLoader, final Bundle databaseUpdateCheckResult) {
-			getSupportLoaderManager().destroyLoader(Loaders.DATABASE_UPDATE_CHECK);
-
-			Runnable loaderRunnable = new Runnable()
-			{
-				@Override
-				public void run() {
-					boolean isDatabaseEverUpdated = databaseUpdateCheckResult.getBoolean(
-						DatabaseUpdateCheckLoader.RESULT_DATABASE_EVER_UPDATED_KEY);
-
-					if (!isDatabaseEverUpdated) {
-						callDatabaseUpdating();
-
-						return;
-					}
-
-					boolean isDatabaseUpdateAvailable = databaseUpdateCheckResult.getBoolean(
-						DatabaseUpdateCheckLoader.RESULT_DATABASE_UPDATE_AVAILABLE_KEY);
-
-					if (isDatabaseUpdateAvailable) {
-						showUpdateAvailableMessage();
-					}
-				}
-			};
-
-			LoaderSafeRunner.run(loaderRunnable);
-		}
-
-		@Override
-		public void onLoaderReset(Loader<Bundle> bundleLoader) {
-		}
-	};
-
-	private void callDatabaseUpdating() {
-		getSupportLoaderManager().initLoader(Loaders.DATABASE_UPDATE, null, databaseUpdateCallback);
+	@Override
+	public void onFailedUpdateCheck() {
 	}
 
-	private final LoaderManager.LoaderCallbacks<String> databaseUpdateCallback = new LoaderManager.LoaderCallbacks<String>()
-	{
-		@Override
-		public Loader<String> onCreateLoader(int loaderId, Bundle loaderArguments) {
-			showUpdateProgressDialog();
+	@Override
+	public void onNoUpdatesEver() {
+		callDatabaseUpdate();
+	}
 
-			return new DatabaseUpdateLoader(HomeActivity.this);
-		}
+	private void callDatabaseUpdate() {
+		showUpdatingProgressDialog();
 
-		@Override
-		public void onLoadFinished(Loader<String> databaseUpdateLoader, final String errorMessage) {
-			getSupportLoaderManager().destroyLoader(Loaders.DATABASE_UPDATE);
+		databaseUpdateTask = DatabaseUpdateTask.newInstance(this, this);
+		databaseUpdateTask.execute();
+	}
 
-			Runnable loaderRunnable = new Runnable()
-			{
-				@Override
-				public void run() {
-					if (TextUtils.isEmpty(errorMessage)) {
-						reSetUpTabs();
-						hideUpdateAvailableMessage();
-					}
-					else {
-						UserAlerter.alert(HomeActivity.this, errorMessage);
-					}
-
-					hideUpdateProgressDialog();
-				}
-			};
-
-			LoaderSafeRunner.run(loaderRunnable);
-		}
-
-		@Override
-		public void onLoaderReset(Loader<String> databaseUpdateLoader) {
-		}
-	};
-
-	private void showUpdateProgressDialog() {
+	private void showUpdatingProgressDialog() {
 		IntermediateProgressDialog progressDialog = IntermediateProgressDialog.newInstance(
 			getString(R.string.loading_update));
 
 		progressDialog.show(getSupportFragmentManager(), IntermediateProgressDialog.TAG);
 	}
 
-	private void reSetUpTabs() {
-		int selectedTabPosition = getSelectedTabPosition();
+	@Override
+	public void onSuccessUpdate() {
+		hideUpdatingAvailableMessage();
 
-		tearDownTabs();
-		setUpTabs();
+		refreshFragments();
 
-		setSelectedTab(selectedTabPosition);
+		hideUpdatingProgressDialog();
+	}
+
+	private void hideUpdatingAvailableMessage() {
+		getSupportActionBar().setSubtitle(null);
+	}
+
+	private void refreshFragments() {
+		if (routesFragment.isAdded()) {
+			routesFragment.callListRepopulation();
+		}
+
+		if (stationsFragment.isAdded()) {
+			stationsFragment.callListRepopulation();
+		}
+	}
+
+	private void hideUpdatingProgressDialog() {
+		if (isPaused()) {
+			setUpdatingDialogHidingOnResumeRequested(true);
+
+			return;
+		}
+
+		IntermediateProgressDialog progressDialog = (IntermediateProgressDialog) getSupportFragmentManager().findFragmentByTag(
+			IntermediateProgressDialog.TAG);
+
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+
+			setUpdatingDialogHidingOnResumeRequested(false);
+		}
+	}
+
+	private boolean isPaused() {
+		return isPaused;
+	}
+
+	private void setUpdatingDialogHidingOnResumeRequested(boolean isRequested) {
+		isUpdatingDialogHidingOnResumeRequested = isRequested;
+	}
+
+	@Override
+	public void onFailedUpdate() {
+		hideUpdatingProgressDialog();
+
+		UserAlerter.alert(this, getString(R.string.error_unspecified));
+	}
+
+	private void restoreLastInstanceState() {
+		if (!isLastInstanceValid()) {
+			return;
+		}
+
+		restoreLastInstanceSelectedTab();
+
+		restoreLastInstanceDatabaseUpdateCheckTask();
+		restoreLastInstanceDatabaseUpdateTask();
+	}
+
+	private boolean isLastInstanceValid() {
+		return getLastCustomNonConfigurationInstance() != null;
+	}
+
+	private void restoreLastInstanceSelectedTab() {
+		if (!isLastInstanceElementValid(LastInstanceKeys.SELECTED_TAB)) {
+			return;
+		}
+
+		setSelectedTab((Integer) getLastInstanceElement(LastInstanceKeys.SELECTED_TAB));
+	}
+
+	private boolean isLastInstanceElementValid(String lastInstanceKey) {
+		Map<String, Object> lastInstance = getLastInstance();
+
+		if (!lastInstance.containsKey(lastInstanceKey)) {
+			return false;
+		}
+
+		return lastInstance.get(lastInstanceKey) != null;
+	}
+
+	private Map<String, Object> getLastInstance() {
+		return (Map<String, Object>) getLastCustomNonConfigurationInstance();
+	}
+
+	private <LastInstanceElementType> LastInstanceElementType getLastInstanceElement(String lastInstanceKey) {
+		Map<String, Object> lastInstance = getLastInstance();
+
+		return (LastInstanceElementType) lastInstance.get(lastInstanceKey);
+	}
+
+	private void setSelectedTab(int tabPosition) {
+		getSupportActionBar().setSelectedNavigationItem(tabPosition);
+	}
+
+	private void restoreLastInstanceDatabaseUpdateCheckTask() {
+		if (!isLastInstanceElementValid(LastInstanceKeys.DATABASE_UPDATE_CHECK_TASK)) {
+			return;
+		}
+
+		databaseUpdateCheckTask = getLastInstanceElement(LastInstanceKeys.DATABASE_UPDATE_CHECK_TASK);
+
+		databaseUpdateCheckTask.setContext(this);
+		databaseUpdateCheckTask.setDatabaseUpdateCheckCallback(this);
+	}
+
+	private void restoreLastInstanceDatabaseUpdateTask() {
+		if (!isLastInstanceElementValid(LastInstanceKeys.DATABASE_UPDATE_TASK)) {
+			return;
+		}
+
+		databaseUpdateTask = getLastInstanceElement(LastInstanceKeys.DATABASE_UPDATE_TASK);
+
+		databaseUpdateTask.setContext(this);
+		databaseUpdateTask.setDatabaseUpdateCallback(this);
+	}
+
+	@Override
+	public Object onRetainCustomNonConfigurationInstance() {
+		Map<String, Object> instance = new HashMap<String, Object>();
+
+		instance.put(LastInstanceKeys.SELECTED_TAB, getSelectedTabPosition());
+
+		instance.put(LastInstanceKeys.DATABASE_UPDATE_CHECK_TASK, databaseUpdateCheckTask);
+		instance.put(LastInstanceKeys.DATABASE_UPDATE_TASK, databaseUpdateTask);
+
+		return instance;
 	}
 
 	private int getSelectedTabPosition() {
 		return getSupportActionBar().getSelectedNavigationIndex();
 	}
 
-	private void tearDownTabs() {
-		getSupportActionBar().removeAllTabs();
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		setPaused(true);
 	}
 
-	private void hideUpdateAvailableMessage() {
-		getSupportActionBar().setSubtitle(null);
+	private void setPaused(boolean isPaused) {
+		this.isPaused = isPaused;
 	}
 
-	private void hideUpdateProgressDialog() {
-		Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-			IntermediateProgressDialog.TAG);
+	@Override
+	protected void onResume() {
+		super.onResume();
 
-		if (fragment != null) {
-			IntermediateProgressDialog progressDialog = (IntermediateProgressDialog) fragment;
-			progressDialog.getDialog().dismiss();
+		setPaused(false);
+
+		if (isUpdatingDialogHidingOnResumeRequested()) {
+			hideUpdatingProgressDialog();
 		}
 	}
 
-	private void showUpdateAvailableMessage() {
-		getSupportActionBar().setSubtitle(R.string.warning_update_available);
+	private boolean isUpdatingDialogHidingOnResumeRequested() {
+		return isUpdatingDialogHidingOnResumeRequested;
 	}
 
 	@Override
@@ -262,7 +333,7 @@ public class HomeActivity extends SherlockFragmentActivity
 				return true;
 
 			case R.id.menu_update:
-				callDatabaseUpdating();
+				callDatabaseUpdate();
 				return true;
 
 			case R.id.menu_map:
@@ -281,12 +352,5 @@ public class HomeActivity extends SherlockFragmentActivity
 	private void callStationsMapActivity() {
 		Intent callIntent = IntentFactory.createStationsMapIntent(this);
 		startActivity(callIntent);
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-
-		outState.putInt(SAVED_INSTANCE_KEY_SELECTED_TAB, getSelectedTabPosition());
 	}
 }
