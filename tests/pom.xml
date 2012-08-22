@@ -9,8 +9,8 @@
 
 	<parent>
 		<artifactId>bus-time-parent</artifactId>
-		<version>0.5.1</version>
-		<groupId>app.android</groupId>
+		<version>0.6.0</version>
+		<groupId>ru.ming13.bustime</groupId>
 	</parent>
 
 	<dependencies>
@@ -31,7 +31,7 @@
 		<dependency>
 			<artifactId>bus-time-application</artifactId>
 			<version>${project.version}</version>
-			<groupId>app.android</groupId>
+			<groupId>ru.ming13.bustime</groupId>
 			<scope>provided</scope>
 			<type>apk</type>
 		</dependency>
@@ -39,7 +39,7 @@
 		<dependency>
 			<artifactId>bus-time-application</artifactId>
 			<version>${project.version}</version>
-			<groupId>app.android</groupId>
+			<groupId>ru.ming13.bustime</groupId>
 			<scope>provided</scope>
 			<type>jar</type>
 		</dependency>

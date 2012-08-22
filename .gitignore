@@ -1,9 +1,24 @@
-# Application keys
+# Android
 
-keys.xml
+bin/
+gen*/
+
+project.properties
 
 # Maven
 
 target/
 
-# Use global .gitignore file for your IDE
+# Application assets
+
+assets/
+
+# API keys
+
+apis.xml
+
+# URLs
+
+urls.xml
+
+# Use global .gitignore for your IDE
