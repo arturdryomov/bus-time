@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- Copy this file as “urls.xml” to “values” directory. -->
+
+	<!-- Obtain your own urls and paste it to “urls.xml”. -->
+
+	<string name="url_server_database_file">SERVER_DATABASE_FILE_URL</string>
+
+</resources>
