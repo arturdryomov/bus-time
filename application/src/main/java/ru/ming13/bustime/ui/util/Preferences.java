@@ -4,6 +4,7 @@ package ru.ming13.bustime.ui.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import org.apache.commons.lang3.StringUtils;
 
 
 public final class Preferences
@@ -37,7 +38,7 @@ public final class Preferences
 	}
 
 	public static String getString(Context context, String key) {
-		return getSharedPreferences(context).getString(key, new String());
+		return getSharedPreferences(context).getString(key, StringUtils.EMPTY);
 	}
 
 	public static void remove(Context context, String key) {

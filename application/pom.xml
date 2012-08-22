@@ -60,6 +60,12 @@
 			<version>2.4</version>
 			<groupId>commons-io</groupId>
 		</dependency>
+
+		<dependency>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
+			<groupId>org.apache.commons</groupId>
+		</dependency>
 	</dependencies>
 
 	<build>
