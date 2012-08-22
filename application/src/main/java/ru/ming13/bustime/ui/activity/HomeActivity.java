@@ -1,6 +1,9 @@
 package ru.ming13.bustime.ui.activity;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,16 +24,36 @@ import ru.ming13.bustime.ui.util.UserAlerter;
 
 public class HomeActivity extends SherlockFragmentActivity implements DatabaseUpdateCheckTask.DatabaseUpdateCheckCallback, DatabaseUpdateTask.DatabaseUpdateCallback
 {
-	private static final String SAVED_INSTANCE_KEY_SELECTED_TAB = "selected_tab";
+	private static final class LastInstanceKeys
+	{
+		private LastInstanceKeys() {
+		}
+
+		public static final String SELECTED_TAB = "selected_tab";
+
+		public static final String DATABASE_UPDATE_CHECK_TASK = "update_check_task";
+		public static final String DATABASE_UPDATE_TASK = "update_task";
+	}
+
+	private DatabaseUpdateCheckTask databaseUpdateCheckTask;
+	private DatabaseUpdateTask databaseUpdateTask;
+
+	private RoutesFragment routesFragment;
+	private StationsFragment stationsFragment;
+
+	private boolean isPaused;
+
+	private boolean isUpdatingDialogHidingOnResumeRequested;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setUpTabs();
-		restorePreviousStateSelectedTab(savedInstanceState);
 
 		callDatabaseUpdateCheck();
+
+		restoreLastInstanceState();
 	}
 
 	private void setUpTabs() {
@@ -43,8 +66,10 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 	private ActionBar.Tab buildRoutesTab() {
 		ActionBar.Tab tab = getSupportActionBar().newTab();
 
+		routesFragment = RoutesFragment.newInstance();
+
 		tab.setText(R.string.title_routes);
-		tab.setTabListener(new TabListener(RoutesFragment.newInstance()));
+		tab.setTabListener(new TabListener(routesFragment));
 
 		return tab;
 	}
@@ -82,32 +107,17 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 	private ActionBar.Tab buildStationsTab() {
 		ActionBar.Tab tab = getSupportActionBar().newTab();
 
+		stationsFragment = StationsFragment.newInstance();
+
 		tab.setText(R.string.title_stations);
-		tab.setTabListener(new TabListener(StationsFragment.newInstance()));
+		tab.setTabListener(new TabListener(stationsFragment));
 
 		return tab;
 	}
 
-	private void restorePreviousStateSelectedTab(Bundle savedInstanceState) {
-		if (isSavedInstanceValid(savedInstanceState)) {
-			setSelectedTab(getPreviousStateSelectedTab(savedInstanceState));
-		}
-	}
-
-	private boolean isSavedInstanceValid(Bundle savedInstanceState) {
-		return savedInstanceState != null;
-	}
-
-	private int getPreviousStateSelectedTab(Bundle savedInstanceState) {
-		return savedInstanceState.getInt(SAVED_INSTANCE_KEY_SELECTED_TAB, 0);
-	}
-
-	private void setSelectedTab(int tabPosition) {
-		getSupportActionBar().setSelectedNavigationItem(tabPosition);
-	}
-
 	private void callDatabaseUpdateCheck() {
-		DatabaseUpdateCheckTask.newInstance(this, this).execute();
+		databaseUpdateCheckTask = DatabaseUpdateCheckTask.newInstance(this, this);
+		databaseUpdateCheckTask.execute();
 	}
 
 	@Override
@@ -131,7 +141,8 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 	private void callDatabaseUpdate() {
 		showUpdatingProgressDialog();
 
-		DatabaseUpdateTask.newInstance(this, this).execute();
+		databaseUpdateTask = DatabaseUpdateTask.newInstance(this, this);
+		databaseUpdateTask.execute();
 	}
 
 	private void showUpdatingProgressDialog() {
@@ -145,7 +156,7 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 	public void onSuccessUpdate() {
 		hideUpdatingAvailableMessage();
 
-		reSetUpTabs();
+		refreshFragments();
 
 		hideUpdatingProgressDialog();
 	}
@@ -154,30 +165,39 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 		getSupportActionBar().setSubtitle(null);
 	}
 
-	private void reSetUpTabs() {
-		int selectedTabPosition = getSelectedTabPosition();
+	private void refreshFragments() {
+		if (routesFragment.isAdded()) {
+			routesFragment.callListRepopulation();
+		}
 
-		tearDownTabs();
-		setUpTabs();
-
-		setSelectedTab(selectedTabPosition);
-	}
-
-	private int getSelectedTabPosition() {
-		return getSupportActionBar().getSelectedNavigationIndex();
-	}
-
-	private void tearDownTabs() {
-		getSupportActionBar().removeAllTabs();
+		if (stationsFragment.isAdded()) {
+			stationsFragment.callListRepopulation();
+		}
 	}
 
 	private void hideUpdatingProgressDialog() {
-		IntermediateProgressDialog intermediateProgressDialog = (IntermediateProgressDialog) getSupportFragmentManager().findFragmentByTag(
+		if (isPaused()) {
+			setUpdatingDialogHidingOnResumeRequested(true);
+
+			return;
+		}
+
+		IntermediateProgressDialog progressDialog = (IntermediateProgressDialog) getSupportFragmentManager().findFragmentByTag(
 			IntermediateProgressDialog.TAG);
 
-		if (intermediateProgressDialog != null) {
-			intermediateProgressDialog.dismiss();
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+
+			setUpdatingDialogHidingOnResumeRequested(false);
 		}
+	}
+
+	private boolean isPaused() {
+		return isPaused;
+	}
+
+	private void setUpdatingDialogHidingOnResumeRequested(boolean isRequested) {
+		isUpdatingDialogHidingOnResumeRequested = isRequested;
 	}
 
 	@Override
@@ -185,6 +205,117 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 		hideUpdatingProgressDialog();
 
 		UserAlerter.alert(this, getString(R.string.error_unspecified));
+	}
+
+	private void restoreLastInstanceState() {
+		if (!isLastInstanceValid()) {
+			return;
+		}
+
+		restoreLastInstanceSelectedTab();
+
+		restoreLastInstanceDatabaseUpdateCheckTask();
+		restoreLastInstanceDatabaseUpdateTask();
+	}
+
+	private boolean isLastInstanceValid() {
+		return getLastCustomNonConfigurationInstance() != null;
+	}
+
+	private void restoreLastInstanceSelectedTab() {
+		if (!isLastInstanceElementValid(LastInstanceKeys.SELECTED_TAB)) {
+			return;
+		}
+
+		setSelectedTab((Integer) getLastInstanceElement(LastInstanceKeys.SELECTED_TAB));
+	}
+
+	private boolean isLastInstanceElementValid(String lastInstanceKey) {
+		Map<String, Object> lastInstance = getLastInstance();
+
+		if (!lastInstance.containsKey(lastInstanceKey)) {
+			return false;
+		}
+
+		return lastInstance.get(lastInstanceKey) != null;
+	}
+
+	private Map<String, Object> getLastInstance() {
+		return (Map<String, Object>) getLastCustomNonConfigurationInstance();
+	}
+
+	private <LastInstanceElementType> LastInstanceElementType getLastInstanceElement(String lastInstanceKey) {
+		Map<String, Object> lastInstance = getLastInstance();
+
+		return (LastInstanceElementType) lastInstance.get(lastInstanceKey);
+	}
+
+	private void setSelectedTab(int tabPosition) {
+		getSupportActionBar().setSelectedNavigationItem(tabPosition);
+	}
+
+	private void restoreLastInstanceDatabaseUpdateCheckTask() {
+		if (!isLastInstanceElementValid(LastInstanceKeys.DATABASE_UPDATE_CHECK_TASK)) {
+			return;
+		}
+
+		databaseUpdateCheckTask = getLastInstanceElement(LastInstanceKeys.DATABASE_UPDATE_CHECK_TASK);
+
+		databaseUpdateCheckTask.setContext(this);
+		databaseUpdateCheckTask.setDatabaseUpdateCheckCallback(this);
+	}
+
+	private void restoreLastInstanceDatabaseUpdateTask() {
+		if (!isLastInstanceElementValid(LastInstanceKeys.DATABASE_UPDATE_TASK)) {
+			return;
+		}
+
+		databaseUpdateTask = getLastInstanceElement(LastInstanceKeys.DATABASE_UPDATE_TASK);
+
+		databaseUpdateTask.setContext(this);
+		databaseUpdateTask.setDatabaseUpdateCallback(this);
+	}
+
+	@Override
+	public Object onRetainCustomNonConfigurationInstance() {
+		Map<String, Object> instance = new HashMap<String, Object>();
+
+		instance.put(LastInstanceKeys.SELECTED_TAB, getSelectedTabPosition());
+
+		instance.put(LastInstanceKeys.DATABASE_UPDATE_CHECK_TASK, databaseUpdateCheckTask);
+		instance.put(LastInstanceKeys.DATABASE_UPDATE_TASK, databaseUpdateTask);
+
+		return instance;
+	}
+
+	private int getSelectedTabPosition() {
+		return getSupportActionBar().getSelectedNavigationIndex();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		setPaused(true);
+	}
+
+	private void setPaused(boolean isPaused) {
+		this.isPaused = isPaused;
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		setPaused(false);
+
+		if (isUpdatingDialogHidingOnResumeRequested()) {
+			hideUpdatingProgressDialog();
+		}
+	}
+
+	private boolean isUpdatingDialogHidingOnResumeRequested() {
+		return isUpdatingDialogHidingOnResumeRequested;
 	}
 
 	@Override
@@ -221,12 +352,5 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 	private void callStationsMapActivity() {
 		Intent callIntent = IntentFactory.createStationsMapIntent(this);
 		startActivity(callIntent);
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-
-		outState.putInt(SAVED_INSTANCE_KEY_SELECTED_TAB, getSelectedTabPosition());
 	}
 }

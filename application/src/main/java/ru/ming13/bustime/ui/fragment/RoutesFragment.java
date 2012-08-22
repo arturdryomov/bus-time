@@ -118,6 +118,13 @@ public class RoutesFragment extends AdaptedListFragment<Route> implements Loader
 	}
 
 	@Override
+	public void callListRepopulation() {
+		setEmptyListText(R.string.loading_routes);
+
+		getLoaderManager().restartLoader(Loaders.ROUTES, null, this);
+	}
+
+	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 

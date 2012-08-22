@@ -23,9 +23,9 @@ public class DatabaseUpdateTask extends AsyncTask<Void, Void, Void>
 
 	private Result result;
 
-	private final Context context;
+	private Context context;
 
-	private final DatabaseUpdateCallback databaseUpdateCallback;
+	private DatabaseUpdateCallback databaseUpdateCallback;
 
 	public static DatabaseUpdateTask newInstance(Context context, DatabaseUpdateCallback databaseUpdateCallback) {
 		return new DatabaseUpdateTask(context, databaseUpdateCallback);
@@ -34,6 +34,14 @@ public class DatabaseUpdateTask extends AsyncTask<Void, Void, Void>
 	private DatabaseUpdateTask(Context context, DatabaseUpdateCallback databaseUpdateCallback) {
 		this.context = context;
 
+		this.databaseUpdateCallback = databaseUpdateCallback;
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
+	}
+
+	public void setDatabaseUpdateCallback(DatabaseUpdateCallback databaseUpdateCallback) {
 		this.databaseUpdateCallback = databaseUpdateCallback;
 	}
 

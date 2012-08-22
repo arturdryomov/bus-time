@@ -133,6 +133,13 @@ public class StationsFragment extends AdaptedListFragment<Station> implements Lo
 	}
 
 	@Override
+	public void callListRepopulation() {
+		setEmptyListText(R.string.loading_stations);
+
+		getLoaderManager().restartLoader(Loaders.STATIONS, null, this);
+	}
+
+	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 

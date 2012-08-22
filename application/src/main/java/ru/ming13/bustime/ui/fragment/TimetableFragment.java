@@ -173,6 +173,13 @@ public class TimetableFragment extends AdaptedListFragment<Time> implements Load
 	}
 
 	@Override
+	public void callListRepopulation() {
+		setEmptyListText(R.string.loading_timetable);
+
+		getLoaderManager().restartLoader(Loaders.TIMETABLE, null, this);
+	}
+
+	@Override
 	public void onResume() {
 		super.onResume();
 
