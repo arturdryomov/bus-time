@@ -31,7 +31,7 @@ public class TimetableFragment extends AdaptedListFragment<Time> implements Load
 
 	private static final int PREVIOUS_TIMES_DISPLAYED_COUNT = 1;
 
-	private Handler remainingTimeTextUpdateTimer = new Handler();
+	private final Handler remainingTimeTextUpdateTimer = new Handler();
 	private static final int AUTO_UPDATE_MILLISECONDS_PERIOD = 60000;
 
 	private Mode mode;
