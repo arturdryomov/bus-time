@@ -7,7 +7,7 @@
 
 	<!-- Google Maps -->
 
-	<string name="key_google_maps_debug">GOOGLE_MAPS_DEBUG_API_KEY</string>
+	<string name="key_google_maps">GOOGLE_MAPS_API_KEY</string>
 
 	<!-- BugSense -->
 
