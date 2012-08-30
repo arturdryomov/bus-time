@@ -7,10 +7,10 @@
 		<maven>3.0.0</maven>
 	</prerequisites>
 
-	<name>BusTime Parent</name>
-	<artifactId>bustime-parent</artifactId>
-	<version>0.5.1</version>
-	<groupId>app.android</groupId>
+	<name>Bus Time Parent</name>
+	<artifactId>bus-time-parent</artifactId>
+	<version>0.6.5</version>
+	<groupId>ru.ming13.bustime</groupId>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -21,29 +21,78 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<android.version>2.3.3</android.version>
-		<android.version.platform>10</android.version.platform>
+		<android.version>4.0.1.2</android.version>
+		<android.version.platform>15</android.version.platform>
 	</properties>
 
 	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 					<artifactId>android-maven-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.3.0</version>
+					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 					<extensions>true</extensions>
 					<configuration>
 						<sdk>
 							<platform>${android.version.platform}</platform>
 						</sdk>
-						<deleteConflictingFiles>true</deleteConflictingFiles>
 						<undeployBeforeDeploy>true</undeployBeforeDeploy>
 						<lazyLibraryUnpack>true</lazyLibraryUnpack>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-jarsigner-plugin</artifactId>
+					<version>1.2</version>
+					<groupId>org.apache.maven.plugins</groupId>
+					<configuration>
+						<removeExistingSignatures>true</removeExistingSignatures>
+						<arguments>
+							<argument>-sigalg</argument><argument>MD5withRSA</argument>
+							<argument>-digestalg</argument><argument>SHA1</argument>
+						</arguments>
 					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.5</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>dependencies</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+
+			<plugin>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>2.5.2</version>
+				<groupId>org.codehaus.mojo</groupId>
+				<configuration>
+					<onlyAnalyze>${project.groupId}.-</onlyAnalyze>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>2.7.1</version>
+				<configuration>
+					<targetJdk>1.6</targetJdk>
+					<excludes>
+						<exclude>com/actionbarsherlock/**</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 
 </project>

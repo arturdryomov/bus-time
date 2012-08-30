@@ -1,99 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="app.android.bustime"
-	android:versionCode="2"
-	android:versionName="0.5.1"
-	android:installLocation="auto" >
+	package="ru.ming13.bustime"
+	android:versionCode="4"
+	android:versionName="0.6.5"
+	android:installLocation="auto">
 
-	<uses-sdk android:minSdkVersion="10" />
+	<uses-sdk
+		android:minSdkVersion="7"
+		android:targetSdkVersion="14" />
 
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 	<application
-		android:label="@string/application_name"
+		android:name="BusTimeApplication"
 		android:icon="@drawable/ic_launcher_bustime"
-		android:theme="@android:style/Theme.Light.NoTitleBar"
-		android:name="BusTimeApplication" >
+		android:logo="@color/background_action_bar"
+		android:label="@string/application_name"
+		android:theme="@style/Theme.BusTime">
 
 		<uses-library android:name="com.google.android.maps" />
 
 		<activity
-			android:name=".ui.DashboardActivity" >
+			android:name=".ui.activity.HomeActivity"
+			android:theme="@style/Theme.BusTime.Home">
+
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
-
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
+
+			<meta-data
+				android:name="android.app.default_searchable"
+				android:value=".ui.activity.StationsSearchActivity" />
 		</activity>
 
 		<activity
-			android:name=".ui.RouteCreationActivity" >
-		</activity>
-		<activity
-			android:name=".ui.RouteRenamingActivity" >
-		</activity>
-		<activity
-			android:name=".ui.DepartureTimetableActivity" >
-		</activity>
-		<activity
-			android:name=".ui.DepartureTimeCreationActivity" >
-		</activity>
-		<activity
-			android:name=".ui.DepartureTimeEditingActivity" >
-		</activity>
-		<activity
-			android:name=".ui.StationLocationActivity" >
-		</activity>
-		<activity
-			android:name=".ui.StationRenamingActivity" >
-		</activity>
-		<activity
-			android:name=".ui.ShiftTimeEditingActivity" >
-		</activity>
-		<activity
-			android:name=".ui.TimetableActivity" >
-		</activity>
-		<activity
-			android:name=".ui.SynchronizationActivity">
+			android:name=".ui.activity.RoutesActivity"
+			android:label="@string/title_routes">
 		</activity>
 
-		<!-- Specific activities with routes dispatch -->
-
 		<activity
-			android:name=".ui.dispatch.routes.RoutesListActivity" >
-		</activity>
-		<activity
-			android:name=".ui.dispatch.routes.StationsListActivity" >
-		</activity>
-		<activity
-			android:name=".ui.dispatch.routes.StationCreationActivity" >
+			android:name=".ui.activity.StationsActivity"
+			android:label="@string/title_stations">
 		</activity>
 
-		<!-- Specific activities with stations dispatch -->
-
 		<activity
-			android:name=".ui.dispatch.stations.RoutesListActivity" >
-		</activity>
-		<activity
-			android:name=".ui.dispatch.stations.StationsListActivity" >
-		</activity>
-		<activity
-			android:name=".ui.dispatch.stations.StationCreationActivity" >
+			android:name=".ui.activity.StationsMapActivity"
+			android:label="@string/title_stations">
 		</activity>
 
-		<!-- Dropbox authorization activity -->
-
 		<activity
-			android:name="com.dropbox.client2.android.AuthActivity"
-			android:launchMode="singleTask"
-			android:configChanges="orientation|keyboard">
+			android:name=".ui.activity.StationsSearchActivity"
+			android:label="@string/title_stations">
+
 			<intent-filter>
-				<data android:scheme="@string/dropbox_activity_key" />
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.BROWSABLE"/>
-				<category android:name="android.intent.category.DEFAULT" />
+				<action android:name="android.intent.action.SEARCH" />
 			</intent-filter>
+
+			<meta-data
+				android:name="android.app.searchable"
+				android:resource="@xml/search" />
+		</activity>
+
+		<activity
+			android:name=".ui.activity.TimetableActivity"
+			android:label="@string/title_timetable_full_week"
+			android:configChanges="keyboardHidden|orientation|screenSize">
 		</activity>
 	</application>
 

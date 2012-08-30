@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.readystatesoftware.maps.TapControlledMapView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/map"
+	android:apiKey="@string/key_google_maps"
+	android:clickable="true"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" />

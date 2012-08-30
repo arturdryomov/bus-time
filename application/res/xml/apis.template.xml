@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- Copy this file as “apis.xml” to “values” directory. -->
+
+	<!-- Obtain your own API keys and paste it to “apis.xml”. -->
+
+	<!-- Google Maps -->
+
+	<string name="key_google_maps">GOOGLE_MAPS_API_KEY</string>
+
+	<!-- BugSense -->
+
+	<bool name="flag_bugsense_enabled">false</bool>
+	<string name="key_bugsense_project">BUGSENSE_PROJECT_KEY</string>
+
+</resources>
