@@ -45,6 +45,8 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 
 	private boolean isUpdatingDialogHidingOnResumeRequested;
 
+	private MenuItem updatingActionBarButton;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -123,10 +125,22 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 	@Override
 	public void onAvailableUpdate() {
 		showUpdatingAvailableMessage();
+
+		if (isUpdatingActionBarButtonExists()) {
+			showUpdatingActionBarButton();
+		}
 	}
 
 	private void showUpdatingAvailableMessage() {
 		getSupportActionBar().setSubtitle(R.string.warning_update_available);
+	}
+
+	private boolean isUpdatingActionBarButtonExists() {
+		return updatingActionBarButton != null;
+	}
+
+	private void showUpdatingActionBarButton() {
+		updatingActionBarButton.setVisible(true);
 	}
 
 	@Override
@@ -159,10 +173,18 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 		refreshFragments();
 
 		hideUpdatingProgressDialog();
+
+		if (isUpdatingActionBarButtonExists()) {
+			hideUpdatingActionBarButton();
+		}
 	}
 
 	private void hideUpdatingAvailableMessage() {
 		getSupportActionBar().setSubtitle(null);
+	}
+
+	private void hideUpdatingActionBarButton() {
+		updatingActionBarButton.setVisible(false);
 	}
 
 	private void refreshFragments() {
@@ -321,6 +343,8 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.menu_action_bar_home, menu);
+
+		updatingActionBarButton = menu.findItem(R.id.menu_update);
 
 		return true;
 	}
