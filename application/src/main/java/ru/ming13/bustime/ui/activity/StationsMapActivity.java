@@ -12,8 +12,6 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockMapActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -316,29 +314,12 @@ public class StationsMapActivity extends SherlockMapActivity
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.menu_action_bar_map, menu);
-
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem menuItem) {
-		switch (menuItem.getItemId()) {
-			case R.id.menu_location:
-				animateToCurrentLocation();
-				return true;
-
-			default:
-				return super.onOptionsItemSelected(menuItem);
-		}
-	}
-
-	@Override
 	protected void onResume() {
 		super.onResume();
 
 		myLocationOverlay.enableMyLocation();
+
+		animateToCurrentLocation();
 	}
 
 	@Override
