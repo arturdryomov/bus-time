@@ -20,6 +20,7 @@
 	<string name="menu_stations_map">Карта остановок</string>
 	<string name="menu_update_database">Обновить информацию</string>
 	<string name="menu_search">Поиск остановок</string>
+	<string name="menu_location">Текущее местоположение</string>
 
 	<string name="search_hint">Поиск остановок</string>
 
@@ -28,7 +29,7 @@
 	<string name="loading_timetable">Загрузка расписания…</string>
 	<string name="loading_update">Обновление…</string>
 
-	<string name="warning_update_available">Доступно обновление</string>
+	<string name="warning_update_available">Есть обновления</string>
 
 	<string name="error_unspecified">Ой, какая-то ошибка!</string>
 

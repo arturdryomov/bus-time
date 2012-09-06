@@ -11,6 +11,7 @@
 		android:id="@+id/menu_update"
 		android:icon="@drawable/ic_menu_update"
 		android:title="@string/menu_update_database"
+		android:visible="false"
 		android:showAsAction="always" />
 
 	<item

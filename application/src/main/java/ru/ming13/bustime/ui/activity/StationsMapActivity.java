@@ -18,6 +18,7 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
+import org.apache.commons.lang3.StringUtils;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.db.DbProvider;
 import ru.ming13.bustime.db.model.Station;
@@ -35,6 +36,8 @@ public class StationsMapActivity extends SherlockMapActivity
 
 	private static final double DEFAULT_MAP_POSITION_LATITUDE = 55.533185;
 	private static final double DEFAULT_MAP_POSITION_LONGITUDE = 28.655477;
+
+	private static final int FAR_FROM_DISTANCE_IN_METERS = 50000;
 
 	private static final String STATION_NAME_REMARK_BEGIN_SIGN = "(";
 	private static final String STATION_NAME_REMARK_END_SIGN = ")";
@@ -78,16 +81,61 @@ public class StationsMapActivity extends SherlockMapActivity
 		{
 			@Override
 			public void run() {
-				getMapView().getController().animateTo(myLocationOverlay.getMyLocation());
+				if (!isCurrentLocationFarFromDefaultLocation()) {
+					animateToCurrentLocation();
+				}
 			}
 		});
 
 		getMapView().getOverlays().add(myLocationOverlay);
 	}
 
+	private boolean isCurrentLocationFarFromDefaultLocation() {
+		GeoPoint currentLocation = myLocationOverlay.getMyLocation();
+
+		return isLocationFarFromDefaultLocation(currentLocation);
+	}
+
+	private boolean isLocationFarFromDefaultLocation(GeoPoint locationPoint) {
+		Location location = buildLocation(locationPoint);
+		Location defaultLocation = buildLocation(getDefaultLocation());
+
+		return location.distanceTo(defaultLocation) > FAR_FROM_DISTANCE_IN_METERS;
+	}
+
+	private Location buildLocation(GeoPoint geoPoint) {
+		Location location = new Location(StringUtils.EMPTY);
+
+		location.setLatitude(geoPoint.getLatitudeE6() / MICRODEGREES_IN_DEGREE);
+		location.setLongitude(geoPoint.getLongitudeE6() / MICRODEGREES_IN_DEGREE);
+
+		return location;
+	}
+
+	private GeoPoint getDefaultLocation() {
+		return buildGeoPoint(DEFAULT_MAP_POSITION_LATITUDE, DEFAULT_MAP_POSITION_LONGITUDE);
+	}
+
+	private GeoPoint buildGeoPoint(double latitude, double longitude) {
+		int latitudeE6 = (int) (latitude * MICRODEGREES_IN_DEGREE);
+		int longitudeE6 = (int) (longitude * MICRODEGREES_IN_DEGREE);
+
+		return new GeoPoint(latitudeE6, longitudeE6);
+	}
+
+	private void animateToCurrentLocation() {
+		GeoPoint currentLocation = myLocationOverlay.getMyLocation();
+
+		if (currentLocation == null) {
+			return;
+		}
+
+		getMapView().getController().animateTo(currentLocation);
+	}
+
 	private void setUpDefaultLocation() {
-		if (isLastLocationKnown()) {
-			getMapView().getController().animateTo(getLastKnownLocation());
+		if (isLastLocationKnown() && !isLastKnownLocationFarFromDefaultLocation()) {
+			animateToLastKnownLocation();
 		}
 		else {
 			animateToDefaultLocation();
@@ -117,17 +165,22 @@ public class StationsMapActivity extends SherlockMapActivity
 		return null;
 	}
 
-	private GeoPoint buildGeoPoint(double latitude, double longitude) {
-		int latitudeE6 = (int) (latitude * MICRODEGREES_IN_DEGREE);
-		int longitudeE6 = (int) (longitude * MICRODEGREES_IN_DEGREE);
+	private boolean isLastKnownLocationFarFromDefaultLocation() {
+		GeoPoint lastKnownLocation = getLastKnownLocation();
 
-		return new GeoPoint(latitudeE6, longitudeE6);
+		return isLocationFarFromDefaultLocation(lastKnownLocation);
+	}
+
+	private void animateToLastKnownLocation() {
+		GeoPoint lastKnownLocation = getLastKnownLocation();
+
+		getMapView().getController().animateTo(lastKnownLocation);
 	}
 
 	private void animateToDefaultLocation() {
-		GeoPoint defaultPoint = buildGeoPoint(DEFAULT_MAP_POSITION_LATITUDE,
-			DEFAULT_MAP_POSITION_LONGITUDE);
-		getMapView().getController().animateTo(defaultPoint);
+		GeoPoint defaultLocation = getDefaultLocation();
+
+		getMapView().getController().animateTo(defaultLocation);
 	}
 
 	private void populateMap() {
@@ -265,6 +318,8 @@ public class StationsMapActivity extends SherlockMapActivity
 		super.onResume();
 
 		myLocationOverlay.enableMyLocation();
+
+		animateToCurrentLocation();
 	}
 
 	@Override
