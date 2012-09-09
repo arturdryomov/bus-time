@@ -6,7 +6,9 @@ import java.util.List;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDoneException;
 import android.os.Parcel;
 import android.os.Parcelable;
 import ru.ming13.bustime.db.DbException;
@@ -14,6 +16,7 @@ import ru.ming13.bustime.db.DbProvider;
 import ru.ming13.bustime.db.sqlite.DbFieldNames;
 import ru.ming13.bustime.db.sqlite.DbTableNames;
 import ru.ming13.bustime.db.time.Time;
+import ru.ming13.bustime.db.time.TimeException;
 
 
 public class Station implements Parcelable
@@ -134,6 +137,44 @@ public class Station implements Parcelable
 		List<Time> routeDepartureTimetable = route.getWeekendDepartureTimetable();
 
 		return getRouteTimetable(routeTimeShift, routeDepartureTimetable);
+	}
+
+	public Time getClosestTrip(Route route) {
+		String closestTripSelectionQuery = buildClosestTripSelectionQuery(route);
+
+		try {
+			String closestTripStringTime = DatabaseUtils.stringForQuery(database,
+				closestTripSelectionQuery, null);
+
+			return Time.parse(closestTripStringTime);
+		}
+		catch (SQLiteDoneException e) {
+			throw new TimeException();
+		}
+	}
+
+	private String buildClosestTripSelectionQuery(Route route) {
+		StringBuilder queryBuilder = new StringBuilder();
+
+		queryBuilder.append("select ");
+		queryBuilder.append(String.format("%s ", DbFieldNames.DEPARTURE_TIME));
+
+		queryBuilder.append(String.format("from %s ", DbTableNames.TRIPS));
+
+		queryBuilder.append(String.format("where %s = %d and ", DbFieldNames.ROUTE_ID, route.getId()));
+		queryBuilder.append(String.format("%s >= '%s' ", DbFieldNames.DEPARTURE_TIME,
+			calculatePossibleDepartureTime(route).toDatabaseString()));
+
+		queryBuilder.append("limit 1");
+
+		return queryBuilder.toString();
+	}
+
+	private Time calculatePossibleDepartureTime(Route route) {
+		Time currentTime = Time.newInstance();
+		Time routeTimeShift = getRouteTimeShift(route);
+
+		return currentTime.subtract(routeTimeShift);
 	}
 
 	@Override
