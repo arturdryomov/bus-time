@@ -34,5 +34,6 @@
 	<string name="error_unspecified">Ой, какая-то ошибка!</string>
 
 	<string name="token_time_now">прямо сейчас</string>
+	<string name="token_no_trips">сегодня рейсов больше не ожидается</string>
 
 </resources>

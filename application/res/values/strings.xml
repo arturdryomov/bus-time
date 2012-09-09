@@ -36,5 +36,6 @@
 	<string name="error_unspecified">Ooops, some error just happened!</string>
 
 	<string name="token_time_now">right now</string>
+	<string name="token_no_trips">no trips today left</string>
 
 </resources>
