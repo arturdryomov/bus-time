@@ -11,7 +11,6 @@ import java.util.Map;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.Log;
 import ru.ming13.bustime.db.DbProvider;
 import ru.ming13.bustime.db.model.Route;
 import ru.ming13.bustime.db.model.Station;
@@ -80,9 +79,6 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 	}
 
 	private Time getClosestTrip(Route route) {
-		Log.d("SORT", route.getName());
-
-
 		if (!route.isWeekPartDependent()) {
 			return station.getClosestFullWeekTrip(route);
 		}
