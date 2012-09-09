@@ -14,6 +14,7 @@ import android.os.Parcelable;
 import ru.ming13.bustime.db.DbException;
 import ru.ming13.bustime.db.DbProvider;
 import ru.ming13.bustime.db.sqlite.DbFieldNames;
+import ru.ming13.bustime.db.sqlite.DbFieldValues;
 import ru.ming13.bustime.db.sqlite.DbTableNames;
 import ru.ming13.bustime.db.time.Time;
 import ru.ming13.bustime.db.time.TimeException;
@@ -139,8 +140,12 @@ public class Station implements Parcelable
 		return getRouteTimetable(routeTimeShift, routeDepartureTimetable);
 	}
 
-	public Time getClosestTrip(Route route) {
-		String closestTripSelectionQuery = buildClosestTripSelectionQuery(route);
+	public Time getClosestFullWeekTrip(Route route) {
+		return getClosestTrip(route, DbFieldValues.TRIP_FULL_WEEK_ID);
+	}
+
+	private Time getClosestTrip(Route route, int tripTypeId) {
+		String closestTripSelectionQuery = buildClosestTripSelectionQuery(route, tripTypeId);
 
 		try {
 			String closestTripStringTime = DatabaseUtils.stringForQuery(database,
@@ -153,7 +158,7 @@ public class Station implements Parcelable
 		}
 	}
 
-	private String buildClosestTripSelectionQuery(Route route) {
+	private String buildClosestTripSelectionQuery(Route route, int tripTypeId) {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select ");
@@ -162,6 +167,7 @@ public class Station implements Parcelable
 		queryBuilder.append(String.format("from %s ", DbTableNames.TRIPS));
 
 		queryBuilder.append(String.format("where %s = %d and ", DbFieldNames.ROUTE_ID, route.getId()));
+		queryBuilder.append(String.format("%s = %d and ", DbFieldNames.TRIP_TYPE_ID, tripTypeId));
 		queryBuilder.append(String.format("%s >= '%s' ", DbFieldNames.DEPARTURE_TIME,
 			calculatePossibleDepartureTime(route).toDatabaseString()));
 
@@ -175,6 +181,14 @@ public class Station implements Parcelable
 		Time routeTimeShift = getRouteTimeShift(route);
 
 		return currentTime.subtract(routeTimeShift);
+	}
+
+	public Time getClosestWorkdaysTrip(Route route) {
+		return getClosestTrip(route, DbFieldValues.TRIP_WORKDAY_ID);
+	}
+
+	public Time getClosestWeekendTrip(Route route) {
+		return getClosestTrip(route, DbFieldValues.TRIP_WEEKEND_ID);
 	}
 
 	@Override
