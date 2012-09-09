@@ -23,6 +23,13 @@ import ru.ming13.bustime.ui.loader.RoutesForStationLoader;
 
 public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Time>> implements LoaderManager.LoaderCallbacks<List<Map<Route, Time>>>
 {
+	private static enum Sorting
+	{
+		BY_NAME, BY_BUS_TIME
+	}
+
+	private Sorting sorting = Sorting.BY_BUS_TIME;
+
 	private static final String LIST_ITEM_NAME_ID = "name";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
 
@@ -101,7 +108,16 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 
 	@Override
 	public Loader<List<Map<Route, Time>>> onCreateLoader(int loaderId, Bundle loaderArguments) {
-		return RoutesForStationLoader.newNameSortingInstance(getActivity(), station);
+		switch (sorting) {
+			case BY_NAME:
+				return RoutesForStationLoader.newNameSortingInstance(getActivity(), station);
+
+			case BY_BUS_TIME:
+				return RoutesForStationLoader.newBusTimeSortingInstance(getActivity(), station);
+
+			default:
+				return RoutesForStationLoader.newBusTimeSortingInstance(getActivity(), station);
+		}
 	}
 
 	@Override
@@ -120,6 +136,9 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 
 	@Override
 	public void callListRepopulation() {
+		list.clear();
+		refreshListContent();
+
 		setEmptyListText(R.string.loading_routes);
 
 		getLoaderManager().restartLoader(Loaders.ROUTES_FOR_STATION, null, this);
@@ -136,5 +155,17 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 	private void callTimetableActivity(Route route) {
 		Intent callIntent = IntentFactory.createTimetableIntent(getActivity(), route, station);
 		startActivity(callIntent);
+	}
+
+	public void sortByName() {
+		sorting = Sorting.BY_NAME;
+
+		callListRepopulation();
+	}
+
+	public void sortByBusTime() {
+		sorting = Sorting.BY_BUS_TIME;
+
+		callListRepopulation();
 	}
 }
