@@ -62,14 +62,22 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 	protected Map<String, Object> buildListItem(Map<Route, Time> routeAndTime) {
 		Map<String, Object> listItem = new HashMap<String, Object>();
 
-		Route route = routeAndTime.keySet().iterator().next();
-		Time time = routeAndTime.get(route);
+		Route route = getRoute(routeAndTime);
+		Time time = getTime(routeAndTime);
 
 		listItem.put(LIST_ITEM_OBJECT_ID, routeAndTime);
 		listItem.put(LIST_ITEM_NAME_ID, route.getName());
 		listItem.put(LIST_ITEM_REMAINING_TIME_ID, buildRemainingTimeText(time));
 
 		return listItem;
+	}
+
+	private Route getRoute(Map<Route, Time> routeAndTime) {
+		return routeAndTime.keySet().iterator().next();
+	}
+
+	private Time getTime(Map<Route, Time> routeAndTime) {
+		return routeAndTime.get(getRoute(routeAndTime));
 	}
 
 	private String buildRemainingTimeText(Time time) {
@@ -93,7 +101,7 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 
 	@Override
 	public Loader<List<Map<Route, Time>>> onCreateLoader(int loaderId, Bundle loaderArguments) {
-		return new RoutesForStationLoader(getActivity(), station);
+		return RoutesForStationLoader.newNameSortingInstance(getActivity(), station);
 	}
 
 	@Override
@@ -121,7 +129,7 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 
-		Route selectedRoute = getListItemObject(position).keySet().iterator().next();
+		Route selectedRoute = getRoute(getListItemObject(position));
 		callTimetableActivity(selectedRoute);
 	}
 
