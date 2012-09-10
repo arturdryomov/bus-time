@@ -101,9 +101,7 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 
 	@Override
 	protected void callListPopulation() {
-		setEmptyListText(R.string.loading_routes);
-
-		getLoaderManager().initLoader(Loaders.ROUTES_FOR_STATION, null, this);
+		// It would be populated with list navigation automatic
 	}
 
 	@Override
