@@ -69,7 +69,7 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 		Map<Route, Time> resultItem = new HashMap<Route, Time>();
 
 		try {
-			resultItem.put(route, getClosestTrip(route));
+			resultItem.put(route, getClosestBusTime(route));
 		}
 		catch (TimeException e) {
 			resultItem.put(route, null);
@@ -78,7 +78,7 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 		return resultItem;
 	}
 
-	private Time getClosestTrip(Route route) {
+	private Time getClosestBusTime(Route route) {
 		if (!route.isWeekPartDependent()) {
 			return station.getClosestFullWeekBusTime(route);
 		}

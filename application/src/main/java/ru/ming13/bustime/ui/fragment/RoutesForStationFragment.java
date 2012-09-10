@@ -105,6 +105,14 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 	}
 
 	@Override
+	public void callListRepopulation() {
+		clearList();
+		setEmptyListText(R.string.loading_routes);
+
+		getLoaderManager().restartLoader(Loaders.ROUTES_FOR_STATION, null, this);
+	}
+
+	@Override
 	protected void callListPopulation() {
 		// It would be populated with list navigation automatic
 	}
@@ -135,16 +143,6 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 
 	@Override
 	public void onLoaderReset(Loader<List<Map<Route, Time>>> routesForStationLoader) {
-	}
-
-	@Override
-	public void callListRepopulation() {
-		list.clear();
-		refreshListContent();
-
-		setEmptyListText(R.string.loading_routes);
-
-		getLoaderManager().restartLoader(Loaders.ROUTES_FOR_STATION, null, this);
 	}
 
 	@Override
