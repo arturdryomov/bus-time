@@ -118,11 +118,11 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 			}
 
 			if (firstRouteTime == null) {
-				return -1;
+				return 1;
 			}
 
 			if (secondRouteTime == null) {
-				return 1;
+				return -1;
 			}
 
 			if (firstRouteTime.toDatabaseString().equals(secondRouteTime.toDatabaseString())) {
