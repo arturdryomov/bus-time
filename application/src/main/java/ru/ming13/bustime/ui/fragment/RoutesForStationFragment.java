@@ -1,12 +1,14 @@
 package ru.ming13.bustime.ui.fragment;
 
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.View;
@@ -32,6 +34,9 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 
 	private static final String LIST_ITEM_NAME_ID = "name";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
+
+	private final Handler remainingTimeTextUpdateTimer = new Handler();
+	private static final int AUTO_UPDATE_MILLISECONDS_PERIOD = 60000;
 
 	private Station station;
 
@@ -165,5 +170,67 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 		sorting = Sorting.BY_BUS_TIME;
 
 		callListRepopulation();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		updateRemainingTimes();
+		startUpdatingRemainingTimeText();
+	}
+
+	private void updateRemainingTimes() {
+		for (int listPosition = 0; listPosition < list.size(); listPosition++) {
+			Map<Route, Time> routeAndTime = getListItemObject(listPosition);
+
+			list.get(listPosition).put(LIST_ITEM_REMAINING_TIME_ID,
+				buildRemainingTimeText(getTime(routeAndTime)));
+		}
+
+		refreshListContent();
+	}
+
+	private void startUpdatingRemainingTimeText() {
+		stopUpdatingRemainingTimeText();
+
+		remainingTimeTextUpdateTimer.postDelayed(remainingTimeTextUpdateTask,
+			calculateMillisecondsForNextMinute());
+	}
+
+	private void stopUpdatingRemainingTimeText() {
+		remainingTimeTextUpdateTimer.removeCallbacks(remainingTimeTextUpdateTask);
+	}
+
+	private long calculateMillisecondsForNextMinute() {
+		Calendar currentTime = Calendar.getInstance();
+
+		Calendar nextMinuteTime = Calendar.getInstance();
+		nextMinuteTime.add(Calendar.MINUTE, 1);
+		nextMinuteTime.set(Calendar.SECOND, 0);
+
+		return nextMinuteTime.getTimeInMillis() - currentTime.getTimeInMillis();
+	}
+
+	private final Runnable remainingTimeTextUpdateTask = new Runnable()
+	{
+		@Override
+		public void run() {
+			updateRemainingTimes();
+
+			continueUpdatingRemainingTimeText();
+		}
+	};
+
+	private void continueUpdatingRemainingTimeText() {
+		remainingTimeTextUpdateTimer.postDelayed(remainingTimeTextUpdateTask,
+			AUTO_UPDATE_MILLISECONDS_PERIOD);
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+
+		stopUpdatingRemainingTimeText();
 	}
 }
