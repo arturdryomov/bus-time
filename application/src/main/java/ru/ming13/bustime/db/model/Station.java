@@ -6,12 +6,15 @@ import java.util.List;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDoneException;
 import android.os.Parcel;
 import android.os.Parcelable;
 import ru.ming13.bustime.db.DbException;
 import ru.ming13.bustime.db.DbProvider;
 import ru.ming13.bustime.db.sqlite.DbFieldNames;
+import ru.ming13.bustime.db.sqlite.DbFieldValues;
 import ru.ming13.bustime.db.sqlite.DbTableNames;
 import ru.ming13.bustime.db.time.Time;
 import ru.ming13.bustime.db.time.TimeException;
@@ -138,36 +141,57 @@ public class Station implements Parcelable
 	}
 
 	public Time getClosestFullWeekTrip(Route route) {
-		return getClosestTrip(getFullWeekTimetable(route));
+		return getClosestTrip(route, DbFieldValues.TRIP_FULL_WEEK_ID);
 	}
 
-	private Time getClosestTrip(List<Time> timetable) {
-		if (timetable.isEmpty()) {
+	private Time getClosestTrip(Route route, int tripTypeId) {
+		Time routeTimeShift = getRouteTimeShift(route);
+
+		String closestTripSelectionQuery = buildClosestTripSelectionQuery(route.getId(), routeTimeShift,
+			tripTypeId);
+
+		try {
+			String closestTripDepartureStringTime = DatabaseUtils.stringForQuery(database,
+				closestTripSelectionQuery, null);
+			Time closestTripDepartureTime = Time.parse(closestTripDepartureStringTime);
+
+			return closestTripDepartureTime.sum(routeTimeShift);
+		}
+		catch (SQLiteDoneException e) {
 			throw new TimeException();
 		}
+	}
 
+	private String buildClosestTripSelectionQuery(long routeId, Time routeTimeShift, int tripTypeId) {
+		StringBuilder queryBuilder = new StringBuilder();
+
+		queryBuilder.append("select ");
+		queryBuilder.append(String.format("%s ", DbFieldNames.DEPARTURE_TIME));
+
+		queryBuilder.append(String.format("from %s ", DbTableNames.TRIPS));
+
+		queryBuilder.append(String.format("where %s = %d and ", DbFieldNames.ROUTE_ID, routeId));
+		queryBuilder.append(String.format("%s = %d and ", DbFieldNames.TRIP_TYPE_ID, tripTypeId));
+		queryBuilder.append(String.format("%s >= '%s' ", DbFieldNames.DEPARTURE_TIME,
+			calculatePossibleDepartureTime(routeTimeShift).toDatabaseString()));
+
+		queryBuilder.append("limit 1");
+
+		return queryBuilder.toString();
+	}
+
+	private Time calculatePossibleDepartureTime(Time routeTimeShift) {
 		Time currentTime = Time.newInstance();
-		Time closestTrip = timetable.get(0);
 
-		for (Time trip : timetable) {
-			if (trip.isAfter(currentTime)) {
-				return trip;
-			}
-
-			if (trip.toDatabaseString().equals(currentTime.toDatabaseString())) {
-				return trip;
-			}
-		}
-
-		return closestTrip;
+		return currentTime.subtract(routeTimeShift);
 	}
 
 	public Time getClosestWorkdaysTrip(Route route) {
-		return getClosestTrip(getWorkdaysTimetable(route));
+		return getClosestTrip(route, DbFieldValues.TRIP_WORKDAY_ID);
 	}
 
 	public Time getClosestWeekendTrip(Route route) {
-		return getClosestTrip(getWeekendTimetable(route));
+		return getClosestTrip(route, DbFieldValues.TRIP_WEEKEND_ID);
 	}
 
 	@Override
