@@ -140,29 +140,29 @@ public class Station implements Parcelable
 		return getRouteTimetable(routeTimeShift, routeDepartureTimetable);
 	}
 
-	public Time getClosestFullWeekTrip(Route route) {
-		return getClosestTrip(route, DbFieldValues.TRIP_FULL_WEEK_ID);
+	public Time getClosestFullWeekBusTime(Route route) {
+		return getClosestBusTime(route, DbFieldValues.TRIP_FULL_WEEK_ID);
 	}
 
-	private Time getClosestTrip(Route route, int tripTypeId) {
-		Time routeTimeShift = getRouteTimeShift(route);
-
-		String closestTripSelectionQuery = buildClosestTripSelectionQuery(route.getId(), routeTimeShift,
-			tripTypeId);
-
+	private Time getClosestBusTime(Route route, int tripTypeId) {
 		try {
-			String closestTripDepartureStringTime = DatabaseUtils.stringForQuery(database,
-				closestTripSelectionQuery, null);
-			Time closestTripDepartureTime = Time.parse(closestTripDepartureStringTime);
+			Time routeTimeShift = getRouteTimeShift(route);
 
-			return closestTripDepartureTime.sum(routeTimeShift);
+			String closestDepartureTimeSelectionQuery = buildClosestDepartureTimeSelectionQuery(
+				route.getId(), routeTimeShift, tripTypeId);
+
+			String closestDepartureStringTime = DatabaseUtils.stringForQuery(database,
+				closestDepartureTimeSelectionQuery, null);
+			Time closestDepartureTime = Time.parse(closestDepartureStringTime);
+
+			return closestDepartureTime.sum(routeTimeShift);
 		}
 		catch (SQLiteDoneException e) {
 			throw new TimeException();
 		}
 	}
 
-	private String buildClosestTripSelectionQuery(long routeId, Time routeTimeShift, int tripTypeId) {
+	private String buildClosestDepartureTimeSelectionQuery(long routeId, Time routeTimeShift, int tripTypeId) {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select ");
@@ -186,12 +186,12 @@ public class Station implements Parcelable
 		return currentTime.subtract(routeTimeShift);
 	}
 
-	public Time getClosestWorkdaysTrip(Route route) {
-		return getClosestTrip(route, DbFieldValues.TRIP_WORKDAY_ID);
+	public Time getClosestWorkdaysBusTime(Route route) {
+		return getClosestBusTime(route, DbFieldValues.TRIP_WORKDAY_ID);
 	}
 
-	public Time getClosestWeekendTrip(Route route) {
-		return getClosestTrip(route, DbFieldValues.TRIP_WEEKEND_ID);
+	public Time getClosestWeekendBusTime(Route route) {
+		return getClosestBusTime(route, DbFieldValues.TRIP_WEEKEND_ID);
 	}
 
 	@Override

@@ -80,14 +80,14 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 
 	private Time getClosestTrip(Route route) {
 		if (!route.isWeekPartDependent()) {
-			return station.getClosestFullWeekTrip(route);
+			return station.getClosestFullWeekBusTime(route);
 		}
 
 		if (Time.newInstance().isWeekend()) {
-			return station.getClosestWeekendTrip(route);
+			return station.getClosestWeekendBusTime(route);
 		}
 		else {
-			return station.getClosestWorkdaysTrip(route);
+			return station.getClosestWorkdaysBusTime(route);
 		}
 	}
 
