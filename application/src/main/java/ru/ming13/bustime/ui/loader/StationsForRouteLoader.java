@@ -11,6 +11,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import ru.ming13.bustime.db.DbProvider;
 import ru.ming13.bustime.db.model.Route;
 import ru.ming13.bustime.db.model.Station;
+import ru.ming13.bustime.db.sqlite.DbFieldValues;
 import ru.ming13.bustime.db.time.Time;
 import ru.ming13.bustime.db.time.TimeException;
 
@@ -25,6 +26,7 @@ public class StationsForRouteLoader extends AsyncTaskLoader<List<Map<Station, Ti
 	private final Order order;
 
 	private final Route route;
+	private int routeTripsType;
 
 	public static StationsForRouteLoader newNameOrderedInstance(Context context, Route route) {
 		return new StationsForRouteLoader(context, route, Order.BY_NAME);
@@ -53,11 +55,26 @@ public class StationsForRouteLoader extends AsyncTaskLoader<List<Map<Station, Ti
 	public List<Map<Station, Time>> loadInBackground() {
 		List<Map<Station, Time>> result = new ArrayList<Map<Station, Time>>();
 
+		routeTripsType = getRouteTripsType();
+
 		for (Station station : getStations()) {
 			result.add(buildResultItem(station));
 		}
 
 		return result;
+	}
+
+	private int getRouteTripsType() {
+		if (!route.isWeekPartDependent()) {
+			return DbFieldValues.TRIP_FULL_WEEK_ID;
+		}
+
+		if (Time.newInstance().isWeekend()) {
+			return DbFieldValues.TRIP_WEEKEND_ID;
+		}
+		else {
+			return DbFieldValues.TRIP_WORKDAY_ID;
+		}
 	}
 
 	private List<Station> getStations() {
@@ -87,15 +104,18 @@ public class StationsForRouteLoader extends AsyncTaskLoader<List<Map<Station, Ti
 	}
 
 	private Time getClosestBusTime(Station station) {
-		if (!route.isWeekPartDependent()) {
-			return station.getClosestFullWeekBusTime(route);
-		}
+		switch (routeTripsType) {
+			case DbFieldValues.TRIP_FULL_WEEK_ID:
+				return station.getClosestFullWeekBusTime(route);
 
-		if (Time.newInstance().isWeekend()) {
-			return station.getClosestWeekendBusTime(route);
-		}
-		else {
-			return station.getClosestWorkdaysBusTime(route);
+			case DbFieldValues.TRIP_WEEKEND_ID:
+				return station.getClosestWeekendBusTime(route);
+
+			case DbFieldValues.TRIP_WORKDAY_ID:
+				return station.getClosestWorkdaysBusTime(route);
+
+			default:
+				return station.getClosestFullWeekBusTime(route);
 		}
 	}
 }
