@@ -59,7 +59,7 @@ public class StationsLoader extends AsyncTaskLoader<List<Station>>
 				return DbProvider.getInstance().getStations().getStationsList();
 
 			case FOR_ROUTE:
-				return DbProvider.getInstance().getStations().getStationsList(route);
+				return DbProvider.getInstance().getStations().getStationsListOrderedByName(route);
 
 			case SEARCH:
 				return DbProvider.getInstance().getStations().getStationsList(searchQuery);
