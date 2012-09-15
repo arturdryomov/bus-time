@@ -20,29 +20,29 @@ import ru.ming13.bustime.db.time.TimeException;
 
 public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time>>>
 {
-	private static enum Sorting
+	private static enum Order
 	{
 		BY_NAME, BY_BUS_TIME
 	}
 
-	private final Sorting sorting;
+	private final Order order;
 
 	private final Station station;
 
-	public static RoutesForStationLoader newNameSortingInstance(Context context, Station station) {
-		return new RoutesForStationLoader(context, station, Sorting.BY_NAME);
+	public static RoutesForStationLoader newNameOrderedInstance(Context context, Station station) {
+		return new RoutesForStationLoader(context, station, Order.BY_NAME);
 	}
 
-	private RoutesForStationLoader(Context context, Station station, Sorting sorting) {
+	private RoutesForStationLoader(Context context, Station station, Order order) {
 		super(context);
 
 		this.station = station;
 
-		this.sorting = sorting;
+		this.order = order;
 	}
 
-	public static RoutesForStationLoader newBusTimeSortingInstance(Context context, Station station) {
-		return new RoutesForStationLoader(context, station, Sorting.BY_BUS_TIME);
+	public static RoutesForStationLoader newBusTimeOrderedInstance(Context context, Station station) {
+		return new RoutesForStationLoader(context, station, Order.BY_BUS_TIME);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 			result.add(buildResultItem(route));
 		}
 
-		sortRoutesAndTimes(result);
+		reorderRoutesAndTimes(result);
 
 		return result;
 	}
@@ -91,8 +91,8 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 		}
 	}
 
-	private void sortRoutesAndTimes(List<Map<Route, Time>> routesAndTimes) {
-		switch (sorting) {
+	private void reorderRoutesAndTimes(List<Map<Route, Time>> routesAndTimes) {
+		switch (order) {
 			case BY_NAME:
 				// It’s already sorted by name by database
 				break;

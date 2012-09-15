@@ -23,6 +23,14 @@
 		<item>@string/title_routes_by_name</item>
 	</string-array>
 
+	<string name="title_stations_by_route_order">Stations: by route order</string>
+	<string name="title_stations_by_name">Stations: by name</string>
+
+	<string-array name="titles_stations_with_sorting">
+		<item>@string/title_stations_by_route_order</item>
+		<item>@string/title_stations_by_name</item>
+	</string-array>
+
 	<string name="empty_routes">No routes.</string>
 	<string name="empty_stations">No stations.</string>
 	<string name="empty_timetable">Timetable is empty.</string>

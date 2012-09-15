@@ -18,44 +18,44 @@ import ru.ming13.bustime.db.model.Station;
 import ru.ming13.bustime.db.time.Time;
 import ru.ming13.bustime.ui.intent.IntentFactory;
 import ru.ming13.bustime.ui.loader.Loaders;
-import ru.ming13.bustime.ui.loader.RoutesForStationLoader;
+import ru.ming13.bustime.ui.loader.StationsForRouteLoader;
 import ru.ming13.bustime.ui.util.EveryMinuteActionPerformer;
 
 
-public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Time>> implements LoaderManager.LoaderCallbacks<List<Map<Route, Time>>>, EveryMinuteActionPerformer.EveryMinuteCallback
+public class StationsForRouteFragment extends AdaptedListFragment<Map<Station, Time>> implements LoaderManager.LoaderCallbacks<List<Map<Station, Time>>>, EveryMinuteActionPerformer.EveryMinuteCallback
 {
 	private static enum Order
 	{
-		BY_NAME, BY_BUS_TIME
+		BY_NAME, BY_TIME_SHIFT
 	}
 
-	private Order order = Order.BY_BUS_TIME;
+	private Order order = Order.BY_TIME_SHIFT;
 
 	private static final String LIST_ITEM_NAME_ID = "name";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
 
 	private final EveryMinuteActionPerformer everyMinuteActionPerformer;
 
-	private Station station;
+	private Route route;
 
-	public RoutesForStationFragment() {
+	public StationsForRouteFragment() {
 		super();
 
 		everyMinuteActionPerformer = new EveryMinuteActionPerformer(this);
 	}
 
-	public static RoutesForStationFragment newInstance(Station station) {
-		RoutesForStationFragment routesForStationFragment = new RoutesForStationFragment();
+	public static StationsForRouteFragment newInstance(Route route) {
+		StationsForRouteFragment stationsForRouteFragment = new StationsForRouteFragment();
 
-		routesForStationFragment.setArguments(buildArguments(station));
+		stationsForRouteFragment.setArguments(buildArguments(route));
 
-		return routesForStationFragment;
+		return stationsForRouteFragment;
 	}
 
-	private static Bundle buildArguments(Station station) {
+	private static Bundle buildArguments(Route route) {
 		Bundle arguments = new Bundle();
 
-		arguments.putParcelable(FragmentArguments.STATION, station);
+		arguments.putParcelable(FragmentArguments.ROUTE, route);
 
 		return arguments;
 	}
@@ -64,7 +64,7 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		station = getArguments().getParcelable(FragmentArguments.STATION);
+		route = getArguments().getParcelable(FragmentArguments.ROUTE);
 	}
 
 	@Override
@@ -75,25 +75,25 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 	}
 
 	@Override
-	protected Map<String, Object> buildListItem(Map<Route, Time> routeAndTime) {
+	protected Map<String, Object> buildListItem(Map<Station, Time> stationAndTime) {
 		Map<String, Object> listItem = new HashMap<String, Object>();
 
-		Route route = getRoute(routeAndTime);
-		Time time = getTime(routeAndTime);
+		Station station = getStation(stationAndTime);
+		Time time = getTime(stationAndTime);
 
-		listItem.put(LIST_ITEM_OBJECT_ID, routeAndTime);
-		listItem.put(LIST_ITEM_NAME_ID, route.getName());
+		listItem.put(LIST_ITEM_OBJECT_ID, stationAndTime);
+		listItem.put(LIST_ITEM_NAME_ID, station.getName());
 		listItem.put(LIST_ITEM_REMAINING_TIME_ID, buildRemainingTimeText(time));
 
 		return listItem;
 	}
 
-	private Route getRoute(Map<Route, Time> routeAndTime) {
-		return routeAndTime.keySet().iterator().next();
+	private Station getStation(Map<Station, Time> stationAndTime) {
+		return stationAndTime.keySet().iterator().next();
 	}
 
-	private Time getTime(Map<Route, Time> routeAndTime) {
-		return routeAndTime.get(getRoute(routeAndTime));
+	private Time getTime(Map<Station, Time> stationAndTime) {
+		return stationAndTime.get(getStation(stationAndTime));
 	}
 
 	private String buildRemainingTimeText(Time time) {
@@ -116,48 +116,48 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 	@Override
 	public void callListRepopulation() {
 		clearList();
-		setEmptyListText(R.string.loading_routes);
+		setEmptyListText(R.string.loading_stations);
 
-		getLoaderManager().restartLoader(Loaders.ROUTES_FOR_STATION, null, this);
+		getLoaderManager().restartLoader(Loaders.STATIONS_FOR_ROUTE, null, this);
 	}
 
 	@Override
-	public Loader<List<Map<Route, Time>>> onCreateLoader(int loaderId, Bundle loaderArguments) {
+	public Loader<List<Map<Station, Time>>> onCreateLoader(int loaderId, Bundle loaderArguments) {
 		switch (order) {
 			case BY_NAME:
-				return RoutesForStationLoader.newNameOrderedInstance(getActivity(), station);
+				return StationsForRouteLoader.newNameOrderedInstance(getActivity(), route);
 
-			case BY_BUS_TIME:
-				return RoutesForStationLoader.newBusTimeOrderedInstance(getActivity(), station);
+			case BY_TIME_SHIFT:
+				return StationsForRouteLoader.newTimeShiftOrderedInstance(getActivity(), route);
 
 			default:
-				return RoutesForStationLoader.newBusTimeOrderedInstance(getActivity(), station);
+				return StationsForRouteLoader.newNameOrderedInstance(getActivity(), route);
 		}
 	}
 
 	@Override
-	public void onLoadFinished(Loader<List<Map<Route, Time>>> routesForStationLoader, List<Map<Route, Time>> routesAndTimes) {
-		if (routesAndTimes.isEmpty()) {
-			setEmptyListText(R.string.empty_routes);
+	public void onLoadFinished(Loader<List<Map<Station, Time>>> stationsForRouteLoader, List<Map<Station, Time>> stationsAndTimes) {
+		if (stationsAndTimes.isEmpty()) {
+			setEmptyListText(R.string.empty_stations);
 		}
 		else {
-			populateList(routesAndTimes);
+			populateList(stationsAndTimes);
 		}
 	}
 
 	@Override
-	public void onLoaderReset(Loader<List<Map<Route, Time>>> routesForStationLoader) {
+	public void onLoaderReset(Loader<List<Map<Station, Time>>> stationsForRouteLoader) {
 	}
 
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 
-		Route selectedRoute = getRoute(getListItemObject(position));
-		callTimetableActivity(selectedRoute);
+		Station selectedStation = getStation(getListItemObject(position));
+		callTimetableActivity(selectedStation);
 	}
 
-	private void callTimetableActivity(Route route) {
+	private void callTimetableActivity(Station station) {
 		Intent callIntent = IntentFactory.createTimetableIntent(getActivity(), route, station);
 		startActivity(callIntent);
 	}
@@ -168,8 +168,8 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 		callListRepopulation();
 	}
 
-	public void sortByBusTime() {
-		order = Order.BY_BUS_TIME;
+	public void sortByTimeShift() {
+		order = Order.BY_TIME_SHIFT;
 
 		callListRepopulation();
 	}
@@ -181,10 +181,10 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 
 	private void updateRemainingTimes() {
 		for (int listPosition = 0; listPosition < list.size(); listPosition++) {
-			Map<Route, Time> routeAndTime = getListItemObject(listPosition);
+			Map<Station, Time> stationAndTime = getListItemObject(listPosition);
 
 			list.get(listPosition).put(LIST_ITEM_REMAINING_TIME_ID,
-				buildRemainingTimeText(getTime(routeAndTime)));
+				buildRemainingTimeText(getTime(stationAndTime)));
 		}
 
 		refreshListContent();
