@@ -1,14 +1,12 @@
 package ru.ming13.bustime.ui.fragment;
 
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.View;
@@ -21,9 +19,10 @@ import ru.ming13.bustime.db.time.Time;
 import ru.ming13.bustime.ui.intent.IntentFactory;
 import ru.ming13.bustime.ui.loader.Loaders;
 import ru.ming13.bustime.ui.loader.RoutesForStationLoader;
+import ru.ming13.bustime.ui.util.EveryMinuteActionPerformer;
 
 
-public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Time>> implements LoaderManager.LoaderCallbacks<List<Map<Route, Time>>>
+public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Time>> implements LoaderManager.LoaderCallbacks<List<Map<Route, Time>>>, EveryMinuteActionPerformer.EveryMinuteCallback
 {
 	private static enum Sorting
 	{
@@ -35,10 +34,15 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 	private static final String LIST_ITEM_NAME_ID = "name";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
 
-	private final Handler remainingTimeTextUpdateTimer = new Handler();
-	private static final int AUTO_UPDATE_MILLISECONDS_PERIOD = 60000;
+	private final EveryMinuteActionPerformer everyMinuteActionPerformer;
 
 	private Station station;
+
+	public RoutesForStationFragment() {
+		super();
+
+		everyMinuteActionPerformer = new EveryMinuteActionPerformer(this);
+	}
 
 	public static RoutesForStationFragment newInstance(Station station) {
 		RoutesForStationFragment routesForStationFragment = new RoutesForStationFragment();
@@ -171,11 +175,8 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-
+	public void onEveryMinute() {
 		updateRemainingTimes();
-		startUpdatingRemainingTimeText();
 	}
 
 	private void updateRemainingTimes() {
@@ -189,46 +190,19 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 		refreshListContent();
 	}
 
-	private void startUpdatingRemainingTimeText() {
-		stopUpdatingRemainingTimeText();
+	@Override
+	public void onResume() {
+		super.onResume();
 
-		remainingTimeTextUpdateTimer.postDelayed(remainingTimeTextUpdateTask,
-			calculateMillisecondsForNextMinute());
-	}
+		updateRemainingTimes();
 
-	private void stopUpdatingRemainingTimeText() {
-		remainingTimeTextUpdateTimer.removeCallbacks(remainingTimeTextUpdateTask);
-	}
-
-	private long calculateMillisecondsForNextMinute() {
-		Calendar currentTime = Calendar.getInstance();
-
-		Calendar nextMinuteTime = Calendar.getInstance();
-		nextMinuteTime.add(Calendar.MINUTE, 1);
-		nextMinuteTime.set(Calendar.SECOND, 0);
-
-		return nextMinuteTime.getTimeInMillis() - currentTime.getTimeInMillis();
-	}
-
-	private final Runnable remainingTimeTextUpdateTask = new Runnable()
-	{
-		@Override
-		public void run() {
-			updateRemainingTimes();
-
-			continueUpdatingRemainingTimeText();
-		}
-	};
-
-	private void continueUpdatingRemainingTimeText() {
-		remainingTimeTextUpdateTimer.postDelayed(remainingTimeTextUpdateTask,
-			AUTO_UPDATE_MILLISECONDS_PERIOD);
+		everyMinuteActionPerformer.startPerforming();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 
-		stopUpdatingRemainingTimeText();
+		everyMinuteActionPerformer.stopPerforming();
 	}
 }
