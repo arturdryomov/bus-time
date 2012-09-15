@@ -15,6 +15,14 @@ import ru.ming13.bustime.ui.intent.IntentExtras;
 
 public class RoutesActivity extends FragmentWrapperActivity implements ActionBar.OnNavigationListener
 {
+	private static final class SavedInstanceKeys
+	{
+		private SavedInstanceKeys() {
+		}
+
+		public static final String SELECTED_LIST_NAVIGATION_INDEX = "list_navigation_index";
+	}
+
 	private static final class ListNavigationIndices
 	{
 		private ListNavigationIndices() {
@@ -44,6 +52,10 @@ public class RoutesActivity extends FragmentWrapperActivity implements ActionBar
 		super.onCreate(savedInstanceState);
 
 		setUpActionBarListNavigation();
+
+		if (isSavedInstanceStateValid(savedInstanceState)) {
+			setSelectedListNavigationIndex(savedInstanceState);
+		}
 	}
 
 	private void setUpActionBarListNavigation() {
@@ -81,5 +93,29 @@ public class RoutesActivity extends FragmentWrapperActivity implements ActionBar
 			default:
 				return false;
 		}
+	}
+
+	private boolean isSavedInstanceStateValid(Bundle savedInstanceState) {
+		return savedInstanceState != null && savedInstanceState.containsKey(
+			SavedInstanceKeys.SELECTED_LIST_NAVIGATION_INDEX);
+	}
+
+	private void setSelectedListNavigationIndex(Bundle savedInstanceState) {
+		int selectedListNavigationIndex = savedInstanceState.getInt(
+			SavedInstanceKeys.SELECTED_LIST_NAVIGATION_INDEX);
+
+		getSupportActionBar().setSelectedNavigationItem(selectedListNavigationIndex);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		outState.putInt(SavedInstanceKeys.SELECTED_LIST_NAVIGATION_INDEX,
+			getSelectedListNavigationIndex());
+	}
+
+	private int getSelectedListNavigationIndex() {
+		return getSupportActionBar().getSelectedNavigationIndex();
 	}
 }
