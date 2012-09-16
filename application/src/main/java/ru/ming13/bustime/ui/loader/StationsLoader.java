@@ -12,37 +12,41 @@ import ru.ming13.bustime.db.model.Station;
 
 public class StationsLoader extends AsyncTaskLoader<List<Station>>
 {
-	private static enum Mode
+	private static enum LoadingMode
 	{
-		ALL, FOR_ROUTE, SEARCH
+		ALL, FOR_ROUTE_SORTED_BY_NAME, FOR_ROUTE_SORTED_BY_TIME_SHIFT, SEARCH
 	}
 
-	private final Mode mode;
+	private final LoadingMode loadingMode;
 
 	private Route route;
 
 	private String searchQuery;
 
-	public StationsLoader(Context context) {
-		super(context);
-
-		mode = Mode.ALL;
+	public static StationsLoader newAllLoadingInstance(Context context) {
+		return new StationsLoader(context, LoadingMode.ALL, null, null);
 	}
 
-	public StationsLoader(Context context, Route route) {
+	private StationsLoader(Context context, LoadingMode loadingMode, Route route, String searchQuery) {
 		super(context);
+
+		this.loadingMode = loadingMode;
 
 		this.route = route;
 
-		mode = Mode.FOR_ROUTE;
+		this.searchQuery = searchQuery;
 	}
 
-	public StationsLoader(Context context, String searchQuery) {
-		super(context);
+	public static StationsLoader newForRouteSortedByNameLoadingInstance(Context context, Route route) {
+		return new StationsLoader(context, LoadingMode.FOR_ROUTE_SORTED_BY_NAME, route, null);
+	}
 
-		this.searchQuery = searchQuery;
+	public static StationsLoader newForRouteSortedByTimeShiftLoadingInstance(Context context, Route route) {
+		return new StationsLoader(context, LoadingMode.FOR_ROUTE_SORTED_BY_TIME_SHIFT, route, null);
+	}
 
-		mode = Mode.SEARCH;
+	public static StationsLoader newSearchLoadingInstance(Context context, String searchQuery) {
+		return new StationsLoader(context, LoadingMode.SEARCH, null, searchQuery);
 	}
 
 	@Override
@@ -54,12 +58,15 @@ public class StationsLoader extends AsyncTaskLoader<List<Station>>
 
 	@Override
 	public List<Station> loadInBackground() {
-		switch (mode) {
+		switch (loadingMode) {
 			case ALL:
 				return DbProvider.getInstance().getStations().getStationsList();
 
-			case FOR_ROUTE:
+			case FOR_ROUTE_SORTED_BY_NAME:
 				return DbProvider.getInstance().getStations().getStationsListOrderedByName(route);
+
+			case FOR_ROUTE_SORTED_BY_TIME_SHIFT:
+				return DbProvider.getInstance().getStations().getStationsListOrderedByTimeShift(route);
 
 			case SEARCH:
 				return DbProvider.getInstance().getStations().getStationsList(searchQuery);

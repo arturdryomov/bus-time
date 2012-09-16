@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import com.actionbarsherlock.app.ActionBar;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.db.model.Route;
-import ru.ming13.bustime.ui.fragment.StationsForRouteFragment;
+import ru.ming13.bustime.ui.fragment.StationsFragment;
 import ru.ming13.bustime.ui.intent.IntentException;
 import ru.ming13.bustime.ui.intent.IntentExtras;
 
@@ -34,7 +34,7 @@ public class StationsActivity extends FragmentWrapperActivity implements ActionB
 
 	@Override
 	protected Fragment buildFragment() {
-		return StationsForRouteFragment.newInstance(extractReceivedRoute());
+		return StationsFragment.newForRouteSortedByTimeShiftLoadingInstance(extractReceivedRoute());
 	}
 
 	private Route extractReceivedRoute() {
@@ -78,16 +78,16 @@ public class StationsActivity extends FragmentWrapperActivity implements ActionB
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		StationsForRouteFragment stationsForRouteFragment = (StationsForRouteFragment)
-			getSupportFragmentManager().findFragmentById(android.R.id.content);
+		StationsFragment stationsFragment = (StationsFragment) getSupportFragmentManager().findFragmentById(
+			android.R.id.content);
 
 		switch (itemPosition) {
 			case ListNavigationIndices.SORTING_BY_TIME_SHIFT:
-				stationsForRouteFragment.sortByTimeShift();
+				stationsFragment.sortByTimeShift();
 				return true;
 
 			case ListNavigationIndices.SORTING_BY_NAME:
-				stationsForRouteFragment.sortByName();
+				stationsFragment.sortByName();
 				return true;
 
 			default:
