@@ -23,9 +23,9 @@ public class StationsActivity extends FragmentWrapperActivity implements ActionB
 		public static final String SELECTED_LIST_NAVIGATION_INDEX = "list_navigation_index";
 	}
 
-	private static final class ListNavigationIndices
+	private static final class ListNavigationIndexes
 	{
-		private ListNavigationIndices() {
+		private ListNavigationIndexes() {
 		}
 
 		public static final int SORTING_BY_TIME_SHIFT = 0;
@@ -82,11 +82,11 @@ public class StationsActivity extends FragmentWrapperActivity implements ActionB
 			android.R.id.content);
 
 		switch (itemPosition) {
-			case ListNavigationIndices.SORTING_BY_TIME_SHIFT:
+			case ListNavigationIndexes.SORTING_BY_TIME_SHIFT:
 				stationsFragment.sortByTimeShift();
 				return true;
 
-			case ListNavigationIndices.SORTING_BY_NAME:
+			case ListNavigationIndexes.SORTING_BY_NAME:
 				stationsFragment.sortByName();
 				return true;
 

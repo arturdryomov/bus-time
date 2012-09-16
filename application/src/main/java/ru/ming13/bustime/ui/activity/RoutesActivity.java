@@ -23,9 +23,9 @@ public class RoutesActivity extends FragmentWrapperActivity implements ActionBar
 		public static final String SELECTED_LIST_NAVIGATION_INDEX = "list_navigation_index";
 	}
 
-	private static final class ListNavigationIndices
+	private static final class ListNavigationIndexes
 	{
-		private ListNavigationIndices() {
+		private ListNavigationIndexes() {
 		}
 
 		public static final int SORTING_BY_BUS_TIME = 0;
@@ -82,11 +82,11 @@ public class RoutesActivity extends FragmentWrapperActivity implements ActionBar
 			findFragmentById(android.R.id.content);
 
 		switch (itemPosition) {
-			case ListNavigationIndices.SORTING_BY_BUS_TIME:
+			case ListNavigationIndexes.SORTING_BY_BUS_TIME:
 				routesForStationFragment.sortByBusTime();
 				return true;
 
-			case ListNavigationIndices.SORTING_BY_NAME:
+			case ListNavigationIndexes.SORTING_BY_NAME:
 				routesForStationFragment.sortByName();
 				return true;
 

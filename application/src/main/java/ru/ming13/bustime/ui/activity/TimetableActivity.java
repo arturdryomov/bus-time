@@ -32,9 +32,9 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		public static final String SELECTED_LIST_NAVIGATION_INDEX = "list_navigation_index";
 	}
 
-	private static final class ListNavigationIndices
+	private static final class ListNavigationIndexes
 	{
-		private ListNavigationIndices() {
+		private ListNavigationIndexes() {
 		}
 
 		public static final int WORKDAYS = 0;
@@ -97,7 +97,7 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	private void setUpTimetableLoaderSafe(final boolean isTimetableWeekPartDependent) {
 		// Loaders don’t allow to run transactions on load finished
 
-		Runnable loaderRunnable = new Runnable()
+		Runnable timetableSetter = new Runnable()
 		{
 			@Override
 			public void run() {
@@ -110,7 +110,7 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 			}
 		};
 
-		new Handler().post(loaderRunnable);
+		new Handler().post(timetableSetter);
 	}
 
 	@Override
@@ -154,13 +154,13 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 			android.R.id.content);
 
 		switch (itemPosition) {
-			case ListNavigationIndices.WORKDAYS:
-				selectedNavigationItemIndex = ListNavigationIndices.WORKDAYS;
+			case ListNavigationIndexes.WORKDAYS:
+				selectedNavigationItemIndex = ListNavigationIndexes.WORKDAYS;
 				timetableFragment.loadWorkdaysTimetable();
 				return true;
 
-			case ListNavigationIndices.WEEKEND:
-				selectedNavigationItemIndex = ListNavigationIndices.WEEKEND;
+			case ListNavigationIndexes.WEEKEND:
+				selectedNavigationItemIndex = ListNavigationIndexes.WEEKEND;
 				timetableFragment.loadWeekendTimetable();
 				return true;
 
@@ -190,19 +190,17 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		int listNavigationIndex;
 
 		if (Time.newInstance().isWeekend()) {
-			listNavigationIndex = ListNavigationIndices.WEEKEND;
+			listNavigationIndex = ListNavigationIndexes.WEEKEND;
 		}
 		else {
-			listNavigationIndex = ListNavigationIndices.WORKDAYS;
+			listNavigationIndex = ListNavigationIndexes.WORKDAYS;
 		}
 
 		getSupportActionBar().setSelectedNavigationItem(listNavigationIndex);
 	}
 
 	private void setPreviousSelectedListNavigationItem() {
-		if (isPreviousSelectedListNavigationItemValid()) {
-			getSupportActionBar().setSelectedNavigationItem(selectedNavigationItemIndex);
-		}
+		getSupportActionBar().setSelectedNavigationItem(selectedNavigationItemIndex);
 	}
 
 	private boolean isPreviousSelectedListNavigationItemValid() {
