@@ -14,7 +14,7 @@ public class StationsSearchActivity extends FragmentWrapperActivity
 
 	@Override
 	protected Fragment buildFragment() {
-		return StationsFragment.newInstance(extractReceivedSearchStationName());
+		return StationsFragment.newSearchLoadingInstance(extractReceivedSearchStationName());
 	}
 
 	private String extractReceivedSearchStationName() {

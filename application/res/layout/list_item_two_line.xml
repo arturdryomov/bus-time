@@ -7,6 +7,7 @@
 		android:id="@+id/text_second_line"
 		android:singleLine="true"
 		android:textColor="?android:attr/textColorSecondaryInverse"
+		android:textAppearance="?android:attr/textAppearanceSmall"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true" />
@@ -15,6 +16,7 @@
 		android:id="@+id/text_first_line"
 		android:singleLine="true"
 		android:textColor="?android:attr/textColorPrimary"
+		android:textAppearance="?android:attr/textAppearanceMedium"
 		android:layout_above="@id/text_second_line"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

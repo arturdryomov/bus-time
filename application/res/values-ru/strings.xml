@@ -13,6 +13,22 @@
 		<item>@string/title_timetable_weekend</item>
 	</string-array>
 
+	<string name="title_routes_by_bus_time">Маршруты: по времени прибытия</string>
+	<string name="title_routes_by_name">Маршруты: по названию</string>
+
+	<string-array name="titles_routes_with_sorting">
+		<item>@string/title_routes_by_bus_time</item>
+		<item>@string/title_routes_by_name</item>
+	</string-array>
+
+	<string name="title_stations_by_route_order">Остановки: по следованию</string>
+	<string name="title_stations_by_name">Остановки: по названию</string>
+
+	<string-array name="titles_stations_with_sorting">
+		<item>@string/title_stations_by_route_order</item>
+		<item>@string/title_stations_by_name</item>
+	</string-array>
+
 	<string name="empty_routes">Маршрутов нет.</string>
 	<string name="empty_stations">Остановок нет.</string>
 	<string name="empty_timetable">Расписание пусто.</string>
@@ -20,7 +36,6 @@
 	<string name="menu_stations_map">Карта остановок</string>
 	<string name="menu_update_database">Обновить информацию</string>
 	<string name="menu_search">Поиск остановок</string>
-	<string name="menu_location">Текущее местоположение</string>
 
 	<string name="search_hint">Поиск остановок</string>
 
@@ -34,5 +49,6 @@
 	<string name="error_unspecified">Ой, какая-то ошибка!</string>
 
 	<string name="token_time_now">прямо сейчас</string>
+	<string name="token_no_trips">сегодня рейсов больше не ожидается</string>
 
 </resources>

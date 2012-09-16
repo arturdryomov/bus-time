@@ -1,13 +1,11 @@
 package ru.ming13.bustime.ui.fragment;
 
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.widget.SimpleAdapter;
@@ -17,29 +15,33 @@ import ru.ming13.bustime.db.model.Station;
 import ru.ming13.bustime.db.time.Time;
 import ru.ming13.bustime.ui.loader.Loaders;
 import ru.ming13.bustime.ui.loader.TimetableLoader;
+import ru.ming13.bustime.ui.util.EveryMinuteActionPerformer;
 
 
-public class TimetableFragment extends AdaptedListFragment<Time> implements LoaderManager.LoaderCallbacks<List<Time>>
+public class TimetableFragment extends AdaptedListFragment<Time> implements LoaderManager.LoaderCallbacks<List<Time>>, EveryMinuteActionPerformer.EveryMinuteCallback
 {
 	private static enum Mode
 	{
 		FULL_WEEK, WORKDAYS, WEEKEND
 	}
 
+	private Mode mode;
+
 	private static final String LIST_ITEM_TIME_ID = "time";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
 
+	private final EveryMinuteActionPerformer everyMinuteActionPerformer;
+
 	private static final int PREVIOUS_TIMES_DISPLAYED_COUNT = 1;
-
-	private final Handler remainingTimeTextUpdateTimer = new Handler();
-	private static final int AUTO_UPDATE_MILLISECONDS_PERIOD = 60000;
-
-	private Mode mode;
 
 	private Route route;
 	private Station station;
 
-	private Time currentTime;
+	public TimetableFragment() {
+		super();
+
+		everyMinuteActionPerformer = new EveryMinuteActionPerformer(this);
+	}
 
 	public static TimetableFragment newFullWeekInstance(Route route, Station station) {
 		TimetableFragment timetableFragment = new TimetableFragment();
@@ -114,9 +116,21 @@ public class TimetableFragment extends AdaptedListFragment<Time> implements Load
 
 	@Override
 	protected void callListPopulation() {
-		setEmptyListText(R.string.loading_timetable);
+		if (mode == Mode.FULL_WEEK) {
+			setEmptyListText(R.string.loading_timetable);
 
-		getLoaderManager().initLoader(Loaders.TIMETABLE, null, this);
+			getLoaderManager().initLoader(Loaders.TIMETABLE, null, this);
+		}
+
+		// For other modes it would be called by list navigation automatic
+	}
+
+	@Override
+	public void callListRepopulation() {
+		setEmptyListText(R.string.loading_timetable);
+		clearList();
+
+		getLoaderManager().restartLoader(Loaders.TIMETABLE, null, this);
 	}
 
 	@Override
@@ -154,6 +168,7 @@ public class TimetableFragment extends AdaptedListFragment<Time> implements Load
 
 	private int getClosestTimeListPosition() {
 		int closestTimeListPosition = 0;
+		Time currentTime = Time.newInstance();
 
 		for (int listPosition = 0; listPosition < list.size(); listPosition++) {
 			Time listDataTime = getListItemObject(listPosition);
@@ -173,23 +188,11 @@ public class TimetableFragment extends AdaptedListFragment<Time> implements Load
 	}
 
 	@Override
-	public void callListRepopulation() {
-		setEmptyListText(R.string.loading_timetable);
-
-		getLoaderManager().restartLoader(Loaders.TIMETABLE, null, this);
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-
+	public void onEveryMinute() {
 		updateRemainingTimes();
-		startUpdatingRemainingTimeText();
 	}
 
 	private void updateRemainingTimes() {
-		currentTime = Time.newInstance();
-
 		for (Map<String, Object> listDataElement : list) {
 			Time listDataTime = (Time) listDataElement.get(LIST_ITEM_OBJECT_ID);
 
@@ -199,46 +202,31 @@ public class TimetableFragment extends AdaptedListFragment<Time> implements Load
 		refreshListContent();
 	}
 
-	private void startUpdatingRemainingTimeText() {
-		stopUpdatingRemainingTimeText();
+	@Override
+	public void onResume() {
+		super.onResume();
 
-		remainingTimeTextUpdateTimer.postDelayed(remainingTimeTextUpdateTask,
-			calculateMillisecondsForNextMinute());
-	}
+		updateRemainingTimes();
 
-	private void stopUpdatingRemainingTimeText() {
-		remainingTimeTextUpdateTimer.removeCallbacks(remainingTimeTextUpdateTask);
-	}
-
-	private long calculateMillisecondsForNextMinute() {
-		Calendar currentTime = Calendar.getInstance();
-
-		Calendar nextMinuteTime = Calendar.getInstance();
-		nextMinuteTime.add(Calendar.MINUTE, 1);
-		nextMinuteTime.set(Calendar.SECOND, 0);
-
-		return nextMinuteTime.getTimeInMillis() - currentTime.getTimeInMillis();
-	}
-
-	private final Runnable remainingTimeTextUpdateTask = new Runnable()
-	{
-		@Override
-		public void run() {
-			updateRemainingTimes();
-
-			continueUpdatingRemainingTimeText();
-		}
-	};
-
-	private void continueUpdatingRemainingTimeText() {
-		remainingTimeTextUpdateTimer.postDelayed(remainingTimeTextUpdateTask,
-			AUTO_UPDATE_MILLISECONDS_PERIOD);
+		everyMinuteActionPerformer.startPerforming();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 
-		stopUpdatingRemainingTimeText();
+		everyMinuteActionPerformer.stopPerforming();
+	}
+
+	public void loadWorkdaysTimetable() {
+		mode = Mode.WORKDAYS;
+
+		callListRepopulation();
+	}
+
+	public void loadWeekendTimetable() {
+		mode = Mode.WEEKEND;
+
+		callListRepopulation();
 	}
 }

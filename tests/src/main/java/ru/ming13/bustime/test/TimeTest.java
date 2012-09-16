@@ -28,6 +28,16 @@ public class TimeTest extends AndroidTestCase
 		assertEquals("13:22", firstTime.sum(secondTime).toDatabaseString());
 	}
 
+	public void testSubtract() {
+		Time firstTime = Time.parse("10:00");
+		Time secondTime = Time.parse("00:20");
+		assertEquals("09:40", firstTime.subtract(secondTime).toDatabaseString());
+
+		firstTime = Time.parse("12:53");
+		secondTime = Time.parse("00:29");
+		assertEquals("12:24", firstTime.subtract(secondTime).toDatabaseString());
+	}
+
 	public void testIsAfter() {
 		Time timeBefore = Time.parse("10:00");
 		Time timeAfter = Time.parse("23:00");

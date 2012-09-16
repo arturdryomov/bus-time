@@ -65,8 +65,7 @@
 
 		<activity
 			android:name=".ui.activity.TimetableActivity"
-			android:label="@string/title_timetable_full_week"
-			android:configChanges="keyboardHidden|orientation|screenSize">
+			android:label="@string/title_timetable_full_week">
 		</activity>
 	</application>
 
