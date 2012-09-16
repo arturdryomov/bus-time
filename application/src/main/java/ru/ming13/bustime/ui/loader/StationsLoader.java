@@ -19,9 +19,9 @@ public class StationsLoader extends AsyncTaskLoader<List<Station>>
 
 	private final LoadingMode loadingMode;
 
-	private Route route;
+	private final Route route;
 
-	private String searchQuery;
+	private final String searchQuery;
 
 	public static StationsLoader newAllLoadingInstance(Context context) {
 		return new StationsLoader(context, LoadingMode.ALL, null, null);

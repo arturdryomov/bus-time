@@ -9,8 +9,7 @@ public final class Loaders
 	public static final int ROUTES = 0;
 	public static final int ROUTES_FOR_STATION = 1;
 	public static final int STATIONS = 2;
-	public static final int STATIONS_FOR_ROUTE = 3;
 
-	public static final int TIMETABLE_TYPE_CHECK = 4;
-	public static final int TIMETABLE = 5;
+	public static final int TIMETABLE_TYPE_CHECK = 3;
+	public static final int TIMETABLE = 4;
 }

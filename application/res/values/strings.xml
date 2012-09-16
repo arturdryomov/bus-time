@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="application_name">Bus Time</string>
+	<string name="application_name" translatable="false">
+		Bus Time
+	</string>
 
 	<string name="title_routes">Routes</string>
 	<string name="title_stations">Stations</string>
@@ -38,7 +40,6 @@
 	<string name="menu_stations_map">Stations map</string>
 	<string name="menu_update_database">Update information</string>
 	<string name="menu_search">Search stations</string>
-	<string name="menu_location">Current location</string>
 
 	<string name="search_hint">Search stations</string>
 
