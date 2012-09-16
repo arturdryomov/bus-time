@@ -24,47 +24,57 @@ public class StationsFragment extends AdaptedListFragment<Station> implements Lo
 {
 	private static final String LIST_ITEM_TEXT_ID = "text";
 
-	private static enum Mode
+	private static enum LoadingMode
 	{
-		ALL, FOR_ROUTE, SEARCH
+		ALL, FOR_ROUTE_SORTED_BY_NAME, FOR_ROUTE_SORTED_BY_TIME_SHIFT, SEARCH
 	}
 
-	private Mode mode;
+	private LoadingMode loadingMode;
 
 	private Route route;
 
 	private String searchQuery;
 
-	public static StationsFragment newInstance() {
+	public static StationsFragment newAllLoadingInstance() {
 		StationsFragment stationsFragment = new StationsFragment();
 
-		stationsFragment.setArguments(buildArguments(Mode.ALL, null, null));
+		stationsFragment.setArguments(buildArguments(LoadingMode.ALL, null, null));
 
 		return stationsFragment;
 	}
 
-	private static Bundle buildArguments(Mode mode, Route route, String searchQuery) {
+	private static Bundle buildArguments(LoadingMode loadingMode, Route route, String searchQuery) {
 		Bundle arguments = new Bundle();
 
-		arguments.putSerializable(FragmentArguments.MODE, mode);
+		arguments.putSerializable(FragmentArguments.MODE, loadingMode);
 		arguments.putParcelable(FragmentArguments.ROUTE, route);
 		arguments.putString(FragmentArguments.SEARCH_QUERY, searchQuery);
 
 		return arguments;
 	}
 
-	public static StationsFragment newInstance(Route route) {
+	public static StationsFragment newForRouteSortedByNameLoadingInstance(Route route) {
 		StationsFragment stationsFragment = new StationsFragment();
 
-		stationsFragment.setArguments(buildArguments(Mode.FOR_ROUTE, route, null));
+		stationsFragment.setArguments(
+			buildArguments(LoadingMode.FOR_ROUTE_SORTED_BY_NAME, route, null));
 
 		return stationsFragment;
 	}
 
-	public static StationsFragment newInstance(String searchQuery) {
+	public static StationsFragment newForRouteSortedByTimeShiftLoadingInstance(Route route) {
 		StationsFragment stationsFragment = new StationsFragment();
 
-		stationsFragment.setArguments(buildArguments(Mode.SEARCH, null, searchQuery));
+		stationsFragment.setArguments(
+			buildArguments(LoadingMode.FOR_ROUTE_SORTED_BY_TIME_SHIFT, route, null));
+
+		return stationsFragment;
+	}
+
+	public static StationsFragment newSearchLoadingInstance(String searchQuery) {
+		StationsFragment stationsFragment = new StationsFragment();
+
+		stationsFragment.setArguments(buildArguments(LoadingMode.SEARCH, null, searchQuery));
 
 		return stationsFragment;
 	}
@@ -73,7 +83,7 @@ public class StationsFragment extends AdaptedListFragment<Station> implements Lo
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mode = (Mode) getArguments().getSerializable(FragmentArguments.MODE);
+		loadingMode = (LoadingMode) getArguments().getSerializable(FragmentArguments.MODE);
 		route = getArguments().getParcelable(FragmentArguments.ROUTE);
 		searchQuery = getArguments().getString(FragmentArguments.SEARCH_QUERY);
 	}
@@ -103,18 +113,21 @@ public class StationsFragment extends AdaptedListFragment<Station> implements Lo
 
 	@Override
 	public Loader<List<Station>> onCreateLoader(int loaderId, Bundle loaderArguments) {
-		switch (mode) {
+		switch (loadingMode) {
 			case ALL:
-				return new StationsLoader(getActivity());
+				return StationsLoader.newAllLoadingInstance(getActivity());
 
-			case FOR_ROUTE:
-				return new StationsLoader(getActivity(), route);
+			case FOR_ROUTE_SORTED_BY_NAME:
+				return StationsLoader.newForRouteSortedByNameLoadingInstance(getActivity(), route);
+
+			case FOR_ROUTE_SORTED_BY_TIME_SHIFT:
+				return StationsLoader.newForRouteSortedByTimeShiftLoadingInstance(getActivity(), route);
 
 			case SEARCH:
-				return new StationsLoader(getActivity(), searchQuery);
+				return StationsLoader.newSearchLoadingInstance(getActivity(), searchQuery);
 
 			default:
-				return new StationsLoader(getActivity());
+				return StationsLoader.newAllLoadingInstance(getActivity());
 		}
 	}
 
@@ -135,6 +148,7 @@ public class StationsFragment extends AdaptedListFragment<Station> implements Lo
 	@Override
 	public void callListRepopulation() {
 		setEmptyListText(R.string.loading_stations);
+		clearList();
 
 		getLoaderManager().restartLoader(Loaders.STATIONS, null, this);
 	}
@@ -145,16 +159,24 @@ public class StationsFragment extends AdaptedListFragment<Station> implements Lo
 
 		Station selectedStation = getListItemObject(position);
 
-		switch (mode) {
+		switch (loadingMode) {
 			case ALL:
 				callRoutesActivity(selectedStation);
 				return;
 
-			case FOR_ROUTE:
+			case FOR_ROUTE_SORTED_BY_NAME:
+				callTimetableActivity(selectedStation);
+				return;
+
+			case FOR_ROUTE_SORTED_BY_TIME_SHIFT:
 				callTimetableActivity(selectedStation);
 				return;
 
 			case SEARCH:
+				callRoutesActivity(selectedStation);
+				return;
+
+			default:
 				callRoutesActivity(selectedStation);
 		}
 	}
@@ -167,5 +189,17 @@ public class StationsFragment extends AdaptedListFragment<Station> implements Lo
 	private void callRoutesActivity(Station station) {
 		Intent callIntent = IntentFactory.createRoutesIntent(getActivity(), station);
 		startActivity(callIntent);
+	}
+
+	public void sortByName() {
+		loadingMode = LoadingMode.FOR_ROUTE_SORTED_BY_NAME;
+
+		callListRepopulation();
+	}
+
+	public void sortByTimeShift() {
+		loadingMode = LoadingMode.FOR_ROUTE_SORTED_BY_TIME_SHIFT;
+
+		callListRepopulation();
 	}
 }

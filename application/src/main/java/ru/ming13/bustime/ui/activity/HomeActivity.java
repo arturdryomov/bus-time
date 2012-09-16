@@ -109,7 +109,7 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 	private ActionBar.Tab buildStationsTab() {
 		ActionBar.Tab tab = getSupportActionBar().newTab();
 
-		stationsFragment = StationsFragment.newInstance();
+		stationsFragment = StationsFragment.newAllLoadingInstance();
 
 		tab.setText(R.string.title_stations);
 		tab.setTabListener(new TabListener(stationsFragment));

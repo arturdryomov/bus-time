@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.db.model.Route;
-import ru.ming13.bustime.db.model.Station;
 import ru.ming13.bustime.ui.intent.IntentFactory;
 import ru.ming13.bustime.ui.loader.Loaders;
 import ru.ming13.bustime.ui.loader.RoutesLoader;
@@ -24,46 +23,8 @@ public class RoutesFragment extends AdaptedListFragment<Route> implements Loader
 {
 	private static final String LIST_ITEM_TEXT_ID = "text";
 
-	private static enum Mode
-	{
-		ALL, FOR_STATION
-	}
-
-	private Mode mode;
-
-	private Station station;
-
 	public static RoutesFragment newInstance() {
-		RoutesFragment routesFragment = new RoutesFragment();
-
-		routesFragment.setArguments(buildArguments(Mode.ALL, null));
-
-		return routesFragment;
-	}
-
-	private static Bundle buildArguments(Mode mode, Station station) {
-		Bundle arguments = new Bundle();
-
-		arguments.putSerializable(FragmentArguments.MODE, mode);
-		arguments.putParcelable(FragmentArguments.STATION, station);
-
-		return arguments;
-	}
-
-	public static RoutesFragment newInstance(Station station) {
-		RoutesFragment routesFragment = new RoutesFragment();
-
-		routesFragment.setArguments(buildArguments(Mode.FOR_STATION, station));
-
-		return routesFragment;
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		mode = (Mode) getArguments().getSerializable(FragmentArguments.MODE);
-		station = getArguments().getParcelable(FragmentArguments.STATION);
+		return new RoutesFragment();
 	}
 
 	@Override
@@ -91,16 +52,7 @@ public class RoutesFragment extends AdaptedListFragment<Route> implements Loader
 
 	@Override
 	public Loader<List<Route>> onCreateLoader(int loaderId, Bundle loaderArguments) {
-		switch (mode) {
-			case ALL:
-				return new RoutesLoader(getActivity());
-
-			case FOR_STATION:
-				return new RoutesLoader(getActivity(), station);
-
-			default:
-				return new RoutesLoader(getActivity());
-		}
+		return new RoutesLoader(getActivity());
 	}
 
 	@Override
@@ -129,20 +81,7 @@ public class RoutesFragment extends AdaptedListFragment<Route> implements Loader
 		super.onListItemClick(listView, view, position, id);
 
 		Route selectedRoute = getListItemObject(position);
-
-		switch (mode) {
-			case ALL:
-				callStationsActivity(selectedRoute);
-				return;
-
-			case FOR_STATION:
-				callTimetableActivity(selectedRoute);
-		}
-	}
-
-	private void callTimetableActivity(Route route) {
-		Intent callIntent = IntentFactory.createTimetableIntent(getActivity(), route, station);
-		startActivity(callIntent);
+		callStationsActivity(selectedRoute);
 	}
 
 	private void callStationsActivity(Route route) {

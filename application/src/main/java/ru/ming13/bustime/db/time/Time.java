@@ -85,6 +85,14 @@ public class Time
 		return calendar;
 	}
 
+	public Time subtract(Time timeToSubtract) {
+		Calendar calendar = getCalendar();
+		calendar.add(Calendar.HOUR_OF_DAY, -timeToSubtract.hours);
+		calendar.add(Calendar.MINUTE, -timeToSubtract.minutes);
+
+		return new Time(calendar);
+	}
+
 	public boolean isNow() {
 		Time now = Time.newInstance();
 

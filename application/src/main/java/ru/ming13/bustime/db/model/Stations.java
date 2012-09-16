@@ -15,6 +15,11 @@ import ru.ming13.bustime.db.sqlite.DbTableNames;
 
 public class Stations
 {
+	private static enum Order
+	{
+		BY_NAME, BY_TIME_SHIFT
+	}
+
 	private final SQLiteDatabase database;
 
 	public Stations() {
@@ -65,10 +70,15 @@ public class Stations
 		return databaseValues;
 	}
 
-	public List<Station> getStationsList(Route route) {
+	public List<Station> getStationsListOrderedByName(Route route) {
+		return getStationsList(route, Order.BY_NAME);
+	}
+
+	private List<Station> getStationsList(Route route, Order order) {
 		List<Station> stationsList = new ArrayList<Station>();
 
-		Cursor databaseCursor = database.rawQuery(buildRoutesStationsSelectionQuery(route), null);
+		Cursor databaseCursor = database.rawQuery(buildRoutesStationsSelectionQuery(route, order),
+			null);
 
 		while (databaseCursor.moveToNext()) {
 			ContentValues databaseValues = extractStationDatabaseValuesFromCursor(databaseCursor);
@@ -78,7 +88,7 @@ public class Stations
 		return stationsList;
 	}
 
-	private String buildRoutesStationsSelectionQuery(Route route) {
+	private String buildRoutesStationsSelectionQuery(Route route, Order order) {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select distinct ");
@@ -101,9 +111,27 @@ public class Stations
 			String.format("where %s.%s = %d ", DbTableNames.ROUTES_AND_STATIONS, DbFieldNames.ROUTE_ID,
 				route.getId()));
 
-		queryBuilder.append(String.format("order by %s.%s", DbTableNames.STATIONS, DbFieldNames.NAME));
+		queryBuilder.append(buildRoutesOrderQuery(order));
 
 		return queryBuilder.toString();
+	}
+
+	private String buildRoutesOrderQuery(Order order) {
+		switch (order) {
+			case BY_NAME:
+				return String.format("order by %s.%s", DbTableNames.STATIONS, DbFieldNames.NAME);
+
+			case BY_TIME_SHIFT:
+				return String.format("order by %s.%s", DbTableNames.ROUTES_AND_STATIONS,
+					DbFieldNames.TIME_SHIFT);
+
+			default:
+				return String.format("order by %s.%s", DbTableNames.STATIONS, DbFieldNames.NAME);
+		}
+	}
+
+	public List<Station> getStationsListOrderedByTimeShift(Route route) {
+		return getStationsList(route, Order.BY_TIME_SHIFT);
 	}
 
 	public List<Station> getStationsList(String searchQuery) {

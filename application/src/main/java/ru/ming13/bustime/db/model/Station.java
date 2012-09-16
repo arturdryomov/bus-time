@@ -6,14 +6,18 @@ import java.util.List;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDoneException;
 import android.os.Parcel;
 import android.os.Parcelable;
 import ru.ming13.bustime.db.DbException;
 import ru.ming13.bustime.db.DbProvider;
 import ru.ming13.bustime.db.sqlite.DbFieldNames;
+import ru.ming13.bustime.db.sqlite.DbFieldValues;
 import ru.ming13.bustime.db.sqlite.DbTableNames;
 import ru.ming13.bustime.db.time.Time;
+import ru.ming13.bustime.db.time.TimeException;
 
 
 public class Station implements Parcelable
@@ -134,6 +138,68 @@ public class Station implements Parcelable
 		List<Time> routeDepartureTimetable = route.getWeekendDepartureTimetable();
 
 		return getRouteTimetable(routeTimeShift, routeDepartureTimetable);
+	}
+
+	public Time getClosestFullWeekBusTime(Route route) {
+		return getClosestBusTime(route, DbFieldValues.TRIP_FULL_WEEK_ID);
+	}
+
+	private Time getClosestBusTime(Route route, int tripTypeId) {
+		try {
+			Time routeTimeShift = getRouteTimeShift(route);
+
+			String closestDepartureTimeSelectionQuery = buildClosestDepartureTimeSelectionQuery(
+				route.getId(), routeTimeShift, tripTypeId);
+
+			String closestDepartureStringTime = DatabaseUtils.stringForQuery(database,
+				closestDepartureTimeSelectionQuery, null);
+			Time closestDepartureTime = Time.parse(closestDepartureStringTime);
+
+			return closestDepartureTime.sum(routeTimeShift);
+		}
+		catch (SQLiteDoneException e) {
+			throw new TimeException();
+		}
+	}
+
+	private String buildClosestDepartureTimeSelectionQuery(long routeId, Time routeTimeShift, int tripTypeId) {
+		StringBuilder queryBuilder = new StringBuilder();
+
+		queryBuilder.append("select ");
+		queryBuilder.append(String.format("%s ", DbFieldNames.DEPARTURE_TIME));
+
+		queryBuilder.append(String.format("from %s ", DbTableNames.TRIPS));
+
+		queryBuilder.append(String.format("where %s = %d and ", DbFieldNames.ROUTE_ID, routeId));
+		queryBuilder.append(String.format("%s = %d and ", DbFieldNames.TRIP_TYPE_ID, tripTypeId));
+		queryBuilder.append(String.format("%s >= '%s' ", DbFieldNames.DEPARTURE_TIME,
+			calculatePossibleDepartureTime(routeTimeShift).toDatabaseString()));
+
+		queryBuilder.append(String.format("order by %s ", DbFieldNames.DEPARTURE_TIME));
+
+		queryBuilder.append("limit 1");
+
+		return queryBuilder.toString();
+	}
+
+	private Time calculatePossibleDepartureTime(Time routeTimeShift) {
+		Time currentTime = Time.newInstance();
+		Time possibleDepartureTime = currentTime.subtract(routeTimeShift);
+
+		if (possibleDepartureTime.isAfter(currentTime)) {
+			// Handle jump into previous day
+			possibleDepartureTime = Time.parse("00:00");
+		}
+
+		return possibleDepartureTime;
+	}
+
+	public Time getClosestWorkdaysBusTime(Route route) {
+		return getClosestBusTime(route, DbFieldValues.TRIP_WORKDAY_ID);
+	}
+
+	public Time getClosestWeekendBusTime(Route route) {
+		return getClosestBusTime(route, DbFieldValues.TRIP_WEEKEND_ID);
 	}
 
 	@Override
