@@ -29,7 +29,7 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 		BY_NAME, BY_BUS_TIME
 	}
 
-	private Order order = Order.BY_BUS_TIME;
+	private Order order;
 
 	private static final String LIST_ITEM_NAME_ID = "name";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
@@ -40,6 +40,8 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 
 	public RoutesForStationFragment() {
 		super();
+
+		order = Order.BY_BUS_TIME;
 
 		everyMinuteActionPerformer = new EveryMinuteActionPerformer(this);
 	}
