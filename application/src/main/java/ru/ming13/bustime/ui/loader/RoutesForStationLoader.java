@@ -106,7 +106,7 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 		}
 	}
 
-	private final class RoutesByTimeComparator implements Comparator<Map<Route, Time>>, Serializable
+	private static final class RoutesByTimeComparator implements Comparator<Map<Route, Time>>, Serializable
 	{
 		@Override
 		public int compare(Map<Route, Time> firstRouteAndTime, Map<Route, Time> secondRouteAndTime) {
@@ -136,13 +136,13 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 				return -1;
 			}
 		}
-	}
 
-	private Time getTime(Map<Route, Time> routeAndTime) {
-		return routeAndTime.get(getRoute(routeAndTime));
-	}
+		private Time getTime(Map<Route, Time> routeAndTime) {
+			return routeAndTime.get(getRoute(routeAndTime));
+		}
 
-	private Route getRoute(Map<Route, Time> routeAndTime) {
-		return routeAndTime.keySet().iterator().next();
+		private Route getRoute(Map<Route, Time> routeAndTime) {
+			return routeAndTime.keySet().iterator().next();
+		}
 	}
 }
