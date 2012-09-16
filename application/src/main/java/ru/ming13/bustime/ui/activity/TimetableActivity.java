@@ -179,11 +179,19 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	}
 
 	private void setUpFragment(Fragment fragment) {
+		if (isFragmentInstalled()) {
+			return;
+		}
+
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
 		fragmentTransaction.replace(android.R.id.content, fragment);
 
 		fragmentTransaction.commit();
+	}
+
+	private boolean isFragmentInstalled() {
+		return getSupportFragmentManager().findFragmentById(android.R.id.content) != null;
 	}
 
 	private void setCurrentWeekPartListNavigationItem() {
