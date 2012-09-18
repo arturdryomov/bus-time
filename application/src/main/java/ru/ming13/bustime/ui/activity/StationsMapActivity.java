@@ -81,19 +81,25 @@ public class StationsMapActivity extends SherlockMapActivity
 		{
 			@Override
 			public void run() {
-				if (!isCurrentLocationFarFromDefaultLocation()) {
-					animateToCurrentLocation();
-				}
+				animateToCurrentLocation();
 			}
 		});
 
 		getMapView().getOverlays().add(myLocationOverlay);
 	}
 
-	private boolean isCurrentLocationFarFromDefaultLocation() {
+	private void animateToCurrentLocation() {
 		GeoPoint currentLocation = myLocationOverlay.getMyLocation();
 
-		return isLocationFarFromDefaultLocation(currentLocation);
+		if (currentLocation == null) {
+			return;
+		}
+
+		if (isLocationFarFromDefaultLocation(currentLocation)) {
+			return;
+		}
+
+		getMapView().getController().animateTo(currentLocation);
 	}
 
 	private boolean isLocationFarFromDefaultLocation(GeoPoint locationPoint) {
@@ -121,16 +127,6 @@ public class StationsMapActivity extends SherlockMapActivity
 		int longitudeE6 = (int) (longitude * MICRODEGREES_IN_DEGREE);
 
 		return new GeoPoint(latitudeE6, longitudeE6);
-	}
-
-	private void animateToCurrentLocation() {
-		GeoPoint currentLocation = myLocationOverlay.getMyLocation();
-
-		if (currentLocation == null) {
-			return;
-		}
-
-		getMapView().getController().animateTo(currentLocation);
 	}
 
 	private void setUpDefaultLocation() {
