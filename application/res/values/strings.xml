@@ -40,6 +40,7 @@
 	<string name="menu_stations_map">Stations map</string>
 	<string name="menu_update_database">Update information</string>
 	<string name="menu_search">Search stations</string>
+	<string name="menu_location">Current location</string>
 
 	<string name="search_hint">Search stations</string>
 
