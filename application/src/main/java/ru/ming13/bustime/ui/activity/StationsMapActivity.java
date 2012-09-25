@@ -12,6 +12,8 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockMapActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -77,6 +79,12 @@ public class StationsMapActivity extends SherlockMapActivity
 	private void setUpMyLocationOverlay() {
 		myLocationOverlay = new MyLocationOverlay(this, getMapView());
 
+		setUpAnimationToCurrentLocation();
+
+		getMapView().getOverlays().add(myLocationOverlay);
+	}
+
+	private void setUpAnimationToCurrentLocation() {
 		myLocationOverlay.runOnFirstFix(new Runnable()
 		{
 			@Override
@@ -84,8 +92,6 @@ public class StationsMapActivity extends SherlockMapActivity
 				animateToCurrentLocation();
 			}
 		});
-
-		getMapView().getOverlays().add(myLocationOverlay);
 	}
 
 	private void animateToCurrentLocation() {
@@ -314,8 +320,6 @@ public class StationsMapActivity extends SherlockMapActivity
 		super.onResume();
 
 		myLocationOverlay.enableMyLocation();
-
-		animateToCurrentLocation();
 	}
 
 	@Override
@@ -323,5 +327,24 @@ public class StationsMapActivity extends SherlockMapActivity
 		super.onPause();
 
 		myLocationOverlay.disableMyLocation();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.menu_action_bar_map, menu);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		switch (menuItem.getItemId()) {
+			case R.id.menu_location:
+				setUpAnimationToCurrentLocation();
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(menuItem);
+		}
 	}
 }
