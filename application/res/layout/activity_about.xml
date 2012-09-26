@@ -5,7 +5,10 @@
 
 	<LinearLayout
 		android:orientation="vertical"
-		android:padding="@dimen/padding_about_items"
+		android:paddingTop="@dimen/padding_about_top"
+		android:paddingBottom="@dimen/padding_about_items"
+		android:paddingRight="@dimen/padding_about_items"
+		android:paddingLeft="@dimen/padding_about_items"
 		style="@style/FullHorizontalParentLayout">
 
 		<ImageView
