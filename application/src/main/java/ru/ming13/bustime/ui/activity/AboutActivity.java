@@ -1,6 +1,7 @@
 package ru.ming13.bustime.ui.activity;
 
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -60,12 +61,22 @@ public class AboutActivity extends SherlockActivity
 	}
 
 	private void callGooglePlay() {
-		Intent intent = IntentFactory.createGooglePlayIntent(buildGooglePlayUrl());
-		startActivity(intent);
+		try {
+			Intent intent = IntentFactory.createGooglePlayIntent(buildAppGooglePlayUrl());
+			startActivity(intent);
+		}
+		catch (ActivityNotFoundException e) {
+			Intent intent = IntentFactory.createGooglePlayIntent(buildWebGooglePlayUrl());
+			startActivity(intent);
+		}
 	}
 
-	private String buildGooglePlayUrl() {
-		return String.format(getString(R.string.url_google_play), getPackageName());
+	private String buildAppGooglePlayUrl() {
+		return String.format(getString(R.string.url_app_google_play), getPackageName());
+	}
+
+	private String buildWebGooglePlayUrl() {
+		return String.format(getString(R.string.url_web_google_play), getPackageName());
 	}
 
 	private void setUpSendingFeedback() {
