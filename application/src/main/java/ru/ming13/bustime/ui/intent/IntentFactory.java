@@ -3,8 +3,10 @@ package ru.ming13.bustime.ui.intent;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import ru.ming13.bustime.db.model.Route;
 import ru.ming13.bustime.db.model.Station;
+import ru.ming13.bustime.ui.activity.AboutActivity;
 import ru.ming13.bustime.ui.activity.RoutesActivity;
 import ru.ming13.bustime.ui.activity.StationsActivity;
 import ru.ming13.bustime.ui.activity.StationsMapActivity;
@@ -38,6 +40,23 @@ public final class IntentFactory
 		Intent intent = new Intent(context, TimetableActivity.class);
 		intent.putExtra(IntentExtras.ROUTE, route);
 		intent.putExtra(IntentExtras.STATION, station);
+
+		return intent;
+	}
+
+	public static Intent createAboutIntent(Context context) {
+		return new Intent(context, AboutActivity.class);
+	}
+
+	public static Intent createGooglePlayIntent(String googlePlayUrl) {
+		return new Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayUrl));
+	}
+
+	public static Intent createEmailIntent(String address, String subject) {
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType(IntentTypes.EMAIL);
+		intent.putExtra(Intent.EXTRA_EMAIL, new String[] {address});
+		intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 
 		return intent;
 	}

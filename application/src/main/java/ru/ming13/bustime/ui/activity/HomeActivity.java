@@ -356,6 +356,10 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 				callStationsMapActivity();
 				return true;
 
+			case R.id.menu_about:
+				callAboutActivity();
+				return true;
+
 			default:
 				return super.onOptionsItemSelected(menuItem);
 		}
@@ -367,6 +371,11 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 
 	private void callStationsMapActivity() {
 		Intent callIntent = IntentFactory.createStationsMapIntent(this);
+		startActivity(callIntent);
+	}
+
+	private void callAboutActivity() {
+		Intent callIntent = IntentFactory.createAboutIntent(this);
 		startActivity(callIntent);
 	}
 

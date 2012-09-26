@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="title_about">О приложении</string>
 	<string name="title_routes">Маршруты</string>
 	<string name="title_stations">Остановки</string>
 
@@ -38,6 +39,9 @@
 	<string name="menu_search">Поиск остановок</string>
 	<string name="menu_about">О приложении</string>
 
+	<string name="button_rate_application">Оценить приложение</string>
+	<string name="button_send_feedback">Написать разработчику</string>
+
 	<string name="search_hint">Поиск остановок</string>
 
 	<string name="loading_routes">Загрузка маршрутов…</string>
@@ -51,5 +55,6 @@
 
 	<string name="token_time_now">прямо сейчас</string>
 	<string name="token_no_trips">сегодня рейсов больше не ожидается</string>
+	<string name="token_version">Версия</string>
 
 </resources>

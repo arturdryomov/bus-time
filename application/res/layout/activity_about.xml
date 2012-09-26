@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	style="@style/FullParentLayout">
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:padding="@dimen/padding_about_items"
+		style="@style/FullHorizontalParentLayout">
+
+		<ImageView
+			android:src="@drawable/ic_logo"
+			android:layout_marginBottom="@dimen/margin_about_logo"
+			style="@style/FullHorizontalParentCenteredLayout" />
+
+		<TextView
+			android:text="@string/application_name"
+			android:textStyle="bold"
+			style="@style/FullHorizontalParentCenteredLayout" />
+
+		<TextView
+			android:id="@+id/text_version"
+			style="@style/FullHorizontalParentCenteredLayout" />
+
+		<TextView
+			android:text="@string/url_vk_group"
+			android:autoLink="web"
+			android:layout_marginBottom="@dimen/margin_about_url"
+			style="@style/FullHorizontalParentCenteredLayout" />
+
+		<Button
+			android:id="@+id/button_rate_application"
+			android:text="@string/button_rate_application"
+			style="@style/FullHorizontalParentLayout" />
+
+		<Button
+			android:id="@+id/button_send_feedback"
+			android:text="@string/button_send_feedback"
+			style="@style/FullHorizontalParentLayout" />
+
+	</LinearLayout>
+
+</ScrollView>
