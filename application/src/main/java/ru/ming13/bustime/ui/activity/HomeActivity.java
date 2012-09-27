@@ -407,17 +407,17 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem updatingActionBarButton = menu.findItem(R.id.menu_update);
-		MenuItem mapActionBarButton = menu.findItem(R.id.menu_map);
+		MenuItem searchActionBarButton = menu.findItem(R.id.menu_search);
 
 		if (isUpdatingAvailable) {
 			updatingActionBarButton.setVisible(true);
 
-			mapActionBarButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			searchActionBarButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		}
 		else {
 			updatingActionBarButton.setVisible(false);
 
-			mapActionBarButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			searchActionBarButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 
 		return super.onPrepareOptionsMenu(menu);
