@@ -4,6 +4,7 @@ package ru.ming13.bustime.ui.activity;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -356,6 +357,14 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 				callStationsMapActivity();
 				return true;
 
+			case R.id.menu_rate_application:
+				callGooglePlay();
+				return true;
+
+			case R.id.menu_send_feedback:
+				callSendingFeedback();
+				return true;
+
 			default:
 				return super.onOptionsItemSelected(menuItem);
 		}
@@ -370,15 +379,45 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 		startActivity(callIntent);
 	}
 
+	private void callGooglePlay() {
+		try {
+			Intent intent = IntentFactory.createGooglePlayIntent(buildAppGooglePlayUrl());
+			startActivity(intent);
+		}
+		catch (ActivityNotFoundException e) {
+			Intent intent = IntentFactory.createGooglePlayIntent(buildWebGooglePlayUrl());
+			startActivity(intent);
+		}
+	}
+
+	private String buildAppGooglePlayUrl() {
+		return String.format(getString(R.string.url_app_google_play), getPackageName());
+	}
+
+	private String buildWebGooglePlayUrl() {
+		return String.format(getString(R.string.url_web_google_play), getPackageName());
+	}
+
+	private void callSendingFeedback() {
+		Intent intent = IntentFactory.createEmailIntent(getString(R.string.email_address_feedback),
+			getString(R.string.email_subject_feedback));
+		startActivity(Intent.createChooser(intent, null));
+	}
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem updatingActionBarButton = menu.findItem(R.id.menu_update);
+		MenuItem mapActionBarButton = menu.findItem(R.id.menu_map);
 
 		if (isUpdatingAvailable) {
 			updatingActionBarButton.setVisible(true);
+
+			mapActionBarButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		}
 		else {
 			updatingActionBarButton.setVisible(false);
+
+			mapActionBarButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 
 		return super.onPrepareOptionsMenu(menu);
