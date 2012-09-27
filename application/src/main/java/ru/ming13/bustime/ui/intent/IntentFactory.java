@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import ru.ming13.bustime.db.model.Route;
 import ru.ming13.bustime.db.model.Station;
-import ru.ming13.bustime.ui.activity.AboutActivity;
 import ru.ming13.bustime.ui.activity.RoutesActivity;
 import ru.ming13.bustime.ui.activity.StationsActivity;
 import ru.ming13.bustime.ui.activity.StationsMapActivity;
@@ -42,10 +41,6 @@ public final class IntentFactory
 		intent.putExtra(IntentExtras.STATION, station);
 
 		return intent;
-	}
-
-	public static Intent createAboutIntent(Context context) {
-		return new Intent(context, AboutActivity.class);
 	}
 
 	public static Intent createGooglePlayIntent(String googlePlayUrl) {

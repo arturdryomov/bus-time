@@ -3,4 +3,6 @@
 	android:id="@+id/map"
 	android:apiKey="@string/key_google_maps"
 	android:clickable="true"
-	style="@style/FullParentLayout" />
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" />
+
