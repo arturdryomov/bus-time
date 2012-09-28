@@ -218,6 +218,13 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 	}
 
 	@Override
+	public void onNetworkFail() {
+		hideUpdatingProgressDialog();
+
+		UserAlerter.alert(this, getString(R.string.error_connection));
+	}
+
+	@Override
 	public void onFailedUpdate() {
 		hideUpdatingProgressDialog();
 
