@@ -9,8 +9,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.util.zip.GZIPInputStream;
 
 import android.content.Context;
@@ -102,6 +104,10 @@ public class DbImporter
 	}
 
 	public void importFromServer() {
+		if (!isDatabasesDirectoryExist()) {
+			createDatabasesDirectory();
+		}
+
 		copyServerDatabaseToLocalDatabase();
 
 		updateLocalDatabaseEtag();
@@ -120,6 +126,12 @@ public class DbImporter
 	private InputStream buildServerDatabaseStream() {
 		try {
 			return new GZIPInputStream(buildServerDatabaseUrl().openStream());
+		}
+		catch (SocketException e) {
+			throw new DbImportConnectionException();
+		}
+		catch (UnknownHostException e) {
+			throw new DbImportConnectionException();
 		}
 		catch (IOException e) {
 			throw new DbImportException();

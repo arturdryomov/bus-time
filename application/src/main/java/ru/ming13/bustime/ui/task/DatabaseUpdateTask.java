@@ -3,6 +3,7 @@ package ru.ming13.bustime.ui.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import ru.ming13.bustime.db.content.DbImportConnectionException;
 import ru.ming13.bustime.db.content.DbImportException;
 import ru.ming13.bustime.db.content.DbImporter;
 
@@ -13,12 +14,14 @@ public class DatabaseUpdateTask extends AsyncTask<Void, Void, Void>
 	{
 		public void onSuccessUpdate();
 
+		public void onNetworkFail();
+
 		public void onFailedUpdate();
 	}
 
 	private static enum Result
 	{
-		SUCCESS, FAIL
+		SUCCESS, NETWORK_FAIL, FAIL
 	}
 
 	private Result result;
@@ -54,6 +57,9 @@ public class DatabaseUpdateTask extends AsyncTask<Void, Void, Void>
 
 			result = Result.SUCCESS;
 		}
+		catch (DbImportConnectionException e) {
+			result = Result.NETWORK_FAIL;
+		}
 		catch (DbImportException e) {
 			result = Result.FAIL;
 		}
@@ -68,6 +74,10 @@ public class DatabaseUpdateTask extends AsyncTask<Void, Void, Void>
 		switch (result) {
 			case SUCCESS:
 				databaseUpdateCallback.onSuccessUpdate();
+				break;
+
+			case NETWORK_FAIL:
+				databaseUpdateCallback.onNetworkFail();
 				break;
 
 			case FAIL:

@@ -49,6 +49,8 @@ public class DbProvider
 	}
 
 	public void refreshDatabase(Context context) {
+		databaseOpenHelper.close();
+
 		databaseOpenHelper = new DbOpenHelper(context);
 
 		routes = new Routes();
@@ -56,7 +58,7 @@ public class DbProvider
 	}
 
 	public SQLiteDatabase getDatabase() {
-		return databaseOpenHelper.getWritableDatabase();
+		return databaseOpenHelper.getReadableDatabase();
 	}
 
 	public Routes getRoutes() {

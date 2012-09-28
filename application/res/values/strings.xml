@@ -54,6 +54,7 @@
 	<string name="warning_update_available">Update available</string>
 
 	<string name="error_unspecified">Ooops, some error just happened!</string>
+	<string name="error_connection">No internet connection found</string>
 
 	<string name="token_time_now">right now</string>
 	<string name="token_no_trips">no trips today left</string>
