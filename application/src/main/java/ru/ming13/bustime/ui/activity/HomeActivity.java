@@ -54,9 +54,9 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 
 		setUpTabs();
 
-		callDatabaseUpdateCheck();
-
 		restoreLastInstanceState();
+
+		callDatabaseUpdateCheck();
 	}
 
 	private void setUpTabs() {
@@ -118,7 +118,80 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 		return tab;
 	}
 
+	private void restoreLastInstanceState() {
+		if (!isLastInstanceValid()) {
+			return;
+		}
+
+		restoreLastInstanceSelectedTab();
+
+		restoreLastInstanceDatabaseUpdateCheckTask();
+		restoreLastInstanceDatabaseUpdateTask();
+	}
+
+	private boolean isLastInstanceValid() {
+		return getLastCustomNonConfigurationInstance() != null;
+	}
+
+	private void restoreLastInstanceSelectedTab() {
+		if (!isLastInstanceElementValid(LastInstanceKeys.SELECTED_TAB)) {
+			return;
+		}
+
+		setSelectedTab((Integer) getLastInstanceElement(LastInstanceKeys.SELECTED_TAB));
+	}
+
+	private boolean isLastInstanceElementValid(String lastInstanceKey) {
+		Map<String, Object> lastInstance = getLastInstance();
+
+		if (!lastInstance.containsKey(lastInstanceKey)) {
+			return false;
+		}
+
+		return lastInstance.get(lastInstanceKey) != null;
+	}
+
+	private Map<String, Object> getLastInstance() {
+		return (Map<String, Object>) getLastCustomNonConfigurationInstance();
+	}
+
+	private <LastInstanceElementType> LastInstanceElementType getLastInstanceElement(String lastInstanceKey) {
+		Map<String, Object> lastInstance = getLastInstance();
+
+		return (LastInstanceElementType) lastInstance.get(lastInstanceKey);
+	}
+
+	private void setSelectedTab(int tabPosition) {
+		getSupportActionBar().setSelectedNavigationItem(tabPosition);
+	}
+
+	private void restoreLastInstanceDatabaseUpdateCheckTask() {
+		if (!isLastInstanceElementValid(LastInstanceKeys.DATABASE_UPDATE_CHECK_TASK)) {
+			return;
+		}
+
+		databaseUpdateCheckTask = getLastInstanceElement(LastInstanceKeys.DATABASE_UPDATE_CHECK_TASK);
+
+		databaseUpdateCheckTask.setContext(this);
+		databaseUpdateCheckTask.setDatabaseUpdateCheckCallback(this);
+	}
+
+	private void restoreLastInstanceDatabaseUpdateTask() {
+		if (!isLastInstanceElementValid(LastInstanceKeys.DATABASE_UPDATE_TASK)) {
+			return;
+		}
+
+		databaseUpdateTask = getLastInstanceElement(LastInstanceKeys.DATABASE_UPDATE_TASK);
+
+		databaseUpdateTask.setContext(this);
+		databaseUpdateTask.setDatabaseUpdateCallback(this);
+	}
+
 	private void callDatabaseUpdateCheck() {
+		if (databaseUpdateCheckTask != null) {
+			return;
+		}
+
 		isUpdatingAvailable = false;
 
 		databaseUpdateCheckTask = DatabaseUpdateCheckTask.newInstance(this, this);
@@ -229,75 +302,6 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 		hideUpdatingProgressDialog();
 
 		UserAlerter.alert(this, getString(R.string.error_unspecified));
-	}
-
-	private void restoreLastInstanceState() {
-		if (!isLastInstanceValid()) {
-			return;
-		}
-
-		restoreLastInstanceSelectedTab();
-
-		restoreLastInstanceDatabaseUpdateCheckTask();
-		restoreLastInstanceDatabaseUpdateTask();
-	}
-
-	private boolean isLastInstanceValid() {
-		return getLastCustomNonConfigurationInstance() != null;
-	}
-
-	private void restoreLastInstanceSelectedTab() {
-		if (!isLastInstanceElementValid(LastInstanceKeys.SELECTED_TAB)) {
-			return;
-		}
-
-		setSelectedTab((Integer) getLastInstanceElement(LastInstanceKeys.SELECTED_TAB));
-	}
-
-	private boolean isLastInstanceElementValid(String lastInstanceKey) {
-		Map<String, Object> lastInstance = getLastInstance();
-
-		if (!lastInstance.containsKey(lastInstanceKey)) {
-			return false;
-		}
-
-		return lastInstance.get(lastInstanceKey) != null;
-	}
-
-	private Map<String, Object> getLastInstance() {
-		return (Map<String, Object>) getLastCustomNonConfigurationInstance();
-	}
-
-	private <LastInstanceElementType> LastInstanceElementType getLastInstanceElement(String lastInstanceKey) {
-		Map<String, Object> lastInstance = getLastInstance();
-
-		return (LastInstanceElementType) lastInstance.get(lastInstanceKey);
-	}
-
-	private void setSelectedTab(int tabPosition) {
-		getSupportActionBar().setSelectedNavigationItem(tabPosition);
-	}
-
-	private void restoreLastInstanceDatabaseUpdateCheckTask() {
-		if (!isLastInstanceElementValid(LastInstanceKeys.DATABASE_UPDATE_CHECK_TASK)) {
-			return;
-		}
-
-		databaseUpdateCheckTask = getLastInstanceElement(LastInstanceKeys.DATABASE_UPDATE_CHECK_TASK);
-
-		databaseUpdateCheckTask.setContext(this);
-		databaseUpdateCheckTask.setDatabaseUpdateCheckCallback(this);
-	}
-
-	private void restoreLastInstanceDatabaseUpdateTask() {
-		if (!isLastInstanceElementValid(LastInstanceKeys.DATABASE_UPDATE_TASK)) {
-			return;
-		}
-
-		databaseUpdateTask = getLastInstanceElement(LastInstanceKeys.DATABASE_UPDATE_TASK);
-
-		databaseUpdateTask.setContext(this);
-		databaseUpdateTask.setDatabaseUpdateCallback(this);
 	}
 
 	@Override
