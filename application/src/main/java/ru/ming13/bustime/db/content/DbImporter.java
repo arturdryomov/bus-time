@@ -104,6 +104,10 @@ public class DbImporter
 	}
 
 	public void importFromServer() {
+		if (!isDatabasesDirectoryExist()) {
+			createDatabasesDirectory();
+		}
+
 		copyServerDatabaseToLocalDatabase();
 
 		updateLocalDatabaseEtag();

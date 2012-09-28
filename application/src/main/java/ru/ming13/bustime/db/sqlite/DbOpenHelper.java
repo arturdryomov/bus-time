@@ -29,13 +29,13 @@ public class DbOpenHelper extends SQLiteOpenHelper
 	}
 
 	@Override
-	public synchronized SQLiteDatabase getWritableDatabase() {
+	public SQLiteDatabase getReadableDatabase() {
 		DbImporter dbImporter = new DbImporter(context);
 
 		if (!dbImporter.isLocalDatabaseExist()) {
 			dbImporter.importFromAssets();
 		}
 
-		return super.getWritableDatabase();
+		return super.getReadableDatabase();
 	}
 }
