@@ -28,6 +28,8 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Pair<Route, Tim
 
 	private final Station station;
 
+	private final boolean isWeekend;
+
 	public static RoutesForStationLoader newNameOrderedInstance(Context context, Station station) {
 		return new RoutesForStationLoader(context, station, Order.BY_NAME);
 	}
@@ -38,6 +40,8 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Pair<Route, Tim
 		this.station = station;
 
 		this.order = order;
+
+		this.isWeekend = Time.newInstance().isWeekend();
 	}
 
 	public static RoutesForStationLoader newBusTimeOrderedInstance(Context context, Station station) {
@@ -82,8 +86,7 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Pair<Route, Tim
 			return station.getClosestFullWeekBusTime(route);
 		}
 
-		// TODO: Optimize
-		if (Time.newInstance().isWeekend()) {
+		if (isWeekend) {
 			return station.getClosestWeekendBusTime(route);
 		}
 		else {
