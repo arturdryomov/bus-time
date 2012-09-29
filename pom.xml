@@ -89,6 +89,7 @@
 					<targetJdk>1.6</targetJdk>
 					<excludes>
 						<exclude>com/actionbarsherlock/**</exclude>
+						<exclude>**/R.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
