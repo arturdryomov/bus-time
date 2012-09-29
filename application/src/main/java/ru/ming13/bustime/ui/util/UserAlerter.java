@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 public class UserAlerter
 {
-	public static void alert(Context context, String text) {
-		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+	public static void alert(Context context, int textResourceId) {
+		Toast.makeText(context, context.getText(textResourceId), Toast.LENGTH_SHORT).show();
 	}
 }
