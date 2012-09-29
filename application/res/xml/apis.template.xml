@@ -7,11 +7,15 @@
 
 	<!-- Google Maps -->
 
-	<string name="key_google_maps">GOOGLE_MAPS_API_KEY</string>
+	<string name="key_google_maps" translatable="false">
+		GOOGLE_MAPS_API_KEY
+	</string>
 
 	<!-- BugSense -->
 
 	<bool name="flag_bugsense_enabled">false</bool>
-	<string name="key_bugsense_project">BUGSENSE_PROJECT_KEY</string>
+	<string name="key_bugsense_project" translatable="false">
+		BUGSENSE_PROJECT_KEY
+	</string>
 
 </resources>
