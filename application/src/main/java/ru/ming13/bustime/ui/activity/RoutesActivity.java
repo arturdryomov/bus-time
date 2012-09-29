@@ -62,7 +62,6 @@ public class RoutesActivity extends FragmentWrapperActivity implements ActionBar
 		ActionBar actionBar = getSupportActionBar();
 
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		actionBar.setDisplayShowTitleEnabled(false);
 
 		actionBar.setListNavigationCallbacks(buildListNavigationAdapter(), this);
 	}

@@ -62,7 +62,6 @@ public class StationsActivity extends FragmentWrapperActivity implements ActionB
 		ActionBar actionBar = getSupportActionBar();
 
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		actionBar.setDisplayShowTitleEnabled(false);
 
 		actionBar.setListNavigationCallbacks(buildListNavigationAdapter(), this);
 	}
