@@ -7,8 +7,8 @@
 		android:id="@+id/text"
 		android:singleLine="true"
 		android:textSize="@dimen/text_size_one_line_list_item"
+		android:layout_centerVertical="true"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerVertical="true" />
+		android:layout_height="wrap_content" />
 
 </RelativeLayout>

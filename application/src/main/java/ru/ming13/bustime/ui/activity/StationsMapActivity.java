@@ -339,7 +339,7 @@ public class StationsMapActivity extends SherlockMapActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
-			case R.id.menu_location:
+			case R.id.menu_current_location:
 				setUpAnimationToCurrentLocation();
 				return true;
 

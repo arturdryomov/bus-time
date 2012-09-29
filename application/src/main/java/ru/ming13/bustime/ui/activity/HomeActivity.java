@@ -356,15 +356,15 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
-			case R.id.menu_search:
+			case R.id.menu_search_stations:
 				callStationsSearch();
 				return true;
 
-			case R.id.menu_update:
+			case R.id.menu_update_information:
 				callDatabaseUpdate();
 				return true;
 
-			case R.id.menu_map:
+			case R.id.menu_stations_map:
 				callStationsMapActivity();
 				return true;
 
@@ -417,8 +417,8 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem updatingActionBarButton = menu.findItem(R.id.menu_update);
-		MenuItem searchActionBarButton = menu.findItem(R.id.menu_search);
+		MenuItem updatingActionBarButton = menu.findItem(R.id.menu_update_information);
+		MenuItem searchActionBarButton = menu.findItem(R.id.menu_search_stations);
 
 		if (isUpdatingAvailable) {
 			updatingActionBarButton.setVisible(true);
