@@ -22,10 +22,10 @@ public class TimetableFragment extends AdaptedListFragment<Time> implements Load
 {
 	private static enum Mode
 	{
-		FULL_WEEK, WORKDAYS, WEEKEND
+		FULL_WEEK, WORKDAYS, WEEKEND, EMPTY
 	}
 
-	private Mode mode;
+	private Mode mode = Mode.EMPTY;
 
 	private static final String LIST_ITEM_TIME_ID = "time";
 	private static final String LIST_ITEM_REMAINING_TIME_ID = "remaining_time";
@@ -43,45 +43,27 @@ public class TimetableFragment extends AdaptedListFragment<Time> implements Load
 		everyMinuteActionPerformer = new EveryMinuteActionPerformer(this);
 	}
 
-	public static TimetableFragment newFullWeekInstance(Route route, Station station) {
+	public static TimetableFragment newEmptyInstance(Route route, Station station) {
 		TimetableFragment timetableFragment = new TimetableFragment();
 
-		timetableFragment.setArguments(buildArguments(Mode.FULL_WEEK, route, station));
+		timetableFragment.setArguments(buildArguments(route, station));
 
 		return timetableFragment;
 	}
 
-	private static Bundle buildArguments(Mode mode, Route route, Station station) {
+	private static Bundle buildArguments(Route route, Station station) {
 		Bundle arguments = new Bundle();
 
-		arguments.putSerializable(FragmentArguments.MODE, mode);
 		arguments.putParcelable(FragmentArguments.ROUTE, route);
 		arguments.putParcelable(FragmentArguments.STATION, station);
 
 		return arguments;
 	}
 
-	public static TimetableFragment newWorkdaysInstance(Route route, Station station) {
-		TimetableFragment timetableFragment = new TimetableFragment();
-
-		timetableFragment.setArguments(buildArguments(Mode.WORKDAYS, route, station));
-
-		return timetableFragment;
-	}
-
-	public static TimetableFragment newWeekendInstance(Route route, Station station) {
-		TimetableFragment timetableFragment = new TimetableFragment();
-
-		timetableFragment.setArguments(buildArguments(Mode.WEEKEND, route, station));
-
-		return timetableFragment;
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mode = (Mode) getArguments().getSerializable(FragmentArguments.MODE);
 		route = getArguments().getParcelable(FragmentArguments.ROUTE);
 		station = getArguments().getParcelable(FragmentArguments.STATION);
 	}
@@ -116,13 +98,7 @@ public class TimetableFragment extends AdaptedListFragment<Time> implements Load
 
 	@Override
 	protected void callListPopulation() {
-		if (mode == Mode.FULL_WEEK) {
-			setEmptyListText(R.string.loading_timetable);
-
-			getLoaderManager().initLoader(Loaders.TIMETABLE, null, this);
-		}
-
-		// For other modes it would be called by list navigation automatic
+		// All population is repopulation (look at TimetableActivity)
 	}
 
 	@Override
@@ -216,6 +192,12 @@ public class TimetableFragment extends AdaptedListFragment<Time> implements Load
 		super.onPause();
 
 		everyMinuteActionPerformer.stopPerforming();
+	}
+
+	public void loadFullWeekTimetable() {
+		mode = Mode.FULL_WEEK;
+
+		callListRepopulation();
 	}
 
 	public void loadWorkdaysTimetable() {

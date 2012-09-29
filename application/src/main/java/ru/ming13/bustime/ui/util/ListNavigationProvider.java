@@ -71,7 +71,7 @@ public class ListNavigationProvider
 		return activityInState.getInt(SavedInstanceKeys.SELECTED_LIST_NAVIGATION_ITEM_INDEX);
 	}
 
-	private boolean isStateValid(Bundle state) {
+	public boolean isStateValid(Bundle state) {
 		if (state == null) {
 			return false;
 		}

@@ -82,6 +82,7 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Pair<Route, Tim
 			return station.getClosestFullWeekBusTime(route);
 		}
 
+		// TODO: Optimize
 		if (Time.newInstance().isWeekend()) {
 			return station.getClosestWeekendBusTime(route);
 		}
