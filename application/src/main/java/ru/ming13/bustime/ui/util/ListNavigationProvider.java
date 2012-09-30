@@ -21,7 +21,7 @@ public class ListNavigationProvider
 
 	private static final int DEFAULT_LIST_NAVIGATION_ITEM_INDEX = 0;
 
-	private SherlockFragmentActivity activity;
+	private final SherlockFragmentActivity activity;
 
 	public ListNavigationProvider(SherlockFragmentActivity activity) {
 		this.activity = activity;

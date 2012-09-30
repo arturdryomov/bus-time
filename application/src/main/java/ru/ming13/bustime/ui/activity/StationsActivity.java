@@ -36,7 +36,7 @@ public class StationsActivity extends SherlockFragmentActivity implements Action
 		setUpListNavigation(savedInstanceState);
 	}
 
-	protected Fragment buildFragment() {
+	private Fragment buildFragment() {
 		return StationsFragment.newForRouteSortedByTimeShiftLoadingInstance(extractReceivedRoute());
 	}
 

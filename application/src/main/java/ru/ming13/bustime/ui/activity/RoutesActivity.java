@@ -36,7 +36,7 @@ public class RoutesActivity extends SherlockFragmentActivity implements ActionBa
 		setUpListNavigation(savedInstanceState);
 	}
 
-	protected Fragment buildFragment() {
+	private Fragment buildFragment() {
 		return RoutesForStationFragment.newInstance(extractReceivedStation());
 	}
 

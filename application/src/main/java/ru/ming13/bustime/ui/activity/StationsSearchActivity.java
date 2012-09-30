@@ -22,7 +22,7 @@ public class StationsSearchActivity extends SherlockFragmentActivity
 		FragmentWrapper.setUpFragment(this, buildFragment());
 	}
 
-	protected Fragment buildFragment() {
+	private Fragment buildFragment() {
 		return StationsFragment.newSearchLoadingInstance(extractReceivedSearchStationName());
 	}
 
