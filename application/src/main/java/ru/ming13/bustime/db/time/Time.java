@@ -10,14 +10,17 @@ import java.util.GregorianCalendar;
 
 import android.content.Context;
 import android.text.format.DateUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 
 
 public class Time
 {
-	private static final DateFormat timeFormatter;
+	private static final DateFormat timeParser;
+	private static final FastDateFormat timeFormatter;
 
 	static {
-		timeFormatter = new SimpleDateFormat("HH:mm");
+		timeParser = new SimpleDateFormat("HH:mm");
+		timeFormatter = FastDateFormat.getInstance("HH:mm");
 	}
 
 	private final int hours;
@@ -36,7 +39,7 @@ public class Time
 
 	private Calendar parseTime(String timeStringRepresentation) {
 		try {
-			Date date = timeFormatter.parse(timeStringRepresentation);
+			Date date = timeParser.parse(timeStringRepresentation);
 
 			return convertDateToCalendar(date);
 		}
