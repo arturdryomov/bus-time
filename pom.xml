@@ -9,7 +9,7 @@
 
 	<name>Bus Time Parent</name>
 	<artifactId>bus-time-parent</artifactId>
-	<version>0.6.9.6</version>
+	<version>0.6.9.7</version>
 	<groupId>ru.ming13.bustime</groupId>
 	<packaging>pom</packaging>
 
@@ -30,7 +30,7 @@
 			<plugins>
 				<plugin>
 					<artifactId>android-maven-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.3.2</version>
 					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 					<extensions>true</extensions>
 					<configuration>
@@ -89,6 +89,7 @@
 					<targetJdk>1.6</targetJdk>
 					<excludes>
 						<exclude>com/actionbarsherlock/**</exclude>
+						<exclude>**/R.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

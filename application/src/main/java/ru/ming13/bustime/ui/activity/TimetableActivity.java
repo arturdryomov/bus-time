@@ -1,14 +1,9 @@
 package ru.ming13.bustime.ui.activity;
 
 
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.widget.ArrayAdapter;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import ru.ming13.bustime.R;
@@ -20,16 +15,15 @@ import ru.ming13.bustime.ui.intent.IntentException;
 import ru.ming13.bustime.ui.intent.IntentExtras;
 import ru.ming13.bustime.ui.loader.Loaders;
 import ru.ming13.bustime.ui.loader.TimetableTypeCheckLoader;
+import ru.ming13.bustime.ui.util.FragmentWrapper;
+import ru.ming13.bustime.ui.util.ListNavigationProvider;
 
 
 public class TimetableActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener, LoaderManager.LoaderCallbacks<Boolean>
 {
-	private static final class SavedInstanceKeys
+	private static enum Mode
 	{
-		private SavedInstanceKeys() {
-		}
-
-		public static final String SELECTED_LIST_NAVIGATION_INDEX = "list_navigation_index";
+		FULL_WEEK, WORKDAYS, WEEKEND
 	}
 
 	private static final class ListNavigationIndexes
@@ -41,23 +35,22 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		public static final int WEEKEND = 1;
 	}
 
+	private ListNavigationProvider listNavigationProvider;
+
 	private Route route;
 	private Station station;
 
-	private int selectedNavigationItemIndex = -1;
+	private Bundle savedInstanceState;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.savedInstanceState = savedInstanceState;
 
 		route = extractReceivedRoute();
 		station = extractReceivedStation();
 
 		setUpTimetable();
-
-		if (isSavedInstanceStateValid(savedInstanceState)) {
-			restorePreviousSelectedListNavigationIndex(savedInstanceState);
-		}
 	}
 
 	private Route extractReceivedRoute() {
@@ -81,6 +74,8 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	}
 
 	private void setUpTimetable() {
+		FragmentWrapper.setUpFragment(this, TimetableFragment.newEmptyInstance(route, station));
+
 		getSupportLoaderManager().initLoader(Loaders.TIMETABLE_TYPE_CHECK, null, this);
 	}
 
@@ -91,26 +86,12 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 
 	@Override
 	public void onLoadFinished(Loader<Boolean> timetableTypeCheckLoader, Boolean isTimetableWeekPartDependent) {
-		setUpTimetableLoaderSafe(isTimetableWeekPartDependent);
-	}
-
-	private void setUpTimetableLoaderSafe(final boolean isTimetableWeekPartDependent) {
-		// Loaders don’t allow to run transactions on load finished
-
-		Runnable timetableSetter = new Runnable()
-		{
-			@Override
-			public void run() {
-				if (isTimetableWeekPartDependent) {
-					setUpWeekPartDependentTimetable();
-				}
-				else {
-					setUpWeekPartIndependentTimetable();
-				}
-			}
-		};
-
-		new Handler().post(timetableSetter);
+		if (isTimetableWeekPartDependent) {
+			setUpWeekPartDependentTimetable();
+		}
+		else {
+			setUpWeekPartIndependentTimetable();
+		}
 	}
 
 	@Override
@@ -118,50 +99,32 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	}
 
 	private void setUpWeekPartDependentTimetable() {
-		setUpActionBarListNavigation();
+		setUpListNavigation();
 
-		setUpWeekPartDependentTimetableFragment();
-
-		if (!isPreviousSelectedListNavigationItemValid()) {
-			setCurrentWeekPartListNavigationItem();
+		if (listNavigationProvider.isStateValid(savedInstanceState)) {
+			listNavigationProvider.restoreSelectedNavigationIndex(savedInstanceState);
 		}
 		else {
-			setPreviousSelectedListNavigationItem();
+			setCurrentWeekPartListNavigationItem();
 		}
 	}
 
-	private void setUpActionBarListNavigation() {
-		ActionBar actionBar = getSupportActionBar();
+	private void setUpListNavigation() {
+		listNavigationProvider = new ListNavigationProvider(this);
 
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		actionBar.setDisplayShowTitleEnabled(false);
-
-		actionBar.setListNavigationCallbacks(buildListNavigationAdapter(), this);
-	}
-
-	private ArrayAdapter<CharSequence> buildListNavigationAdapter() {
-		Context themedContext = getSupportActionBar().getThemedContext();
-		ArrayAdapter<CharSequence> listNavigationAdapter = ArrayAdapter.createFromResource(
-			themedContext, R.array.week_part_dependent_timetable, R.layout.sherlock_spinner_item);
-		listNavigationAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-
-		return listNavigationAdapter;
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		listNavigationProvider.setUpListNavigation(this, R.array.week_part_dependent_timetable);
 	}
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		TimetableFragment timetableFragment = (TimetableFragment) getSupportFragmentManager().findFragmentById(
-			android.R.id.content);
-
 		switch (itemPosition) {
 			case ListNavigationIndexes.WORKDAYS:
-				selectedNavigationItemIndex = ListNavigationIndexes.WORKDAYS;
-				timetableFragment.loadWorkdaysTimetable();
+				loadTimetable(Mode.WORKDAYS);
 				return true;
 
 			case ListNavigationIndexes.WEEKEND:
-				selectedNavigationItemIndex = ListNavigationIndexes.WEEKEND;
-				timetableFragment.loadWeekendTimetable();
+				loadTimetable(Mode.WEEKEND);
 				return true;
 
 			default:
@@ -169,29 +132,41 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		}
 	}
 
-	private void setUpWeekPartDependentTimetableFragment() {
-		if (Time.newInstance().isWeekend()) {
-			setUpFragment(TimetableFragment.newWeekendInstance(route, station));
-		}
-		else {
-			setUpFragment(TimetableFragment.newWorkdaysInstance(route, station));
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		switch (getSupportActionBar().getNavigationMode()) {
+			case ActionBar.NAVIGATION_MODE_LIST:
+				listNavigationProvider.saveSelectedNavigationIndex(outState);
+				break;
+
+			default:
+				break;
 		}
 	}
 
-	private void setUpFragment(Fragment fragment) {
-		if (isFragmentInstalled()) {
-			return;
+	private void loadTimetable(Mode mode) {
+		TimetableFragment timetableFragment = (TimetableFragment) getSupportFragmentManager().findFragmentById(
+			android.R.id.content);
+
+		switch (mode) {
+			case FULL_WEEK:
+				timetableFragment.loadFullWeekTimetable();
+				break;
+
+			case WORKDAYS:
+				timetableFragment.loadWorkdaysTimetable();
+				break;
+
+			case WEEKEND:
+				timetableFragment.loadWeekendTimetable();
+				break;
+
+			default:
+				timetableFragment.loadFullWeekTimetable();
+				break;
 		}
-
-		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-		fragmentTransaction.replace(android.R.id.content, fragment);
-
-		fragmentTransaction.commit();
-	}
-
-	private boolean isFragmentInstalled() {
-		return getSupportFragmentManager().findFragmentById(android.R.id.content) != null;
 	}
 
 	private void setCurrentWeekPartListNavigationItem() {
@@ -207,32 +182,7 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		getSupportActionBar().setSelectedNavigationItem(listNavigationIndex);
 	}
 
-	private void setPreviousSelectedListNavigationItem() {
-		getSupportActionBar().setSelectedNavigationItem(selectedNavigationItemIndex);
-	}
-
-	private boolean isPreviousSelectedListNavigationItemValid() {
-		return selectedNavigationItemIndex >= 0;
-	}
-
 	private void setUpWeekPartIndependentTimetable() {
-		setUpFragment(TimetableFragment.newFullWeekInstance(route, station));
-	}
-
-	private boolean isSavedInstanceStateValid(Bundle savedInstanceState) {
-		return savedInstanceState != null && savedInstanceState.containsKey(
-			SavedInstanceKeys.SELECTED_LIST_NAVIGATION_INDEX);
-	}
-
-	private void restorePreviousSelectedListNavigationIndex(Bundle savedInstanceState) {
-		selectedNavigationItemIndex = savedInstanceState.getInt(
-			SavedInstanceKeys.SELECTED_LIST_NAVIGATION_INDEX);
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-
-		outState.putInt(SavedInstanceKeys.SELECTED_LIST_NAVIGATION_INDEX, selectedNavigationItemIndex);
+		loadTimetable(Mode.FULL_WEEK);
 	}
 }

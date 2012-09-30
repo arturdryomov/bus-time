@@ -1,28 +1,21 @@
 package ru.ming13.bustime.ui.activity;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.widget.ArrayAdapter;
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.db.model.Station;
 import ru.ming13.bustime.ui.fragment.RoutesForStationFragment;
 import ru.ming13.bustime.ui.intent.IntentException;
 import ru.ming13.bustime.ui.intent.IntentExtras;
+import ru.ming13.bustime.ui.util.FragmentWrapper;
+import ru.ming13.bustime.ui.util.ListNavigationProvider;
 
 
-public class RoutesActivity extends FragmentWrapperActivity implements ActionBar.OnNavigationListener
+public class RoutesActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener
 {
-	private static final class SavedInstanceKeys
-	{
-		private SavedInstanceKeys() {
-		}
-
-		public static final String SELECTED_LIST_NAVIGATION_INDEX = "list_navigation_index";
-	}
-
 	private static final class ListNavigationIndexes
 	{
 		private ListNavigationIndexes() {
@@ -32,8 +25,18 @@ public class RoutesActivity extends FragmentWrapperActivity implements ActionBar
 		public static final int SORTING_BY_NAME = 1;
 	}
 
+	private ListNavigationProvider listNavigationProvider;
+
 	@Override
-	protected Fragment buildFragment() {
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		FragmentWrapper.setUpFragment(this, buildFragment());
+
+		setUpListNavigation(savedInstanceState);
+	}
+
+	private Fragment buildFragment() {
 		return RoutesForStationFragment.newInstance(extractReceivedStation());
 	}
 
@@ -47,33 +50,12 @@ public class RoutesActivity extends FragmentWrapperActivity implements ActionBar
 		return station;
 	}
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	private void setUpListNavigation(Bundle activityInState) {
+		listNavigationProvider = new ListNavigationProvider(this);
 
-		setUpActionBarListNavigation();
+		listNavigationProvider.setUpListNavigation(this, R.array.titles_routes_with_sorting);
 
-		if (isSavedInstanceStateValid(savedInstanceState)) {
-			setSelectedListNavigationIndex(savedInstanceState);
-		}
-	}
-
-	private void setUpActionBarListNavigation() {
-		ActionBar actionBar = getSupportActionBar();
-
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		actionBar.setDisplayShowTitleEnabled(false);
-
-		actionBar.setListNavigationCallbacks(buildListNavigationAdapter(), this);
-	}
-
-	private ArrayAdapter<CharSequence> buildListNavigationAdapter() {
-		Context themedContext = getSupportActionBar().getThemedContext();
-		ArrayAdapter<CharSequence> listNavigationAdapter = ArrayAdapter.createFromResource(
-			themedContext, R.array.titles_routes_with_sorting, R.layout.sherlock_spinner_item);
-		listNavigationAdapter.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-
-		return listNavigationAdapter;
+		listNavigationProvider.restoreSelectedNavigationIndex(activityInState);
 	}
 
 	@Override
@@ -95,27 +77,10 @@ public class RoutesActivity extends FragmentWrapperActivity implements ActionBar
 		}
 	}
 
-	private boolean isSavedInstanceStateValid(Bundle savedInstanceState) {
-		return savedInstanceState != null && savedInstanceState.containsKey(
-			SavedInstanceKeys.SELECTED_LIST_NAVIGATION_INDEX);
-	}
-
-	private void setSelectedListNavigationIndex(Bundle savedInstanceState) {
-		int selectedListNavigationIndex = savedInstanceState.getInt(
-			SavedInstanceKeys.SELECTED_LIST_NAVIGATION_INDEX);
-
-		getSupportActionBar().setSelectedNavigationItem(selectedListNavigationIndex);
-	}
-
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putInt(SavedInstanceKeys.SELECTED_LIST_NAVIGATION_INDEX,
-			getSelectedListNavigationIndex());
-	}
-
-	private int getSelectedListNavigationIndex() {
-		return getSupportActionBar().getSelectedNavigationIndex();
+		listNavigationProvider.saveSelectedNavigationIndex(outState);
 	}
 }

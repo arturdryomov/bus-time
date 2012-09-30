@@ -3,8 +3,18 @@
 
 	<!-- Copy this file as “urls.xml” to “values” directory. -->
 
-	<!-- Obtain your own urls and paste it to “urls.xml”. -->
+	<!-- Obtain your own server database file url and paste it to “urls.xml”. -->
 
-	<string name="url_server_database_file">SERVER_DATABASE_FILE_URL</string>
+	<string name="url_server_database_file" translatable="false">
+		SERVER_DATABASE_FILE_URL
+	</string>
+
+	<string name="url_app_google_play" translatable="false">
+		market://details?id=%s
+	</string>
+
+	<string name="url_web_google_play" translatable="false">
+		https://play.google.com/store/apps/details?id=%s
+	</string>
 
 </resources>

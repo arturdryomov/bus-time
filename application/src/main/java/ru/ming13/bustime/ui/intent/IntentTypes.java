@@ -1,7 +1,7 @@
 package ru.ming13.bustime.ui.intent;
 
 
-public final class IntentTypes
+final class IntentTypes
 {
 	private IntentTypes() {
 	}

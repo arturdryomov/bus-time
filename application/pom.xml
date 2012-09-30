@@ -9,7 +9,7 @@
 
 	<parent>
 		<artifactId>bus-time-parent</artifactId>
-		<version>0.6.9.6</version>
+		<version>0.6.9.7</version>
 		<groupId>ru.ming13.bustime</groupId>
 	</parent>
 
@@ -18,9 +18,15 @@
 			<id>com.jakewharton</id>
 			<url>http://r.jakewharton.com/maven/release</url>
 		</repository>
+
 		<repository>
 			<id>novoda-mvn-repo</id>
 			<url>https://github.com/novoda/public-mvn-repo/raw/master/releases</url>
+		</repository>
+
+		<repository>
+			<id>ignition-mvn-repo</id>
+			<url>http://nexus.qype.com/content/repositories/releases</url>
 		</repository>
 	</repositories>
 
