@@ -5,12 +5,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
+import org.apache.commons.lang3.tuple.Pair;
 import ru.ming13.bustime.db.DbProvider;
 import ru.ming13.bustime.db.model.Route;
 import ru.ming13.bustime.db.model.Station;
@@ -18,7 +17,7 @@ import ru.ming13.bustime.db.time.Time;
 import ru.ming13.bustime.db.time.TimeException;
 
 
-public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time>>>
+public class RoutesForStationLoader extends AsyncTaskLoader<List<Pair<Route, Time>>>
 {
 	private static enum Order
 	{
@@ -28,6 +27,8 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 	private final Order order;
 
 	private final Station station;
+
+	private final boolean isWeekend;
 
 	public static RoutesForStationLoader newNameOrderedInstance(Context context, Station station) {
 		return new RoutesForStationLoader(context, station, Order.BY_NAME);
@@ -39,6 +40,8 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 		this.station = station;
 
 		this.order = order;
+
+		this.isWeekend = Time.newInstance().isWeekend();
 	}
 
 	public static RoutesForStationLoader newBusTimeOrderedInstance(Context context, Station station) {
@@ -53,8 +56,8 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 	}
 
 	@Override
-	public List<Map<Route, Time>> loadInBackground() {
-		List<Map<Route, Time>> result = new ArrayList<Map<Route, Time>>();
+	public List<Pair<Route, Time>> loadInBackground() {
+		List<Pair<Route, Time>> result = new ArrayList<Pair<Route, Time>>();
 
 		for (Route route : DbProvider.getInstance().getRoutes().getRoutesList(station)) {
 			result.add(buildResultItem(route));
@@ -65,17 +68,17 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 		return result;
 	}
 
-	private Map<Route, Time> buildResultItem(Route route) {
-		Map<Route, Time> resultItem = new HashMap<Route, Time>();
+	private Pair<Route, Time> buildResultItem(Route route) {
+		Time closestBusTime;
 
 		try {
-			resultItem.put(route, getClosestBusTime(route));
+			closestBusTime = getClosestBusTime(route);
 		}
 		catch (TimeException e) {
-			resultItem.put(route, null);
+			closestBusTime = null;
 		}
 
-		return resultItem;
+		return Pair.of(route, closestBusTime);
 	}
 
 	private Time getClosestBusTime(Route route) {
@@ -83,7 +86,7 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 			return station.getClosestFullWeekBusTime(route);
 		}
 
-		if (Time.newInstance().isWeekend()) {
+		if (isWeekend) {
 			return station.getClosestWeekendBusTime(route);
 		}
 		else {
@@ -91,7 +94,7 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 		}
 	}
 
-	private void reorderRoutesAndTimes(List<Map<Route, Time>> routesAndTimes) {
+	private void reorderRoutesAndTimes(List<Pair<Route, Time>> routesAndTimes) {
 		switch (order) {
 			case BY_NAME:
 				// It’s already sorted by name by database
@@ -106,12 +109,12 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 		}
 	}
 
-	private static final class RoutesByTimeComparator implements Comparator<Map<Route, Time>>, Serializable
+	private static final class RoutesByTimeComparator implements Comparator<Pair<Route, Time>>, Serializable
 	{
 		@Override
-		public int compare(Map<Route, Time> firstRouteAndTime, Map<Route, Time> secondRouteAndTime) {
-			Time firstRouteTime = getTime(firstRouteAndTime);
-			Time secondRouteTime = getTime(secondRouteAndTime);
+		public int compare(Pair<Route, Time> firstRouteAndTime, Pair<Route, Time> secondRouteAndTime) {
+			Time firstRouteTime = firstRouteAndTime.getRight();
+			Time secondRouteTime = secondRouteAndTime.getRight();
 
 			if ((firstRouteTime == null) && (secondRouteAndTime == null)) {
 				return 0;
@@ -135,14 +138,6 @@ public class RoutesForStationLoader extends AsyncTaskLoader<List<Map<Route, Time
 			else {
 				return -1;
 			}
-		}
-
-		private Time getTime(Map<Route, Time> routeAndTime) {
-			return routeAndTime.get(getRoute(routeAndTime));
-		}
-
-		private Route getRoute(Map<Route, Time> routeAndTime) {
-			return routeAndTime.keySet().iterator().next();
 		}
 	}
 }

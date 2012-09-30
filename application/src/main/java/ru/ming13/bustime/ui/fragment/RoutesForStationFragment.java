@@ -12,6 +12,7 @@ import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import org.apache.commons.lang3.tuple.Pair;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.db.model.Route;
 import ru.ming13.bustime.db.model.Station;
@@ -22,7 +23,7 @@ import ru.ming13.bustime.ui.loader.RoutesForStationLoader;
 import ru.ming13.bustime.ui.util.EveryMinuteActionPerformer;
 
 
-public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Time>> implements LoaderManager.LoaderCallbacks<List<Map<Route, Time>>>, EveryMinuteActionPerformer.EveryMinuteCallback
+public class RoutesForStationFragment extends AdaptedListFragment<Pair<Route, Time>> implements LoaderManager.LoaderCallbacks<List<Pair<Route, Time>>>, EveryMinuteActionPerformer.EveryMinuteCallback
 {
 	private static enum Order
 	{
@@ -77,25 +78,17 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 	}
 
 	@Override
-	protected Map<String, Object> buildListItem(Map<Route, Time> routeAndTime) {
+	protected Map<String, Object> buildListItem(Pair<Route, Time> routeAndTime) {
 		Map<String, Object> listItem = new HashMap<String, Object>();
 
-		Route route = getRoute(routeAndTime);
-		Time time = getTime(routeAndTime);
+		Route route = routeAndTime.getLeft();
+		Time time = routeAndTime.getRight();
 
 		listItem.put(LIST_ITEM_OBJECT_ID, routeAndTime);
 		listItem.put(LIST_ITEM_NAME_ID, route.getName());
 		listItem.put(LIST_ITEM_REMAINING_TIME_ID, buildRemainingTimeText(time));
 
 		return listItem;
-	}
-
-	private Route getRoute(Map<Route, Time> routeAndTime) {
-		return routeAndTime.keySet().iterator().next();
-	}
-
-	private Time getTime(Map<Route, Time> routeAndTime) {
-		return routeAndTime.get(getRoute(routeAndTime));
 	}
 
 	private String buildRemainingTimeText(Time time) {
@@ -124,7 +117,7 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 	}
 
 	@Override
-	public Loader<List<Map<Route, Time>>> onCreateLoader(int loaderId, Bundle loaderArguments) {
+	public Loader<List<Pair<Route, Time>>> onCreateLoader(int loaderId, Bundle loaderArguments) {
 		switch (order) {
 			case BY_NAME:
 				return RoutesForStationLoader.newNameOrderedInstance(getActivity(), station);
@@ -138,7 +131,7 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 	}
 
 	@Override
-	public void onLoadFinished(Loader<List<Map<Route, Time>>> routesForStationLoader, List<Map<Route, Time>> routesAndTimes) {
+	public void onLoadFinished(Loader<List<Pair<Route, Time>>> routesForStationLoader, List<Pair<Route, Time>> routesAndTimes) {
 		if (routesAndTimes.isEmpty()) {
 			setEmptyListText(R.string.empty_routes);
 		}
@@ -148,14 +141,14 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 	}
 
 	@Override
-	public void onLoaderReset(Loader<List<Map<Route, Time>>> routesForStationLoader) {
+	public void onLoaderReset(Loader<List<Pair<Route, Time>>> routesForStationLoader) {
 	}
 
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 
-		Route selectedRoute = getRoute(getListItemObject(position));
+		Route selectedRoute = getListItemObject(position).getLeft();
 		callTimetableActivity(selectedRoute);
 	}
 
@@ -183,10 +176,10 @@ public class RoutesForStationFragment extends AdaptedListFragment<Map<Route, Tim
 
 	private void updateRemainingTimes() {
 		for (int listPosition = 0; listPosition < list.size(); listPosition++) {
-			Map<Route, Time> routeAndTime = getListItemObject(listPosition);
+			Pair<Route, Time> routeAndTime = getListItemObject(listPosition);
 
 			list.get(listPosition).put(LIST_ITEM_REMAINING_TIME_ID,
-				buildRemainingTimeText(getTime(routeAndTime)));
+				buildRemainingTimeText(routeAndTime.getRight()));
 		}
 
 		refreshListContent();

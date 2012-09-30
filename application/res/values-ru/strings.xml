@@ -34,9 +34,9 @@
 	<string name="empty_timetable">Расписание пусто.</string>
 
 	<string name="menu_stations_map">Карта остановок</string>
-	<string name="menu_update_database">Обновить информацию</string>
-	<string name="menu_search">Поиск остановок</string>
-	<string name="menu_location">Текущее местоположение</string>
+	<string name="menu_update_information">Обновить информацию</string>
+	<string name="menu_search_stations">Поиск остановок</string>
+	<string name="menu_current_location">Текущее местоположение</string>
 	<string name="menu_rate_application">Оценить приложение</string>
 	<string name="menu_send_feedback">Написать разработчику</string>
 

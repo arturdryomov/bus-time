@@ -41,8 +41,8 @@ public class StationsMapActivity extends SherlockMapActivity
 
 	private static final int FAR_FROM_DISTANCE_IN_METERS = 50000;
 
-	private static final String STATION_NAME_REMARK_BEGIN_SIGN = "(";
-	private static final String STATION_NAME_REMARK_END_SIGN = ")";
+	private static final String STATION_NAME_SUBTITLE_BEGIN_SIGN = "(";
+	private static final String STATION_NAME_SUBTITLE_END_SIGN = ")";
 
 	private MyLocationOverlay myLocationOverlay;
 
@@ -259,28 +259,28 @@ public class StationsMapActivity extends SherlockMapActivity
 	}
 
 	private StationOverlayItem buildStationOverlayItem(Station station) {
-		if (hasStationNameRemark(station.getName())) {
-			return buildStationOverlayItemWithRemark(station);
+		if (hasStationNameSubtitle(station.getName())) {
+			return buildStationOverlayItemWithSubtitle(station);
 		}
 		else {
-			return buildStationOverlayItemWithoutRemark(station);
+			return buildStationOverlayItemWithoutSubtitle(station);
 		}
 	}
 
-	private boolean hasStationNameRemark(String stationName) {
-		if (!stationName.contains(STATION_NAME_REMARK_BEGIN_SIGN)) {
+	private boolean hasStationNameSubtitle(String stationName) {
+		if (!stationName.contains(STATION_NAME_SUBTITLE_BEGIN_SIGN)) {
 			return false;
 		}
 
-		return stationName.contains(STATION_NAME_REMARK_END_SIGN);
+		return stationName.contains(STATION_NAME_SUBTITLE_END_SIGN);
 	}
 
-	private StationOverlayItem buildStationOverlayItemWithRemark(Station station) {
+	private StationOverlayItem buildStationOverlayItemWithSubtitle(Station station) {
 		GeoPoint stationGeoPoint = buildGeoPoint(station);
 		String pureStationName = extractPureStationName(station.getName());
-		String stationNameRemark = extractStationNameRemark(station.getName());
+		String stationNameSubtitle = extractStationNameSubtitle(station.getName());
 
-		return new StationOverlayItem(station, stationGeoPoint, pureStationName, stationNameRemark);
+		return new StationOverlayItem(station, stationGeoPoint, pureStationName, stationNameSubtitle);
 	}
 
 	private GeoPoint buildGeoPoint(Station station) {
@@ -288,19 +288,19 @@ public class StationsMapActivity extends SherlockMapActivity
 	}
 
 	private String extractPureStationName(String stationName) {
-		int stationRemarkBeginPosition = stationName.indexOf(STATION_NAME_REMARK_BEGIN_SIGN);
+		int stationSubtitleBeginPosition = stationName.indexOf(STATION_NAME_SUBTITLE_BEGIN_SIGN);
 
-		return stationName.substring(0, stationRemarkBeginPosition - 1);
+		return stationName.substring(0, stationSubtitleBeginPosition - 1);
 	}
 
-	private String extractStationNameRemark(String stationName) {
-		int stationRemarkBeginPosition = stationName.indexOf(STATION_NAME_REMARK_BEGIN_SIGN);
-		int stationRemarkEndPosition = stationName.indexOf(STATION_NAME_REMARK_END_SIGN);
+	private String extractStationNameSubtitle(String stationName) {
+		int stationSubtitleBeginPosition = stationName.indexOf(STATION_NAME_SUBTITLE_BEGIN_SIGN);
+		int stationSubtitleEndPosition = stationName.indexOf(STATION_NAME_SUBTITLE_END_SIGN);
 
-		return stationName.substring(stationRemarkBeginPosition + 1, stationRemarkEndPosition);
+		return stationName.substring(stationSubtitleBeginPosition + 1, stationSubtitleEndPosition);
 	}
 
-	private StationOverlayItem buildStationOverlayItemWithoutRemark(Station station) {
+	private StationOverlayItem buildStationOverlayItemWithoutSubtitle(Station station) {
 		GeoPoint stationGeoPoint = buildGeoPoint(station);
 
 		return new StationOverlayItem(station, stationGeoPoint);
@@ -339,7 +339,7 @@ public class StationsMapActivity extends SherlockMapActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
-			case R.id.menu_location:
+			case R.id.menu_current_location:
 				setUpAnimationToCurrentLocation();
 				return true;
 

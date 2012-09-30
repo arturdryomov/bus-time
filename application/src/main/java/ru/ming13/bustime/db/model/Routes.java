@@ -45,7 +45,7 @@ public class Routes
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES));
 
-		queryBuilder.append(String.format("order by cast (%s as integer)", DbFieldNames.ID));
+		queryBuilder.append(String.format("order by cast(%s as integer)", DbFieldNames.ID));
 
 		return queryBuilder.toString();
 	}
@@ -94,7 +94,7 @@ public class Routes
 				station.getId()));
 
 		queryBuilder.append(
-			String.format("order by cast (%s.%s as integer)", DbTableNames.ROUTES, DbFieldNames.NAME));
+			String.format("order by cast(%s.%s as integer)", DbTableNames.ROUTES, DbFieldNames.NAME));
 
 		return queryBuilder.toString();
 	}

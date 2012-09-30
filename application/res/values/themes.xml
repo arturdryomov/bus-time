@@ -14,17 +14,32 @@
 		<item name="displayOptions">showTitle</item>
 	</style>
 
-	<style name="Theme.BusTime.Home" parent="Theme.BusTime">
-		<item name="android:actionBarStyle">@style/Theme.BusTime.ActionBar.Home</item>
-		<item name="actionBarStyle">@style/Theme.BusTime.ActionBar.Home</item>
+	<style name="Theme.BusTime.TabNavigation" parent="Theme.BusTime">
+		<item name="android:actionBarStyle">@style/Theme.BusTime.TabNavigation.ActionBar</item>
+		<item name="actionBarStyle">@style/Theme.BusTime.TabNavigation.ActionBar</item>
 	</style>
 
-	<style name="Theme.BusTime.ActionBar.Home" parent="Theme.BusTime.ActionBar">
+	<style name="Theme.BusTime.TabNavigation.ActionBar" parent="Theme.BusTime.ActionBar">
+		<!-- Theme with a “disableHome” displayOption would place tabs on top of the main action bar. -->
+		<!-- It is a bug in a mainstream Android implementation of action bar. -->
 		<item name="android:displayOptions">showHome|showTitle|useLogo</item>
 		<item name="displayOptions">showHome|showTitle|useLogo</item>
 
 		<item name="android:navigationMode">tabMode</item>
 		<item name="navigationMode">tabMode</item>
+	</style>
+
+	<style name="Theme.BusTime.ListNavigation" parent="Theme.BusTime">
+		<item name="android:actionBarStyle">@style/Theme.BusTime.ListNavigation.ActionBar</item>
+		<item name="actionBarStyle">@style/Theme.BusTime.ListNavigation.ActionBar</item>
+	</style>
+
+	<style name="Theme.BusTime.ListNavigation.ActionBar" parent="Theme.BusTime.ActionBar">
+		<item name="android:displayOptions">disableHome</item>
+		<item name="displayOptions">disableHome</item>
+
+		<!-- Setting navigationMode to “listMode” would not work properly. -->
+		<!-- It should be activated in the code. Another strange Android bug. -->
 	</style>
 
 </resources>

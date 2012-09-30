@@ -30,7 +30,7 @@
 
 		<activity
 			android:name=".ui.activity.HomeActivity"
-			android:theme="@style/Theme.BusTime.Home">
+			android:theme="@style/Theme.BusTime.TabNavigation">
 
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -44,12 +44,14 @@
 
 		<activity
 			android:name=".ui.activity.RoutesActivity"
-			android:label="@string/title_routes">
+			android:label="@string/title_routes"
+			android:theme="@style/Theme.BusTime.ListNavigation">
 		</activity>
 
 		<activity
 			android:name=".ui.activity.StationsActivity"
-			android:label="@string/title_stations">
+			android:label="@string/title_stations"
+			android:theme="@style/Theme.BusTime.ListNavigation">
 		</activity>
 
 		<activity
