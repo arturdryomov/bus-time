@@ -153,8 +153,8 @@ public class RoutesForStationFragment extends AdaptedListFragment<Pair<Route, Ti
 	}
 
 	private void callTimetableActivity(Route route) {
-		Intent callIntent = IntentFactory.createTimetableIntent(getActivity(), route, station);
-		startActivity(callIntent);
+		Intent intent = IntentFactory.createTimetableIntent(getActivity(), route, station);
+		startActivity(intent);
 	}
 
 	public void sortByName() {

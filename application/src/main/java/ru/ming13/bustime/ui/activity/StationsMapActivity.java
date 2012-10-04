@@ -253,8 +253,8 @@ public class StationsMapActivity extends SherlockMapActivity
 		}
 
 		private void callRoutesActivity(Station station) {
-			Intent callIntent = IntentFactory.createRoutesIntent(activity, station);
-			activity.startActivity(callIntent);
+			Intent intent = IntentFactory.createRoutesIntent(activity, station);
+			activity.startActivity(intent);
 		}
 	}
 

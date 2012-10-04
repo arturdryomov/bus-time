@@ -386,8 +386,8 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 	}
 
 	private void callStationsMapActivity() {
-		Intent callIntent = IntentFactory.createStationsMapIntent(this);
-		startActivity(callIntent);
+		Intent intent = IntentFactory.createStationsMapIntent(this);
+		startActivity(intent);
 	}
 
 	private void callGooglePlay() {

@@ -182,13 +182,13 @@ public class StationsFragment extends AdaptedListFragment<Station> implements Lo
 	}
 
 	private void callTimetableActivity(Station station) {
-		Intent callIntent = IntentFactory.createTimetableIntent(getActivity(), route, station);
-		startActivity(callIntent);
+		Intent intent = IntentFactory.createTimetableIntent(getActivity(), route, station);
+		startActivity(intent);
 	}
 
 	private void callRoutesActivity(Station station) {
-		Intent callIntent = IntentFactory.createRoutesIntent(getActivity(), station);
-		startActivity(callIntent);
+		Intent intent = IntentFactory.createRoutesIntent(getActivity(), station);
+		startActivity(intent);
 	}
 
 	public void sortByName() {

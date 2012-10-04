@@ -85,7 +85,7 @@ public class RoutesFragment extends AdaptedListFragment<Route> implements Loader
 	}
 
 	private void callStationsActivity(Route route) {
-		Intent callIntent = IntentFactory.createStationsIntent(getActivity(), route);
-		startActivity(callIntent);
+		Intent intent = IntentFactory.createStationsIntent(getActivity(), route);
+		startActivity(intent);
 	}
 }
