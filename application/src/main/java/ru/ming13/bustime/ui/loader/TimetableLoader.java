@@ -21,16 +21,16 @@ public class TimetableLoader extends AsyncTaskLoader<List<Time>>
 	private final Station station;
 	private final Mode mode;
 
+	public static TimetableLoader newFullWeekLoader(Context context, Route route, Station station) {
+		return new TimetableLoader(context, route, station, Mode.FULL_WEEK);
+	}
+
 	private TimetableLoader(Context context, Route route, Station station, Mode mode) {
 		super(context);
 
 		this.route = route;
 		this.station = station;
 		this.mode = mode;
-	}
-
-	public static TimetableLoader newFullWeekLoader(Context context, Route route, Station station) {
-		return new TimetableLoader(context, route, station, Mode.FULL_WEEK);
 	}
 
 	public static TimetableLoader newWorkdaysLoader(Context context, Route route, Station station) {
