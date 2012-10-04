@@ -29,8 +29,11 @@ public class RoutesFragment extends AdaptedListFragment<Route> implements Loader
 
 	@Override
 	protected SimpleAdapter buildListAdapter() {
-		return new SimpleAdapter(getActivity(), list, R.layout.list_item_one_line,
-			new String[] {LIST_ITEM_TEXT_ID}, new int[] {R.id.text});
+		String[] listColumnNames = {LIST_ITEM_TEXT_ID};
+		int[] columnCorrespondingResources = {R.id.text};
+
+		return new SimpleAdapter(getActivity(), list, R.layout.list_item_one_line, listColumnNames,
+			columnCorrespondingResources);
 	}
 
 	@Override
