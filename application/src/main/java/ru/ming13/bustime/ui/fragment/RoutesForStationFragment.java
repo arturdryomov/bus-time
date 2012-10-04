@@ -112,8 +112,8 @@ public class RoutesForStationFragment extends AdaptedListFragment<Pair<Route, Ti
 
 	@Override
 	public void callListRepopulation() {
-		clearList();
 		setEmptyListText(R.string.loading_routes);
+		clearList();
 
 		getLoaderManager().restartLoader(Loaders.ROUTES_FOR_STATION, null, this);
 	}

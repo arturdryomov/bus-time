@@ -75,6 +75,7 @@ public class RoutesFragment extends AdaptedListFragment<Route> implements Loader
 	@Override
 	public void callListRepopulation() {
 		setEmptyListText(R.string.loading_routes);
+		clearList();
 
 		getLoaderManager().restartLoader(Loaders.ROUTES, null, this);
 	}
