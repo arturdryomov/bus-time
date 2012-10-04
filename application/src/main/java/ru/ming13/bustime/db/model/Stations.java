@@ -27,18 +27,7 @@ public class Stations
 	}
 
 	public List<Station> getStationsList() {
-		List<Station> stationsList = new ArrayList<Station>();
-
-		Cursor databaseCursor = database.rawQuery(buildStationsSelectionQuery(), null);
-
-		while (databaseCursor.moveToNext()) {
-			ContentValues databaseValues = extractStationDatabaseValuesFromCursor(databaseCursor);
-			stationsList.add(new Station(databaseValues));
-		}
-
-		databaseCursor.close();
-
-		return stationsList;
+		return getStationsListForQuery(buildStationsSelectionQuery());
 	}
 
 	private String buildStationsSelectionQuery() {
@@ -57,7 +46,22 @@ public class Stations
 		return queryBuilder.toString();
 	}
 
-	private ContentValues extractStationDatabaseValuesFromCursor(Cursor databaseCursor) {
+	private List<Station> getStationsListForQuery(String stationsSelectionQuery) {
+		List<Station> stationsList = new ArrayList<Station>();
+
+		Cursor databaseCursor = database.rawQuery(stationsSelectionQuery, null);
+
+		while (databaseCursor.moveToNext()) {
+			ContentValues databaseValues = extractStationDatabaseValues(databaseCursor);
+			stationsList.add(new Station(databaseValues));
+		}
+
+		databaseCursor.close();
+
+		return stationsList;
+	}
+
+	private ContentValues extractStationDatabaseValues(Cursor databaseCursor) {
 		ContentValues databaseValues = new ContentValues();
 
 		DatabaseUtils.cursorLongToContentValues(databaseCursor, DbFieldNames.ID, databaseValues);
@@ -71,24 +75,10 @@ public class Stations
 	}
 
 	public List<Station> getStationsListOrderedByName(Route route) {
-		return getStationsList(route, Order.BY_NAME);
+		return getStationsListForQuery(buildStationsSelectionQuery(route, Order.BY_NAME));
 	}
 
-	private List<Station> getStationsList(Route route, Order order) {
-		List<Station> stationsList = new ArrayList<Station>();
-
-		Cursor databaseCursor = database.rawQuery(buildRoutesStationsSelectionQuery(route, order),
-			null);
-
-		while (databaseCursor.moveToNext()) {
-			ContentValues databaseValues = extractStationDatabaseValuesFromCursor(databaseCursor);
-			stationsList.add(new Station(databaseValues));
-		}
-
-		return stationsList;
-	}
-
-	private String buildRoutesStationsSelectionQuery(Route route, Order order) {
+	private String buildStationsSelectionQuery(Route route, Order order) {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select distinct ");
@@ -111,12 +101,12 @@ public class Stations
 			String.format("where %s.%s = %d ", DbTableNames.ROUTES_AND_STATIONS, DbFieldNames.ROUTE_ID,
 				route.getId()));
 
-		queryBuilder.append(buildRoutesOrderQuery(order));
+		queryBuilder.append(buildStationsOrderQuery(order));
 
 		return queryBuilder.toString();
 	}
 
-	private String buildRoutesOrderQuery(Order order) {
+	private String buildStationsOrderQuery(Order order) {
 		switch (order) {
 			case BY_NAME:
 				return String.format("order by %s.%s", DbTableNames.STATIONS, DbFieldNames.NAME);
@@ -131,7 +121,7 @@ public class Stations
 	}
 
 	public List<Station> getStationsListOrderedByTimeShift(Route route) {
-		return getStationsList(route, Order.BY_TIME_SHIFT);
+		return getStationsListForQuery(buildStationsSelectionQuery(route, Order.BY_TIME_SHIFT));
 	}
 
 	public List<Station> getStationsList(String searchQuery) {
