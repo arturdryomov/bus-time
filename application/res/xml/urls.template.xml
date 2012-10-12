@@ -10,11 +10,11 @@
 	</string>
 
 	<string name="url_app_google_play" translatable="false">
-		market://details?id=%s
+		market://details?id=%1$s
 	</string>
 
 	<string name="url_web_google_play" translatable="false">
-		https://play.google.com/store/apps/details?id=%s
+		https://play.google.com/store/apps/details?id=%1$s
 	</string>
 
 </resources>
