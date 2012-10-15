@@ -17,7 +17,7 @@ public class StationsSearchProvider extends ContentProvider
 	private static final String[] SUGGESTIONS_CURSOR_COLUMNS;
 
 	static {
-		SUGGESTIONS_CURSOR_COLUMNS = new String[] {BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1};
+		SUGGESTIONS_CURSOR_COLUMNS = new String[] {BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1, SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA};
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class StationsSearchProvider extends ContentProvider
 
 		int rowId = 0;
 		for (Station station : DbProvider.getInstance().getStations().getStationsList(searchQuery)) {
-			suggestionsCursor.addRow(buildSuggestionsCursorRow(rowId, station.getName()));
+			suggestionsCursor.addRow(buildSuggestionsCursorRow(rowId, station));
 
 			rowId++;
 		}
@@ -40,8 +40,8 @@ public class StationsSearchProvider extends ContentProvider
 		return suggestionsCursor;
 	}
 
-	private Object[] buildSuggestionsCursorRow(int rowId, String suggestion) {
-		return new Object[] {Integer.valueOf(rowId), suggestion};
+	private Object[] buildSuggestionsCursorRow(int rowId, Station station) {
+		return new Object[] {Integer.valueOf(rowId), station.getName(), Long.valueOf(station.getId())};
 	}
 
 	@Override

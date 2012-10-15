@@ -5,5 +5,5 @@
 	android:hint="@string/search_hint"
 	android:searchSuggestAuthority="ru.ming13.bustime.ui.provider.StationsSearchProvider"
 	android:searchSuggestSelection=" ?"
-	android:searchSuggestIntentAction="android.Intent.action.VIEW"
+	android:searchSuggestIntentAction="android.intent.action.VIEW"
 	android:searchSuggestThreshold="@integer/search_suggestions_threshold" />
