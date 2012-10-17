@@ -26,6 +26,13 @@ public final class IntentFactory
 		return intent;
 	}
 
+	public static Intent createRoutesIntent(Context context, long stationId) {
+		Intent intent = new Intent(context, RoutesActivity.class);
+		intent.putExtra(IntentExtras.STATION_ID, stationId);
+
+		return intent;
+	}
+
 	public static Intent createStationsIntent(Context context, Route route) {
 		Intent intent = new Intent(context, StationsActivity.class);
 		intent.putExtra(IntentExtras.ROUTE, route);
