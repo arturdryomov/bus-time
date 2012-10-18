@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import org.apache.commons.lang3.StringUtils;
 import ru.ming13.bustime.db.DbProvider;
 import ru.ming13.bustime.db.sqlite.DbFieldNames;
 import ru.ming13.bustime.db.sqlite.DbTableNames;
@@ -153,6 +154,10 @@ public class Stations
 
 	public List<Station> getStationsList(String searchQuery) {
 		List<Station> stationsList = new ArrayList<Station>();
+
+		if (StringUtils.isBlank(searchQuery)) {
+			return stationsList;
+		}
 
 		searchQuery = buildUniformStationName(searchQuery);
 
