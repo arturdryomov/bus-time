@@ -9,7 +9,7 @@
 
 	<parent>
 		<artifactId>bus-time-parent</artifactId>
-		<version>0.6.9.7</version>
+		<version>0.7.0</version>
 		<groupId>ru.ming13.bustime</groupId>
 	</parent>
 
