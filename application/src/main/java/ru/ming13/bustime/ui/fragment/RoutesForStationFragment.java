@@ -116,12 +116,17 @@ public class RoutesForStationFragment extends AdaptedListFragment<Pair<Route, Ti
 
 	public void callListPopulation(Station station) {
 		this.station = station;
+		getArguments().putParcelable(FragmentArguments.STATION, station);
 
 		callListRepopulation();
 	}
 
 	@Override
 	public void callListRepopulation() {
+		if (station == null) {
+			return;
+		}
+
 		setEmptyListText(R.string.loading_routes);
 		clearList();
 
