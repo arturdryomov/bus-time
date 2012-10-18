@@ -17,7 +17,11 @@ public class StationsSearchProvider extends ContentProvider
 	private static final String[] SUGGESTIONS_CURSOR_COLUMNS;
 
 	static {
-		SUGGESTIONS_CURSOR_COLUMNS = new String[] {BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1, SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA};
+		SUGGESTIONS_CURSOR_COLUMNS = new String[] {
+			BaseColumns._ID,
+			SearchManager.SUGGEST_COLUMN_TEXT_1,
+			SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA
+		};
 	}
 
 	@Override

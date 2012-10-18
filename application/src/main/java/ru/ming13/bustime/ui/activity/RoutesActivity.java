@@ -45,19 +45,19 @@ public class RoutesActivity extends SherlockFragmentActivity implements ActionBa
 
 	private void handleIntent(Intent intent) {
 		if (intent.hasExtra(IntentExtras.STATION)) {
-			setUpActivityWithStation();
+			setUpActivityWithReceivedStation();
 			return;
 		}
 
 		if (intent.hasExtra(IntentExtras.STATION_ID)) {
-			setUpActivityWithStationId();
+			setUpActivityWithReceivedStationId();
 			return;
 		}
 
 		throw new IntentException();
 	}
 
-	private void setUpActivityWithStation() {
+	private void setUpActivityWithReceivedStation() {
 		Station station = getIntent().getParcelableExtra(IntentExtras.STATION);
 
 		setUpActivity(station);
@@ -103,7 +103,7 @@ public class RoutesActivity extends SherlockFragmentActivity implements ActionBa
 		listNavigationProvider.saveSelectedNavigationIndex(outState);
 	}
 
-	private void setUpActivityWithStationId() {
+	private void setUpActivityWithReceivedStationId() {
 		setUpActivity();
 
 		getSupportLoaderManager().initLoader(Loaders.STATION, getIntent().getExtras(), this);
