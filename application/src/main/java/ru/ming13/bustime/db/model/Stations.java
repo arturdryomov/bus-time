@@ -26,6 +26,46 @@ public class Stations
 		database = DbProvider.getInstance().getDatabase();
 	}
 
+	public Station getStation(long stationId) {
+		Cursor databaseCursor = database.rawQuery(buildStationSelectionQuery(stationId), null);
+
+		databaseCursor.moveToFirst();
+		Station station = new Station(extractStationDatabaseValues(databaseCursor));
+
+		databaseCursor.close();
+
+		return station;
+	}
+
+	private String buildStationSelectionQuery(long stationId) {
+		StringBuilder queryBuilder = new StringBuilder();
+
+		queryBuilder.append("select ");
+		queryBuilder.append(String.format("%s, ", DbFieldNames.ID));
+		queryBuilder.append(String.format("%s, ", DbFieldNames.NAME));
+		queryBuilder.append(String.format("%s, ", DbFieldNames.LATITUDE));
+		queryBuilder.append(String.format("%s ", DbFieldNames.LONGITUDE));
+
+		queryBuilder.append(String.format("from %s ", DbTableNames.STATIONS));
+
+		queryBuilder.append(String.format("where %s = %d", DbFieldNames.ID, stationId));
+
+		return queryBuilder.toString();
+	}
+
+	private ContentValues extractStationDatabaseValues(Cursor databaseCursor) {
+		ContentValues databaseValues = new ContentValues();
+
+		DatabaseUtils.cursorLongToContentValues(databaseCursor, DbFieldNames.ID, databaseValues);
+		DatabaseUtils.cursorStringToContentValues(databaseCursor, DbFieldNames.NAME, databaseValues);
+		DatabaseUtils.cursorDoubleToContentValues(databaseCursor, DbFieldNames.LATITUDE, databaseValues,
+			DbFieldNames.LATITUDE);
+		DatabaseUtils.cursorDoubleToContentValues(databaseCursor, DbFieldNames.LONGITUDE,
+			databaseValues, DbFieldNames.LONGITUDE);
+
+		return databaseValues;
+	}
+
 	public List<Station> getStationsList() {
 		return getStationsListForQuery(buildStationsSelectionQuery());
 	}
@@ -59,19 +99,6 @@ public class Stations
 		databaseCursor.close();
 
 		return stationsList;
-	}
-
-	private ContentValues extractStationDatabaseValues(Cursor databaseCursor) {
-		ContentValues databaseValues = new ContentValues();
-
-		DatabaseUtils.cursorLongToContentValues(databaseCursor, DbFieldNames.ID, databaseValues);
-		DatabaseUtils.cursorStringToContentValues(databaseCursor, DbFieldNames.NAME, databaseValues);
-		DatabaseUtils.cursorDoubleToContentValues(databaseCursor, DbFieldNames.LATITUDE, databaseValues,
-			DbFieldNames.LATITUDE);
-		DatabaseUtils.cursorDoubleToContentValues(databaseCursor, DbFieldNames.LONGITUDE,
-			databaseValues, DbFieldNames.LONGITUDE);
-
-		return databaseValues;
 	}
 
 	public List<Station> getStationsListOrderedByName(Route route) {

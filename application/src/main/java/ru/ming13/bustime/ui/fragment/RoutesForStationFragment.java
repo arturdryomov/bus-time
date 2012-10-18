@@ -55,6 +55,10 @@ public class RoutesForStationFragment extends AdaptedListFragment<Pair<Route, Ti
 		return routesForStationFragment;
 	}
 
+	public static RoutesForStationFragment newInstance() {
+		return newInstance(null);
+	}
+
 	private static Bundle buildArguments(Station station) {
 		Bundle arguments = new Bundle();
 
@@ -108,6 +112,12 @@ public class RoutesForStationFragment extends AdaptedListFragment<Pair<Route, Ti
 	@Override
 	protected void callListPopulation() {
 		// It would be populated with list navigation automatic
+	}
+
+	public void callListPopulation(Station station) {
+		this.station = station;
+
+		callListRepopulation();
 	}
 
 	@Override

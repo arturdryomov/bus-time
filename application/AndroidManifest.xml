@@ -76,6 +76,11 @@
 			android:name=".ui.activity.TimetableActivity"
 			android:label="@string/title_timetable_full_week">
 		</activity>
+
+		<provider
+			android:name=".ui.provider.StationsSearchProvider"
+			android:authorities="ru.ming13.bustime.ui.provider.StationsSearchProvider">
+		</provider>
 	</application>
 
 </manifest>
