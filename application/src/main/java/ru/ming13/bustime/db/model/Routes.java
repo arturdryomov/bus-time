@@ -22,18 +22,7 @@ public class Routes
 	}
 
 	public List<Route> getRoutesList() {
-		List<Route> routesList = new ArrayList<Route>();
-
-		Cursor databaseCursor = database.rawQuery(buildRoutesSelectionQuery(), null);
-
-		while (databaseCursor.moveToNext()) {
-			ContentValues databaseValues = extractRouteDatabaseValuesFromCursor(databaseCursor);
-			routesList.add(new Route(databaseValues));
-		}
-
-		databaseCursor.close();
-
-		return routesList;
+		return getRoutesListForQuery(buildRoutesSelectionQuery());
 	}
 
 	private String buildRoutesSelectionQuery() {
@@ -45,12 +34,27 @@ public class Routes
 
 		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES));
 
-		queryBuilder.append(String.format("order by cast(%s as integer)", DbFieldNames.ID));
+		queryBuilder.append(String.format("order by cast(%s as integer)", DbFieldNames.NAME));
 
 		return queryBuilder.toString();
 	}
 
-	private ContentValues extractRouteDatabaseValuesFromCursor(Cursor databaseCursor) {
+	private List<Route> getRoutesListForQuery(String routesSelectionQuery) {
+		List<Route> routesList = new ArrayList<Route>();
+
+		Cursor databaseCursor = database.rawQuery(routesSelectionQuery, null);
+
+		while (databaseCursor.moveToNext()) {
+			ContentValues databaseValues = extractRouteDatabaseValues(databaseCursor);
+			routesList.add(new Route(databaseValues));
+		}
+
+		databaseCursor.close();
+
+		return routesList;
+	}
+
+	private ContentValues extractRouteDatabaseValues(Cursor databaseCursor) {
 		ContentValues databaseValues = new ContentValues();
 
 		DatabaseUtils.cursorLongToContentValues(databaseCursor, DbFieldNames.ID, databaseValues);
@@ -60,21 +64,10 @@ public class Routes
 	}
 
 	public List<Route> getRoutesList(Station station) {
-		List<Route> routesList = new ArrayList<Route>();
-
-		Cursor databaseCursor = database.rawQuery(buildStationsRoutesSelectionQuery(station), null);
-
-		while (databaseCursor.moveToNext()) {
-			ContentValues databaseValues = extractRouteDatabaseValuesFromCursor(databaseCursor);
-			routesList.add(new Route(databaseValues));
-		}
-
-		databaseCursor.close();
-
-		return routesList;
+		return getRoutesListForQuery(buildRoutesSelectionQuery(station));
 	}
 
-	private String buildStationsRoutesSelectionQuery(Station station) {
+	private String buildRoutesSelectionQuery(Station station) {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select distinct ");

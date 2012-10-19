@@ -90,8 +90,11 @@ public class StationsFragment extends AdaptedListFragment<Station> implements Lo
 
 	@Override
 	protected SimpleAdapter buildListAdapter() {
-		return new SimpleAdapter(getActivity(), list, R.layout.list_item_one_line,
-			new String[] {LIST_ITEM_TEXT_ID}, new int[] {R.id.text});
+		String[] listColumnNames = {LIST_ITEM_TEXT_ID};
+		int[] columnCorrespondingResources = {R.id.text};
+
+		return new SimpleAdapter(getActivity(), list, R.layout.list_item_one_line, listColumnNames,
+			columnCorrespondingResources);
 	}
 
 	@Override
@@ -182,13 +185,13 @@ public class StationsFragment extends AdaptedListFragment<Station> implements Lo
 	}
 
 	private void callTimetableActivity(Station station) {
-		Intent callIntent = IntentFactory.createTimetableIntent(getActivity(), route, station);
-		startActivity(callIntent);
+		Intent intent = IntentFactory.createTimetableIntent(getActivity(), route, station);
+		startActivity(intent);
 	}
 
 	private void callRoutesActivity(Station station) {
-		Intent callIntent = IntentFactory.createRoutesIntent(getActivity(), station);
-		startActivity(callIntent);
+		Intent intent = IntentFactory.createRoutesIntent(getActivity(), station);
+		startActivity(intent);
 	}
 
 	public void sortByName() {

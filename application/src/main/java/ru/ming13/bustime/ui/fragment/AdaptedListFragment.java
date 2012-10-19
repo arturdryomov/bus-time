@@ -79,7 +79,7 @@ abstract class AdaptedListFragment<ListItemType> extends SherlockListFragment
 	protected void setEmptyListText(int textResourceId) {
 		TextView emptyListTextView = (TextView) getListView().getEmptyView();
 
-		emptyListTextView.setText(getString(textResourceId));
+		emptyListTextView.setText(textResourceId);
 	}
 
 	protected ListItemType getListItemObject(int listPosition) {

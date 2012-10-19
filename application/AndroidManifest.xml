@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="ru.ming13.bustime"
-	android:versionCode="12"
-	android:versionName="0.6.9.7"
+	android:versionCode="13"
+	android:versionName="0.7.0"
 	android:installLocation="auto">
 
 	<uses-sdk
@@ -76,6 +76,11 @@
 			android:name=".ui.activity.TimetableActivity"
 			android:label="@string/title_timetable_full_week">
 		</activity>
+
+		<provider
+			android:name=".ui.provider.StationsSearchProvider"
+			android:authorities="ru.ming13.bustime.ui.provider.StationsSearchProvider">
+		</provider>
 	</application>
 
 </manifest>

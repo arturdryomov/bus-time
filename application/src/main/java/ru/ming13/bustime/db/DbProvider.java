@@ -3,6 +3,7 @@ package ru.ming13.bustime.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import ru.ming13.bustime.db.content.DbImporter;
 import ru.ming13.bustime.db.model.Routes;
 import ru.ming13.bustime.db.model.Stations;
 import ru.ming13.bustime.db.sqlite.DbOpenHelper;
@@ -37,7 +38,16 @@ public class DbProvider
 			throw new AlreadyInstantiatedException();
 		}
 
+		importDatabaseIfNecessary(context);
 		databaseOpenHelper = new DbOpenHelper(context.getApplicationContext());
+	}
+
+	private void importDatabaseIfNecessary(Context context) {
+		DbImporter dbImporter = new DbImporter(context);
+
+		if (!dbImporter.isLocalDatabaseExist()) {
+			dbImporter.importFromAssets();
+		}
 	}
 
 	public static DbProvider getInstance(Context context) {

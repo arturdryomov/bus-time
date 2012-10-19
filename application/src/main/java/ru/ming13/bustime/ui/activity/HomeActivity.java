@@ -386,8 +386,8 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 	}
 
 	private void callStationsMapActivity() {
-		Intent callIntent = IntentFactory.createStationsMapIntent(this);
-		startActivity(callIntent);
+		Intent intent = IntentFactory.createStationsMapIntent(this);
+		startActivity(intent);
 	}
 
 	private void callGooglePlay() {
@@ -402,11 +402,11 @@ public class HomeActivity extends SherlockFragmentActivity implements DatabaseUp
 	}
 
 	private String buildAppGooglePlayUrl() {
-		return String.format(getString(R.string.url_app_google_play), getPackageName());
+		return getString(R.string.url_app_google_play, getPackageName());
 	}
 
 	private String buildWebGooglePlayUrl() {
-		return String.format(getString(R.string.url_web_google_play), getPackageName());
+		return getString(R.string.url_web_google_play, getPackageName());
 	}
 
 	private void callSendingFeedback() {

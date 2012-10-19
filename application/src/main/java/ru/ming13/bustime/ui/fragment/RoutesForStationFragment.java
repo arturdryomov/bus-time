@@ -55,6 +55,10 @@ public class RoutesForStationFragment extends AdaptedListFragment<Pair<Route, Ti
 		return routesForStationFragment;
 	}
 
+	public static RoutesForStationFragment newInstance() {
+		return newInstance(null);
+	}
+
 	private static Bundle buildArguments(Station station) {
 		Bundle arguments = new Bundle();
 
@@ -72,9 +76,11 @@ public class RoutesForStationFragment extends AdaptedListFragment<Pair<Route, Ti
 
 	@Override
 	protected SimpleAdapter buildListAdapter() {
-		return new SimpleAdapter(getActivity(), list, R.layout.list_item_two_line,
-			new String[] {LIST_ITEM_NAME_ID, LIST_ITEM_REMAINING_TIME_ID},
-			new int[] {R.id.text_first_line, R.id.text_second_line});
+		String[] listColumnNames = {LIST_ITEM_NAME_ID, LIST_ITEM_REMAINING_TIME_ID};
+		int[] columnCorrespondingResources = {R.id.text_first_line, R.id.text_second_line};
+
+		return new SimpleAdapter(getActivity(), list, R.layout.list_item_two_line, listColumnNames,
+			columnCorrespondingResources);
 	}
 
 	@Override
@@ -108,10 +114,21 @@ public class RoutesForStationFragment extends AdaptedListFragment<Pair<Route, Ti
 		// It would be populated with list navigation automatic
 	}
 
+	public void callListPopulation(Station station) {
+		this.station = station;
+		getArguments().putParcelable(FragmentArguments.STATION, station);
+
+		callListRepopulation();
+	}
+
 	@Override
 	public void callListRepopulation() {
-		clearList();
+		if (station == null) {
+			return;
+		}
+
 		setEmptyListText(R.string.loading_routes);
+		clearList();
 
 		getLoaderManager().restartLoader(Loaders.ROUTES_FOR_STATION, null, this);
 	}
@@ -153,8 +170,8 @@ public class RoutesForStationFragment extends AdaptedListFragment<Pair<Route, Ti
 	}
 
 	private void callTimetableActivity(Route route) {
-		Intent callIntent = IntentFactory.createTimetableIntent(getActivity(), route, station);
-		startActivity(callIntent);
+		Intent intent = IntentFactory.createTimetableIntent(getActivity(), route, station);
+		startActivity(intent);
 	}
 
 	public void sortByName() {

@@ -14,12 +14,21 @@ import ru.ming13.bustime.ui.activity.TimetableActivity;
 
 public final class IntentFactory
 {
+	private static final String URI_EMAIL_PATTERN = "mailto:%s?subject=%s";
+
 	private IntentFactory() {
 	}
 
 	public static Intent createRoutesIntent(Context context, Station station) {
 		Intent intent = new Intent(context, RoutesActivity.class);
 		intent.putExtra(IntentExtras.STATION, station);
+
+		return intent;
+	}
+
+	public static Intent createRoutesIntent(Context context, long stationId) {
+		Intent intent = new Intent(context, RoutesActivity.class);
+		intent.putExtra(IntentExtras.STATION_ID, stationId);
 
 		return intent;
 	}
@@ -48,11 +57,8 @@ public final class IntentFactory
 	}
 
 	public static Intent createEmailIntent(String address, String subject) {
-		Intent intent = new Intent(Intent.ACTION_SEND);
-		intent.setType(IntentTypes.EMAIL);
-		intent.putExtra(Intent.EXTRA_EMAIL, new String[] {address});
-		intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+		Uri uri = Uri.parse(String.format(URI_EMAIL_PATTERN, address, subject));
 
-		return intent;
+		return new Intent(Intent.ACTION_SENDTO, uri);
 	}
 }

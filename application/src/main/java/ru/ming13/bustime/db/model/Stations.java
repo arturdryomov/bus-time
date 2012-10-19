@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import org.apache.commons.lang3.StringUtils;
 import ru.ming13.bustime.db.DbProvider;
 import ru.ming13.bustime.db.sqlite.DbFieldNames;
 import ru.ming13.bustime.db.sqlite.DbTableNames;
@@ -26,19 +27,48 @@ public class Stations
 		database = DbProvider.getInstance().getDatabase();
 	}
 
-	public List<Station> getStationsList() {
-		List<Station> stationsList = new ArrayList<Station>();
+	public Station getStation(long stationId) {
+		Cursor databaseCursor = database.rawQuery(buildStationSelectionQuery(stationId), null);
 
-		Cursor databaseCursor = database.rawQuery(buildStationsSelectionQuery(), null);
-
-		while (databaseCursor.moveToNext()) {
-			ContentValues databaseValues = extractStationDatabaseValuesFromCursor(databaseCursor);
-			stationsList.add(new Station(databaseValues));
-		}
+		databaseCursor.moveToFirst();
+		Station station = new Station(extractStationDatabaseValues(databaseCursor));
 
 		databaseCursor.close();
 
-		return stationsList;
+		return station;
+	}
+
+	private String buildStationSelectionQuery(long stationId) {
+		StringBuilder queryBuilder = new StringBuilder();
+
+		queryBuilder.append("select ");
+		queryBuilder.append(String.format("%s, ", DbFieldNames.ID));
+		queryBuilder.append(String.format("%s, ", DbFieldNames.NAME));
+		queryBuilder.append(String.format("%s, ", DbFieldNames.LATITUDE));
+		queryBuilder.append(String.format("%s ", DbFieldNames.LONGITUDE));
+
+		queryBuilder.append(String.format("from %s ", DbTableNames.STATIONS));
+
+		queryBuilder.append(String.format("where %s = %d", DbFieldNames.ID, stationId));
+
+		return queryBuilder.toString();
+	}
+
+	private ContentValues extractStationDatabaseValues(Cursor databaseCursor) {
+		ContentValues databaseValues = new ContentValues();
+
+		DatabaseUtils.cursorLongToContentValues(databaseCursor, DbFieldNames.ID, databaseValues);
+		DatabaseUtils.cursorStringToContentValues(databaseCursor, DbFieldNames.NAME, databaseValues);
+		DatabaseUtils.cursorDoubleToContentValues(databaseCursor, DbFieldNames.LATITUDE, databaseValues,
+			DbFieldNames.LATITUDE);
+		DatabaseUtils.cursorDoubleToContentValues(databaseCursor, DbFieldNames.LONGITUDE,
+			databaseValues, DbFieldNames.LONGITUDE);
+
+		return databaseValues;
+	}
+
+	public List<Station> getStationsList() {
+		return getStationsListForQuery(buildStationsSelectionQuery());
 	}
 
 	private String buildStationsSelectionQuery() {
@@ -57,38 +87,26 @@ public class Stations
 		return queryBuilder.toString();
 	}
 
-	private ContentValues extractStationDatabaseValuesFromCursor(Cursor databaseCursor) {
-		ContentValues databaseValues = new ContentValues();
-
-		DatabaseUtils.cursorLongToContentValues(databaseCursor, DbFieldNames.ID, databaseValues);
-		DatabaseUtils.cursorStringToContentValues(databaseCursor, DbFieldNames.NAME, databaseValues);
-		DatabaseUtils.cursorDoubleToContentValues(databaseCursor, DbFieldNames.LATITUDE, databaseValues,
-			DbFieldNames.LATITUDE);
-		DatabaseUtils.cursorDoubleToContentValues(databaseCursor, DbFieldNames.LONGITUDE,
-			databaseValues, DbFieldNames.LONGITUDE);
-
-		return databaseValues;
-	}
-
-	public List<Station> getStationsListOrderedByName(Route route) {
-		return getStationsList(route, Order.BY_NAME);
-	}
-
-	private List<Station> getStationsList(Route route, Order order) {
+	private List<Station> getStationsListForQuery(String stationsSelectionQuery) {
 		List<Station> stationsList = new ArrayList<Station>();
 
-		Cursor databaseCursor = database.rawQuery(buildRoutesStationsSelectionQuery(route, order),
-			null);
+		Cursor databaseCursor = database.rawQuery(stationsSelectionQuery, null);
 
 		while (databaseCursor.moveToNext()) {
-			ContentValues databaseValues = extractStationDatabaseValuesFromCursor(databaseCursor);
+			ContentValues databaseValues = extractStationDatabaseValues(databaseCursor);
 			stationsList.add(new Station(databaseValues));
 		}
+
+		databaseCursor.close();
 
 		return stationsList;
 	}
 
-	private String buildRoutesStationsSelectionQuery(Route route, Order order) {
+	public List<Station> getStationsListOrderedByName(Route route) {
+		return getStationsListForQuery(buildStationsSelectionQuery(route, Order.BY_NAME));
+	}
+
+	private String buildStationsSelectionQuery(Route route, Order order) {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select distinct ");
@@ -111,12 +129,12 @@ public class Stations
 			String.format("where %s.%s = %d ", DbTableNames.ROUTES_AND_STATIONS, DbFieldNames.ROUTE_ID,
 				route.getId()));
 
-		queryBuilder.append(buildRoutesOrderQuery(order));
+		queryBuilder.append(buildStationsOrderQuery(order));
 
 		return queryBuilder.toString();
 	}
 
-	private String buildRoutesOrderQuery(Order order) {
+	private String buildStationsOrderQuery(Order order) {
 		switch (order) {
 			case BY_NAME:
 				return String.format("order by %s.%s", DbTableNames.STATIONS, DbFieldNames.NAME);
@@ -131,11 +149,15 @@ public class Stations
 	}
 
 	public List<Station> getStationsListOrderedByTimeShift(Route route) {
-		return getStationsList(route, Order.BY_TIME_SHIFT);
+		return getStationsListForQuery(buildStationsSelectionQuery(route, Order.BY_TIME_SHIFT));
 	}
 
 	public List<Station> getStationsList(String searchQuery) {
 		List<Station> stationsList = new ArrayList<Station>();
+
+		if (StringUtils.isBlank(searchQuery)) {
+			return stationsList;
+		}
 
 		searchQuery = buildUniformStationName(searchQuery);
 
