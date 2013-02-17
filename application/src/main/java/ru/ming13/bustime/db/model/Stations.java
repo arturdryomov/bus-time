@@ -19,13 +19,8 @@ public class Stations
 		BY_NAME, BY_TIME_SHIFT
 	}
 
-	private final SQLiteDatabase database;
-
-	public Stations() {
-		database = DbProvider.getInstance().getDatabase();
-	}
-
 	public Station getStation(long stationId) {
+		SQLiteDatabase database = DbProvider.getInstance().getDatabase();
 		Cursor databaseCursor = database.rawQuery(buildStationSelectionQuery(stationId), null);
 
 		databaseCursor.moveToFirst();
@@ -84,9 +79,10 @@ public class Stations
 	}
 
 	private List<Station> getStationsListForQuery(String stationsSelectionQuery) {
-		List<Station> stationsList = new ArrayList<Station>();
-
+		SQLiteDatabase database = DbProvider.getInstance().getDatabase();
 		Cursor databaseCursor = database.rawQuery(stationsSelectionQuery, null);
+
+		List<Station> stationsList = new ArrayList<Station>();
 
 		while (databaseCursor.moveToNext()) {
 			stationsList.add(buildStation(databaseCursor));

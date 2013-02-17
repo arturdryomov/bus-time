@@ -22,16 +22,12 @@ public class Station implements Parcelable
 {
 	private static final int SPECIAL_PARCELABLE_OBJECTS_BITMASK = 0;
 
-	private final SQLiteDatabase database;
-
 	private final long id;
 	private final String name;
 	private final double latitude;
 	private final double longitude;
 
 	Station(long id, String name, double latitude, double longitude) {
-		database = DbProvider.getInstance().getDatabase();
-
 		this.id = id;
 		this.name = name;
 		this.latitude = latitude;
@@ -72,6 +68,7 @@ public class Station implements Parcelable
 	}
 
 	private Time getRouteTimeShift(Route route) {
+		SQLiteDatabase database = DbProvider.getInstance().getDatabase();
 		Cursor databaseCursor = database.rawQuery(buildRouteTimeShiftSelectionQuery(route), null);
 
 		databaseCursor.moveToFirst();
@@ -124,6 +121,7 @@ public class Station implements Parcelable
 			String closestDepartureTimeSelectionQuery = buildClosestDepartureTimeSelectionQuery(
 				route.getId(), routeTimeShift, tripTypeId);
 
+			SQLiteDatabase database = DbProvider.getInstance().getDatabase();
 			String closestDepartureStringTime = DatabaseUtils.stringForQuery(database,
 				closestDepartureTimeSelectionQuery, null);
 			Time closestDepartureTime = Time.parse(closestDepartureStringTime);
@@ -202,8 +200,6 @@ public class Station implements Parcelable
 	};
 
 	private Station(Parcel parcel) {
-		database = DbProvider.getInstance().getDatabase();
-
 		id = parcel.readLong();
 		name = parcel.readString();
 		latitude = parcel.readDouble();

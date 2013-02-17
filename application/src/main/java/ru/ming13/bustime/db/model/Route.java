@@ -20,14 +20,10 @@ public class Route implements Parcelable
 {
 	private static final int SPECIAL_PARCELABLE_OBJECTS_BITMASK = 0;
 
-	private final SQLiteDatabase database;
-
 	private final long id;
 	private final String name;
 
 	Route(long id, String name) {
-		database = DbProvider.getInstance().getDatabase();
-
 		this.id = id;
 		this.name = name;
 	}
@@ -59,6 +55,7 @@ public class Route implements Parcelable
 	}
 
 	private long getCountQueryResult(String countQuery) {
+		SQLiteDatabase database = DbProvider.getInstance().getDatabase();
 		return DatabaseUtils.longForQuery(database, countQuery, null);
 	}
 
@@ -67,10 +64,11 @@ public class Route implements Parcelable
 	}
 
 	private List<Time> getDepartureTimetable(int tripTypeId) {
-		List<Time> departureTimetable = new ArrayList<Time>();
-
+		SQLiteDatabase database = DbProvider.getInstance().getDatabase();
 		Cursor databaseCursor = database.rawQuery(buildDepartureTimetableSelectionQuery(tripTypeId),
 			null);
+
+		List<Time> departureTimetable = new ArrayList<Time>();
 
 		while (databaseCursor.moveToNext()) {
 			String departureTimeAsString = extractDepartureTimeFromCursor(databaseCursor);
@@ -136,8 +134,6 @@ public class Route implements Parcelable
 	};
 
 	private Route(Parcel parcel) {
-		database = DbProvider.getInstance().getDatabase();
-
 		id = parcel.readLong();
 		name = parcel.readString();
 	}

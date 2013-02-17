@@ -13,12 +13,6 @@ import ru.ming13.bustime.db.sqlite.DbTableNames;
 
 public class Routes
 {
-	private final SQLiteDatabase database;
-
-	public Routes() {
-		database = DbProvider.getInstance().getDatabase();
-	}
-
 	public List<Route> getRoutesList() {
 		return getRoutesListForQuery(buildRoutesSelectionQuery());
 	}
@@ -38,9 +32,10 @@ public class Routes
 	}
 
 	private List<Route> getRoutesListForQuery(String routesSelectionQuery) {
-		List<Route> routesList = new ArrayList<Route>();
-
+		SQLiteDatabase database = DbProvider.getInstance().getDatabase();
 		Cursor databaseCursor = database.rawQuery(routesSelectionQuery, null);
+
+		List<Route> routesList = new ArrayList<Route>();
 
 		while (databaseCursor.moveToNext()) {
 			routesList.add(buildRoute(databaseCursor));
