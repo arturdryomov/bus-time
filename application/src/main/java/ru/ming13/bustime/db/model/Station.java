@@ -4,14 +4,12 @@ package ru.ming13.bustime.db.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDoneException;
 import android.os.Parcel;
 import android.os.Parcelable;
-import ru.ming13.bustime.db.DbException;
 import ru.ming13.bustime.db.DbProvider;
 import ru.ming13.bustime.db.sqlite.DbFieldNames;
 import ru.ming13.bustime.db.sqlite.DbFieldValues;
@@ -26,41 +24,18 @@ public class Station implements Parcelable
 
 	private final SQLiteDatabase database;
 
-	private long id;
-	private String name;
-	private double latitude;
-	private double longitude;
+	private final long id;
+	private final String name;
+	private final double latitude;
+	private final double longitude;
 
-	Station(ContentValues databaseValues) {
+	Station(long id, String name, double latitude, double longitude) {
 		database = DbProvider.getInstance().getDatabase();
 
-		setValues(databaseValues);
-	}
-
-	private void setValues(ContentValues databaseValues) {
-		Long idAsLong = databaseValues.getAsLong(DbFieldNames.ID);
-		if (idAsLong == null) {
-			throw new DbException();
-		}
-		id = idAsLong.longValue();
-
-		String nameAsString = databaseValues.getAsString(DbFieldNames.NAME);
-		if (nameAsString == null) {
-			throw new DbException();
-		}
-		name = nameAsString;
-
-		Double latitudeAsDouble = databaseValues.getAsDouble(DbFieldNames.LATITUDE);
-		if (latitudeAsDouble == null) {
-			throw new DbException();
-		}
-		latitude = latitudeAsDouble.doubleValue();
-
-		Double longitudeAsDouble = databaseValues.getAsDouble(DbFieldNames.LONGITUDE);
-		if (longitudeAsDouble == null) {
-			throw new DbException();
-		}
-		longitude = longitudeAsDouble.doubleValue();
+		this.id = id;
+		this.name = name;
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
 
 	public long getId() {
@@ -209,6 +184,8 @@ public class Station implements Parcelable
 	public void writeToParcel(Parcel parcel, int flags) {
 		parcel.writeLong(id);
 		parcel.writeString(name);
+		parcel.writeDouble(latitude);
+		parcel.writeDouble(longitude);
 	}
 
 	public static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>()
@@ -227,11 +204,9 @@ public class Station implements Parcelable
 	private Station(Parcel parcel) {
 		database = DbProvider.getInstance().getDatabase();
 
-		readStationDataFromParcel(parcel);
-	}
-
-	private void readStationDataFromParcel(Parcel parcel) {
 		id = parcel.readLong();
 		name = parcel.readString();
+		latitude = parcel.readDouble();
+		longitude = parcel.readDouble();
 	}
 }

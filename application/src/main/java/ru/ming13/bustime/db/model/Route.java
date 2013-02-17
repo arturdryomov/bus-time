@@ -4,13 +4,11 @@ package ru.ming13.bustime.db.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
-import ru.ming13.bustime.db.DbException;
 import ru.ming13.bustime.db.DbProvider;
 import ru.ming13.bustime.db.sqlite.DbFieldNames;
 import ru.ming13.bustime.db.sqlite.DbFieldValues;
@@ -24,27 +22,14 @@ public class Route implements Parcelable
 
 	private final SQLiteDatabase database;
 
-	private long id;
-	private String name;
+	private final long id;
+	private final String name;
 
-	Route(ContentValues databaseValues) {
+	Route(long id, String name) {
 		database = DbProvider.getInstance().getDatabase();
 
-		setValues(databaseValues);
-	}
-
-	private void setValues(ContentValues databaseValues) {
-		Long idAsLong = databaseValues.getAsLong(DbFieldNames.ID);
-		if (idAsLong == null) {
-			throw new DbException();
-		}
-		id = idAsLong.longValue();
-
-		String nameAsString = databaseValues.getAsString(DbFieldNames.NAME);
-		if (nameAsString == null) {
-			throw new DbException();
-		}
-		name = nameAsString;
+		this.id = id;
+		this.name = name;
 	}
 
 	public long getId() {
@@ -153,10 +138,6 @@ public class Route implements Parcelable
 	private Route(Parcel parcel) {
 		database = DbProvider.getInstance().getDatabase();
 
-		readRouteDataFromParcel(parcel);
-	}
-
-	private void readRouteDataFromParcel(Parcel parcel) {
 		id = parcel.readLong();
 		name = parcel.readString();
 	}

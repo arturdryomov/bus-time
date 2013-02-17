@@ -4,9 +4,7 @@ package ru.ming13.bustime.db.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import ru.ming13.bustime.db.DbProvider;
 import ru.ming13.bustime.db.sqlite.DbFieldNames;
@@ -45,8 +43,7 @@ public class Routes
 		Cursor databaseCursor = database.rawQuery(routesSelectionQuery, null);
 
 		while (databaseCursor.moveToNext()) {
-			ContentValues databaseValues = extractRouteDatabaseValues(databaseCursor);
-			routesList.add(new Route(databaseValues));
+			routesList.add(buildRoute(databaseCursor));
 		}
 
 		databaseCursor.close();
@@ -54,13 +51,11 @@ public class Routes
 		return routesList;
 	}
 
-	private ContentValues extractRouteDatabaseValues(Cursor databaseCursor) {
-		ContentValues databaseValues = new ContentValues();
+	private Route buildRoute(Cursor databaseCursor) {
+		long id = databaseCursor.getLong(databaseCursor.getColumnIndex(DbFieldNames.ID));
+		String name = databaseCursor.getString(databaseCursor.getColumnIndex(DbFieldNames.NAME));
 
-		DatabaseUtils.cursorLongToContentValues(databaseCursor, DbFieldNames.ID, databaseValues);
-		DatabaseUtils.cursorStringToContentValues(databaseCursor, DbFieldNames.NAME, databaseValues);
-
-		return databaseValues;
+		return new Route(id, name);
 	}
 
 	public List<Route> getRoutesList(Station station) {

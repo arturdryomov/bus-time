@@ -4,9 +4,7 @@ package ru.ming13.bustime.db.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import org.apache.commons.lang3.StringUtils;
 import ru.ming13.bustime.db.DbProvider;
@@ -31,7 +29,7 @@ public class Stations
 		Cursor databaseCursor = database.rawQuery(buildStationSelectionQuery(stationId), null);
 
 		databaseCursor.moveToFirst();
-		Station station = new Station(extractStationDatabaseValues(databaseCursor));
+		Station station = buildStation(databaseCursor);
 
 		databaseCursor.close();
 
@@ -54,17 +52,15 @@ public class Stations
 		return queryBuilder.toString();
 	}
 
-	private ContentValues extractStationDatabaseValues(Cursor databaseCursor) {
-		ContentValues databaseValues = new ContentValues();
+	private Station buildStation(Cursor databaseCursor) {
+		long id = databaseCursor.getLong(databaseCursor.getColumnIndex(DbFieldNames.ID));
+		String name = databaseCursor.getString(databaseCursor.getColumnIndex(DbFieldNames.NAME));
+		double latitude = databaseCursor.getDouble(
+			databaseCursor.getColumnIndex(DbFieldNames.LATITUDE));
+		double longitude = databaseCursor.getDouble(
+			databaseCursor.getColumnIndex(DbFieldNames.LONGITUDE));
 
-		DatabaseUtils.cursorLongToContentValues(databaseCursor, DbFieldNames.ID, databaseValues);
-		DatabaseUtils.cursorStringToContentValues(databaseCursor, DbFieldNames.NAME, databaseValues);
-		DatabaseUtils.cursorDoubleToContentValues(databaseCursor, DbFieldNames.LATITUDE, databaseValues,
-			DbFieldNames.LATITUDE);
-		DatabaseUtils.cursorDoubleToContentValues(databaseCursor, DbFieldNames.LONGITUDE,
-			databaseValues, DbFieldNames.LONGITUDE);
-
-		return databaseValues;
+		return new Station(id, name, latitude, longitude);
 	}
 
 	public List<Station> getStationsList() {
@@ -93,8 +89,7 @@ public class Stations
 		Cursor databaseCursor = database.rawQuery(stationsSelectionQuery, null);
 
 		while (databaseCursor.moveToNext()) {
-			ContentValues databaseValues = extractStationDatabaseValues(databaseCursor);
-			stationsList.add(new Station(databaseValues));
+			stationsList.add(buildStation(databaseCursor));
 		}
 
 		databaseCursor.close();
