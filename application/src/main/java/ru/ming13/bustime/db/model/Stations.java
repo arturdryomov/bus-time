@@ -8,8 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import org.apache.commons.lang3.StringUtils;
 import ru.ming13.bustime.db.DbProvider;
-import ru.ming13.bustime.db.sqlite.DbFieldNames;
-import ru.ming13.bustime.db.sqlite.DbTableNames;
+import ru.ming13.bustime.db.sqlite.DbSchema;
 
 
 public class Stations
@@ -35,25 +34,26 @@ public class Stations
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select ");
-		queryBuilder.append(String.format("%s, ", DbFieldNames.ID));
-		queryBuilder.append(String.format("%s, ", DbFieldNames.NAME));
-		queryBuilder.append(String.format("%s, ", DbFieldNames.LATITUDE));
-		queryBuilder.append(String.format("%s ", DbFieldNames.LONGITUDE));
+		queryBuilder.append(String.format("%s, ", DbSchema.StationsColumns._ID));
+		queryBuilder.append(String.format("%s, ", DbSchema.StationsColumns.NAME));
+		queryBuilder.append(String.format("%s, ", DbSchema.StationsColumns.LATITUDE));
+		queryBuilder.append(String.format("%s ", DbSchema.StationsColumns.LONGITUDE));
 
-		queryBuilder.append(String.format("from %s ", DbTableNames.STATIONS));
+		queryBuilder.append(String.format("from %s ", DbSchema.Tables.STATIONS));
 
-		queryBuilder.append(String.format("where %s = %d", DbFieldNames.ID, stationId));
+		queryBuilder.append(String.format("where %s = %d", DbSchema.StationsColumns._ID, stationId));
 
 		return queryBuilder.toString();
 	}
 
 	private Station buildStation(Cursor databaseCursor) {
-		long id = databaseCursor.getLong(databaseCursor.getColumnIndex(DbFieldNames.ID));
-		String name = databaseCursor.getString(databaseCursor.getColumnIndex(DbFieldNames.NAME));
+		long id = databaseCursor.getLong(databaseCursor.getColumnIndex(DbSchema.StationsColumns._ID));
+		String name = databaseCursor.getString(
+			databaseCursor.getColumnIndex(DbSchema.StationsColumns.NAME));
 		double latitude = databaseCursor.getDouble(
-			databaseCursor.getColumnIndex(DbFieldNames.LATITUDE));
+			databaseCursor.getColumnIndex(DbSchema.StationsColumns.LATITUDE));
 		double longitude = databaseCursor.getDouble(
-			databaseCursor.getColumnIndex(DbFieldNames.LONGITUDE));
+			databaseCursor.getColumnIndex(DbSchema.StationsColumns.LONGITUDE));
 
 		return new Station(id, name, latitude, longitude);
 	}
@@ -66,14 +66,14 @@ public class Stations
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select ");
-		queryBuilder.append(String.format("%s, ", DbFieldNames.ID));
-		queryBuilder.append(String.format("%s, ", DbFieldNames.NAME));
-		queryBuilder.append(String.format("%s, ", DbFieldNames.LATITUDE));
-		queryBuilder.append(String.format("%s ", DbFieldNames.LONGITUDE));
+		queryBuilder.append(String.format("%s, ", DbSchema.StationsColumns._ID));
+		queryBuilder.append(String.format("%s, ", DbSchema.StationsColumns.NAME));
+		queryBuilder.append(String.format("%s, ", DbSchema.StationsColumns.LATITUDE));
+		queryBuilder.append(String.format("%s ", DbSchema.StationsColumns.LONGITUDE));
 
-		queryBuilder.append(String.format("from %s ", DbTableNames.STATIONS));
+		queryBuilder.append(String.format("from %s ", DbSchema.Tables.STATIONS));
 
-		queryBuilder.append(String.format("order by %s", DbFieldNames.NAME));
+		queryBuilder.append(String.format("order by %s", DbSchema.StationsColumns.NAME));
 
 		return queryBuilder.toString();
 	}
@@ -102,23 +102,27 @@ public class Stations
 
 		queryBuilder.append("select distinct ");
 		queryBuilder.append(
-			String.format("%s.%s as %s, ", DbTableNames.STATIONS, DbFieldNames.ID, DbFieldNames.ID));
+			String.format("%s.%s as %s, ", DbSchema.Tables.STATIONS, DbSchema.StationsColumns._ID,
+				DbSchema.StationsColumns._ID));
 		queryBuilder.append(
-			String.format("%s.%s as %s, ", DbTableNames.STATIONS, DbFieldNames.NAME, DbFieldNames.NAME));
-		queryBuilder.append(String.format("%s.%s as %s, ", DbTableNames.STATIONS, DbFieldNames.LATITUDE,
-			DbFieldNames.LATITUDE));
-		queryBuilder.append(String.format("%s.%s %s ", DbTableNames.STATIONS, DbFieldNames.LONGITUDE,
-			DbFieldNames.LONGITUDE));
-
-		queryBuilder.append(String.format("from %s ", DbTableNames.STATIONS));
-
-		queryBuilder.append(String.format("inner join %s ", DbTableNames.ROUTES_AND_STATIONS));
-		queryBuilder.append(String.format("on %s.%s = %s.%s ", DbTableNames.STATIONS, DbFieldNames.ID,
-			DbTableNames.ROUTES_AND_STATIONS, DbFieldNames.STATION_ID));
-
+			String.format("%s.%s as %s, ", DbSchema.Tables.STATIONS, DbSchema.StationsColumns.NAME,
+				DbSchema.StationsColumns.NAME));
 		queryBuilder.append(
-			String.format("where %s.%s = %d ", DbTableNames.ROUTES_AND_STATIONS, DbFieldNames.ROUTE_ID,
-				route.getId()));
+			String.format("%s.%s as %s, ", DbSchema.Tables.STATIONS, DbSchema.StationsColumns.LATITUDE,
+				DbSchema.StationsColumns.LATITUDE));
+		queryBuilder.append(
+			String.format("%s.%s %s ", DbSchema.Tables.STATIONS, DbSchema.StationsColumns.LONGITUDE,
+				DbSchema.StationsColumns.LONGITUDE));
+
+		queryBuilder.append(String.format("from %s ", DbSchema.Tables.STATIONS));
+
+		queryBuilder.append(String.format("inner join %s ", DbSchema.Tables.ROUTES_AND_STATIONS));
+		queryBuilder.append(
+			String.format("on %s.%s = %s.%s ", DbSchema.Tables.STATIONS, DbSchema.StationsColumns._ID,
+				DbSchema.Tables.ROUTES_AND_STATIONS, DbSchema.RoutesAndStationsColumns.STATION_ID));
+
+		queryBuilder.append(String.format("where %s.%s = %d ", DbSchema.Tables.ROUTES_AND_STATIONS,
+			DbSchema.RoutesAndStationsColumns.ROUTE_ID, route.getId()));
 
 		queryBuilder.append(buildStationsOrderQuery(order));
 
@@ -128,14 +132,16 @@ public class Stations
 	private String buildStationsOrderQuery(Order order) {
 		switch (order) {
 			case BY_NAME:
-				return String.format("order by %s.%s", DbTableNames.STATIONS, DbFieldNames.NAME);
+				return String.format("order by %s.%s", DbSchema.Tables.STATIONS,
+					DbSchema.StationsColumns.NAME);
 
 			case BY_TIME_SHIFT:
-				return String.format("order by %s.%s", DbTableNames.ROUTES_AND_STATIONS,
-					DbFieldNames.TIME_SHIFT);
+				return String.format("order by %s.%s", DbSchema.Tables.ROUTES_AND_STATIONS,
+					DbSchema.RoutesAndStationsColumns.TIME_SHIFT);
 
 			default:
-				return String.format("order by %s.%s", DbTableNames.STATIONS, DbFieldNames.NAME);
+				return String.format("order by %s.%s", DbSchema.Tables.STATIONS,
+					DbSchema.StationsColumns.NAME);
 		}
 	}
 

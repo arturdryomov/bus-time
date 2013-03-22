@@ -10,9 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
 import ru.ming13.bustime.db.DbProvider;
-import ru.ming13.bustime.db.sqlite.DbFieldNames;
-import ru.ming13.bustime.db.sqlite.DbFieldValues;
-import ru.ming13.bustime.db.sqlite.DbTableNames;
+import ru.ming13.bustime.db.sqlite.DbSchema;
 import ru.ming13.bustime.db.time.Time;
 
 
@@ -37,7 +35,7 @@ public class Route implements Parcelable
 	}
 
 	public boolean isWeekPartDependent() {
-		return getCountQueryResult(buildFullWeekRouteTripsCountingQuery()) == 0;
+		return getCountingQueryResult(buildFullWeekRouteTripsCountingQuery()) == 0;
 	}
 
 	private String buildFullWeekRouteTripsCountingQuery() {
@@ -45,22 +43,23 @@ public class Route implements Parcelable
 
 		queryBuilder.append("select count(*) ");
 
-		queryBuilder.append(String.format("from %s ", DbTableNames.TRIPS));
+		queryBuilder.append(String.format("from %s ", DbSchema.Tables.TRIPS));
 
-		queryBuilder.append(String.format("where %s = %d and ", DbFieldNames.ROUTE_ID, id));
-		queryBuilder.append(
-			String.format("%s = %d", DbFieldNames.TRIP_TYPE_ID, DbFieldValues.TRIP_FULL_WEEK_ID));
+		queryBuilder.append(String.format("where %s = %d and ", DbSchema.TripsColumns.ROUTE_ID, id));
+		queryBuilder.append(String.format("%s = %d", DbSchema.TripsColumns.TRIP_TYPE_ID,
+			DbSchema.TripTypesColumnsValues.FULL_WEEK_ID));
 
 		return queryBuilder.toString();
 	}
 
-	private long getCountQueryResult(String countQuery) {
+	private long getCountingQueryResult(String countingQuery) {
 		SQLiteDatabase database = DbProvider.getInstance().getDatabase();
-		return DatabaseUtils.longForQuery(database, countQuery, null);
+
+		return DatabaseUtils.longForQuery(database, countingQuery, null);
 	}
 
 	public List<Time> getFullWeekDepartureTimetable() {
-		return getDepartureTimetable(DbFieldValues.TRIP_FULL_WEEK_ID);
+		return getDepartureTimetable(DbSchema.TripTypesColumnsValues.FULL_WEEK_ID);
 	}
 
 	private List<Time> getDepartureTimetable(int tripTypeId) {
@@ -84,29 +83,30 @@ public class Route implements Parcelable
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select ");
-		queryBuilder.append(String.format("%s ", DbFieldNames.DEPARTURE_TIME));
+		queryBuilder.append(String.format("%s ", DbSchema.TripsColumns.DEPARTURE_TIME));
 
-		queryBuilder.append(String.format("from %s ", DbTableNames.TRIPS));
+		queryBuilder.append(String.format("from %s ", DbSchema.Tables.TRIPS));
 
-		queryBuilder.append(String.format("where %s = %d and ", DbFieldNames.ROUTE_ID, id));
-		queryBuilder.append(String.format("%s = %d ", DbFieldNames.TRIP_TYPE_ID, tripTypeId));
+		queryBuilder.append(String.format("where %s = %d and ", DbSchema.TripsColumns.ROUTE_ID, id));
+		queryBuilder.append(String.format("%s = %d ", DbSchema.TripsColumns.TRIP_TYPE_ID, tripTypeId));
 
-		queryBuilder.append(String.format("order by %s", DbFieldNames.DEPARTURE_TIME));
+		queryBuilder.append(String.format("order by %s", DbSchema.TripsColumns.DEPARTURE_TIME));
 
 		return queryBuilder.toString();
 	}
 
 	private String extractDepartureTimeFromCursor(Cursor databaseCursor) {
-		int departureTimeColumnIndex = databaseCursor.getColumnIndex(DbFieldNames.DEPARTURE_TIME);
+		int departureTimeColumnIndex = databaseCursor.getColumnIndex(
+			DbSchema.TripsColumns.DEPARTURE_TIME);
 		return databaseCursor.getString(departureTimeColumnIndex);
 	}
 
 	public List<Time> getWorkdaysDepartureTimetable() {
-		return getDepartureTimetable(DbFieldValues.TRIP_WORKDAY_ID);
+		return getDepartureTimetable(DbSchema.TripTypesColumnsValues.WORKDAY_ID);
 	}
 
 	public List<Time> getWeekendDepartureTimetable() {
-		return getDepartureTimetable(DbFieldValues.TRIP_WEEKEND_ID);
+		return getDepartureTimetable(DbSchema.TripTypesColumnsValues.WEEKEND_ID);
 	}
 
 	@Override
