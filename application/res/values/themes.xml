@@ -42,4 +42,17 @@
 		<!-- It should be activated in the code. Another strange Android bug. -->
 	</style>
 
+	<style name="Theme.BusTime.Map" parent="Theme.BusTime">
+		<item name="android:actionBarStyle">@style/Theme.BusTime.Map.ActionBar</item>
+		<item name="actionBarStyle">@style/Theme.BusTime.Map.ActionBar</item>
+
+		<item name="android:windowActionBarOverlay">true</item>
+		<item name="windowActionBarOverlay">true</item>
+	</style>
+
+	<style name="Theme.BusTime.Map.ActionBar" parent="Theme.BusTime.ActionBar">
+		<item name="android:background">@drawable/background_action_bar_transparent</item>
+		<item name="background">@drawable/background_action_bar_transparent</item>
+	</style>
+
 </resources>

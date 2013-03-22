@@ -56,7 +56,8 @@
 
 		<activity
 			android:name=".ui.activity.StationsMapActivity"
-			android:label="@string/title_stations">
+			android:label="@string/title_stations"
+			android:theme="@style/Theme.BusTime.Map">
 		</activity>
 
 		<activity
