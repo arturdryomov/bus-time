@@ -17,7 +17,7 @@ public class BusTimeApplication extends Application
 	}
 
 	private void setUpDatabase() {
-		DbProvider.getInstance(this);
+		DbProvider.setUp(this);
 	}
 
 	private void setUpBugsense() {
