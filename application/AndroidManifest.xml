@@ -50,8 +50,7 @@
 
 		<activity
 			android:name=".ui.activity.StationsActivity"
-			android:label="@string/title_stations"
-			android:theme="@style/Theme.BusTime.ListNavigation">
+			android:label="@string/title_stations">
 		</activity>
 
 		<activity

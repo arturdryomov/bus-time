@@ -12,11 +12,11 @@
 
 				<item
 					android:id="@+id/menu_timetable_workdays"
-					android:title="@string/menu_timetable_workdays" />
+					android:title="@string/menu_timetable_type_workdays" />
 
 				<item
 					android:id="@+id/menu_timetable_weekend"
-					android:title="@string/menu_timetable_weekend" />
+					android:title="@string/menu_timetable_type_weekend" />
 
 			</group>
 
