@@ -44,8 +44,7 @@
 
 		<activity
 			android:name=".ui.activity.RoutesActivity"
-			android:label="@string/title_routes"
-			android:theme="@style/Theme.BusTime.ListNavigation">
+			android:label="@string/title_routes">
 		</activity>
 
 		<activity

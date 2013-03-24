@@ -46,9 +46,12 @@
 	<string name="menu_timetable_type">Timetable type</string>
 	<string name="menu_timetable_type_workdays">Workdays</string>
 	<string name="menu_timetable_type_weekend">Weekend</string>
-	<string name="menu_stations_order">Order</string>
+	<string name="menu_stations_order">Stations order</string>
 	<string name="menu_stations_order_route">Route</string>
 	<string name="menu_stations_order_name">Name</string>
+	<string name="menu_routes_order">Routes order</string>
+	<string name="menu_routes_order_bus_time">Bus time</string>
+	<string name="menu_routes_order_name">Name</string>
 
 	<string name="search_hint">Search stations</string>
 
