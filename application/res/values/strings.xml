@@ -43,6 +43,9 @@
 	<string name="menu_current_location">Current location</string>
 	<string name="menu_rate_application">Rate the application</string>
 	<string name="menu_send_feedback">Send feedback</string>
+	<string name="menu_timetable_type">Timetable type</string>
+	<string name="menu_timetable_workdays">Workdays</string>
+	<string name="menu_timetable_weekend">Weekend</string>
 
 	<string name="search_hint">Search stations</string>
 
