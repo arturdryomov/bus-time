@@ -39,6 +39,15 @@
 	<string name="menu_current_location">Текущее местоположение</string>
 	<string name="menu_rate_application">Оценить приложение</string>
 	<string name="menu_send_feedback">Написать разработчику</string>
+	<string name="menu_timetable_type">Тип расписания</string>
+	<string name="menu_timetable_type_workdays">Рабочие дни</string>
+	<string name="menu_timetable_type_weekend">Выходные дни</string>
+	<string name="menu_stations_order">Сортировка остановок</string>
+	<string name="menu_stations_order_route">По следованию</string>
+	<string name="menu_stations_order_name">По названию</string>
+	<string name="menu_routes_order">Сортировка маршрутов</string>
+	<string name="menu_routes_order_bus_time">По времени прибытия</string>
+	<string name="menu_routes_order_name">По названию</string>
 
 	<string name="search_hint">Поиск остановок</string>
 
