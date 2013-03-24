@@ -44,13 +44,13 @@ public class RoutesActivity extends SherlockFragmentActivity implements LoaderMa
 	private void setUpActivityWithReceivedStation() {
 		Station station = getIntent().getParcelableExtra(IntentExtras.STATION);
 
-		setUpActionBarTitle(station.getName());
+		setUpActionBarSubtitle(station.getName());
 
 		setUpActivity(station);
 	}
 
-	private void setUpActionBarTitle(String stationName) {
-		getSupportActionBar().setTitle(stationName);
+	private void setUpActionBarSubtitle(String stationName) {
+		getSupportActionBar().setSubtitle(stationName);
 	}
 
 	private void setUpActivity(Station station) {
@@ -79,7 +79,7 @@ public class RoutesActivity extends SherlockFragmentActivity implements LoaderMa
 		RoutesForStationFragment routesForStationFragment = (RoutesForStationFragment) getSupportFragmentManager().findFragmentById(
 			android.R.id.content);
 
-		setUpActionBarTitle(station.getName());
+		setUpActionBarSubtitle(station.getName());
 
 		routesForStationFragment.callListPopulation(station);
 

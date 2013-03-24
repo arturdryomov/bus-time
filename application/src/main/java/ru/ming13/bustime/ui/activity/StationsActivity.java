@@ -12,7 +12,6 @@ import ru.ming13.bustime.ui.fragment.StationsFragment;
 import ru.ming13.bustime.ui.intent.IntentException;
 import ru.ming13.bustime.ui.intent.IntentExtras;
 import ru.ming13.bustime.ui.util.FragmentWrapper;
-import ru.ming13.bustime.ui.util.NameParser;
 
 
 public class StationsActivity extends SherlockFragmentActivity
@@ -23,7 +22,7 @@ public class StationsActivity extends SherlockFragmentActivity
 
 		FragmentWrapper.setUpFragment(this, buildFragment());
 
-		setUpActionBarTitle();
+		setUpActionBarSubtitle();
 	}
 
 	private Fragment buildFragment() {
@@ -40,10 +39,8 @@ public class StationsActivity extends SherlockFragmentActivity
 		return route;
 	}
 
-	private void setUpActionBarTitle() {
-		String routeNumber = NameParser.parseRouteNumber(extractReceivedRoute().getName());
-
-		getSupportActionBar().setTitle(routeNumber);
+	private void setUpActionBarSubtitle() {
+		getSupportActionBar().setSubtitle(extractReceivedRoute().getName());
 	}
 
 	@Override
