@@ -34,7 +34,7 @@ public class BusTimeApplication extends Application
 	}
 
 	private boolean isBugsenseEnabled() {
-		return getResources().getBoolean(R.bool.flag_bugsense_enabled);
+		return !BuildConfig.DEBUG;
 	}
 
 	private String getBugsenseProjectKey() {
