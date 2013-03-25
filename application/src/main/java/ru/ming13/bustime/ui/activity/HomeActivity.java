@@ -23,6 +23,7 @@ import ru.ming13.bustime.ui.intent.IntentFactory;
 import ru.ming13.bustime.ui.task.DatabaseUpdateCheckTask;
 import ru.ming13.bustime.ui.task.DatabaseUpdateTask;
 import ru.ming13.bustime.ui.util.ActionBarTabListener;
+import ru.ming13.bustime.ui.util.Preferences;
 import ru.ming13.bustime.ui.util.UserAlerter;
 
 
@@ -43,6 +44,7 @@ public class HomeActivity extends SherlockFragmentActivity
 		super.onCreate(savedInstanceState);
 
 		setUpTabs();
+		selectLastTimeSelectedTab();
 
 		checkDatabaseUpdates();
 	}
@@ -167,6 +169,12 @@ public class HomeActivity extends SherlockFragmentActivity
 		}
 	}
 
+	private void selectLastTimeSelectedTab() {
+		int selectedTabIndex = Preferences.getInt(this, Preferences.Keys.SELECTED_TAB_INDEX);
+
+		getSupportActionBar().setSelectedNavigationItem(selectedTabIndex);
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.menu_action_bar_home, menu);
@@ -254,6 +262,19 @@ public class HomeActivity extends SherlockFragmentActivity
 		Intent intent = IntentFactory.createEmailIntent(getString(R.string.email_address_feedback),
 			getString(R.string.email_subject_feedback));
 		startActivity(Intent.createChooser(intent, null));
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		saveSelectedTab();
+	}
+
+	private void saveSelectedTab() {
+		int selectedTabIndex = getSupportActionBar().getSelectedNavigationIndex();
+
+		Preferences.set(this, Preferences.Keys.SELECTED_TAB_INDEX, selectedTabIndex);
 	}
 
 	@Override
