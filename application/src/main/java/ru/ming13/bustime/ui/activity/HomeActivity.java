@@ -78,6 +78,12 @@ public class HomeActivity extends SherlockFragmentActivity
 		return tab;
 	}
 
+	private void selectLastTimeSelectedTab() {
+		int selectedTabIndex = Preferences.getInt(this, Preferences.Keys.SELECTED_TAB_INDEX);
+
+		getSupportActionBar().setSelectedNavigationItem(selectedTabIndex);
+	}
+
 	private void checkDatabaseUpdates() {
 		DatabaseUpdateCheckTask.execute(this);
 	}
@@ -167,12 +173,6 @@ public class HomeActivity extends SherlockFragmentActivity
 		else {
 			UserAlerter.alert(this, R.string.error_unspecified);
 		}
-	}
-
-	private void selectLastTimeSelectedTab() {
-		int selectedTabIndex = Preferences.getInt(this, Preferences.Keys.SELECTED_TAB_INDEX);
-
-		getSupportActionBar().setSelectedNavigationItem(selectedTabIndex);
 	}
 
 	@Override
