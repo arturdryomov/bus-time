@@ -3,43 +3,44 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>Bus Time Tests</name>
+	<parent>
+		<groupId>ru.ming13.bustime</groupId>
+		<artifactId>bus-time-parent</artifactId>
+		<version>0.7.0</version>
+	</parent>
+
 	<artifactId>bus-time-tests</artifactId>
 	<packaging>apk</packaging>
 
-	<parent>
-		<artifactId>bus-time-parent</artifactId>
-		<version>0.7.0</version>
-		<groupId>ru.ming13.bustime</groupId>
-	</parent>
+	<name>Bus Time Tests</name>
 
 	<dependencies>
 		<dependency>
+			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
 			<version>${android.version}</version>
-			<groupId>com.google.android</groupId>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
+			<groupId>com.google.android</groupId>
 			<artifactId>android-test</artifactId>
 			<version>${android.version}</version>
-			<groupId>com.google.android</groupId>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
+			<groupId>ru.ming13.bustime</groupId>
 			<artifactId>bus-time-application</artifactId>
 			<version>${project.version}</version>
-			<groupId>ru.ming13.bustime</groupId>
 			<scope>provided</scope>
 			<type>apk</type>
 		</dependency>
 
 		<dependency>
+			<groupId>ru.ming13.bustime</groupId>
 			<artifactId>bus-time-application</artifactId>
 			<version>${project.version}</version>
-			<groupId>ru.ming13.bustime</groupId>
 			<scope>provided</scope>
 			<type>jar</type>
 		</dependency>
