@@ -5,7 +5,7 @@
 
 	<groupId>ru.ming13.bustime</groupId>
 	<artifactId>bus-time-parent</artifactId>
-	<version>0.7.0</version>
+	<version>0.7.1</version>
 	<packaging>pom</packaging>
 
 	<name>Bus Time Parent</name>
