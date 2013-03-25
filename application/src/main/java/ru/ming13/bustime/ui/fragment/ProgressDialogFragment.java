@@ -7,14 +7,14 @@ import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 
-public class IntermediateProgressDialog extends SherlockDialogFragment
+public class ProgressDialogFragment extends SherlockDialogFragment
 {
 	public static final String TAG = "progress_dialog";
 
 	private static final boolean CANCELABLE = false;
 
-	public static IntermediateProgressDialog newInstance(String message) {
-		IntermediateProgressDialog progressDialog = new IntermediateProgressDialog();
+	public static ProgressDialogFragment newInstance(String message) {
+		ProgressDialogFragment progressDialog = new ProgressDialogFragment();
 
 		progressDialog.setArguments(buildArguments(message));
 

@@ -4,6 +4,8 @@ package ru.ming13.bustime;
 import android.app.Application;
 import com.bugsense.trace.BugSenseHandler;
 import ru.ming13.bustime.db.DbProvider;
+import ru.ming13.bustime.ui.bus.BusEventsCollector;
+import ru.ming13.bustime.ui.bus.BusProvider;
 
 
 public class BusTimeApplication extends Application
@@ -13,11 +15,16 @@ public class BusTimeApplication extends Application
 		super.onCreate();
 
 		setUpDatabase();
+		setUpBusEventsCollector();
 		setUpBugsense();
 	}
 
 	private void setUpDatabase() {
 		DbProvider.setUp(this);
+	}
+
+	private void setUpBusEventsCollector() {
+		BusProvider.getInstance().register(BusEventsCollector.getInstance());
 	}
 
 	private void setUpBugsense() {

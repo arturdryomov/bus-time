@@ -6,83 +6,43 @@ import android.os.AsyncTask;
 import ru.ming13.bustime.db.content.DbImportConnectionException;
 import ru.ming13.bustime.db.content.DbImportException;
 import ru.ming13.bustime.db.content.DbImporter;
+import ru.ming13.bustime.ui.bus.BusEvent;
+import ru.ming13.bustime.ui.bus.BusProvider;
+import ru.ming13.bustime.ui.bus.DatabaseUpdateFailedEvent;
+import ru.ming13.bustime.ui.bus.DatabaseUpdateSucceedEvent;
 
 
-public class DatabaseUpdateTask extends AsyncTask<Void, Void, Void>
+public class DatabaseUpdateTask extends AsyncTask<Void, Void, BusEvent>
 {
-	public interface DatabaseUpdateCallback
-	{
-		public void onSuccessUpdate();
+	private final DbImporter dbImporter;
 
-		public void onNetworkFail();
-
-		public void onFailedUpdate();
+	public static void execute(Context context) {
+		new DatabaseUpdateTask(context).execute();
 	}
 
-	private static enum Result
-	{
-		SUCCESS, NETWORK_FAIL, FAIL
-	}
-
-	private Result result;
-
-	private Context context;
-
-	private DatabaseUpdateCallback databaseUpdateCallback;
-
-	public static DatabaseUpdateTask newInstance(Context context, DatabaseUpdateCallback databaseUpdateCallback) {
-		return new DatabaseUpdateTask(context, databaseUpdateCallback);
-	}
-
-	private DatabaseUpdateTask(Context context, DatabaseUpdateCallback databaseUpdateCallback) {
-		this.context = context;
-
-		this.databaseUpdateCallback = databaseUpdateCallback;
-	}
-
-	public void setContext(Context context) {
-		this.context = context;
-	}
-
-	public void setDatabaseUpdateCallback(DatabaseUpdateCallback databaseUpdateCallback) {
-		this.databaseUpdateCallback = databaseUpdateCallback;
+	private DatabaseUpdateTask(Context context) {
+		this.dbImporter = new DbImporter(context);
 	}
 
 	@Override
-	protected Void doInBackground(Void... parameters) {
-		DbImporter dbImporter = new DbImporter(context);
-
+	protected BusEvent doInBackground(Void... parameters) {
 		try {
 			dbImporter.importFromServer();
 
-			result = Result.SUCCESS;
+			return new DatabaseUpdateSucceedEvent();
 		}
 		catch (DbImportConnectionException e) {
-			result = Result.NETWORK_FAIL;
+			return new DatabaseUpdateFailedEvent(true);
 		}
 		catch (DbImportException e) {
-			result = Result.FAIL;
+			return new DatabaseUpdateFailedEvent(false);
 		}
-
-		return null;
 	}
 
 	@Override
-	protected void onPostExecute(Void taskResult) {
-		super.onPostExecute(taskResult);
+	protected void onPostExecute(BusEvent busEvent) {
+		super.onPostExecute(busEvent);
 
-		switch (result) {
-			case SUCCESS:
-				databaseUpdateCallback.onSuccessUpdate();
-				break;
-
-			case NETWORK_FAIL:
-				databaseUpdateCallback.onNetworkFail();
-				break;
-
-			case FAIL:
-				databaseUpdateCallback.onFailedUpdate();
-				break;
-		}
+		BusProvider.getInstance().post(busEvent);
 	}
 }
