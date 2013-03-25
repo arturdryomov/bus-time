@@ -94,6 +94,11 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+
+			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
 			</plugin>
@@ -105,6 +110,11 @@
 			<id>release</id>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+					</plugin>
+
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-jarsigner-plugin</artifactId>
@@ -123,6 +133,10 @@
 						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 						<artifactId>android-maven-plugin</artifactId>
 						<configuration>
+							<release>true</release>
+							<zipalign>
+								<skip>false</skip>
+							</zipalign>
 							<proguard>
 								<skip>false</skip>
 							</proguard>
