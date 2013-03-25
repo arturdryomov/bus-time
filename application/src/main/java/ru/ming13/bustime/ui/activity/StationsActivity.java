@@ -51,6 +51,14 @@ public class StationsActivity extends SherlockFragmentActivity
 	}
 
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.findItem(R.id.menu_stations_order_name).setChecked(true);
+		onOptionsItemSelected(menu.findItem(R.id.menu_stations_order_route));
+
+		return true;
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		if (menuItem.isChecked()) {
 			return false;

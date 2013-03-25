@@ -25,8 +25,6 @@ abstract class AdaptedListFragment<ListItemType> extends SherlockListFragment
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setRetainInstance(true);
-
 		if (!isListInitialized()) {
 			initializeList();
 		}
@@ -95,9 +93,7 @@ abstract class AdaptedListFragment<ListItemType> extends SherlockListFragment
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		if (list.isEmpty()) {
-			callListPopulation();
-		}
+		callListPopulation();
 	}
 
 	protected abstract void callListPopulation();

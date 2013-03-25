@@ -3,31 +3,7 @@
 
 	<string name="title_routes">Маршруты</string>
 	<string name="title_stations">Остановки</string>
-
-	<string name="title_timetable_full_week">Расписание</string>
-	<string name="title_timetable_workdays">Расписание: рабочие дни</string>
-	<string name="title_timetable_weekend">Расписание: выходные дни</string>
-
-	<string-array name="week_part_dependent_timetable">
-		<item>@string/title_timetable_workdays</item>
-		<item>@string/title_timetable_weekend</item>
-	</string-array>
-
-	<string name="title_routes_by_bus_time">Маршруты: по времени прибытия</string>
-	<string name="title_routes_by_name">Маршруты: по названию</string>
-
-	<string-array name="titles_routes_with_sorting">
-		<item>@string/title_routes_by_bus_time</item>
-		<item>@string/title_routes_by_name</item>
-	</string-array>
-
-	<string name="title_stations_by_route_order">Остановки: по следованию</string>
-	<string name="title_stations_by_name">Остановки: по названию</string>
-
-	<string-array name="titles_stations_with_sorting">
-		<item>@string/title_stations_by_route_order</item>
-		<item>@string/title_stations_by_name</item>
-	</string-array>
+	<string name="title_timetable">Расписание</string>
 
 	<string name="empty_routes">Маршрутов нет.</string>
 	<string name="empty_stations">Остановок нет.</string>
