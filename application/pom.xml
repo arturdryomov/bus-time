@@ -3,15 +3,16 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>Bus Time Application</name>
+	<parent>
+		<groupId>ru.ming13.bustime</groupId>
+		<artifactId>bus-time-parent</artifactId>
+		<version>0.7.0</version>
+	</parent>
+
 	<artifactId>bus-time-application</artifactId>
 	<packaging>apk</packaging>
 
-	<parent>
-		<artifactId>bus-time-parent</artifactId>
-		<version>0.7.0</version>
-		<groupId>ru.ming13.bustime</groupId>
-	</parent>
+	<name>Bus Time Application</name>
 
 	<repositories>
 		<repository>
@@ -32,49 +33,49 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
 			<version>${android.version}</version>
-			<groupId>com.google.android</groupId>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
+			<groupId>com.actionbarsherlock</groupId>
 			<artifactId>library</artifactId>
 			<version>4.1.0</version>
-			<groupId>com.actionbarsherlock</groupId>
 			<type>apklib</type>
 		</dependency>
 
 		<dependency>
+			<groupId>com.actionbarsherlock</groupId>
 			<artifactId>plugin-maps</artifactId>
 			<version>4.1.0</version>
-			<groupId>com.actionbarsherlock</groupId>
 		</dependency>
 
 		<dependency>
+			<groupId>com.google.android.maps</groupId>
 			<artifactId>maps</artifactId>
 			<version>15_r2</version>
-			<groupId>com.google.android.maps</groupId>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
+			<groupId>com.github.jgilfelt</groupId>
 			<artifactId>map-view-baloons</artifactId>
 			<version>1.5.1</version>
-			<groupId>com.github.jgilfelt</groupId>
 			<type>apklib</type>
 		</dependency>
 
 		<dependency>
+			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
-			<groupId>commons-io</groupId>
 		</dependency>
 
 		<dependency>
+			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.1</version>
-			<groupId>org.apache.commons</groupId>
 		</dependency>
 
 		<dependency>
@@ -84,9 +85,9 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.bugsense</groupId>
 			<artifactId>bugsense-trace</artifactId>
 			<version>3.0.3</version>
-			<groupId>com.bugsense</groupId>
 		</dependency>
 	</dependencies>
 
@@ -105,8 +106,8 @@
 			<build>
 				<plugins>
 					<plugin>
-						<artifactId>maven-jarsigner-plugin</artifactId>
 						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jarsigner-plugin</artifactId>
 						<executions>
 							<execution>
 								<id>signing</id>
@@ -119,8 +120,8 @@
 					</plugin>
 
 					<plugin>
-						<artifactId>android-maven-plugin</artifactId>
 						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+						<artifactId>android-maven-plugin</artifactId>
 						<configuration>
 							<proguard>
 								<skip>false</skip>

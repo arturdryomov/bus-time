@@ -3,15 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<prerequisites>
-		<maven>3.0.0</maven>
-	</prerequisites>
-
-	<name>Bus Time Parent</name>
+	<groupId>ru.ming13.bustime</groupId>
 	<artifactId>bus-time-parent</artifactId>
 	<version>0.7.0</version>
-	<groupId>ru.ming13.bustime</groupId>
 	<packaging>pom</packaging>
+
+	<name>Bus Time Parent</name>
 
 	<modules>
 		<module>application</module>
@@ -29,9 +26,9 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 					<artifactId>android-maven-plugin</artifactId>
 					<version>3.3.2</version>
-					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 					<extensions>true</extensions>
 					<configuration>
 						<sdk>
@@ -43,9 +40,9 @@
 				</plugin>
 
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jarsigner-plugin</artifactId>
 					<version>1.2</version>
-					<groupId>org.apache.maven.plugins</groupId>
 					<configuration>
 						<removeExistingSignatures>true</removeExistingSignatures>
 						<arguments>
@@ -74,9 +71,9 @@
 			</plugin>
 
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
 				<version>2.5.2</version>
-				<groupId>org.codehaus.mojo</groupId>
 				<configuration>
 					<onlyAnalyze>${project.groupId}.-</onlyAnalyze>
 				</configuration>
