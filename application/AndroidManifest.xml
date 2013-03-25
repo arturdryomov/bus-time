@@ -21,7 +21,7 @@
 
 	<application
 		android:name="BusTimeApplication"
-		android:icon="@drawable/ic_launcher_bustime"
+		android:icon="@drawable/ic_launcher"
 		android:logo="@color/background_action_bar"
 		android:label="@string/application_name"
 		android:theme="@style/Theme.BusTime">
