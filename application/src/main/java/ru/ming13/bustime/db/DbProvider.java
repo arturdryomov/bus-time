@@ -11,35 +11,25 @@ import ru.ming13.bustime.db.sqlite.DbOpenHelper;
 
 public class DbProvider
 {
-	private static class AlreadyInstantiatedException extends RuntimeException
-	{
-	}
-
 	private DbOpenHelper databaseOpenHelper;
 
 	private Routes routes;
 	private Stations stations;
 
-	public static DbProvider getInstance() {
-		return DbProviderHolder.instance;
+	private static DbProvider INSTANCE;
+
+	public static void setUp(Context context) {
+		INSTANCE = new DbProvider(context.getApplicationContext());
 	}
 
-	private static class DbProviderHolder
-	{
-		private static DbProvider instance;
-
-		public DbProviderHolder(Context context) {
-			instance = new DbProvider(context);
-		}
+	public static DbProvider getInstance() {
+		return INSTANCE;
 	}
 
 	private DbProvider(Context context) {
-		if (getInstance() != null) {
-			throw new AlreadyInstantiatedException();
-		}
-
 		importDatabaseIfNecessary(context);
-		databaseOpenHelper = new DbOpenHelper(context.getApplicationContext());
+
+		databaseOpenHelper = new DbOpenHelper(context);
 	}
 
 	private void importDatabaseIfNecessary(Context context) {
@@ -50,18 +40,9 @@ public class DbProvider
 		}
 	}
 
-	public static DbProvider getInstance(Context context) {
-		if (getInstance() == null) {
-			new DbProviderHolder(context);
-		}
-
-		return getInstance();
-	}
-
 	public void refreshDatabase(Context context) {
 		databaseOpenHelper.close();
-
-		databaseOpenHelper = new DbOpenHelper(context);
+		databaseOpenHelper = new DbOpenHelper(context.getApplicationContext());
 
 		routes = new Routes();
 		stations = new Stations();

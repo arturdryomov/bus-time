@@ -4,18 +4,14 @@ package ru.ming13.bustime.db.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDoneException;
 import android.os.Parcel;
 import android.os.Parcelable;
-import ru.ming13.bustime.db.DbException;
 import ru.ming13.bustime.db.DbProvider;
-import ru.ming13.bustime.db.sqlite.DbFieldNames;
-import ru.ming13.bustime.db.sqlite.DbFieldValues;
-import ru.ming13.bustime.db.sqlite.DbTableNames;
+import ru.ming13.bustime.db.sqlite.DbSchema;
 import ru.ming13.bustime.db.time.Time;
 import ru.ming13.bustime.db.time.TimeException;
 
@@ -24,43 +20,16 @@ public class Station implements Parcelable
 {
 	private static final int SPECIAL_PARCELABLE_OBJECTS_BITMASK = 0;
 
-	private final SQLiteDatabase database;
+	private final long id;
+	private final String name;
+	private final double latitude;
+	private final double longitude;
 
-	private long id;
-	private String name;
-	private double latitude;
-	private double longitude;
-
-	Station(ContentValues databaseValues) {
-		database = DbProvider.getInstance().getDatabase();
-
-		setValues(databaseValues);
-	}
-
-	private void setValues(ContentValues databaseValues) {
-		Long idAsLong = databaseValues.getAsLong(DbFieldNames.ID);
-		if (idAsLong == null) {
-			throw new DbException();
-		}
-		id = idAsLong.longValue();
-
-		String nameAsString = databaseValues.getAsString(DbFieldNames.NAME);
-		if (nameAsString == null) {
-			throw new DbException();
-		}
-		name = nameAsString;
-
-		Double latitudeAsDouble = databaseValues.getAsDouble(DbFieldNames.LATITUDE);
-		if (latitudeAsDouble == null) {
-			throw new DbException();
-		}
-		latitude = latitudeAsDouble.doubleValue();
-
-		Double longitudeAsDouble = databaseValues.getAsDouble(DbFieldNames.LONGITUDE);
-		if (longitudeAsDouble == null) {
-			throw new DbException();
-		}
-		longitude = longitudeAsDouble.doubleValue();
+	Station(long id, String name, double latitude, double longitude) {
+		this.id = id;
+		this.name = name;
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
 
 	public long getId() {
@@ -97,6 +66,7 @@ public class Station implements Parcelable
 	}
 
 	private Time getRouteTimeShift(Route route) {
+		SQLiteDatabase database = DbProvider.getInstance().getDatabase();
 		Cursor databaseCursor = database.rawQuery(buildRouteTimeShiftSelectionQuery(route), null);
 
 		databaseCursor.moveToFirst();
@@ -111,18 +81,21 @@ public class Station implements Parcelable
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select ");
-		queryBuilder.append(String.format("%s ", DbFieldNames.TIME_SHIFT));
+		queryBuilder.append(String.format("%s ", DbSchema.RoutesAndStationsColumns.TIME_SHIFT));
 
-		queryBuilder.append(String.format("from %s ", DbTableNames.ROUTES_AND_STATIONS));
+		queryBuilder.append(String.format("from %s ", DbSchema.Tables.ROUTES_AND_STATIONS));
 
-		queryBuilder.append(String.format("where %s = %d and ", DbFieldNames.STATION_ID, id));
-		queryBuilder.append(String.format("%s = %d", DbFieldNames.ROUTE_ID, route.getId()));
+		queryBuilder.append(
+			String.format("where %s = %d and ", DbSchema.RoutesAndStationsColumns.STATION_ID, id));
+		queryBuilder.append(
+			String.format("%s = %d", DbSchema.RoutesAndStationsColumns.ROUTE_ID, route.getId()));
 
 		return queryBuilder.toString();
 	}
 
 	private String extractTimeShiftFromCursor(Cursor databaseCursor) {
-		int timeShiftColumnIndex = databaseCursor.getColumnIndex(DbFieldNames.TIME_SHIFT);
+		int timeShiftColumnIndex = databaseCursor.getColumnIndex(
+			DbSchema.RoutesAndStationsColumns.TIME_SHIFT);
 		return databaseCursor.getString(timeShiftColumnIndex);
 	}
 
@@ -139,7 +112,7 @@ public class Station implements Parcelable
 	}
 
 	public Time getClosestFullWeekBusTime(Route route) {
-		return getClosestBusTime(route, DbFieldValues.TRIP_FULL_WEEK_ID);
+		return getClosestBusTime(route, DbSchema.TripTypesColumnsValues.FULL_WEEK_ID);
 	}
 
 	private Time getClosestBusTime(Route route, int tripTypeId) {
@@ -149,6 +122,7 @@ public class Station implements Parcelable
 			String closestDepartureTimeSelectionQuery = buildClosestDepartureTimeSelectionQuery(
 				route.getId(), routeTimeShift, tripTypeId);
 
+			SQLiteDatabase database = DbProvider.getInstance().getDatabase();
 			String closestDepartureStringTime = DatabaseUtils.stringForQuery(database,
 				closestDepartureTimeSelectionQuery, null);
 			Time closestDepartureTime = Time.parse(closestDepartureStringTime);
@@ -164,16 +138,18 @@ public class Station implements Parcelable
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append("select ");
-		queryBuilder.append(String.format("%s ", DbFieldNames.DEPARTURE_TIME));
+		queryBuilder.append(String.format("%s ", DbSchema.TripsColumns.DEPARTURE_TIME));
 
-		queryBuilder.append(String.format("from %s ", DbTableNames.TRIPS));
+		queryBuilder.append(String.format("from %s ", DbSchema.Tables.TRIPS));
 
-		queryBuilder.append(String.format("where %s = %d and ", DbFieldNames.ROUTE_ID, routeId));
-		queryBuilder.append(String.format("%s = %d and ", DbFieldNames.TRIP_TYPE_ID, tripTypeId));
-		queryBuilder.append(String.format("%s >= '%s' ", DbFieldNames.DEPARTURE_TIME,
+		queryBuilder.append(
+			String.format("where %s = %d and ", DbSchema.TripsColumns.ROUTE_ID, routeId));
+		queryBuilder.append(
+			String.format("%s = %d and ", DbSchema.TripsColumns.TRIP_TYPE_ID, tripTypeId));
+		queryBuilder.append(String.format("%s >= '%s' ", DbSchema.TripsColumns.DEPARTURE_TIME,
 			calculatePossibleDepartureTime(routeTimeShift).toDatabaseString()));
 
-		queryBuilder.append(String.format("order by %s ", DbFieldNames.DEPARTURE_TIME));
+		queryBuilder.append(String.format("order by %s ", DbSchema.TripsColumns.DEPARTURE_TIME));
 
 		queryBuilder.append("limit 1");
 
@@ -193,11 +169,11 @@ public class Station implements Parcelable
 	}
 
 	public Time getClosestWorkdaysBusTime(Route route) {
-		return getClosestBusTime(route, DbFieldValues.TRIP_WORKDAY_ID);
+		return getClosestBusTime(route, DbSchema.TripTypesColumnsValues.WORKDAY_ID);
 	}
 
 	public Time getClosestWeekendBusTime(Route route) {
-		return getClosestBusTime(route, DbFieldValues.TRIP_WEEKEND_ID);
+		return getClosestBusTime(route, DbSchema.TripTypesColumnsValues.WEEKEND_ID);
 	}
 
 	@Override
@@ -209,6 +185,8 @@ public class Station implements Parcelable
 	public void writeToParcel(Parcel parcel, int flags) {
 		parcel.writeLong(id);
 		parcel.writeString(name);
+		parcel.writeDouble(latitude);
+		parcel.writeDouble(longitude);
 	}
 
 	public static final Parcelable.Creator<Station> CREATOR = new Parcelable.Creator<Station>()
@@ -225,13 +203,9 @@ public class Station implements Parcelable
 	};
 
 	private Station(Parcel parcel) {
-		database = DbProvider.getInstance().getDatabase();
-
-		readStationDataFromParcel(parcel);
-	}
-
-	private void readStationDataFromParcel(Parcel parcel) {
 		id = parcel.readLong();
 		name = parcel.readString();
+		latitude = parcel.readDouble();
+		longitude = parcel.readDouble();
 	}
 }

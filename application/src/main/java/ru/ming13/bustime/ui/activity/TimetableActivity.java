@@ -4,8 +4,9 @@ package ru.ming13.bustime.ui.activity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.db.model.Route;
 import ru.ming13.bustime.db.model.Station;
@@ -16,39 +17,29 @@ import ru.ming13.bustime.ui.intent.IntentExtras;
 import ru.ming13.bustime.ui.loader.Loaders;
 import ru.ming13.bustime.ui.loader.TimetableTypeCheckLoader;
 import ru.ming13.bustime.ui.util.FragmentWrapper;
-import ru.ming13.bustime.ui.util.ListNavigationProvider;
+import ru.ming13.bustime.ui.util.NameParser;
 
 
-public class TimetableActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener, LoaderManager.LoaderCallbacks<Boolean>
+public class TimetableActivity extends SherlockFragmentActivity implements LoaderManager.LoaderCallbacks<Boolean>
 {
 	private static enum Mode
 	{
-		FULL_WEEK, WORKDAYS, WEEKEND
+		UNDEFINED, FULL_WEEK, WORKDAYS, WEEKEND
 	}
 
-	private static final class ListNavigationIndexes
-	{
-		private ListNavigationIndexes() {
-		}
-
-		public static final int WORKDAYS = 0;
-		public static final int WEEKEND = 1;
-	}
-
-	private ListNavigationProvider listNavigationProvider;
+	private Mode mode = Mode.UNDEFINED;
 
 	private Route route;
 	private Station station;
 
-	private Bundle savedInstanceState;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.savedInstanceState = savedInstanceState;
 
 		route = extractReceivedRoute();
 		station = extractReceivedStation();
+
+		setUpActionBarTitles();
 
 		setUpTimetable();
 	}
@@ -73,6 +64,11 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		return station;
 	}
 
+	private void setUpActionBarTitles() {
+		getSupportActionBar().setTitle(NameParser.parseRouteNumber(route.getName()));
+		getSupportActionBar().setSubtitle(station.getName());
+	}
+
 	private void setUpTimetable() {
 		FragmentWrapper.setUpFragment(this, TimetableFragment.newEmptyInstance(route, station));
 
@@ -87,66 +83,35 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 	@Override
 	public void onLoadFinished(Loader<Boolean> timetableTypeCheckLoader, Boolean isTimetableWeekPartDependent) {
 		if (isTimetableWeekPartDependent) {
-			setUpWeekPartDependentTimetable();
+			setUpWeekPartDependentTimetableMode();
 		}
 		else {
-			setUpWeekPartIndependentTimetable();
+			setUpWeekPartIndependentTimetableMode();
 		}
+
+		loadTimetable();
+
+		setUpActionBarButtons();
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Boolean> timetableTypeCheckLoader) {
 	}
 
-	private void setUpWeekPartDependentTimetable() {
-		setUpListNavigation();
-
-		if (listNavigationProvider.isStateValid(savedInstanceState)) {
-			listNavigationProvider.restoreSelectedNavigationIndex(savedInstanceState);
+	private void setUpWeekPartDependentTimetableMode() {
+		if (Time.newInstance().isWeekend()) {
+			mode = Mode.WEEKEND;
 		}
 		else {
-			setCurrentWeekPartListNavigationItem();
+			mode = Mode.WORKDAYS;
 		}
 	}
 
-	private void setUpListNavigation() {
-		listNavigationProvider = new ListNavigationProvider(this);
-
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		listNavigationProvider.setUpListNavigation(this, R.array.week_part_dependent_timetable);
+	private void setUpWeekPartIndependentTimetableMode() {
+		mode = Mode.FULL_WEEK;
 	}
 
-	@Override
-	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		switch (itemPosition) {
-			case ListNavigationIndexes.WORKDAYS:
-				loadTimetable(Mode.WORKDAYS);
-				return true;
-
-			case ListNavigationIndexes.WEEKEND:
-				loadTimetable(Mode.WEEKEND);
-				return true;
-
-			default:
-				return false;
-		}
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-
-		switch (getSupportActionBar().getNavigationMode()) {
-			case ActionBar.NAVIGATION_MODE_LIST:
-				listNavigationProvider.saveSelectedNavigationIndex(outState);
-				break;
-
-			default:
-				break;
-		}
-	}
-
-	private void loadTimetable(Mode mode) {
+	private void loadTimetable() {
 		TimetableFragment timetableFragment = (TimetableFragment) getSupportFragmentManager().findFragmentById(
 			android.R.id.content);
 
@@ -169,20 +134,54 @@ public class TimetableActivity extends SherlockFragmentActivity implements Actio
 		}
 	}
 
-	private void setCurrentWeekPartListNavigationItem() {
-		int listNavigationIndex;
-
-		if (Time.newInstance().isWeekend()) {
-			listNavigationIndex = ListNavigationIndexes.WEEKEND;
-		}
-		else {
-			listNavigationIndex = ListNavigationIndexes.WORKDAYS;
-		}
-
-		getSupportActionBar().setSelectedNavigationItem(listNavigationIndex);
+	private void setUpActionBarButtons() {
+		supportInvalidateOptionsMenu();
 	}
 
-	private void setUpWeekPartIndependentTimetable() {
-		loadTimetable(Mode.FULL_WEEK);
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.menu_action_bar_timetable, menu);
+
+		return true;
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		switch (mode) {
+			case WORKDAYS:
+				menu.findItem(R.id.menu_timetable_workdays).setChecked(true);
+				return true;
+
+			case WEEKEND:
+				menu.findItem(R.id.menu_timetable_weekend).setChecked(true);
+				return true;
+
+			default:
+				return false;
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		if (menuItem.isChecked()) {
+			return false;
+		}
+
+		menuItem.setChecked(true);
+
+		switch (menuItem.getItemId()) {
+			case R.id.menu_timetable_weekend:
+				mode = Mode.WEEKEND;
+				loadTimetable();
+				return true;
+
+			case R.id.menu_timetable_workdays:
+				mode = Mode.WORKDAYS;
+				loadTimetable();
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(menuItem);
+		}
 	}
 }

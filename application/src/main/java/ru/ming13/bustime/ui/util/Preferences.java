@@ -16,6 +16,7 @@ public final class Preferences
 
 		public static final String DATABASE_ETAG = "database_etag";
 		public static final String UPDATE_AVAILABLE = "update_available";
+		public static final String SELECTED_TAB_INDEX = "selected_tab_index";
 	}
 
 	private Preferences() {
@@ -33,12 +34,24 @@ public final class Preferences
 		return getSharedPreferences(context).edit();
 	}
 
+	public static void set(Context context, String key, int value) {
+		SharedPreferences.Editor preferencesEditor = getPreferencesEditor(context);
+
+		preferencesEditor.putInt(key, value);
+
+		preferencesEditor.commit();
+	}
+
 	private static SharedPreferences getSharedPreferences(Context context) {
 		return PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 	}
 
 	public static String getString(Context context, String key) {
 		return getSharedPreferences(context).getString(key, StringUtils.EMPTY);
+	}
+
+	public static int getInt(Context context, String key) {
+		return getSharedPreferences(context).getInt(key, 0);
 	}
 
 	public static void remove(Context context, String key) {

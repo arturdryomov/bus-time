@@ -5,94 +5,53 @@ import android.content.Context;
 import android.os.AsyncTask;
 import ru.ming13.bustime.db.content.DbImportException;
 import ru.ming13.bustime.db.content.DbImporter;
+import ru.ming13.bustime.ui.bus.BusEvent;
+import ru.ming13.bustime.ui.bus.BusProvider;
+import ru.ming13.bustime.ui.bus.DatabaseUpdateAvailableEvent;
+import ru.ming13.bustime.ui.bus.DatabaseUpdateCheckFailedEvent;
+import ru.ming13.bustime.ui.bus.NoDatabaseUpdateAvailableEvent;
+import ru.ming13.bustime.ui.bus.NoDatabaseUpdatesEverEvent;
 
 
-public class DatabaseUpdateCheckTask extends AsyncTask<Void, Void, Void>
+public class DatabaseUpdateCheckTask extends AsyncTask<Void, Void, BusEvent>
 {
-	public interface DatabaseUpdateCheckCallback
-	{
-		public void onNoUpdatesEver();
+	private final DbImporter dbImporter;
 
-		public void onAvailableUpdate();
-
-		public void onFailedUpdateCheck();
+	public static void execute(Context context) {
+		new DatabaseUpdateCheckTask(context).execute();
 	}
 
-	private static enum Result
-	{
-		NO_UPDATES_EVER, UPDATE_AVAILABLE, NO_UPDATE_AVAILABLE, FAIL
-	}
-
-	private Result result;
-
-	private Context context;
-
-	private DatabaseUpdateCheckCallback databaseUpdateCheckCallback;
-
-	public static DatabaseUpdateCheckTask newInstance(Context context, DatabaseUpdateCheckCallback databaseUpdateCheckCallback) {
-		return new DatabaseUpdateCheckTask(context, databaseUpdateCheckCallback);
-	}
-
-	private DatabaseUpdateCheckTask(Context context, DatabaseUpdateCheckCallback databaseUpdateCheckCallback) {
-		this.context = context;
-
-		this.databaseUpdateCheckCallback = databaseUpdateCheckCallback;
-	}
-
-	public void setContext(Context context) {
-		this.context = context;
-	}
-
-	public void setDatabaseUpdateCheckCallback(DatabaseUpdateCheckCallback databaseUpdateCheckCallback) {
-		this.databaseUpdateCheckCallback = databaseUpdateCheckCallback;
+	private DatabaseUpdateCheckTask(Context context) {
+		this.dbImporter = new DbImporter(context);
 	}
 
 	@Override
-	protected Void doInBackground(Void... parameters) {
+	protected BusEvent doInBackground(Void... parameters) {
 		try {
-			result = checkDatabaseUpdate();
+			return checkDatabaseUpdate();
 		}
 		catch (DbImportException e) {
-			result = Result.FAIL;
+			return new DatabaseUpdateCheckFailedEvent();
 		}
-
-		return null;
 	}
 
-	private Result checkDatabaseUpdate() {
-		DbImporter dbImporter = new DbImporter(context);
-
+	private BusEvent checkDatabaseUpdate() {
 		if (!dbImporter.isLocalDatabaseEverUpdated()) {
-			return Result.NO_UPDATES_EVER;
+			return new NoDatabaseUpdatesEverEvent();
 		}
 
 		if (dbImporter.isLocalDatabaseUpdateAvailable()) {
-			return Result.UPDATE_AVAILABLE;
+			return new DatabaseUpdateAvailableEvent();
 		}
 		else {
-			return Result.NO_UPDATE_AVAILABLE;
+			return new NoDatabaseUpdateAvailableEvent();
 		}
 	}
 
 	@Override
-	protected void onPostExecute(Void taskResult) {
-		super.onPostExecute(taskResult);
+	protected void onPostExecute(BusEvent busEvent) {
+		super.onPostExecute(busEvent);
 
-		switch (result) {
-			case NO_UPDATES_EVER:
-				databaseUpdateCheckCallback.onNoUpdatesEver();
-				break;
-
-			case UPDATE_AVAILABLE:
-				databaseUpdateCheckCallback.onAvailableUpdate();
-				break;
-
-			case FAIL:
-				databaseUpdateCheckCallback.onFailedUpdateCheck();
-				break;
-
-			default:
-				break;
-		}
+		BusProvider.getInstance().post(busEvent);
 	}
 }

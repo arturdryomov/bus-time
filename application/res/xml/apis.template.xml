@@ -13,7 +13,6 @@
 
 	<!-- BugSense -->
 
-	<bool name="flag_bugsense_enabled">false</bool>
 	<string name="key_bugsense_project" translatable="false">
 		BUGSENSE_PROJECT_KEY
 	</string>

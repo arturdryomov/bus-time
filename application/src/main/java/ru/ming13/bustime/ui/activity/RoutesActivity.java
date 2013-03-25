@@ -5,8 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.db.model.Station;
 import ru.ming13.bustime.ui.fragment.RoutesForStationFragment;
@@ -15,30 +16,13 @@ import ru.ming13.bustime.ui.intent.IntentExtras;
 import ru.ming13.bustime.ui.loader.Loaders;
 import ru.ming13.bustime.ui.loader.StationLoader;
 import ru.ming13.bustime.ui.util.FragmentWrapper;
-import ru.ming13.bustime.ui.util.ListNavigationProvider;
 
 
-public class RoutesActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener, LoaderManager.LoaderCallbacks<Station>
+public class RoutesActivity extends SherlockFragmentActivity implements LoaderManager.LoaderCallbacks<Station>
 {
-
-	private static final class ListNavigationIndexes
-	{
-		private ListNavigationIndexes() {
-		}
-
-		public static final int SORTING_BY_BUS_TIME = 0;
-		public static final int SORTING_BY_NAME = 1;
-	}
-
-	private Bundle savedInstanceState;
-
-	private ListNavigationProvider listNavigationProvider;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		this.savedInstanceState = savedInstanceState;
 
 		handleIntent(getIntent());
 	}
@@ -60,47 +44,17 @@ public class RoutesActivity extends SherlockFragmentActivity implements ActionBa
 	private void setUpActivityWithReceivedStation() {
 		Station station = getIntent().getParcelableExtra(IntentExtras.STATION);
 
+		setUpActionBarSubtitle(station.getName());
+
 		setUpActivity(station);
+	}
+
+	private void setUpActionBarSubtitle(String stationName) {
+		getSupportActionBar().setSubtitle(stationName);
 	}
 
 	private void setUpActivity(Station station) {
 		FragmentWrapper.setUpFragment(this, RoutesForStationFragment.newInstance(station));
-
-		setUpListNavigation(savedInstanceState);
-	}
-
-	private void setUpListNavigation(Bundle activityInState) {
-		listNavigationProvider = new ListNavigationProvider(this);
-
-		listNavigationProvider.setUpListNavigation(this, R.array.titles_routes_with_sorting);
-
-		listNavigationProvider.restoreSelectedNavigationIndex(activityInState);
-	}
-
-	@Override
-	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		RoutesForStationFragment routesForStationFragment = (RoutesForStationFragment) getSupportFragmentManager().
-			findFragmentById(android.R.id.content);
-
-		switch (itemPosition) {
-			case ListNavigationIndexes.SORTING_BY_BUS_TIME:
-				routesForStationFragment.sortByBusTime();
-				return true;
-
-			case ListNavigationIndexes.SORTING_BY_NAME:
-				routesForStationFragment.sortByName();
-				return true;
-
-			default:
-				return false;
-		}
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-
-		listNavigationProvider.saveSelectedNavigationIndex(outState);
 	}
 
 	private void setUpActivityWithReceivedStationId() {
@@ -111,8 +65,6 @@ public class RoutesActivity extends SherlockFragmentActivity implements ActionBa
 
 	private void setUpActivity() {
 		FragmentWrapper.setUpFragment(this, RoutesForStationFragment.newInstance());
-
-		setUpListNavigation(savedInstanceState);
 	}
 
 	@Override
@@ -127,6 +79,8 @@ public class RoutesActivity extends SherlockFragmentActivity implements ActionBa
 		RoutesForStationFragment routesForStationFragment = (RoutesForStationFragment) getSupportFragmentManager().findFragmentById(
 			android.R.id.content);
 
+		setUpActionBarSubtitle(station.getName());
+
 		routesForStationFragment.callListPopulation(station);
 
 		getSupportLoaderManager().destroyLoader(Loaders.STATION);
@@ -134,5 +88,45 @@ public class RoutesActivity extends SherlockFragmentActivity implements ActionBa
 
 	@Override
 	public void onLoaderReset(Loader<Station> stationLoader) {
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.menu_action_bar_routes, menu);
+
+		return true;
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.findItem(R.id.menu_routes_order_name).setChecked(true);
+		onOptionsItemSelected(menu.findItem(R.id.menu_routes_order_bus_time));
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		if (menuItem.isChecked()) {
+			return false;
+		}
+
+		menuItem.setChecked(true);
+
+		RoutesForStationFragment routesForStationFragment = (RoutesForStationFragment) getSupportFragmentManager().
+			findFragmentById(android.R.id.content);
+
+		switch (menuItem.getItemId()) {
+			case R.id.menu_routes_order_name:
+				routesForStationFragment.sortByName();
+				return true;
+
+			case R.id.menu_routes_order_bus_time:
+				routesForStationFragment.sortByBusTime();
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(menuItem);
+		}
 	}
 }
