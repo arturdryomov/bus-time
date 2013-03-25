@@ -3,37 +3,26 @@ package ru.ming13.bustime.ui.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.db.model.Route;
 import ru.ming13.bustime.ui.fragment.StationsFragment;
 import ru.ming13.bustime.ui.intent.IntentException;
 import ru.ming13.bustime.ui.intent.IntentExtras;
 import ru.ming13.bustime.ui.util.FragmentWrapper;
-import ru.ming13.bustime.ui.util.ListNavigationProvider;
 
 
-public class StationsActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener
+public class StationsActivity extends SherlockFragmentActivity
 {
-	private static final class ListNavigationIndexes
-	{
-		private ListNavigationIndexes() {
-		}
-
-		public static final int SORTING_BY_TIME_SHIFT = 0;
-		public static final int SORTING_BY_NAME = 1;
-	}
-
-	private ListNavigationProvider listNavigationProvider;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		FragmentWrapper.setUpFragment(this, buildFragment());
 
-		setUpListNavigation(savedInstanceState);
+		setUpActionBarSubtitle();
 	}
 
 	private Fragment buildFragment() {
@@ -50,37 +39,47 @@ public class StationsActivity extends SherlockFragmentActivity implements Action
 		return route;
 	}
 
-	private void setUpListNavigation(Bundle activityInState) {
-		listNavigationProvider = new ListNavigationProvider(this);
-
-		listNavigationProvider.setUpListNavigation(this, R.array.titles_stations_with_sorting);
-
-		listNavigationProvider.restoreSelectedNavigationIndex(activityInState);
+	private void setUpActionBarSubtitle() {
+		getSupportActionBar().setSubtitle(extractReceivedRoute().getName());
 	}
 
 	@Override
-	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.menu_action_bar_stations, menu);
+
+		return true;
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.findItem(R.id.menu_stations_order_name).setChecked(true);
+		onOptionsItemSelected(menu.findItem(R.id.menu_stations_order_route));
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		if (menuItem.isChecked()) {
+			return false;
+		}
+
+		menuItem.setChecked(true);
+
 		StationsFragment stationsFragment = (StationsFragment) getSupportFragmentManager().findFragmentById(
 			android.R.id.content);
 
-		switch (itemPosition) {
-			case ListNavigationIndexes.SORTING_BY_TIME_SHIFT:
-				stationsFragment.sortByTimeShift();
-				return true;
-
-			case ListNavigationIndexes.SORTING_BY_NAME:
+		switch (menuItem.getItemId()) {
+			case R.id.menu_stations_order_name:
 				stationsFragment.sortByName();
 				return true;
 
+			case R.id.menu_stations_order_route:
+				stationsFragment.sortByTimeShift();
+				return true;
+
 			default:
-				return false;
+				return super.onOptionsItemSelected(menuItem);
 		}
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-
-		listNavigationProvider.saveSelectedNavigationIndex(outState);
 	}
 }

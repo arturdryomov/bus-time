@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item
+		android:icon="@drawable/ic_menu_sort"
+		android:title="@string/menu_routes_order"
+		android:showAsAction="always">
+
+		<menu>
+
+			<group android:checkableBehavior="single">
+
+				<item
+					android:id="@+id/menu_routes_order_bus_time"
+					android:title="@string/menu_routes_order_bus_time"
+					android:checked="true" />
+
+				<item
+					android:id="@+id/menu_routes_order_name"
+					android:title="@string/menu_routes_order_name" />
+
+			</group>
+
+		</menu>
+
+	</item>
+
+</menu>
