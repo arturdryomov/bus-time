@@ -40,6 +40,7 @@
 
 	<string name="error_unspecified">Ooops, some error just happened!</string>
 	<string name="error_connection">No internet connection found</string>
+	<string name="error_maps">Your device doesn’t support maps, sorry.</string>
 
 	<string name="token_time_now">right now</string>
 	<string name="token_no_trips">no trips today left</string>

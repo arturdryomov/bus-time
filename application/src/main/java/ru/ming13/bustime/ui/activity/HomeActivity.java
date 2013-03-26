@@ -235,8 +235,13 @@ public class HomeActivity extends SherlockFragmentActivity
 	}
 
 	private void callStationsMapActivity() {
-		Intent intent = IntentFactory.createStationsMapIntent(this);
-		startActivity(intent);
+		try {
+			Intent intent = IntentFactory.createStationsMapIntent(this);
+			startActivity(intent);
+		}
+		catch (NoClassDefFoundError e) {
+			UserAlerter.alert(this, R.string.error_maps);
+		}
 	}
 
 	private void callGooglePlay() {
