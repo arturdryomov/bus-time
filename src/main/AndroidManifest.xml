@@ -6,18 +6,8 @@
 	android:installLocation="auto">
 
 	<uses-sdk
-		android:minSdkVersion="7"
-		android:targetSdkVersion="16" />
-
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-	<uses-feature
-		android:name="android.hardware.location"
-		android:required="false" />
-	<uses-feature
-		android:name="android.hardware.location.gps"
-		android:required="false" />
+		android:minSdkVersion="8"
+		android:targetSdkVersion="18" />
 
 	<application
 		android:name="BusTimeApplication"
@@ -25,8 +15,6 @@
 		android:logo="@color/background_action_bar"
 		android:label="@string/application_name"
 		android:theme="@style/Theme.BusTime">
-
-		<uses-library android:name="com.google.android.maps" />
 
 		<activity
 			android:name=".ui.activity.HomeActivity"
@@ -50,12 +38,6 @@
 		<activity
 			android:name=".ui.activity.StationsActivity"
 			android:label="@string/title_stations">
-		</activity>
-
-		<activity
-			android:name=".ui.activity.StationsMapActivity"
-			android:label="@string/title_stations"
-			android:theme="@style/Theme.BusTime.Map">
 		</activity>
 
 		<activity

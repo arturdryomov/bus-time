@@ -8,7 +8,6 @@ import ru.ming13.bustime.db.model.Route;
 import ru.ming13.bustime.db.model.Station;
 import ru.ming13.bustime.ui.activity.RoutesActivity;
 import ru.ming13.bustime.ui.activity.StationsActivity;
-import ru.ming13.bustime.ui.activity.StationsMapActivity;
 import ru.ming13.bustime.ui.activity.TimetableActivity;
 
 
@@ -38,10 +37,6 @@ public final class IntentFactory
 		intent.putExtra(IntentExtras.ROUTE, route);
 
 		return intent;
-	}
-
-	public static Intent createStationsMapIntent(Context context) {
-		return new Intent(context, StationsMapActivity.class);
 	}
 
 	public static Intent createTimetableIntent(Context context, Route route, Station station) {

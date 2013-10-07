@@ -213,10 +213,6 @@ public class HomeActivity extends SherlockFragmentActivity
 				updateDatabase();
 				return true;
 
-			case R.id.menu_stations_map:
-				callStationsMapActivity();
-				return true;
-
 			case R.id.menu_rate_application:
 				callGooglePlay();
 				return true;
@@ -232,16 +228,6 @@ public class HomeActivity extends SherlockFragmentActivity
 
 	private void callStationsSearch() {
 		onSearchRequested();
-	}
-
-	private void callStationsMapActivity() {
-		try {
-			Intent intent = IntentFactory.createStationsMapIntent(this);
-			startActivity(intent);
-		}
-		catch (NoClassDefFoundError e) {
-			UserAlerter.alert(this, R.string.error_maps);
-		}
 	}
 
 	private void callGooglePlay() {

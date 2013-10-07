@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<style name="Theme.BusTime" parent="Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
+	<style name="Theme.BusTime" parent="Theme.Sherlock.Light.DarkActionBar">
 		<item name="android:actionBarStyle">@style/Theme.BusTime.ActionBar</item>
 		<item name="actionBarStyle">@style/Theme.BusTime.ActionBar</item>
 	</style>
