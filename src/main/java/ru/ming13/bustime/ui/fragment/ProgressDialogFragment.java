@@ -4,10 +4,10 @@ package ru.ming13.bustime.ui.fragment;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import android.support.v4.app.DialogFragment;
 
 
-public class ProgressDialogFragment extends SherlockDialogFragment
+public class ProgressDialogFragment extends DialogFragment
 {
 	public static final String TAG = "progress_dialog";
 

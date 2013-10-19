@@ -2,32 +2,32 @@
 <resources>
 
 	<style name="Theme.BusTime" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-		<item name="actionBarStyle">@style/Theme.BusTime.ActionBar</item>
+		<item name="android:actionBarStyle">@style/Theme.BusTime.ActionBar</item>
 	</style>
 
 	<style name="Theme.BusTime.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-		<item name="background">@color/background_action_bar</item>
-		<item name="displayOptions">showTitle</item>
+		<item name="android:background">@color/background_action_bar</item>
+		<item name="android:displayOptions">showTitle</item>
 	</style>
 
 	<style name="Theme.BusTime.Home" parent="Theme.BusTime">
-		<item name="actionBarStyle">@style/Theme.BusTime.Home.ActionBar</item>
+		<item name="android:actionBarStyle">@style/Theme.BusTime.Home.ActionBar</item>
 	</style>
 
 	<style name="Theme.BusTime.Home.ActionBar" parent="Theme.BusTime.ActionBar">
 		<!-- Theme with a “disableHome” displayOption would place tabs on top of the main action bar. -->
 		<!-- It is a bug in a mainstream Android implementation of action bar. -->
-		<item name="displayOptions">showHome|showTitle|useLogo</item>
-		<item name="navigationMode">tabMode</item>
+		<item name="android:displayOptions">showHome|showTitle|useLogo</item>
+		<item name="android:navigationMode">tabMode</item>
 	</style>
 
 	<style name="Theme.BusTime.Map" parent="Theme.BusTime">
-		<item name="actionBarStyle">@style/Theme.BusTime.Map.ActionBar</item>
-		<item name="windowActionBarOverlay">true</item>
+		<item name="android:actionBarStyle">@style/Theme.BusTime.Map.ActionBar</item>
+		<item name="android:windowActionBarOverlay">true</item>
 	</style>
 
 	<style name="Theme.BusTime.Map.ActionBar" parent="Theme.BusTime.ActionBar">
-		<item name="background">@drawable/background_action_bar_transparent</item>
+		<item name="android:background">@drawable/background_action_bar_transparent</item>
 	</style>
 
 </resources>

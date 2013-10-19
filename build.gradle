@@ -25,7 +25,6 @@ dependencies {
         } 
     }
 
-    compile "com.actionbarsherlock:actionbarsherlock:4.4.+@aar"
     compile "com.android.support:appcompat-v7:18.0.+"
     compile "com.android.support:support-v4:18.0.+"
     compile "com.bugsense.trace:bugsense:3.5"

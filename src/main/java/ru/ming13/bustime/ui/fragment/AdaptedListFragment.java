@@ -6,16 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockListFragment;
 import ru.ming13.bustime.R;
 
 
-abstract class AdaptedListFragment<ListItemType> extends SherlockListFragment
+abstract class AdaptedListFragment<ListItemType> extends ListFragment
 {
 	protected static final String LIST_ITEM_OBJECT_ID = "object";
 

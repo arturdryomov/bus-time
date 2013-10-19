@@ -4,9 +4,10 @@ package ru.ming13.bustime.ui.activity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.db.model.Route;
 import ru.ming13.bustime.db.model.Station;
@@ -20,7 +21,7 @@ import ru.ming13.bustime.ui.util.FragmentWrapper;
 import ru.ming13.bustime.ui.util.NameParser;
 
 
-public class TimetableActivity extends SherlockFragmentActivity implements LoaderManager.LoaderCallbacks<Boolean>
+public class TimetableActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Boolean>
 {
 	private static enum Mode
 	{
@@ -140,7 +141,7 @@ public class TimetableActivity extends SherlockFragmentActivity implements Loade
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.menu_action_bar_timetable, menu);
+		getMenuInflater().inflate(R.menu.menu_action_bar_timetable, menu);
 
 		return true;
 	}

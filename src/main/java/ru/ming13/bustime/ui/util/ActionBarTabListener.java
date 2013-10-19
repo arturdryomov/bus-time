@@ -3,7 +3,7 @@ package ru.ming13.bustime.ui.util;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import com.actionbarsherlock.app.ActionBar;
+import android.support.v7.app.ActionBar;
 
 
 public class ActionBarTabListener implements ActionBar.TabListener

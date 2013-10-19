@@ -5,14 +5,15 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import android.support.v7.app.ActionBarActivity;
+
 import ru.ming13.bustime.ui.fragment.StationsFragment;
 import ru.ming13.bustime.ui.intent.IntentException;
 import ru.ming13.bustime.ui.intent.IntentFactory;
 import ru.ming13.bustime.ui.util.FragmentWrapper;
 
 
-public class StationsSearchActivity extends SherlockFragmentActivity
+public class StationsSearchActivity extends ActionBarActivity
 {
 	private static final boolean USE_SEARCH_IN_SEARCH_ACTIVITY = false;
 

@@ -5,9 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.db.model.Station;
 import ru.ming13.bustime.ui.fragment.RoutesForStationFragment;
@@ -18,7 +19,7 @@ import ru.ming13.bustime.ui.loader.StationLoader;
 import ru.ming13.bustime.ui.util.FragmentWrapper;
 
 
-public class RoutesActivity extends SherlockFragmentActivity implements LoaderManager.LoaderCallbacks<Station>
+public class RoutesActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<Station>
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +93,7 @@ public class RoutesActivity extends SherlockFragmentActivity implements LoaderMa
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.menu_action_bar_routes, menu);
+		getMenuInflater().inflate(R.menu.menu_action_bar_routes, menu);
 
 		return true;
 	}

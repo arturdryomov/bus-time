@@ -4,10 +4,12 @@ package ru.ming13.bustime.ui.activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import com.squareup.otto.Subscribe;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.ui.bus.BusEventsCollector;
@@ -27,7 +29,7 @@ import ru.ming13.bustime.ui.util.Preferences;
 import ru.ming13.bustime.ui.util.UserAlerter;
 
 
-public class HomeActivity extends SherlockFragmentActivity
+public class HomeActivity extends ActionBarActivity
 {
 	private static enum Mode
 	{
@@ -177,7 +179,7 @@ public class HomeActivity extends SherlockFragmentActivity
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.menu_action_bar_home, menu);
+		getMenuInflater().inflate(R.menu.menu_action_bar_home, menu);
 
 		return true;
 	}
@@ -190,12 +192,12 @@ public class HomeActivity extends SherlockFragmentActivity
 		switch (mode) {
 			case UPDATE_AVAILABLE:
 				updatingActionBarButton.setVisible(true);
-				searchActionBarButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+				MenuItemCompat.setShowAsAction(searchActionBarButton, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
 				break;
 
 			default:
 				updatingActionBarButton.setVisible(false);
-				searchActionBarButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				MenuItemCompat.setShowAsAction(searchActionBarButton, MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 				break;
 		}
 
