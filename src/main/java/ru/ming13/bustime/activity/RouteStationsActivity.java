@@ -8,13 +8,13 @@ import android.support.v7.app.ActionBarActivity;
 
 import com.squareup.otto.Subscribe;
 
-import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StationSelectedEvent;
 import ru.ming13.bustime.fragment.RouteStationsFragment;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
+import ru.ming13.bustime.util.TitleBuilder;
 
 public class RouteStationsActivity extends ActionBarActivity
 {
@@ -34,7 +34,7 @@ public class RouteStationsActivity extends ActionBarActivity
 		String routeNumber = getRouteNumber();
 		String routeDescription = getRouteDescription();
 
-		return getString(R.string.mask_route_stations_subtitle, routeNumber, routeDescription);
+		return TitleBuilder.with(this).buildRouteTitle(routeNumber, routeDescription);
 	}
 
 	private String getRouteNumber() {

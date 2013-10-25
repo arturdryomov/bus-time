@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import ru.ming13.bustime.R;
+
 public final class Time
 {
 	private static final SimpleDateFormat timeParser;
@@ -38,20 +40,20 @@ public final class Time
 		return formatter;
 	}
 
-	private final Date time;
+	private final Date date;
 
 	public static Time from(String timeString) {
 		return new Time(buildCalendar(timeString));
 	}
 
 	private Time(Calendar calendar) {
-		this.time = calendar.getTime();
+		this.date = calendar.getTime();
 	}
 
 	public static Calendar buildCalendar(String timeString) {
 		Calendar calendar = Calendar.getInstance();
 
-		Pair<Integer, Integer> hourMinute = buildHourMinute(timeString);
+		Pair<Integer, Integer> hourMinute = buildHourMinute(buildDate(timeString));
 		calendar.set(Calendar.HOUR, hourMinute.first);
 		calendar.set(Calendar.MINUTE, hourMinute.second);
 		calendar.set(Calendar.SECOND, 0);
@@ -60,10 +62,8 @@ public final class Time
 		return calendar;
 	}
 
-	public static Pair<Integer, Integer> buildHourMinute(String timeString) {
+	public static Pair<Integer, Integer> buildHourMinute(Date date) {
 		Calendar calendar = Calendar.getInstance();
-
-		Date date = buildDate(timeString);
 		calendar.setTime(date);
 
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -80,7 +80,17 @@ public final class Time
 		}
 	}
 
-	public static Time current() {
+	public String toRelativeString(Context context) {
+		Time currentTime = Time.current();
+
+		if (this.equals(currentTime)) {
+			return context.getString(R.string.token_time_now);
+		}
+
+		return relativeTimeFormatter.setReference(currentTime.toDate()).format(date);
+	}
+
+	private static Time current() {
 		Calendar calendar = Calendar.getInstance();
 
 		calendar.set(Calendar.SECOND, 0);
@@ -89,16 +99,18 @@ public final class Time
 		return new Time(calendar);
 	}
 
-	public Date toDate() {
-		return time;
+	private boolean equals(Time time) {
+		Pair<Integer, Integer> otherHourMinute = buildHourMinute(time.toDate());
+		Pair<Integer, Integer> thisHourMinute = buildHourMinute(this.toDate());
+
+		return otherHourMinute.equals(thisHourMinute);
 	}
 
-	public String toRelativeString() {
-		relativeTimeFormatter.setReference(Time.current().toDate());
-		return relativeTimeFormatter.format(time);
+	public Date toDate() {
+		return date;
 	}
 
 	public String toSystemTimeString(Context context) {
-		return DateFormat.getTimeFormat(context).format(time);
+		return DateFormat.getTimeFormat(context).format(date);
 	}
 }

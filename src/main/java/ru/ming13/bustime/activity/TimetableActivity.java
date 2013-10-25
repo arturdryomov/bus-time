@@ -6,10 +6,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
-import ru.ming13.bustime.R;
 import ru.ming13.bustime.fragment.TimetableFragment;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
+import ru.ming13.bustime.util.TitleBuilder;
 
 public class TimetableActivity extends ActionBarActivity
 {
@@ -42,7 +42,7 @@ public class TimetableActivity extends ActionBarActivity
 		String stationName = getStationName();
 		String stationDirection = getStationDirection();
 
-		return getString(R.string.mask_station_routes_subtitle, stationName, stationDirection);
+		return TitleBuilder.with(this).buildStationTitle(stationName, stationDirection);
 	}
 
 	private String getStationName() {

@@ -60,7 +60,7 @@ public class TimetableAdapter extends CursorAdapter
 		Time time = Time.from(getArrivalTime(timetableCursor));
 
 		timeViewHolder.exactTimeTextView.setText(time.toSystemTimeString(context));
-		timeViewHolder.relativeTimeTextView.setText(time.toRelativeString());
+		timeViewHolder.relativeTimeTextView.setText(time.toRelativeString(context));
 	}
 
 	private String getArrivalTime(Cursor timetableCursor) {

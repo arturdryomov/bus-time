@@ -3,6 +3,7 @@ package ru.ming13.bustime.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +22,10 @@ public class StationsAdapter extends CursorAdapter
 
 	private final LayoutInflater layoutInflater;
 
-	private final String placeholderEmptyStationDirection;
-
 	public StationsAdapter(Context context) {
 		super(context, null, 0);
 
 		layoutInflater = LayoutInflater.from(context);
-
-		placeholderEmptyStationDirection = context.getString(R.string.placeholder_empty_direction);
 	}
 
 	@Override
@@ -65,6 +62,8 @@ public class StationsAdapter extends CursorAdapter
 
 		stationViewHolder.nameTextView.setText(stationName);
 		stationViewHolder.directionTextView.setText(stationDirection);
+
+		stationViewHolder.directionTextView.setVisibility(getStationDirectionVisibility(stationDirection));
 	}
 
 	private String getStationName(Cursor stationsCursor) {
@@ -73,14 +72,17 @@ public class StationsAdapter extends CursorAdapter
 	}
 
 	private String getStationDirection(Cursor stationsCursor) {
-		String direction = stationsCursor.getString(
+		return stationsCursor.getString(
 			stationsCursor.getColumnIndex(BusTimeContract.Stations.DIRECTION));
+	}
 
-		if (direction == null) {
-			return placeholderEmptyStationDirection;
+	private int getStationDirectionVisibility(String stationDirection) {
+		if (TextUtils.isEmpty(stationDirection)) {
+			return View.GONE;
 		}
-
-		return direction;
+		else {
+			return View.VISIBLE;
+		}
 	}
 
 	@Override
