@@ -45,4 +45,9 @@
 	<string name="token_time_now">right now</string>
 	<string name="token_no_trips">no trips today left</string>
 
+	<string name="mask_route_stations_subtitle">%1$s • %2$s</string>
+	<string name="mask_station_routes_subtitle">%1$s — %2$s</string>
+
+	<string name="placeholder_empty_direction">—</string>
+
 </resources>

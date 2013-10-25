@@ -5,66 +5,54 @@
 	android:versionName="0.7.1"
 	android:installLocation="auto">
 
-	<uses-permission
-		android:name="android.permission.INTERNET" />
-
 	<uses-sdk
 		android:minSdkVersion="8"
-		android:targetSdkVersion="18" />
+		android:targetSdkVersion="18"/>
 
 	<application
-		android:name="BusTimeApplication"
 		android:icon="@drawable/ic_launcher"
-		android:logo="@color/background_action_bar"
 		android:label="@string/application_name"
+		android:logo="@color/background_action_bar"
 		android:theme="@style/Theme.BusTime">
 
 		<activity
-			android:name=".ui.activity.HomeActivity"
+			android:launchMode="singleTop"
+			android:name=".activity.HomeActivity"
 			android:theme="@style/Theme.BusTime.Home">
 
 			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
+				<action android:name="android.intent.action.MAIN"/>
+				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 
-			<meta-data
-				android:name="android.app.default_searchable"
-				android:value=".ui.activity.StationsSearchActivity" />
 		</activity>
 
 		<activity
-			android:name=".ui.activity.RoutesActivity"
-			android:label="@string/title_routes">
+			android:label="@string/title_stations"
+			android:launchMode="singleTop"
+			android:name=".activity.RouteStationsActivity"
+			android:parentActivityName=".activity.HomeActivity">
 		</activity>
 
 		<activity
-			android:name=".ui.activity.StationsActivity"
-			android:label="@string/title_stations">
+			android:label="@string/title_routes"
+			android:launchMode="singleTop"
+			android:name=".activity.StationRoutesActivity"
+			android:parentActivityName=".activity.HomeActivity">
 		</activity>
 
 		<activity
-			android:name=".ui.activity.StationsSearchActivity"
-			android:label="@string/title_stations">
-
-			<intent-filter>
-				<action android:name="android.intent.action.SEARCH" />
-			</intent-filter>
-
-			<meta-data
-				android:name="android.app.searchable"
-				android:resource="@xml/search" />
-		</activity>
-
-		<activity
-			android:name=".ui.activity.TimetableActivity"
-			android:label="@string/title_timetable">
+			android:label="@string/title_timetable"
+			android:launchMode="singleTop"
+			android:name=".activity.TimetableActivity">
 		</activity>
 
 		<provider
-			android:name=".ui.provider.StationsSearchProvider"
-			android:authorities="ru.ming13.bustime.ui.provider.StationsSearchProvider">
+			android:authorities="ru.ming13.bustime.provider"
+			android:exported="false"
+			android:name=".provider.BusTimeProvider">
 		</provider>
+
 	</application>
 
 </manifest>

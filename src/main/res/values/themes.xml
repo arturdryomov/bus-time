@@ -16,7 +16,8 @@
 
 	<style name="Theme.BusTime.Home.ActionBar" parent="Theme.BusTime.ActionBar">
 		<!-- Theme with a “disableHome” displayOption would place tabs on top of the main action bar. -->
-		<!-- It is a bug in a mainstream Android implementation of action bar. -->
+		<!-- Android’s issue #36191. -->
+
 		<item name="displayOptions">showHome|showTitle|useLogo</item>
 		<item name="navigationMode">tabMode</item>
 	</style>
