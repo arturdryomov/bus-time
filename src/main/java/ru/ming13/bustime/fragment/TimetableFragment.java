@@ -17,7 +17,9 @@ import com.squareup.otto.Subscribe;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.TimetableAdapter;
 import ru.ming13.bustime.bus.BusProvider;
+import ru.ming13.bustime.bus.ClosestTimeFoundEvent;
 import ru.ming13.bustime.bus.TimeChangedEvent;
+import ru.ming13.bustime.task.ClosestTimeSearchTask;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
 import ru.ming13.bustime.util.Timer;
@@ -83,6 +85,21 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	@Override
 	public void onLoadFinished(Loader<Cursor> timetableLoader, Cursor timetableCursor) {
 		getTimetableAdapter().swapCursor(timetableCursor);
+
+		setUpClosestTime();
+	}
+
+	private void setUpClosestTime() {
+		ClosestTimeSearchTask.execute(getActivity(), getTimetableUri());
+	}
+
+	@Subscribe
+	public void onClosestTimeFound(ClosestTimeFoundEvent event) {
+		setUpClosestTime(event.getClosestTimePosition());
+	}
+
+	private void setUpClosestTime(int closestTimePosition) {
+		getListView().smoothScrollToPosition(closestTimePosition);
 	}
 
 	private TimetableAdapter getTimetableAdapter() {

@@ -18,15 +18,15 @@ import ru.ming13.bustime.R;
 
 public final class Time
 {
-	private static final SimpleDateFormat timeParser;
+	private static final SimpleDateFormat databaseTimeFormatter;
 	private static final PrettyTime relativeTimeFormatter;
 
 	static {
-		timeParser = buildTimeParser();
+		databaseTimeFormatter = buildDatabaseTimeFormatter();
 		relativeTimeFormatter = buildRelativeTimeFormatter();
 	}
 
-	private static SimpleDateFormat buildTimeParser() {
+	private static SimpleDateFormat buildDatabaseTimeFormatter() {
 		return new SimpleDateFormat("HH:mm");
 	}
 
@@ -42,18 +42,18 @@ public final class Time
 
 	private final Date date;
 
-	public static Time from(String timeString) {
-		return new Time(buildCalendar(timeString));
+	public static Time from(String databaseTimeString) {
+		return new Time(buildCalendar(databaseTimeString));
 	}
 
 	private Time(Calendar calendar) {
 		this.date = calendar.getTime();
 	}
 
-	public static Calendar buildCalendar(String timeString) {
+	public static Calendar buildCalendar(String databaseTimeString) {
 		Calendar calendar = Calendar.getInstance();
 
-		Pair<Integer, Integer> hourMinute = buildHourMinute(buildDate(timeString));
+		Pair<Integer, Integer> hourMinute = buildHourMinute(buildDate(databaseTimeString));
 		calendar.set(Calendar.HOUR, hourMinute.first);
 		calendar.set(Calendar.MINUTE, hourMinute.second);
 		calendar.set(Calendar.SECOND, 0);
@@ -72,12 +72,16 @@ public final class Time
 		return Pair.create(hour, minute);
 	}
 
-	public static Date buildDate(String timeString) {
+	public static Date buildDate(String databaseTimeString) {
 		try {
-			return timeParser.parse(timeString);
+			return databaseTimeFormatter.parse(databaseTimeString);
 		} catch (ParseException e) {
 			return new Date();
 		}
+	}
+
+	public boolean isAfter(Time time) {
+		return this.date.after(time.date);
 	}
 
 	public String toRelativeString(Context context) {
@@ -87,10 +91,10 @@ public final class Time
 			return context.getString(R.string.token_time_now);
 		}
 
-		return relativeTimeFormatter.setReference(currentTime.toDate()).format(date);
+		return relativeTimeFormatter.setReference(currentTime.date).format(date);
 	}
 
-	private static Time current() {
+	public static Time current() {
 		Calendar calendar = Calendar.getInstance();
 
 		calendar.set(Calendar.SECOND, 0);
@@ -100,17 +104,13 @@ public final class Time
 	}
 
 	private boolean equals(Time time) {
-		Pair<Integer, Integer> otherHourMinute = buildHourMinute(time.toDate());
-		Pair<Integer, Integer> thisHourMinute = buildHourMinute(this.toDate());
+		Pair<Integer, Integer> otherHourMinute = buildHourMinute(time.date);
+		Pair<Integer, Integer> thisHourMinute = buildHourMinute(this.date);
 
 		return otherHourMinute.equals(thisHourMinute);
 	}
 
-	public Date toDate() {
-		return date;
-	}
-
-	public String toSystemTimeString(Context context) {
+	public String toSystemString(Context context) {
 		return DateFormat.getTimeFormat(context).format(date);
 	}
 }
