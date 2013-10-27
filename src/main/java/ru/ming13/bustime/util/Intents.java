@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import ru.ming13.bustime.R;
 import ru.ming13.bustime.activity.RouteStationsActivity;
 import ru.ming13.bustime.activity.StationRoutesActivity;
 import ru.ming13.bustime.activity.TimetableActivity;
@@ -65,6 +66,30 @@ public final class Intents
 			intent.putExtra(Extras.STATION_DIRECTION, stationDirection);
 
 			return intent;
+		}
+
+		public Intent buildGooglePlayAppIntent() {
+			String packageName = context.getPackageName();
+			String googlePlayUri = context.getString(R.string.uri_app_google_play, packageName);
+
+			return new Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayUri));
+		}
+
+		public Intent buildGooglePlayWebIntent() {
+			String packageName = context.getPackageName();
+			String googlePlayUri = context.getString(R.string.uri_web_google_play, packageName);
+
+			return new Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayUri));
+		}
+
+		public Intent buildFeedbackIntent() {
+			String feedbackAddress = context.getString(R.string.email_feedback_address);
+			String feedbackSubject = context.getString(R.string.email_feedback_subject);
+
+			String feedbackUri = String.format("mailto:%s?subject=%s", feedbackAddress, feedbackSubject);
+			Intent feedbackIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse(feedbackUri));
+
+			return Intent.createChooser(feedbackIntent, null);
 		}
 	}
 }

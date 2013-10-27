@@ -1,6 +1,7 @@
 package ru.ming13.bustime.activity;
 
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.squareup.otto.Subscribe;
 
@@ -87,6 +90,45 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 
 	@Override
 	public void onPageScrollStateChanged(int position) {
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.action_bar_home, menu);
+
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		switch (menuItem.getItemId()) {
+			case R.id.menu_rate_application:
+				startApplicationRating();
+				return true;
+
+			case R.id.menu_send_feedback:
+				startFeedbackSending();
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(menuItem);
+		}
+	}
+
+	private void startApplicationRating() {
+		try {
+			Intent intent = Intents.Builder.with(this).buildGooglePlayAppIntent();
+			startActivity(intent);
+		}
+		catch (ActivityNotFoundException e) {
+			Intent intent = Intents.Builder.with(this).buildGooglePlayWebIntent();
+			startActivity(intent);
+		}
+	}
+
+	private void startFeedbackSending() {
+		Intent intent = Intents.Builder.with(this).buildFeedbackIntent();
+		startActivity(intent);
 	}
 
 	@Override
