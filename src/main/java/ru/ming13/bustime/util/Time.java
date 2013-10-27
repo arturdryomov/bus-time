@@ -54,7 +54,7 @@ public final class Time
 		Calendar calendar = Calendar.getInstance();
 
 		Pair<Integer, Integer> hourMinute = buildHourMinute(buildDate(databaseTimeString));
-		calendar.set(Calendar.HOUR, hourMinute.first);
+		calendar.set(Calendar.HOUR_OF_DAY, hourMinute.first);
 		calendar.set(Calendar.MINUTE, hourMinute.second);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
