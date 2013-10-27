@@ -12,7 +12,6 @@
 	<application
 		android:icon="@drawable/ic_launcher"
 		android:label="@string/application_name"
-		android:logo="@color/background_action_bar"
 		android:theme="@style/Theme.BusTime">
 
 		<activity
