@@ -81,7 +81,7 @@ public final class Time
 	}
 
 	public boolean isAfter(Time time) {
-		return this.date.after(time.date);
+		return this.date.equals(time.date) || this.date.after(time.date);
 	}
 
 	public String toRelativeString(Context context) {
