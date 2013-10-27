@@ -106,7 +106,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		String routeNumber = event.getRouteNumber();
 		String routeDescription = event.getRouteDescription();
 
-		Intent intent = Intents.getBuilder(this)
+		Intent intent = Intents.Builder.with(this)
 			.buildRouteStationsIntent(routeStationsUri, routeNumber, routeDescription);
 
 		startActivity(intent);
@@ -126,7 +126,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		String stationName = event.getStationName();
 		String stationDirection = event.getStationDirection();
 
-		Intent intent = Intents.getBuilder(this)
+		Intent intent = Intents.Builder.with(this)
 			.buildStationRoutesIntent(stationRoutesUri, stationName, stationDirection);
 
 		startActivity(intent);

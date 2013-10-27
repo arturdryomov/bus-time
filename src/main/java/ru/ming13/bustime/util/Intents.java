@@ -10,6 +10,9 @@ import ru.ming13.bustime.activity.TimetableActivity;
 
 public final class Intents
 {
+	private Intents() {
+	}
+
 	public static final class Extras
 	{
 		private Extras() {
@@ -27,6 +30,10 @@ public final class Intents
 	public static final class Builder
 	{
 		private final Context context;
+
+		public static Builder with(Context context) {
+			return new Builder(context);
+		}
 
 		private Builder(Context context) {
 			this.context = context;
@@ -59,12 +66,5 @@ public final class Intents
 
 			return intent;
 		}
-	}
-
-	private Intents() {
-	}
-
-	public static Builder getBuilder(Context context) {
-		return new Builder(context);
 	}
 }

@@ -75,7 +75,7 @@ public class RouteStationsActivity extends ActionBarActivity
 		String stationName = event.getStationName();
 		String stationDirection = event.getStationDirection();
 
-		Intent intent = Intents.getBuilder(this)
+		Intent intent = Intents.Builder.with(this)
 			.buildTimetableIntent(timetableUri, routeNumber, stationName, stationDirection);
 
 		startActivity(intent);
