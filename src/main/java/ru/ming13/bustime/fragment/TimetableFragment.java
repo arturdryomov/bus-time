@@ -99,7 +99,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private void setUpClosestTime(int closestTimePosition) {
-		getListView().smoothScrollToPosition(closestTimePosition);
+		setSelection(closestTimePosition);
 	}
 
 	private TimetableAdapter getTimetableAdapter() {
