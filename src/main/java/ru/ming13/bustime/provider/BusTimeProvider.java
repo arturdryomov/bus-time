@@ -186,7 +186,7 @@ public class BusTimeProvider extends ContentProvider
 	}
 
 	private String buildArrivalTimeProjection() {
-		return String.format("strftime('%%H:%%M', '00:00', + %s, + %s, + %s, + %s) as %s",
+		return String.format("datetime('now', 'localtime', 'start of day', + %s, + %s, + %s, + %s) as %s",
 			SqlBuilder.buildConcatClause(DatabaseSchema.TripsColumns.HOUR, "' hours'"),
 			SqlBuilder.buildConcatClause(DatabaseSchema.TripsColumns.MINUTE, "' minutes'"),
 			SqlBuilder.buildConcatClause(DatabaseSchema.RoutesAndStationsColumns.SHIFT_HOUR, "' hours'"),

@@ -27,7 +27,7 @@ public final class Time
 	}
 
 	private static SimpleDateFormat buildDatabaseTimeFormatter() {
-		return new SimpleDateFormat("HH:mm");
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
 
 	private static PrettyTime buildRelativeTimeFormatter() {
@@ -43,33 +43,21 @@ public final class Time
 	private final Date date;
 
 	public static Time from(String databaseTimeString) {
-		return new Time(buildCalendar(databaseTimeString));
+		return new Time(buildCalendar(buildDate(databaseTimeString)));
 	}
 
 	private Time(Calendar calendar) {
 		this.date = calendar.getTime();
 	}
 
-	public static Calendar buildCalendar(String databaseTimeString) {
+	public static Calendar buildCalendar(Date date) {
 		Calendar calendar = Calendar.getInstance();
 
-		Pair<Integer, Integer> hourMinute = buildHourMinute(buildDate(databaseTimeString));
-		calendar.set(Calendar.HOUR_OF_DAY, hourMinute.first);
-		calendar.set(Calendar.MINUTE, hourMinute.second);
+		calendar.setTime(date);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
 
 		return calendar;
-	}
-
-	public static Pair<Integer, Integer> buildHourMinute(Date date) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-
-		int hour = calendar.get(Calendar.HOUR_OF_DAY);
-		int minute = calendar.get(Calendar.MINUTE);
-
-		return Pair.create(hour, minute);
 	}
 
 	public static Date buildDate(String databaseTimeString) {
@@ -104,10 +92,7 @@ public final class Time
 	}
 
 	private boolean equals(Time time) {
-		Pair<Integer, Integer> otherHourMinute = buildHourMinute(time.date);
-		Pair<Integer, Integer> thisHourMinute = buildHourMinute(this.date);
-
-		return otherHourMinute.equals(thisHourMinute);
+		return this.date.equals(time.date);
 	}
 
 	public String toSystemString(Context context) {
