@@ -22,6 +22,7 @@ import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.bus.StationSelectedEvent;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Intents;
+import ru.ming13.bustime.util.Preferences;
 
 
 public class HomeActivity extends ActionBarActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
@@ -33,6 +34,8 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 
 		setUpTabs();
 		setUpTabsPager();
+
+		setUpSelectedTab();
 	}
 
 	private void setUpTabs() {
@@ -90,6 +93,13 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 
 	@Override
 	public void onPageScrollStateChanged(int position) {
+	}
+
+	private void setUpSelectedTab() {
+		Preferences preferences = Preferences.getApplicationStateInstance(this);
+		int selectedTabPosition = preferences.getInt(Preferences.Keys.SELECTED_TAB_POSITION);
+
+		getSupportActionBar().setSelectedNavigationItem(selectedTabPosition);
 	}
 
 	@Override
@@ -183,5 +193,19 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		super.onPause();
 
 		BusProvider.getBus().unregister(this);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		saveSeletectedTab();
+	}
+
+	private void saveSeletectedTab() {
+		Preferences preferences = Preferences.getApplicationStateInstance(this);
+		int selectedTabPosition = getSupportActionBar().getSelectedNavigationIndex();
+
+		preferences.set(Preferences.Keys.SELECTED_TAB_POSITION, selectedTabPosition);
 	}
 }
