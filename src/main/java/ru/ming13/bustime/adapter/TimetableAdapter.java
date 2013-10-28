@@ -46,7 +46,7 @@ public class TimetableAdapter extends CursorAdapter
 	private TimeViewHolder buildTimeViewHolder(View timeView) {
 		TimeViewHolder timeViewHolder = new TimeViewHolder();
 
-		timeViewHolder.exactTimeTextView = (TextView) timeView.findViewById(R.id.text_exact_time);
+		timeViewHolder.exactTimeTextView = (TextView) timeView.findViewById(R.id.text_time_exact);
 		timeViewHolder.relativeTimeTextView = (TextView) timeView.findViewById(R.id.text_time_relative);
 
 		return timeViewHolder;
