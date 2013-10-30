@@ -2,15 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="horizontal"
 	android:gravity="center_vertical"
+	android:padding="@dimen/padding_list_item"
 	android:layout_width="match_parent"
 	android:layout_height="?android:attr/listPreferredItemHeight">
 
 	<TextView
 		android:id="@+id/text_time_exact"
 		android:textSize="@dimen/text_size_time_exact"
-		android:minEms="@integer/width_time_exact"
 		android:singleLine="true"
-		android:gravity="center_horizontal"
+		android:paddingRight="@dimen/paddint_time_exact"
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"/>
 
