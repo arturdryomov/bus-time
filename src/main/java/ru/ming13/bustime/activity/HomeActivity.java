@@ -1,17 +1,23 @@
 package ru.ming13.bustime.activity;
 
 
+import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.squareup.otto.Subscribe;
 
@@ -21,6 +27,7 @@ import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.bus.StationSelectedEvent;
 import ru.ming13.bustime.provider.BusTimeContract;
+import ru.ming13.bustime.task.StationInformationQueryingTask;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.Preferences;
 
@@ -103,10 +110,49 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+
+		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+			startShowingSearchResult(intent);
+		}
+	}
+
+	private void startShowingSearchResult(Intent searchResultIntent) {
+		long stationId = BusTimeContract.Stations.getStationSearchId(searchResultIntent.getData());
+
+		StationInformationQueryingTask.execute(this, stationId);
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.action_bar_home, menu);
 
+		setUpStationsSearch(menu);
+
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	private void setUpStationsSearch(Menu menu) {
+		MenuItem stationsSearchMenuItem = menu.findItem(R.id.menu_stations_search);
+		SearchView stationsSearchView = (SearchView) MenuItemCompat.getActionView(stationsSearchMenuItem);
+
+		setUpStationsSearchInformation(stationsSearchView);
+		setUpStationsSearchView(stationsSearchView);
+	}
+
+	private void setUpStationsSearchInformation(SearchView stationsSearchView) {
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+		stationsSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+	}
+
+	private void setUpStationsSearchView(SearchView stationsSearchView) {
+		LinearLayout stationsSearchPlate = (LinearLayout) stationsSearchView.findViewById(R.id.search_plate);
+		EditText stationsSearchQueryEdit = (EditText) stationsSearchView.findViewById(R.id.search_src_text);
+
+		stationsSearchPlate.setBackgroundResource(R.drawable.abc_textfield_search_default_holo_dark);
+		stationsSearchQueryEdit.setHintTextColor(getResources().getColor(R.color.text_hint_search));
 	}
 
 	@Override
@@ -129,8 +175,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		try {
 			Intent intent = Intents.Builder.with(this).buildGooglePlayAppIntent();
 			startActivity(intent);
-		}
-		catch (ActivityNotFoundException e) {
+		} catch (ActivityNotFoundException e) {
 			Intent intent = Intents.Builder.with(this).buildGooglePlayWebIntent();
 			startActivity(intent);
 		}
@@ -150,13 +195,15 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 
 	@Subscribe
 	public void onRouteSelected(RouteSelectedEvent event) {
-		startRouteStationsActivity(event);
-	}
-
-	private void startRouteStationsActivity(RouteSelectedEvent event) {
-		Uri routeStationsUri = getRouteStationsUri(event.getRouteId());
+		long routeId = event.getRouteId();
 		String routeNumber = event.getRouteNumber();
 		String routeDescription = event.getRouteDescription();
+
+		startRouteStationsActivity(routeId, routeNumber, routeDescription);
+	}
+
+	private void startRouteStationsActivity(long routeId, String routeNumber, String routeDescription) {
+		Uri routeStationsUri = getRouteStationsUri(routeId);
 
 		Intent intent = Intents.Builder.with(this)
 			.buildRouteStationsIntent(routeStationsUri, routeNumber, routeDescription);
@@ -170,13 +217,15 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 
 	@Subscribe
 	public void onStationSelected(StationSelectedEvent event) {
-		startStationRoutesActivity(event);
-	}
-
-	private void startStationRoutesActivity(StationSelectedEvent event) {
-		Uri stationRoutesUri = getStationRoutesUri(event.getStationId());
+		long stationId = event.getStationId();
 		String stationName = event.getStationName();
 		String stationDirection = event.getStationDirection();
+
+		startStationRoutesActivity(stationId, stationName, stationDirection);
+	}
+
+	private void startStationRoutesActivity(long stationId, String stationName, String stationDirection) {
+		Uri stationRoutesUri = getStationRoutesUri(stationId);
 
 		Intent intent = Intents.Builder.with(this)
 			.buildStationRoutesIntent(stationRoutesUri, stationName, stationDirection);

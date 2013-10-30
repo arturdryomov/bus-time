@@ -1,5 +1,6 @@
 package ru.ming13.bustime.provider;
 
+import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -9,6 +10,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Calendar;
 
@@ -68,6 +71,13 @@ public class BusTimeProvider extends ContentProvider
 				queryBuilder.appendWhere(buildStationTimetableSelectionClause(uri));
 				projection = buildTimetableProjection();
 				sortOrder = buildTimetableSortOrder();
+				break;
+
+			case BusTimeProviderPaths.Codes.STATIONS_SEARCH:
+				queryBuilder.setTables(buildStationsTableClause());
+				queryBuilder.appendWhere(buildStationsSearchSelectionClause(uri));
+				projection = buildStationsSearchProjection();
+				sortOrder = buildStationsSortOrder();
 				break;
 
 			default:
@@ -176,7 +186,7 @@ public class BusTimeProvider extends ContentProvider
 		String timetableSelectionClause = SqlBuilder.buildSelectionClause(
 			DatabaseSchema.Tables.TRIPS, DatabaseSchema.TripsColumns.TYPE_ID, typeId);
 
-		return SqlBuilder.buildSelectionClause(routeSelectionClause, stationSelectionClause, timetableSelectionClause);
+		return SqlBuilder.buildRequiredSelectionClause(routeSelectionClause, stationSelectionClause, timetableSelectionClause);
 	}
 
 	private String[] buildTimetableProjection() {
@@ -206,6 +216,24 @@ public class BusTimeProvider extends ContentProvider
 		int typeId = getTimetableTypeId(routeId);
 
 		return buildTimetableSelectionClause(routeId, stationId, typeId);
+	}
+
+	private String buildStationsSearchSelectionClause(Uri uri) {
+		String searchQuery = BusTimeContract.Stations.getStationSearchQuery(uri);
+
+		return SqlBuilder.buildOptionalSelectionClause(
+			SqlBuilder.buildLikeClause(DatabaseSchema.StationsColumns.NAME, searchQuery),
+			SqlBuilder.buildLikeClause(DatabaseSchema.StationsColumns.NAME, StringUtils.lowerCase(searchQuery)),
+			SqlBuilder.buildLikeClause(DatabaseSchema.StationsColumns.NAME, StringUtils.capitalize(searchQuery)),
+			SqlBuilder.buildLikeClause(DatabaseSchema.StationsColumns.NAME, StringUtils.upperCase(searchQuery)));
+	}
+
+	private String[] buildStationsSearchProjection() {
+		return new String[]{
+			DatabaseSchema.StationsColumns._ID,
+			SqlBuilder.buildAliasClause(DatabaseSchema.StationsColumns._ID, SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID),
+			SqlBuilder.buildAliasClause(DatabaseSchema.StationsColumns.NAME, SearchManager.SUGGEST_COLUMN_TEXT_1),
+			SqlBuilder.buildAliasClause(DatabaseSchema.StationsColumns.DIRECTION, SearchManager.SUGGEST_COLUMN_TEXT_2)};
 	}
 
 	private String buildUnsupportedUriDetailMessage(Uri unsupportedUri) {

@@ -4,6 +4,7 @@
 	<color name="background_action_bar">#0099cc</color>
 	<color name="background_action_bar_transparent">#95000000</color>
 
+	<color name="text_hint_search">#80ffffff</color>
 	<color name="text_secondary">#777777</color>
 
 </resources>

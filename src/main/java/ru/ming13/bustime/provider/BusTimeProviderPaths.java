@@ -1,5 +1,6 @@
 package ru.ming13.bustime.provider;
 
+import android.app.SearchManager;
 import android.content.UriMatcher;
 
 final class BusTimeProviderPaths
@@ -16,6 +17,8 @@ final class BusTimeProviderPaths
 	public static final String STATION_TIMETABLE;
 	public static final String ROUTE_TIMETABLE;
 
+	public static final String STATIONS_SEARCH;
+
 	static {
 		ROUTES = Segments.ROUTES;
 		STATIONS = Segments.STATIONS;
@@ -25,6 +28,8 @@ final class BusTimeProviderPaths
 
 		ROUTE_TIMETABLE = appendUriPath(ROUTE_STATIONS, Segments.NUMBER);
 		STATION_TIMETABLE = appendUriPath(STATION_ROUTES, Segments.NUMBER);
+
+		STATIONS_SEARCH = appendUriPath(SearchManager.SUGGEST_URI_PATH_QUERY, Segments.SYMBOL);
 	}
 
 	public static final class Segments
@@ -33,6 +38,7 @@ final class BusTimeProviderPaths
 		}
 
 		public static final String NUMBER = "#";
+		public static final String SYMBOL = "*";
 
 		public static final String ROUTES = "routes";
 		public static final String STATIONS = "stations";
@@ -54,6 +60,8 @@ final class BusTimeProviderPaths
 		uriMatcher.addURI(BusTimeContract.AUTHORITY, ROUTE_TIMETABLE, Codes.ROUTE_TIMETABLE);
 		uriMatcher.addURI(BusTimeContract.AUTHORITY, STATION_TIMETABLE, Codes.STATION_TIMETABLE);
 
+		uriMatcher.addURI(BusTimeContract.AUTHORITY, STATIONS_SEARCH, Codes.STATIONS_SEARCH);
+
 		return uriMatcher;
 	}
 
@@ -70,5 +78,7 @@ final class BusTimeProviderPaths
 
 		public static final int ROUTE_TIMETABLE = 5;
 		public static final int STATION_TIMETABLE = 6;
+
+		public static final int STATIONS_SEARCH = 7;
 	}
 }

@@ -6,12 +6,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import ru.ming13.bustime.bus.BusEvent;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.ClosestTimeFoundEvent;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Time;
 
-public class ClosestTimeSearchTask extends AsyncTask<Void, Void, Integer>
+public class ClosestTimeSearchTask extends AsyncTask<Void, Void, BusEvent>
 {
 	private static final int DEFAULT_TIME_POSITION = 0;
 
@@ -28,8 +29,8 @@ public class ClosestTimeSearchTask extends AsyncTask<Void, Void, Integer>
 	}
 
 	@Override
-	protected Integer doInBackground(Void... parameters) {
-		return getClosestTimePosition();
+	protected BusEvent doInBackground(Void... parameters) {
+		return new ClosestTimeFoundEvent(getClosestTimePosition());
 	}
 
 	private int getClosestTimePosition() {
@@ -64,13 +65,9 @@ public class ClosestTimeSearchTask extends AsyncTask<Void, Void, Integer>
 	}
 
 	@Override
-	protected void onPostExecute(Integer closestTimePosition) {
-		super.onPostExecute(closestTimePosition);
+	protected void onPostExecute(BusEvent closestTimeFoundEvent) {
+		super.onPostExecute(closestTimeFoundEvent);
 
-		sendClosestTimeFoundEvent(closestTimePosition);
-	}
-
-	private void sendClosestTimeFoundEvent(Integer closestTimePosition) {
-		BusProvider.getBus().post(new ClosestTimeFoundEvent(closestTimePosition));
+		BusProvider.getBus().post(closestTimeFoundEvent);
 	}
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
-	android:label="@string/application_name"
 	android:hint="@string/search_hint"
-	android:searchSuggestAuthority="ru.ming13.bustime.ui.provider.StationsSearchProvider"
-	android:searchSuggestSelection=" ?"
+	android:label="@string/application_name"
+	android:imeOptions="actionSearch"
+	android:searchSuggestAuthority="ru.ming13.bustime.provider"
 	android:searchSuggestIntentAction="android.intent.action.VIEW"
-	android:searchSuggestThreshold="@integer/search_suggestions_threshold" />
+	android:searchSuggestIntentData="content://ru.ming13.bustime.provider/stations"
+	android:searchSuggestThreshold="1"/>

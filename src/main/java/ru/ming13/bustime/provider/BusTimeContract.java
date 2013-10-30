@@ -114,6 +114,14 @@ public final class BusTimeContract
 
 			return Long.parseLong(stationTimetableUri.getPathSegments().get(stationIdSegmentIndex));
 		}
+
+		public static String getStationSearchQuery(Uri stationsSearchUri) {
+			return stationsSearchUri.getLastPathSegment();
+		}
+
+		public static long getStationSearchId(Uri stationUri) {
+			return ContentUris.parseId(stationUri);
+		}
 	}
 
 	private interface TimetableColumns
