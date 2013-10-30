@@ -55,7 +55,7 @@
 		</activity>
 
 		<provider
-			android:authorities="ru.ming13.bustime.provider"
+			android:authorities="ru.ming13.bustime"
 			android:exported="false"
 			android:name=".provider.BusTimeProvider">
 		</provider>

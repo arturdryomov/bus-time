@@ -10,7 +10,7 @@ import ru.ming13.bustime.database.DatabaseSchema;
 
 public final class BusTimeContract
 {
-	public static final String AUTHORITY = "ru.ming13.bustime.provider";
+	public static final String AUTHORITY = "ru.ming13.bustime";
 
 	private static final Uri CONTENT_URI;
 
