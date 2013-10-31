@@ -10,6 +10,12 @@
 		appcompat:actionViewClass="android.support.v7.widget.SearchView"/>
 
 	<item
+		android:id="@+id/menu_stations_map"
+		android:icon="@drawable/ic_menu_map"
+		android:title="@string/menu_stations_map"
+		appcompat:showAsAction="ifRoom"/>
+
+	<item
 		android:id="@+id/menu_rate_application"
 		android:title="@string/menu_rate_application"
 		appcompat:showAsAction="never"/>

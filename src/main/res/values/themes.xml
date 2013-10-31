@@ -29,7 +29,7 @@
 	</style>
 
 	<style name="Theme.BusTime.Map.ActionBar" parent="Theme.BusTime.ActionBar">
-		<item name="background">@drawable/background_action_bar_transparent</item>
+		<item name="background">@drawable/bg_action_bar_map</item>
 	</style>
 
 </resources>

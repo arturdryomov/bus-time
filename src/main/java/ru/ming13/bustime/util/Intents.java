@@ -7,6 +7,7 @@ import android.net.Uri;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.activity.RouteStationsActivity;
 import ru.ming13.bustime.activity.StationRoutesActivity;
+import ru.ming13.bustime.activity.StationsMapActivity;
 import ru.ming13.bustime.activity.TimetableActivity;
 
 public final class Intents
@@ -47,6 +48,10 @@ public final class Intents
 			intent.putExtra(Extras.ROUTE_DESCRIPTION, routeDescription);
 
 			return intent;
+		}
+
+		public Intent buildStationsMapIntent() {
+			return new Intent(context, StationsMapActivity.class);
 		}
 
 		public Intent buildStationRoutesIntent(Uri routesUri, String stationName, String stationDirection) {

@@ -158,6 +158,10 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
+			case R.id.menu_stations_map:
+				startStationsMapActivity();
+				return true;
+
 			case R.id.menu_rate_application:
 				startApplicationRating();
 				return true;
@@ -169,6 +173,11 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 			default:
 				return super.onOptionsItemSelected(menuItem);
 		}
+	}
+
+	private void startStationsMapActivity() {
+		Intent intent = Intents.Builder.with(this).buildStationsMapIntent();
+		startActivity(intent);
 	}
 
 	private void startApplicationRating() {
