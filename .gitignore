@@ -1,24 +1,14 @@
-# Android
+# Gradle
 
-bin/
-gen*/
+build/
+.gradle
 
-project.properties
-
-# Maven
-
-target/
-
-# Application assets
+# Assets
 
 assets/
 
 # API keys
 
 keys.xml
-
-# URLs
-
-urls.xml
 
 # Use global .gitignore for your IDE
