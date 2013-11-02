@@ -26,6 +26,8 @@ import ru.ming13.bustime.util.Timer;
 
 public class TimetableFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
+	private static final int PREVIOUS_VISIBLE_TIMES_COUNT = 1;
+
 	public static TimetableFragment newInstance(Uri uri) {
 		TimetableFragment fragment = new TimetableFragment();
 
@@ -99,7 +101,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private void setUpClosestTime(int closestTimePosition) {
-		setSelection(closestTimePosition);
+		setSelection(closestTimePosition - PREVIOUS_VISIBLE_TIMES_COUNT);
 	}
 
 	private TimetableAdapter getTimetableAdapter() {
