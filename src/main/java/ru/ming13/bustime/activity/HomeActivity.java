@@ -195,13 +195,6 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		startActivity(intent);
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		BusProvider.getBus().register(this);
-	}
-
 	@Subscribe
 	public void onRouteSelected(RouteSelectedEvent event) {
 		long routeId = event.getRouteId();
@@ -244,6 +237,13 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 
 	private Uri getStationRoutesUri(long stationId) {
 		return BusTimeContract.Stations.buildStationRoutesUri(stationId);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		BusProvider.getBus().register(this);
 	}
 
 	@Override

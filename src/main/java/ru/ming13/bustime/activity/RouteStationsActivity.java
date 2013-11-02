@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 
 import com.squareup.otto.Subscribe;
 
@@ -57,23 +58,18 @@ public class RouteStationsActivity extends ActionBarActivity
 		return getIntent().getParcelableExtra(Intents.Extras.URI);
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		BusProvider.getBus().register(this);
-	}
-
 	@Subscribe
 	public void onStationSelected(StationSelectedEvent event) {
-		startTimetableActivity(event);
-	}
-
-	private void startTimetableActivity(StationSelectedEvent event) {
-		Uri timetableUri = getTimetableUri(event.getStationId());
-		String routeNumber = getRouteNumber();
+		long stationId = event.getStationId();
 		String stationName = event.getStationName();
 		String stationDirection = event.getStationDirection();
+
+		startTimetableActivity(stationId, stationName, stationDirection);
+	}
+
+	private void startTimetableActivity(long stationId, String stationName, String stationDirection) {
+		Uri timetableUri = getTimetableUri(stationId);
+		String routeNumber = getRouteNumber();
 
 		Intent intent = Intents.Builder.with(this)
 			.buildTimetableIntent(timetableUri, routeNumber, stationName, stationDirection);
@@ -83,6 +79,29 @@ public class RouteStationsActivity extends ActionBarActivity
 
 	private Uri getTimetableUri(long stationId) {
 		return BusTimeContract.Routes.buildRouteTimetableUri(getStationsUri(), stationId);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		switch (menuItem.getItemId()) {
+			case android.R.id.home:
+				callUpActivity();
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(menuItem);
+		}
+	}
+
+	private void callUpActivity() {
+		finish();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		BusProvider.getBus().register(this);
 	}
 
 	@Override

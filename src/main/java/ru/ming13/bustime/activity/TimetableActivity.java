@@ -78,8 +78,6 @@ public class TimetableActivity extends ActionBarActivity
 	}
 
 	private void callUpActivity() {
-		// It is not possible to use NavUtils here because of multiple possible activities.
-
 		finish();
 	}
 }

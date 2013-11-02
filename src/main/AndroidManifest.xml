@@ -56,23 +56,20 @@
 		<activity
 			android:label="@string/title_stations"
 			android:launchMode="singleTop"
-			android:name=".activity.RouteStationsActivity"
-			android:parentActivityName=".activity.HomeActivity">
+			android:name=".activity.RouteStationsActivity">
 		</activity>
 
 		<activity
 			android:label="@string/title_stations"
 			android:launchMode="singleTop"
 			android:name=".activity.StationsMapActivity"
-			android:theme="@style/Theme.BusTime.Map"
-			android:parentActivityName=".activity.HomeActivity">
+			android:theme="@style/Theme.BusTime.Map">
 		</activity>
 
 		<activity
 			android:label="@string/title_routes"
 			android:launchMode="singleTop"
-			android:name=".activity.StationRoutesActivity"
-			android:parentActivityName=".activity.HomeActivity">
+			android:name=".activity.StationRoutesActivity">
 		</activity>
 
 		<activity
