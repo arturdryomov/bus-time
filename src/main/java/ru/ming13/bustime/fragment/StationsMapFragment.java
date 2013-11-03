@@ -1,12 +1,16 @@
 package ru.ming13.bustime.fragment;
 
 import android.database.Cursor;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -14,6 +18,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +30,10 @@ import ru.ming13.bustime.bus.StationSelectedEvent;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Loaders;
 
-public class StationsMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>, GoogleMap.OnInfoWindowClickListener
+public class StationsMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>,
+	GoogleMap.OnInfoWindowClickListener,
+	GooglePlayServicesClient.ConnectionCallbacks,
+	GooglePlayServicesClient.OnConnectionFailedListener
 {
 	private static final class Ui
 	{
@@ -35,17 +44,20 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 		public static final boolean ZOOM_ENABLED = true;
 	}
 
-	private static final class DefaultPosition
+	private static final class Defaults
 	{
-		private DefaultPosition() {
+		private Defaults() {
 		}
 
-		public static final int ZOOM = 15;
+		public static final double LOCATION_LATITUDE = 55.533391;
+		public static final double LOCATION_LONGITUDE = 28.650013;
 
-		public static final double LATITUDE = 55.533391;
-		public static final double LONGITUDE = 28.650013;
+		public static final int FAR_AWAY_DISTANCE_IN_METERS = 50000;
+
+		public static final int ZOOM = 15;
 	}
 
+	private LocationClient locationClient;
 	private Map<String, Long> stationMarkerIds;
 
 	public static StationsMapFragment newInstance() {
@@ -58,11 +70,11 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 
 		setUpMap();
 		setUpStations();
+		setUpLocationClient();
 	}
 
 	private void setUpMap() {
 		setUpUi();
-		setUpDefaultPosition();
 		setUpStationMarkersListener();
 	}
 
@@ -79,12 +91,6 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 
 	private int getTopPadding() {
 		return getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height);
-	}
-
-	private void setUpDefaultPosition() {
-		LatLng defaultPosition = new LatLng(DefaultPosition.LATITUDE, DefaultPosition.LONGITUDE);
-
-		getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(defaultPosition, DefaultPosition.ZOOM));
 	}
 
 	private void setUpStationMarkersListener() {
@@ -185,16 +191,88 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 			stationsCursor.getColumnIndex(BusTimeContract.Stations.LONGITUDE));
 	}
 
+	private float getStationMarkerHue() {
+		return getResources().getInteger(R.integer.hue_map_marker_station);
+	}
+
 	private long getStationId(Cursor stationsCursor) {
 		return stationsCursor.getLong(
 			stationsCursor.getColumnIndex(BusTimeContract.Stations._ID));
 	}
 
-	private float getStationMarkerHue() {
-		return getResources().getInteger(R.integer.hue_map_marker_station);
+	@Override
+	public void onLoaderReset(Loader<Cursor> stationsLoader) {
+	}
+
+	private void setUpLocationClient() {
+		locationClient = new LocationClient(getActivity(), this, this);
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> stationsLoader) {
+	public void onConnected(Bundle connectionHint) {
+		setUpCurrentLocation();
+	}
+
+	private void setUpCurrentLocation() {
+		getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLocation(), Defaults.ZOOM));
+	}
+
+	private LatLng getCurrentLocation() {
+		Location location = locationClient.getLastLocation();
+
+		if (!isLocationAvailable(location)) {
+			return getDefaultLocation();
+		}
+
+		if (isLocationFarAway(location)) {
+			return getDefaultLocation();
+		}
+
+		return new LatLng(location.getLatitude(), location.getLongitude());
+	}
+
+	private boolean isLocationAvailable(Location location) {
+		return location != null;
+	}
+
+	private LatLng getDefaultLocation() {
+		return new LatLng(Defaults.LOCATION_LATITUDE, Defaults.LOCATION_LONGITUDE);
+	}
+
+	private boolean isLocationFarAway(Location location) {
+		Location defaultLocation = convertLocation(getDefaultLocation());
+
+		return location.distanceTo(defaultLocation) >= Defaults.FAR_AWAY_DISTANCE_IN_METERS;
+	}
+
+	private Location convertLocation(LatLng latLng) {
+		Location location = new Location(StringUtils.EMPTY);
+
+		location.setLatitude(latLng.latitude);
+		location.setLongitude(latLng.longitude);
+
+		return location;
+	}
+
+	@Override
+	public void onDisconnected() {
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult connectionResult) {
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		locationClient.connect();
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+
+		locationClient.disconnect();
 	}
 }
