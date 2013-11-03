@@ -48,7 +48,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 	@Override
 	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
-		return layoutInflater.inflate(R.layout.fragment_list, container, false);
+		return layoutInflater.inflate(R.layout.fragment_timetable, container, false);
 	}
 
 	@Override
@@ -88,7 +88,26 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	public void onLoadFinished(Loader<Cursor> timetableLoader, Cursor timetableCursor) {
 		getTimetableAdapter().swapCursor(timetableCursor);
 
-		setUpClosestTime();
+		if (isTimetableEmpty(timetableCursor)) {
+			showMessage();
+		} else {
+			showTimetable();
+			setUpClosestTime();
+		}
+	}
+
+	private boolean isTimetableEmpty(Cursor timetableCursor) {
+		return timetableCursor.getCount() == 0;
+	}
+
+	private void showTimetable() {
+		getView().findViewById(android.R.id.list).setVisibility(View.VISIBLE);
+		getView().findViewById(R.id.layout_message).setVisibility(View.GONE);
+	}
+
+	private void showMessage() {
+		getView().findViewById(android.R.id.list).setVisibility(View.GONE);
+		getView().findViewById(R.id.layout_message).setVisibility(View.VISIBLE);
 	}
 
 	private void setUpClosestTime() {
