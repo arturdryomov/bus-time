@@ -22,13 +22,11 @@ import ru.ming13.bustime.util.SqlBuilder;
 public class BusTimeProvider extends ContentProvider
 {
 	private SQLiteOpenHelper databaseHelper;
-
 	private UriMatcher uriMatcher;
 
 	@Override
 	public boolean onCreate() {
 		databaseHelper = new DatabaseOpenHelper(getContext());
-
 		uriMatcher = BusTimeUriMatcher.buildMatcher();
 
 		return true;
@@ -52,11 +50,13 @@ public class BusTimeProvider extends ContentProvider
 			case BusTimeUriMatcher.Codes.ROUTE_STATIONS:
 				queryBuilder.setTables(buildRouteStationsTableClause());
 				queryBuilder.appendWhere(buildRouteStationsSelectionClause(uri));
+				sortOrder = buildRouteStationsSortOrder();
 				break;
 
 			case BusTimeUriMatcher.Codes.STATION_ROUTES:
 				queryBuilder.setTables(buildStationRoutesTableClause());
 				queryBuilder.appendWhere(buildStationRoutesSelectionClause(uri));
+				sortOrder = buildRoutesSortOrder();
 				break;
 
 			case BusTimeUriMatcher.Codes.ROUTE_TIMETABLE:
@@ -92,7 +92,9 @@ public class BusTimeProvider extends ContentProvider
 	}
 
 	private String buildRoutesSortOrder() {
-		return SqlBuilder.buildCastIntegerClause(DatabaseSchema.RoutesColumns.NUMBER);
+		return SqlBuilder.buildOrderClause(
+			SqlBuilder.buildCastIntegerClause(DatabaseSchema.RoutesColumns.NUMBER),
+			DatabaseSchema.RoutesColumns.DESCRIPTION);
 	}
 
 	private String buildStationsTableClause() {
@@ -100,7 +102,9 @@ public class BusTimeProvider extends ContentProvider
 	}
 
 	private String buildStationsSortOrder() {
-		return DatabaseSchema.StationsColumns.NAME;
+		return SqlBuilder.buildOrderClause(
+			DatabaseSchema.StationsColumns.NAME,
+			DatabaseSchema.StationsColumns.DIRECTION);
 	}
 
 	private String buildRouteStationsTableClause() {
@@ -115,6 +119,12 @@ public class BusTimeProvider extends ContentProvider
 		long routeId = BusTimeContract.Routes.getStationsRouteId(uri);
 
 		return SqlBuilder.buildSelectionClause(DatabaseSchema.RoutesAndStationsColumns.ROUTE_ID, routeId);
+	}
+
+	private String buildRouteStationsSortOrder() {
+		return SqlBuilder.buildOrderClause(
+			DatabaseSchema.RoutesAndStationsColumns.SHIFT_HOUR,
+			DatabaseSchema.RoutesAndStationsColumns.SHIFT_MINUTE);
 	}
 
 	private String buildStationRoutesTableClause() {
