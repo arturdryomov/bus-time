@@ -29,7 +29,7 @@ public class BusTimeProvider extends ContentProvider
 	public boolean onCreate() {
 		databaseHelper = new DatabaseOpenHelper(getContext());
 
-		uriMatcher = BusTimeProviderPaths.buildUriMatcher();
+		uriMatcher = BusTimeUriMatcher.buildMatcher();
 
 		return true;
 	}
@@ -39,41 +39,41 @@ public class BusTimeProvider extends ContentProvider
 		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 
 		switch (uriMatcher.match(uri)) {
-			case BusTimeProviderPaths.Codes.ROUTES:
+			case BusTimeUriMatcher.Codes.ROUTES:
 				queryBuilder.setTables(buildRoutesTableClause());
 				sortOrder = buildRoutesSortOrder();
 				break;
 
-			case BusTimeProviderPaths.Codes.STATIONS:
+			case BusTimeUriMatcher.Codes.STATIONS:
 				queryBuilder.setTables(buildStationsTableClause());
 				sortOrder = buildStationsSortOrder();
 				break;
 
-			case BusTimeProviderPaths.Codes.ROUTE_STATIONS:
+			case BusTimeUriMatcher.Codes.ROUTE_STATIONS:
 				queryBuilder.setTables(buildRouteStationsTableClause());
 				queryBuilder.appendWhere(buildRouteStationsSelectionClause(uri));
 				break;
 
-			case BusTimeProviderPaths.Codes.STATION_ROUTES:
+			case BusTimeUriMatcher.Codes.STATION_ROUTES:
 				queryBuilder.setTables(buildStationRoutesTableClause());
 				queryBuilder.appendWhere(buildStationRoutesSelectionClause(uri));
 				break;
 
-			case BusTimeProviderPaths.Codes.ROUTE_TIMETABLE:
+			case BusTimeUriMatcher.Codes.ROUTE_TIMETABLE:
 				queryBuilder.setTables(buildTimetableTableClause());
 				queryBuilder.appendWhere(buildRouteTimetableSelectionClause(uri));
 				projection = buildTimetableProjection();
 				sortOrder = buildTimetableSortOrder();
 				break;
 
-			case BusTimeProviderPaths.Codes.STATION_TIMETABLE:
+			case BusTimeUriMatcher.Codes.STATION_TIMETABLE:
 				queryBuilder.setTables(buildTimetableTableClause());
 				queryBuilder.appendWhere(buildStationTimetableSelectionClause(uri));
 				projection = buildTimetableProjection();
 				sortOrder = buildTimetableSortOrder();
 				break;
 
-			case BusTimeProviderPaths.Codes.STATIONS_SEARCH:
+			case BusTimeUriMatcher.Codes.STATIONS_SEARCH:
 				queryBuilder.setTables(buildStationsTableClause());
 				queryBuilder.appendWhere(buildStationsSearchSelectionClause(uri));
 				projection = buildStationsSearchProjection();
@@ -112,7 +112,7 @@ public class BusTimeProvider extends ContentProvider
 	}
 
 	private String buildRouteStationsSelectionClause(Uri uri) {
-		long routeId = BusTimeContract.Routes.getRouteId(uri);
+		long routeId = BusTimeContract.Routes.getStationsRouteId(uri);
 
 		return SqlBuilder.buildSelectionClause(DatabaseSchema.RoutesAndStationsColumns.ROUTE_ID, routeId);
 	}
@@ -126,7 +126,7 @@ public class BusTimeProvider extends ContentProvider
 	}
 
 	private String buildStationRoutesSelectionClause(Uri uri) {
-		long stationId = BusTimeContract.Stations.getStationId(uri);
+		long stationId = BusTimeContract.Stations.getRoutesStationId(uri);
 
 		return SqlBuilder.buildSelectionClause(DatabaseSchema.RoutesAndStationsColumns.STATION_ID, stationId);
 	}
@@ -219,7 +219,7 @@ public class BusTimeProvider extends ContentProvider
 	}
 
 	private String buildStationsSearchSelectionClause(Uri uri) {
-		String searchQuery = BusTimeContract.Stations.getStationSearchQuery(uri);
+		String searchQuery = BusTimeContract.Stations.getSearchStationQuery(uri);
 
 		return SqlBuilder.buildOptionalSelectionClause(
 			SqlBuilder.buildLikeClause(DatabaseSchema.StationsColumns.NAME, searchQuery),

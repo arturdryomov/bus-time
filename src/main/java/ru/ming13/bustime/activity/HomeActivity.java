@@ -120,7 +120,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void startShowingSearchResult(Intent searchResultIntent) {
-		long stationId = BusTimeContract.Stations.getStationSearchId(searchResultIntent.getData());
+		long stationId = BusTimeContract.Stations.getSearchStationId(searchResultIntent.getData());
 
 		StationInformationQueryingTask.execute(this, stationId);
 	}

@@ -10,18 +10,30 @@ import ru.ming13.bustime.database.DatabaseSchema;
 
 public final class BusTimeContract
 {
-	public static final String AUTHORITY = "ru.ming13.bustime";
-
-	private static final Uri CONTENT_URI;
-
-	static {
-		CONTENT_URI = new Uri.Builder()
-			.scheme(ContentResolver.SCHEME_CONTENT)
-			.authority(AUTHORITY)
-			.build();
+	private BusTimeContract() {
 	}
 
-	private BusTimeContract() {
+	public static final String AUTHORITY = "ru.ming13.bustime";
+	public static final Uri CONTENT_URI = buildContentUri();
+
+	private static Uri buildContentUri() {
+		return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(AUTHORITY).build();
+	}
+
+	private static Uri buildContentUri(String path) {
+		return Uri.withAppendedPath(CONTENT_URI, path);
+	}
+
+	private static Uri buildContentUri(Uri uri, long id) {
+		return ContentUris.withAppendedId(uri, id);
+	}
+
+	private static long parseId(Uri uri, int segmentPosition) {
+		return Long.parseLong(uri.getPathSegments().get(segmentPosition));
+	}
+
+	private static BusTimePathsBuilder getPathsBuilder() {
+		return new BusTimePathsBuilder();
 	}
 
 	private interface RoutesColumns
@@ -36,36 +48,33 @@ public final class BusTimeContract
 		}
 
 		public static Uri buildRoutesUri() {
-			return CONTENT_URI.buildUpon().appendPath(BusTimeProviderPaths.ROUTES).build();
+			return buildContentUri(getPathsBuilder().buildRoutesPath());
 		}
 
 		public static Uri buildRouteStationsUri(long routeId) {
-			return ContentUris.withAppendedId(buildRoutesUri(), routeId)
-				.buildUpon()
-				.appendPath(BusTimeProviderPaths.STATIONS)
-				.build();
+			return buildContentUri(getPathsBuilder().buildRouteStationsPath(String.valueOf(routeId)));
 		}
 
 		public static Uri buildRouteTimetableUri(Uri routeStationsUri, long stationId) {
-			return ContentUris.withAppendedId(routeStationsUri, stationId);
+			return buildContentUri(routeStationsUri, stationId);
 		}
 
-		public static long getRouteId(Uri routeStationsUri) {
-			final int routeIdSegmentIndex = 1;
+		public static long getStationsRouteId(Uri routeStationsUri) {
+			final int routeIdSegmentPosition = 1;
 
-			return Long.parseLong(routeStationsUri.getPathSegments().get(routeIdSegmentIndex));
+			return parseId(routeStationsUri, routeIdSegmentPosition);
 		}
 
 		public static long getTimetableRouteId(Uri routeTimetableUri) {
-			final int routeIdSegmentIndex = 1;
+			final int routeIdSegmentPosition = 1;
 
-			return Long.parseLong(routeTimetableUri.getPathSegments().get(routeIdSegmentIndex));
+			return parseId(routeTimetableUri, routeIdSegmentPosition);
 		}
 
 		public static long getTimetableStationId(Uri routeTimetableUri) {
-			final int stationIdSegmentIndex = 3;
+			final int stationIdSegmentPosition = 3;
 
-			return Long.parseLong(routeTimetableUri.getPathSegments().get(stationIdSegmentIndex));
+			return parseId(routeTimetableUri, stationIdSegmentPosition);
 		}
 	}
 
@@ -83,44 +92,41 @@ public final class BusTimeContract
 		}
 
 		public static Uri buildStationsUri() {
-			return CONTENT_URI.buildUpon().appendPath(BusTimeProviderPaths.STATIONS).build();
+			return buildContentUri(getPathsBuilder().buildStationsPath());
 		}
 
 		public static Uri buildStationRoutesUri(long stationId) {
-			return ContentUris.withAppendedId(buildStationsUri(), stationId)
-				.buildUpon()
-				.appendPath(BusTimeProviderPaths.ROUTES)
-				.build();
+			return buildContentUri(getPathsBuilder().buildStationRoutesPath(String.valueOf(stationId)));
 		}
 
 		public static Uri buildStationTimetableUri(Uri stationRoutesUri, long routeId) {
-			return ContentUris.withAppendedId(stationRoutesUri, routeId);
+			return buildContentUri(stationRoutesUri, routeId);
 		}
 
-		public static long getStationId(Uri stationRoutesUri) {
-			final int stationIdSegmentIndex = 1;
+		public static long getRoutesStationId(Uri stationRoutesUri) {
+			final int stationIdSegmentPosition = 1;
 
-			return Long.parseLong(stationRoutesUri.getPathSegments().get(stationIdSegmentIndex));
+			return parseId(stationRoutesUri, stationIdSegmentPosition);
 		}
 
 		public static long getTimetableRouteId(Uri stationTimetableUri) {
-			final int routeIdSegmentIndex = 3;
+			final int routeIdSegmentPosition = 3;
 
-			return Long.parseLong(stationTimetableUri.getPathSegments().get(routeIdSegmentIndex));
+			return parseId(stationTimetableUri, routeIdSegmentPosition);
 		}
 
 		public static long getTimetableStationId(Uri stationTimetableUri) {
 			final int stationIdSegmentIndex = 1;
 
-			return Long.parseLong(stationTimetableUri.getPathSegments().get(stationIdSegmentIndex));
+			return parseId(stationTimetableUri, stationIdSegmentIndex);
 		}
 
-		public static String getStationSearchQuery(Uri stationsSearchUri) {
-			return stationsSearchUri.getLastPathSegment();
-		}
-
-		public static long getStationSearchId(Uri stationUri) {
+		public static long getSearchStationId(Uri stationUri) {
 			return ContentUris.parseId(stationUri);
+		}
+
+		public static String getSearchStationQuery(Uri stationsSearchUri) {
+			return stationsSearchUri.getLastPathSegment();
 		}
 	}
 
