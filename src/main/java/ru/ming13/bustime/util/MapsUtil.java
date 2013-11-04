@@ -37,7 +37,7 @@ public final class MapsUtil
 		showErrorDialog(fragmentManager, getErrorCode());
 	}
 
-	public void showErrorDialog(FragmentManager fragmentManager, int errorCode) {
+	private void showErrorDialog(FragmentManager fragmentManager, int errorCode) {
 		DialogFragment dialog = GooglePlayServicesErrorDialog.newInstance(errorCode, REQUEST_CODE);
 		dialog.show(fragmentManager, GooglePlayServicesErrorDialog.TAG);
 	}

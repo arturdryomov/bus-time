@@ -2,7 +2,6 @@ package ru.ming13.bustime.util;
 
 import android.content.Context;
 import android.text.format.DateFormat;
-import android.util.Pair;
 
 import org.ocpsoft.prettytime.PrettyTime;
 import org.ocpsoft.prettytime.units.JustNow;
@@ -50,7 +49,7 @@ public final class Time
 		this.date = calendar.getTime();
 	}
 
-	public static Calendar buildCalendar(Date date) {
+	private static Calendar buildCalendar(Date date) {
 		Calendar calendar = Calendar.getInstance();
 
 		calendar.setTime(date);
@@ -60,7 +59,7 @@ public final class Time
 		return calendar;
 	}
 
-	public static Date buildDate(String databaseTimeString) {
+	private static Date buildDate(String databaseTimeString) {
 		try {
 			return databaseTimeFormatter.parse(databaseTimeString);
 		} catch (ParseException e) {

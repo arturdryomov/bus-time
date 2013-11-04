@@ -23,7 +23,7 @@ final class DatabaseImporter
 		return new DatabaseImporter(context).isImportRequired();
 	}
 
-	public DatabaseImporter(Context context) {
+	private DatabaseImporter(Context context) {
 		this.context = context;
 	}
 

@@ -10,7 +10,7 @@
 		android:id="@+id/text_time_exact"
 		android:textSize="@dimen/text_size_time_exact"
 		android:singleLine="true"
-		android:paddingRight="@dimen/paddint_time_exact"
+		android:paddingRight="@dimen/padding_time_exact"
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"/>
 
