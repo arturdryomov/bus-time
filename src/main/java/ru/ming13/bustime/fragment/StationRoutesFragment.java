@@ -71,15 +71,7 @@ public class StationRoutesFragment extends ListFragment implements LoaderManager
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int loaderId, Bundle loaderArguments) {
-		Uri uri = getRoutesUri();
-
-		String[] projection = {
-			BusTimeContract.Routes._ID,
-			BusTimeContract.Routes.NUMBER,
-			BusTimeContract.Routes.DESCRIPTION
-		};
-
-		return new CursorLoader(getActivity(), uri, projection, null, null, null);
+		return new CursorLoader(getActivity(), getRoutesUri(), null, null, null, null);
 	}
 
 	private Uri getRoutesUri() {
@@ -108,10 +100,6 @@ public class StationRoutesFragment extends ListFragment implements LoaderManager
 	}
 
 	private void sendRouteSelectedEvent(long routeId, int routePosition) {
-		BusProvider.getBus().post(buildRouteSelectedEvent(routeId, routePosition));
-	}
-
-	private BusEvent buildRouteSelectedEvent(long routeId, int routePosition) {
 		Cursor routesCursor = getRoutesCursor(routePosition);
 
 		String routeNumber = routesCursor.getString(
@@ -119,7 +107,7 @@ public class StationRoutesFragment extends ListFragment implements LoaderManager
 		String routeDescription = routesCursor.getString(
 			routesCursor.getColumnIndex(BusTimeContract.Routes.DESCRIPTION));
 
-		return new RouteSelectedEvent(routeId, routeNumber, routeDescription);
+		BusProvider.getBus().post(new RouteSelectedEvent(routeId, routeNumber, routeDescription));
 	}
 
 	private Cursor getRoutesCursor(int routePosition) {

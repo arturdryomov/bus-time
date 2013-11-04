@@ -71,15 +71,7 @@ public class RouteStationsFragment extends ListFragment implements LoaderManager
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int loaderId, Bundle loaderArguments) {
-		Uri uri = getStationsUri();
-
-		String[] projection = {
-			BusTimeContract.Stations._ID,
-			BusTimeContract.Stations.NAME,
-			BusTimeContract.Stations.DIRECTION
-		};
-
-		return new CursorLoader(getActivity(), uri, projection, null, null, null);
+		return new CursorLoader(getActivity(), getStationsUri(), null, null, null, null);
 	}
 
 	private Uri getStationsUri() {
@@ -108,29 +100,17 @@ public class RouteStationsFragment extends ListFragment implements LoaderManager
 	}
 
 	private void sendStationSelectedEvent(long stationId, int stationPosition) {
-		BusProvider.getBus().post(buildStationSelectedEvent(stationId, stationPosition));
-	}
-
-	private BusEvent buildStationSelectedEvent(long stationId, int stationPosition) {
-		String stationName = getStationName(stationPosition);
-		String stationDirection = getStationDirection(stationPosition);
-
-		return new StationSelectedEvent(stationId, stationName, stationDirection);
-	}
-
-	private String getStationName(int stationPosition) {
 		Cursor stationsCursor = getStationsCursor(stationPosition);
 
-		return stationsCursor.getString(stationsCursor.getColumnIndex(BusTimeContract.Stations.NAME));
+		String stationName = stationsCursor.getString(
+			stationsCursor.getColumnIndex(BusTimeContract.Stations.NAME));
+		String stationDirection = stationsCursor.getString(
+			stationsCursor.getColumnIndex(BusTimeContract.Stations.DIRECTION));
+
+		BusProvider.getBus().post(new StationSelectedEvent(stationId, stationName, stationDirection));
 	}
 
 	private Cursor getStationsCursor(int stationPosition) {
 		return (Cursor) getStationsAdapter().getItem(stationPosition);
-	}
-
-	private String getStationDirection(int stationPosition) {
-		Cursor stationsCursor = getStationsCursor(stationPosition);
-
-		return stationsCursor.getString(stationsCursor.getColumnIndex(BusTimeContract.Stations.DIRECTION));
 	}
 }

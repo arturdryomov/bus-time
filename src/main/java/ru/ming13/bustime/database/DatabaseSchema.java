@@ -9,6 +9,8 @@ public class DatabaseSchema
 	private DatabaseSchema() {
 	}
 
+	public static final String DATABASE_NAME = "bustime.db";
+
 	public static final class Tables
 	{
 		private Tables() {

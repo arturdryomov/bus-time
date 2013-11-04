@@ -104,10 +104,6 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 		String stationName = stationMarker.getTitle();
 		String stationDirection = stationMarker.getSnippet();
 
-		sendStationSelectedEvent(stationId, stationName, stationDirection);
-	}
-
-	private void sendStationSelectedEvent(long stationId, String stationName, String stationDirection) {
 		BusProvider.getBus().post(new StationSelectedEvent(stationId, stationName, stationDirection));
 	}
 

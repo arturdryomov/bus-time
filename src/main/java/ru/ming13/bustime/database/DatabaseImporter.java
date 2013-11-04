@@ -15,8 +15,6 @@ import org.apache.commons.io.IOUtils;
 
 final class DatabaseImporter
 {
-	private static final String DATABASE_NAME = "bustime.db";
-
 	private final Context context;
 
 	public static boolean isDatabaseImportRequired(Context context) {
@@ -36,7 +34,7 @@ final class DatabaseImporter
 	}
 
 	private File getLocalDatabaseFile() {
-		return context.getDatabasePath(DATABASE_NAME).getAbsoluteFile();
+		return context.getDatabasePath(DatabaseSchema.DATABASE_NAME).getAbsoluteFile();
 	}
 
 	public static void importDatabase(Context context) {
@@ -71,7 +69,7 @@ final class DatabaseImporter
 		AssetManager assetManager = context.getAssets();
 
 		try {
-			return assetManager.open(DATABASE_NAME);
+			return assetManager.open(DatabaseSchema.DATABASE_NAME);
 		}
 		catch (IOException e) {
 			throw new RuntimeException();
