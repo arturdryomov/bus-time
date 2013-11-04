@@ -13,6 +13,8 @@ public final class Fragments
 		private Arguments() {
 		}
 
+		public static final String ERROR_CODE = "error_code";
+		public static final String REQUEST_CODE = "request_code";
 		public static final String URI = "uri";
 	}
 

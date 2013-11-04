@@ -29,6 +29,7 @@ import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StationSelectedEvent;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Loaders;
+import ru.ming13.bustime.util.MapsUtil;
 
 public class StationsMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>,
 	GoogleMap.OnInfoWindowClickListener,
@@ -260,6 +261,13 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 
 	@Override
 	public void onConnectionFailed(ConnectionResult connectionResult) {
+		MapsUtil mapsUtil = MapsUtil.with(getActivity());
+
+		if (mapsUtil.isResolvable(connectionResult)) {
+			mapsUtil.resolveError(connectionResult);
+		} else {
+			mapsUtil.showErrorDialog(getFragmentManager(), connectionResult);
+		}
 	}
 
 	@Override

@@ -28,6 +28,7 @@ import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.bus.StationSelectedEvent;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.task.StationInformationQueryingTask;
+import ru.ming13.bustime.util.MapsUtil;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.Preferences;
 
@@ -176,8 +177,12 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void startStationsMapActivity() {
-		Intent intent = Intents.Builder.with(this).buildStationsMapIntent();
-		startActivity(intent);
+		if (MapsUtil.with(this).areMapsAvailable()) {
+			Intent intent = Intents.Builder.with(this).buildStationsMapIntent();
+			startActivity(intent);
+		} else {
+			MapsUtil.with(this).showErrorDialog(getSupportFragmentManager());
+		}
 	}
 
 	private void startApplicationRating() {
