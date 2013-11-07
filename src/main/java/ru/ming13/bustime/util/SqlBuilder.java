@@ -30,12 +30,8 @@ public final class SqlBuilder
 		return String.format("%s like '%%%s%%'", field, query);
 	}
 
-	public static String buildOrderClause(String... orderClauses) {
+	public static String buildSortOrderClause(String... orderClauses) {
 		return TextUtils.join(", ", orderClauses);
-	}
-
-	public static String buildOrderAscendingClause(String field) {
-		return String.format("%s asc", field);
 	}
 
 	public static String buildOptionalSelectionClause(String... selectionClauses) {
@@ -50,11 +46,23 @@ public final class SqlBuilder
 		return String.format("%s = %d", field, id);
 	}
 
+	public static String buildSelectionClause(String firstField, String secondField) {
+		return String.format("%s = %s", firstField, secondField);
+	}
+
+	public static String buildFullSelectionClause(String tableName, String field) {
+		return String.format("%s.%s = ?", tableName, field);
+	}
+
 	public static String buildSelectionClause(String tableName, String field, long id) {
 		return String.format("%s.%s = %d", tableName, field, id);
 	}
 
 	public static String buildTableClause(String... tableClauses) {
 		return TextUtils.join(" ", tableClauses);
+	}
+
+	public static String buildFullField(String tableName, String field) {
+		return String.format("%s.%s", tableName, field);
 	}
 }

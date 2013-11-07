@@ -5,7 +5,6 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-
 import ru.ming13.bustime.database.DatabaseSchema;
 
 public final class BusTimeContract
@@ -133,11 +132,22 @@ public final class BusTimeContract
 	private interface TimetableColumns
 	{
 		String ARRIVAL_TIME = "arrival_time";
+		String TYPE = "type";
 	}
 
-	public static final class Timetable implements TimetableColumns
+	public static final class Timetable implements BaseColumns, TimetableColumns
 	{
 		private Timetable() {
+		}
+
+		public static final class Types
+		{
+			private Types() {
+			}
+
+			public static final int FULL_WEEK = DatabaseSchema.TripTypesColumnsValues.FULL_WEEK_ID;
+			public static final int WORKDAYS = DatabaseSchema.TripTypesColumnsValues.WORKDAY_ID;
+			public static final int WEEKEND = DatabaseSchema.TripTypesColumnsValues.WEEKEND_ID;
 		}
 	}
 }
