@@ -6,9 +6,10 @@
 	<dimen name="space_ui_element">8dp</dimen>
 	<dimen name="space_ui_element_double">16dp</dimen>
 
-	<dimen name="text_size_small">14sp</dimen>
-	<dimen name="text_size_medium">18sp</dimen>
-	<dimen name="text_size_large">22sp</dimen>
+	<dimen name="text_micro">12dp</dimen>
+	<dimen name="text_small">14sp</dimen>
+	<dimen name="text_medium">18sp</dimen>
+	<dimen name="text_large">22sp</dimen>
 
 	<!-- Actual dimensions. -->
 
@@ -17,14 +18,15 @@
 	<dimen name="padding_time_exact">@dimen/space_ui_element_double</dimen>
 	<dimen name="padding_timetable_message">40dp</dimen>
 
-	<dimen name="text_size_route_description">@dimen/text_size_medium</dimen>
-	<dimen name="text_size_route_number">@dimen/text_size_large</dimen>
-	<dimen name="text_size_station_direction">@dimen/text_size_small</dimen>
-	<dimen name="text_size_station_name">@dimen/text_size_medium</dimen>
-	<dimen name="text_size_time_exact">@dimen/text_size_medium</dimen>
-	<dimen name="text_size_time_relative">@dimen/text_size_small</dimen>
-	<dimen name="text_size_timetable_message_title">@dimen/text_size_large</dimen>
-	<dimen name="text_size_timetable_message_summary">@dimen/text_size_medium</dimen>
+	<dimen name="text_route_description">@dimen/text_medium</dimen>
+	<dimen name="text_route_number">@dimen/text_large</dimen>
+	<dimen name="text_route_time">@dimen/text_micro</dimen>
+	<dimen name="text_station_direction">@dimen/text_small</dimen>
+	<dimen name="text_station_name">@dimen/text_medium</dimen>
+	<dimen name="text_time_exact">@dimen/text_medium</dimen>
+	<dimen name="text_time_relative">@dimen/text_small</dimen>
+	<dimen name="text_timetable_message_title">@dimen/text_large</dimen>
+	<dimen name="text_timetable_message_summary">@dimen/text_medium</dimen>
 
 	<integer name="width_route_number">2</integer>
 
