@@ -1,7 +1,6 @@
 package ru.ming13.bustime.provider;
 
 import android.app.SearchManager;
-import android.content.UriMatcher;
 
 final class BusTimePathsBuilder
 {

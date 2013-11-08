@@ -19,7 +19,7 @@ public final class SqlBuilder
 		return String.format("(select %s)", TextUtils.join(" || ", fields));
 	}
 
-	public static String buildInnerJoinClause(String sourceTable, String sourceField, String destinationTable, String destinationField) {
+	public static String buildJoinClause(String sourceTable, String sourceField, String destinationTable, String destinationField) {
 		return String.format("inner join %s on %s.%s = %s.%s",
 			destinationTable,
 			destinationTable, destinationField,
@@ -31,7 +31,7 @@ public final class SqlBuilder
 	}
 
 	public static String buildSortOrderClause(String... orderClauses) {
-		return TextUtils.join(", ", orderClauses);
+		return TextUtils.join(",", orderClauses);
 	}
 
 	public static String buildOptionalSelectionClause(String... selectionClauses) {
@@ -42,8 +42,8 @@ public final class SqlBuilder
 		return TextUtils.join(" and ", selectionClauses);
 	}
 
-	public static String buildSelectionClause(String field, long id) {
-		return String.format("%s = %d", field, id);
+	public static String buildSelectionClause(String field) {
+		return String.format("%s = ?", field);
 	}
 
 	public static String buildSelectionClause(String firstField, String secondField) {
@@ -52,10 +52,6 @@ public final class SqlBuilder
 
 	public static String buildFullSelectionClause(String tableName, String field) {
 		return String.format("%s.%s = ?", tableName, field);
-	}
-
-	public static String buildSelectionClause(String tableName, String field, long id) {
-		return String.format("%s.%s = %d", tableName, field, id);
 	}
 
 	public static String buildTableClause(String... tableClauses) {

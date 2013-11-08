@@ -20,7 +20,7 @@ public final class TimetableQueryComponents implements QueryComponents
 	public String getTables() {
 		return SqlBuilder.buildTableClause(
 			DatabaseSchema.Tables.TRIPS,
-			SqlBuilder.buildInnerJoinClause(
+			SqlBuilder.buildJoinClause(
 				DatabaseSchema.Tables.TRIPS, DatabaseSchema.TripsColumns.ROUTE_ID,
 				DatabaseSchema.Tables.ROUTES_AND_STATIONS, DatabaseSchema.RoutesAndStationsColumns.ROUTE_ID));
 	}
@@ -29,10 +29,10 @@ public final class TimetableQueryComponents implements QueryComponents
 	public String[] getProjection() {
 		return new String[]{
 			BusTimeContract.Timetable._ID,
-			getArrivalTimeProjection()};
+			getArrivalTimeColumn()};
 	}
 
-	private String getArrivalTimeProjection() {
+	private String getArrivalTimeColumn() {
 		return String.format("datetime('now', 'localtime', 'start of day', + %s, + %s, + %s, + %s) as %s",
 			SqlBuilder.buildConcatClause(DatabaseSchema.TripsColumns.HOUR, "' hours'"),
 			SqlBuilder.buildConcatClause(DatabaseSchema.TripsColumns.MINUTE, "' minutes'"),
@@ -48,14 +48,16 @@ public final class TimetableQueryComponents implements QueryComponents
 				DatabaseSchema.Tables.ROUTES_AND_STATIONS, DatabaseSchema.RoutesAndStationsColumns.ROUTE_ID),
 			SqlBuilder.buildFullSelectionClause(
 				DatabaseSchema.Tables.ROUTES_AND_STATIONS, DatabaseSchema.RoutesAndStationsColumns.STATION_ID),
-			SqlBuilder.buildFullSelectionClause(
-				DatabaseSchema.Tables.TRIPS, DatabaseSchema.TripsColumns.TYPE_ID));
+			SqlBuilder.buildSelectionClause(
+				DatabaseSchema.TripsColumns.TYPE_ID));
 	}
 
 	@Override
 	public String[] getSelectionArguments() {
 		return new String[]{
-			String.valueOf(routeId), String.valueOf(stationId), String.valueOf(tripTypeId)};
+			String.valueOf(routeId),
+			String.valueOf(stationId),
+			String.valueOf(tripTypeId)};
 	}
 
 	@Override

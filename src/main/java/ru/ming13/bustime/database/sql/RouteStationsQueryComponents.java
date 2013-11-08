@@ -16,7 +16,7 @@ public final class RouteStationsQueryComponents implements QueryComponents
 	public String getTables() {
 		return SqlBuilder.buildTableClause(
 			DatabaseSchema.Tables.ROUTES_AND_STATIONS,
-			SqlBuilder.buildInnerJoinClause(
+			SqlBuilder.buildJoinClause(
 				DatabaseSchema.Tables.ROUTES_AND_STATIONS, DatabaseSchema.RoutesAndStationsColumns.STATION_ID,
 				DatabaseSchema.Tables.STATIONS, DatabaseSchema.StationsColumns._ID));
 	}
@@ -31,14 +31,12 @@ public final class RouteStationsQueryComponents implements QueryComponents
 
 	@Override
 	public String getSelection() {
-		return SqlBuilder.buildFullSelectionClause(
-			DatabaseSchema.Tables.ROUTES_AND_STATIONS, DatabaseSchema.RoutesAndStationsColumns.ROUTE_ID);
+		return SqlBuilder.buildSelectionClause(DatabaseSchema.RoutesAndStationsColumns.ROUTE_ID);
 	}
 
 	@Override
 	public String[] getSelectionArguments() {
-		return new String[]{
-			String.valueOf(routeId)};
+		return new String[]{String.valueOf(routeId)};
 	}
 
 	@Override
