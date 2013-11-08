@@ -71,6 +71,13 @@ public final class Time
 		return this.date.equals(time.date) || this.date.after(time.date);
 	}
 
+	public boolean isWeekend() {
+		Calendar calendar = buildCalendar(date);
+		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+		return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
+	}
+
 	public String toRelativeString(Context context) {
 		Time currentTime = Time.current();
 

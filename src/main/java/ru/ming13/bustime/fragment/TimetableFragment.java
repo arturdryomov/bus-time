@@ -8,6 +8,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -19,7 +22,10 @@ import ru.ming13.bustime.adapter.TimetableAdapter;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.ClosestTimeFoundEvent;
 import ru.ming13.bustime.bus.TimeChangedEvent;
+import ru.ming13.bustime.bus.TimetableTypeQueriedEvent;
+import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.task.ClosestTimeSearchTask;
+import ru.ming13.bustime.task.TimetableTypeQueryingTask;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
 import ru.ming13.bustime.util.Timer;
@@ -45,6 +51,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private Timer timer;
+	private int type;
 
 	@Override
 	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,7 +62,34 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		setUpActionBar();
+
+		setUpTimetableType();
+	}
+
+	private void setUpActionBar() {
+		setHasOptionsMenu(true);
+	}
+
+	private void setUpTimetableType() {
+		TimetableTypeQueryingTask.execute(getActivity(), getTimetableUri());
+	}
+
+	private Uri getTimetableUri() {
+		return getArguments().getParcelable(Fragments.Arguments.URI);
+	}
+
+	@Subscribe
+	public void onTimetableTypeQueried(TimetableTypeQueriedEvent event) {
+		type = event.getTimetableType();
+
+		setUpCurrentActionBar();
+
 		setUpTimetable();
+	}
+
+	private void setUpCurrentActionBar() {
+		getActivity().supportInvalidateOptionsMenu();
 	}
 
 	private void setUpTimetable() {
@@ -72,16 +106,32 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private void setUpTimetableContent() {
-		getLoaderManager().initLoader(Loaders.TIMETABLE, null, this);
+		getLoaderManager().initLoader(getLoaderId(), null, this);
+	}
+
+	private int getLoaderId() {
+		switch (type) {
+			case BusTimeContract.Timetable.Type.FULL_WEEK:
+				return Loaders.FULL_WEEK_TIMETABLE;
+
+			case BusTimeContract.Timetable.Type.WORKDAYS:
+				return Loaders.WORKDAYS_TIMETABLE;
+
+			case BusTimeContract.Timetable.Type.WEEKEND:
+				return Loaders.WEEKEND_TIMETABLE;
+
+			default:
+				return Loaders.FULL_WEEK_TIMETABLE;
+		}
 	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int loaderId, Bundle loaderArguments) {
-		return new CursorLoader(getActivity(), getTimetableUri(), null, null, null, null);
+		return new CursorLoader(getActivity(), getCurrentTimetableUri(), null, null, null, null);
 	}
 
-	private Uri getTimetableUri() {
-		return getArguments().getParcelable(Fragments.Arguments.URI);
+	private Uri getCurrentTimetableUri() {
+		return BusTimeContract.Timetable.buildTimetableUri(getTimetableUri(), type);
 	}
 
 	@Override
@@ -111,7 +161,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private void setUpClosestTime() {
-		ClosestTimeSearchTask.execute(getActivity(), getTimetableUri());
+		ClosestTimeSearchTask.execute(getActivity(), getCurrentTimetableUri());
 	}
 
 	@Subscribe
@@ -133,8 +183,59 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+		super.onCreateOptionsMenu(menu, menuInflater);
+
+		if (!BusTimeContract.Timetable.Type.isWeekPartDependent(type)) {
+			return;
+		}
+
+		menuInflater.inflate(R.menu.action_bar_timetable, menu);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+
+		switch (type) {
+			case BusTimeContract.Timetable.Type.WORKDAYS:
+				menu.findItem(R.id.menu_timetable_workdays).setChecked(true);
+				break;
+
+			case BusTimeContract.Timetable.Type.WEEKEND:
+				menu.findItem(R.id.menu_timetable_weekend).setChecked(true);
+				break;
+
+			default:
+				break;
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		menuItem.setChecked(!menuItem.isChecked());
+
+		switch (menuItem.getItemId()) {
+			case R.id.menu_timetable_workdays:
+				type = BusTimeContract.Timetable.Type.WORKDAYS;
+				setUpTimetableContent();
+				return true;
+
+			case R.id.menu_timetable_weekend:
+				type = BusTimeContract.Timetable.Type.WEEKEND;
+				setUpTimetableContent();
+				return true;
+
+			default:
+				return super.onOptionsItemSelected(menuItem);
+		}
+	}
+
+	@Override
 	public void onResume() {
 		super.onResume();
+
+		BusProvider.getBus().register(this);
 
 		setUpTimer();
 
@@ -142,8 +243,6 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private void setUpTimer() {
-		BusProvider.getBus().register(this);
-
 		timer = new Timer();
 		timer.start();
 	}
@@ -154,19 +253,25 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private void refreshRemainingTime() {
-		getTimetableAdapter().notifyDataSetChanged();
+		if (isTimetableAdapterSet()) {
+			getTimetableAdapter().notifyDataSetChanged();
+		}
+	}
+
+	private boolean isTimetableAdapterSet() {
+		return getTimetableAdapter() != null;
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 
+		BusProvider.getBus().unregister(this);
+
 		tearDownTimer();
 	}
 
 	private void tearDownTimer() {
-		BusProvider.getBus().unregister(this);
-
 		timer.stop();
 	}
 }

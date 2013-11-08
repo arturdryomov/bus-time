@@ -8,9 +8,9 @@ public final class TimetableQueryComponents implements QueryComponents
 {
 	private final long routeId;
 	private final long stationId;
-	private final int tripTypeId;
+	private final long tripTypeId;
 
-	public TimetableQueryComponents(long routeId, long stationId, int tripTypeId) {
+	public TimetableQueryComponents(long routeId, long stationId, long tripTypeId) {
 		this.routeId = routeId;
 		this.stationId = stationId;
 		this.tripTypeId = tripTypeId;

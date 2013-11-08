@@ -91,7 +91,7 @@ public class BusTimeProvider extends ContentProvider
 
 	private QueryComponents buildStationRoutesQueryComponents(Uri uri) {
 		long stationId = BusTimeContract.Stations.getRoutesStationId(uri);
-		long timetableTypeId = 1;
+		long timetableTypeId = BusTimeContract.Timetable.Type.currentWeekPartDependent();
 
 		return new StationRoutesQueryComponents(stationId, timetableTypeId);
 	}
@@ -99,7 +99,7 @@ public class BusTimeProvider extends ContentProvider
 	private QueryComponents buildRouteTimetableQueryComponents(Uri uri) {
 		long routeId = BusTimeContract.Routes.getTimetableRouteId(uri);
 		long stationId = BusTimeContract.Routes.getTimetableStationId(uri);
-		int typeId = 1;
+		long typeId = BusTimeContract.Timetable.getTimetableType(uri);
 
 		return new TimetableQueryComponents(routeId, stationId, typeId);
 	}
@@ -107,7 +107,7 @@ public class BusTimeProvider extends ContentProvider
 	private QueryComponents buildStationTimetableQueryComponents(Uri uri) {
 		long routeId = BusTimeContract.Stations.getTimetableRouteId(uri);
 		long stationId = BusTimeContract.Stations.getTimetableStationId(uri);
-		int typeId = 1;
+		long typeId = BusTimeContract.Timetable.getTimetableType(uri);
 
 		return new TimetableQueryComponents(routeId, stationId, typeId);
 	}

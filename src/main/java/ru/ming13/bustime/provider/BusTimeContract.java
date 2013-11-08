@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import ru.ming13.bustime.database.DatabaseSchema;
+import ru.ming13.bustime.util.Time;
 
 public final class BusTimeContract
 {
@@ -27,8 +28,20 @@ public final class BusTimeContract
 		return ContentUris.withAppendedId(uri, id);
 	}
 
+	private static Uri buildContentUri(Uri uri, String key, String value) {
+		return uri.buildUpon().appendQueryParameter(key, value).build();
+	}
+
+	private static long parseId(Uri uri) {
+		return ContentUris.parseId(uri);
+	}
+
 	private static long parseId(Uri uri, int segmentPosition) {
-		return Long.parseLong(uri.getPathSegments().get(segmentPosition));
+		return Long.valueOf(uri.getPathSegments().get(segmentPosition));
+	}
+
+	private static int parseParameter(Uri uri, String key) {
+		return Integer.valueOf(uri.getQueryParameter(key));
 	}
 
 	private static BusTimePathsBuilder getPathsBuilder() {
@@ -121,7 +134,7 @@ public final class BusTimeContract
 		}
 
 		public static long getSearchStationId(Uri stationUri) {
-			return ContentUris.parseId(stationUri);
+			return parseId(stationUri);
 		}
 
 		public static String getSearchStationQuery(Uri stationsSearchUri) {
@@ -140,14 +153,34 @@ public final class BusTimeContract
 		private Timetable() {
 		}
 
-		public static final class Types
+		public static final class Type
 		{
-			private Types() {
+			private Type() {
 			}
 
 			public static final int FULL_WEEK = DatabaseSchema.TripTypesColumnsValues.FULL_WEEK_ID;
 			public static final int WORKDAYS = DatabaseSchema.TripTypesColumnsValues.WORKDAY_ID;
 			public static final int WEEKEND = DatabaseSchema.TripTypesColumnsValues.WEEKEND_ID;
+
+			public static long currentWeekPartDependent() {
+				if (Time.current().isWeekend()) {
+					return WEEKEND;
+				} else {
+					return WORKDAYS;
+				}
+			}
+
+			public static boolean isWeekPartDependent(int type) {
+				return type != FULL_WEEK;
+			}
+		}
+
+		public static Uri buildTimetableUri(Uri timetableUri, int type) {
+			return buildContentUri(timetableUri, Timetable.TYPE, String.valueOf(type));
+		}
+
+		public static int getTimetableType(Uri timetableUri) {
+			return parseParameter(timetableUri, Timetable.TYPE);
 		}
 	}
 }
