@@ -15,6 +15,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -28,6 +29,7 @@ import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StationSelectedEvent;
 import ru.ming13.bustime.provider.BusTimeContract;
+import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
 import ru.ming13.bustime.util.MapsUtil;
 
@@ -71,7 +73,8 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 
 		setUpMap();
 		setUpStations();
-		setUpLocationClient();
+
+		setUpCameraPosition(savedInstanceState);
 	}
 
 	private void setUpMap() {
@@ -201,13 +204,32 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 	public void onLoaderReset(Loader<Cursor> stationsLoader) {
 	}
 
+	private void setUpCameraPosition(Bundle state) {
+		if (isCameraPositionAvailable(state)) {
+			CameraPosition cameraPosition = restoreCameraPosition(state);
+			getMap().moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+		} else {
+			setUpLocationClient();
+		}
+	}
+
+	private boolean isCameraPositionAvailable(Bundle state) {
+		return (state != null) && (restoreCameraPosition(state) != null);
+	}
+
+	private CameraPosition restoreCameraPosition(Bundle state) {
+		return state.getParcelable(Fragments.States.CAMERA_POSITION);
+	}
+
 	private void setUpLocationClient() {
 		locationClient = new LocationClient(getActivity(), this, this);
+		locationClient.connect();
 	}
 
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		setUpCurrentLocation();
+		tearDownLocationClient();
 	}
 
 	private void setUpCurrentLocation() {
@@ -251,6 +273,10 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 		return location;
 	}
 
+	private void tearDownLocationClient() {
+		locationClient.disconnect();
+	}
+
 	@Override
 	public void onDisconnected() {
 	}
@@ -267,16 +293,13 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 
-		locationClient.connect();
+		saveCameraPosition(outState);
 	}
 
-	@Override
-	public void onStop() {
-		super.onStop();
-
-		locationClient.disconnect();
+	private void saveCameraPosition(Bundle state) {
+		state.putParcelable(Fragments.States.CAMERA_POSITION, getMap().getCameraPosition());
 	}
 }

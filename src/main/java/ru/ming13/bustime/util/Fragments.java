@@ -18,6 +18,14 @@ public final class Fragments
 		public static final String URI = "uri";
 	}
 
+	public static final class States
+	{
+		private States() {
+		}
+
+		public static final String CAMERA_POSITION = "camera_position";
+	}
+
 	public static final class Operator
 	{
 		private Operator() {
