@@ -104,4 +104,8 @@ public final class Time
 	public String toSystemString(Context context) {
 		return DateFormat.getTimeFormat(context).format(date);
 	}
+
+	public String toDatabaseString() {
+		return databaseTimeFormatter.format(date);
+	}
 }

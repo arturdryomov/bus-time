@@ -24,6 +24,7 @@ public final class Fragments
 		}
 
 		public static final String CAMERA_POSITION = "camera_position";
+		public static final String TIMETABLE_TYPE = "timetable_type";
 	}
 
 	public static final class Operator

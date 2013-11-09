@@ -39,6 +39,12 @@ public class ClosestTimeSearchTask extends AsyncTask<Void, Void, BusEvent>
 		try {
 			return getClosestTimePosition(timetableCursor);
 		} finally {
+			// This is really strange.
+			// If we wouldn’t reset the cursor there
+			// the timetable would display a wrong time sometimes.
+			timetableCursor.moveToFirst();
+			timetableCursor.moveToPrevious();
+
 			timetableCursor.close();
 		}
 	}
@@ -48,10 +54,10 @@ public class ClosestTimeSearchTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private int getClosestTimePosition(Cursor timetableCursor) {
-		Time currentTime = Time.current();
+		String currentTime = Time.current().toDatabaseString();
 
 		while (timetableCursor.moveToNext()) {
-			if (Time.from(getTimeString(timetableCursor)).isAfter(currentTime)) {
+			if (getTimeString(timetableCursor).compareTo(currentTime) > 0) {
 				return timetableCursor.getPosition();
 			}
 		}

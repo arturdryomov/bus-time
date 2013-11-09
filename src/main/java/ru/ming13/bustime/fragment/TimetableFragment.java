@@ -64,15 +64,27 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 		setUpActionBar();
 
-		setUpTimetableType();
+		setUpTimetableType(savedInstanceState);
 	}
 
 	private void setUpActionBar() {
 		setHasOptionsMenu(true);
 	}
 
-	private void setUpTimetableType() {
-		TimetableTypeQueryingTask.execute(getActivity(), getTimetableUri());
+	private void setUpTimetableType(Bundle state) {
+		if (!isTimetableTypeAvailable(state)) {
+			TimetableTypeQueryingTask.execute(getActivity(), getTimetableUri());
+		} else {
+			setUpTimetable(restoreTimetableType(state));
+		}
+	}
+
+	private boolean isTimetableTypeAvailable(Bundle state) {
+		return (state != null) && (restoreTimetableType(state) >= 0);
+	}
+
+	private int restoreTimetableType(Bundle state) {
+		return state.getInt(Fragments.States.TIMETABLE_TYPE, -1);
 	}
 
 	private Uri getTimetableUri() {
@@ -81,7 +93,11 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 	@Subscribe
 	public void onTimetableTypeQueried(TimetableTypeQueriedEvent event) {
-		type = event.getTimetableType();
+		setUpTimetable(event.getTimetableType());
+	}
+
+	private void setUpTimetable(int type) {
+		this.type = type;
 
 		setUpCurrentActionBar();
 
@@ -242,6 +258,12 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 		refreshRemainingTime();
 	}
 
+	private void refreshRemainingTime() {
+		if (isTimetableAdapterSet()) {
+			getTimetableAdapter().notifyDataSetChanged();
+		}
+	}
+
 	private void setUpTimer() {
 		timer = new Timer();
 		timer.start();
@@ -250,12 +272,6 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	@Subscribe
 	public void onTimeChanged(TimeChangedEvent event) {
 		refreshRemainingTime();
-	}
-
-	private void refreshRemainingTime() {
-		if (isTimetableAdapterSet()) {
-			getTimetableAdapter().notifyDataSetChanged();
-		}
 	}
 
 	private boolean isTimetableAdapterSet() {
@@ -273,5 +289,16 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 	private void tearDownTimer() {
 		timer.stop();
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		saveTimetableType(outState);
+	}
+
+	private void saveTimetableType(Bundle state) {
+		state.putInt(Fragments.States.TIMETABLE_TYPE, type);
 	}
 }
