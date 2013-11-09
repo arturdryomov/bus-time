@@ -70,6 +70,10 @@ public final class StationRoutesQueryComponents implements QueryComponents
 
 	@Override
 	public String getSortOrder() {
-		return BusTimeContract.Timetable.ARRIVAL_TIME;
+		return SqlBuilder.buildSortOrderClause(
+			SqlBuilder.buildIsNullClause(BusTimeContract.Timetable.ARRIVAL_TIME),
+			BusTimeContract.Timetable.ARRIVAL_TIME,
+			SqlBuilder.buildCastIntegerClause(BusTimeContract.Routes.NUMBER),
+			BusTimeContract.Routes.DESCRIPTION);
 	}
 }

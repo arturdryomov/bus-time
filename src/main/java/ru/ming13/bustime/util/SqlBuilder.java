@@ -19,6 +19,10 @@ public final class SqlBuilder
 		return String.format("(select %s)", TextUtils.join(" || ", fields));
 	}
 
+	public static String buildIsNullClause(String field) {
+		return String.format("%s is null", field);
+	}
+
 	public static String buildJoinClause(String sourceTable, String sourceField, String destinationTable, String destinationField) {
 		return String.format("inner join %s on %s.%s = %s.%s",
 			destinationTable,
