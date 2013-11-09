@@ -13,13 +13,18 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.squareup.otto.Subscribe;
+
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.StationRoutesAdapter;
+import ru.ming13.bustime.animation.ListOrderAnimator;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
+import ru.ming13.bustime.bus.TimeChangedEvent;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
+import ru.ming13.bustime.util.Timer;
 
 public class StationRoutesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
@@ -38,6 +43,8 @@ public class StationRoutesFragment extends ListFragment implements LoaderManager
 
 		return arguments;
 	}
+
+	private Timer timer;
 
 	@Override
 	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,7 +86,12 @@ public class StationRoutesFragment extends ListFragment implements LoaderManager
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> routesLoader, Cursor routesCursor) {
+		ListOrderAnimator animator = new ListOrderAnimator(getListView());
+		animator.saveListState();
+
 		getRoutesAdapter().swapCursor(routesCursor);
+
+		animator.animateReorderedListState();
 	}
 
 	private StationRoutesAdapter getRoutesAdapter() {
@@ -111,5 +123,43 @@ public class StationRoutesFragment extends ListFragment implements LoaderManager
 
 	private Cursor getRoutesCursor(int routePosition) {
 		return (Cursor) getRoutesAdapter().getItem(routePosition);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		BusProvider.getBus().register(this);
+
+		setUpTimer();
+
+		setUpRoutesContentForce();
+	}
+
+	private void setUpTimer() {
+		timer = new Timer();
+		timer.start();
+	}
+
+	private void setUpRoutesContentForce() {
+		getLoaderManager().initLoader(Loaders.STATION_ROUTES, null, this).forceLoad();
+	}
+
+	@Subscribe
+	public void onTimeChanged(TimeChangedEvent event) {
+		setUpRoutesContentForce();
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+
+		BusProvider.getBus().unregister(this);
+
+		tearDownTimer();
+	}
+
+	private void tearDownTimer() {
+		timer.stop();
 	}
 }
