@@ -21,6 +21,12 @@
 		<item name="android:logo">@android:color/transparent</item>
 		<item name="android:displayOptions">showTitle|showHome|useLogo</item>
 		<item name="android:navigationMode">tabMode</item>
+		<item name="android:titleTextStyle">@style/Theme.BusTime.Home.ActionBar.Title</item>
+	</style>
+
+	<style name="Theme.BusTime.Home.ActionBar.Title" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+		<item name="android:textColor">@color/text_application_name</item>
+		<item name="android:textStyle">bold</item>
 	</style>
 
 	<style name="Theme.BusTime.Map" parent="Theme.BusTime">

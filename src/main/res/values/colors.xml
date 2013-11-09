@@ -6,6 +6,7 @@
 
 	<integer name="hue_map_marker_station">195</integer>
 
+	<color name="text_application_name">#dfffffff</color>
 	<color name="text_hint_search">#80ffffff</color>
 	<color name="text_route_time">#777777</color>
 	<color name="text_time_relative">#777777</color>
