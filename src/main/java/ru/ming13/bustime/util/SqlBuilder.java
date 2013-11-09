@@ -8,30 +8,42 @@ public final class SqlBuilder
 	}
 
 	public static String buildAliasClause(String field, String alias) {
-		return String.format("%s as %s", field, alias);
+		return new StringBuilder()
+			.append(field).append(" as ").append(alias)
+			.toString();
 	}
 
 	public static String buildCastIntegerClause(String field) {
-		return String.format("cast (%s as integer)", field);
+		return new StringBuilder()
+			.append("cast (").append(field).append(" as integer)")
+			.toString();
 	}
 
-	public static String buildConcatClause(String... fields) {
-		return String.format("(select %s)", TextUtils.join(" || ", fields));
+	public static String buildConcatClause(String firstField, String secondField) {
+		return new StringBuilder()
+			.append("(select ").append(firstField).append(" || ").append(secondField).append(")")
+			.toString();
 	}
 
 	public static String buildIsNullClause(String field) {
-		return String.format("%s is null", field);
+		return new StringBuilder()
+			.append(field).append(" is null")
+			.toString();
 	}
 
 	public static String buildJoinClause(String sourceTable, String sourceField, String destinationTable, String destinationField) {
-		return String.format("inner join %s on %s.%s = %s.%s",
-			destinationTable,
-			destinationTable, destinationField,
-			sourceTable, sourceField);
+		return new StringBuilder()
+			.append("inner join ").append(destinationTable).append(" on ")
+			.append(destinationTable).append(".").append(destinationField)
+			.append(" = ")
+			.append(sourceTable).append(".").append(sourceField)
+			.toString();
 	}
 
 	public static String buildLikeClause(String field, String query) {
-		return String.format("%s like '%%%s%%'", field, query);
+		return new StringBuilder()
+			.append(field).append(" like ").append("'%").append(query).append("%'")
+			.toString();
 	}
 
 	public static String buildSortOrderClause(String... orderClauses) {
@@ -47,22 +59,24 @@ public final class SqlBuilder
 	}
 
 	public static String buildSelectionClause(String field) {
-		return String.format("%s = ?", field);
+		return new StringBuilder()
+			.append(field).append(" = ?")
+			.toString();
 	}
 
 	public static String buildSelectionClause(String firstField, String secondField) {
-		return String.format("%s = %s", firstField, secondField);
-	}
-
-	public static String buildFullSelectionClause(String tableName, String field) {
-		return String.format("%s.%s = ?", tableName, field);
+		return new StringBuilder()
+			.append(firstField).append(" = ").append(secondField)
+			.toString();
 	}
 
 	public static String buildTableClause(String... tableClauses) {
 		return TextUtils.join(" ", tableClauses);
 	}
 
-	public static String buildFullField(String tableName, String field) {
-		return String.format("%s.%s", tableName, field);
+	public static String buildTableField(String table, String field) {
+		return new StringBuilder()
+			.append(table).append(".").append(field)
+			.toString();
 	}
 }

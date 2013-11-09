@@ -44,10 +44,10 @@ public final class TimetableQueryComponents implements QueryComponents
 	@Override
 	public String getSelection() {
 		return SqlBuilder.buildRequiredSelectionClause(
-			SqlBuilder.buildFullSelectionClause(
-				DatabaseSchema.Tables.ROUTES_AND_STATIONS, DatabaseSchema.RoutesAndStationsColumns.ROUTE_ID),
-			SqlBuilder.buildFullSelectionClause(
-				DatabaseSchema.Tables.ROUTES_AND_STATIONS, DatabaseSchema.RoutesAndStationsColumns.STATION_ID),
+			SqlBuilder.buildSelectionClause(SqlBuilder.buildTableField(
+				DatabaseSchema.Tables.ROUTES_AND_STATIONS, DatabaseSchema.RoutesAndStationsColumns.ROUTE_ID)),
+			SqlBuilder.buildSelectionClause(SqlBuilder.buildTableField(
+				DatabaseSchema.Tables.ROUTES_AND_STATIONS, DatabaseSchema.RoutesAndStationsColumns.STATION_ID)),
 			SqlBuilder.buildSelectionClause(
 				DatabaseSchema.TripsColumns.TYPE_ID));
 	}

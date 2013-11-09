@@ -39,7 +39,7 @@ public final class StationRoutesQueryComponents implements QueryComponents
 			SqlBuilder.buildRequiredSelectionClause(
 				SqlBuilder.buildSelectionClause(
 					DatabaseSchema.TripsColumns.ROUTE_ID,
-					SqlBuilder.buildFullField(DatabaseSchema.Tables.ROUTES, DatabaseSchema.RoutesColumns._ID)),
+					SqlBuilder.buildTableField(DatabaseSchema.Tables.ROUTES, DatabaseSchema.RoutesColumns._ID)),
 				String.format("%s in (%d, %d)",
 					DatabaseSchema.TripsColumns.TYPE_ID,
 					DatabaseSchema.TripTypesColumnsValues.FULL_WEEK_ID, timetableTypeId),
