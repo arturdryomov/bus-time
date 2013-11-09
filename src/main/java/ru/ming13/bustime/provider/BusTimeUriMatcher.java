@@ -21,7 +21,7 @@ final class BusTimeUriMatcher
 		public static final int STATIONS_SEARCH = 7;
 	}
 
-	public static final class Masks
+	private static final class Masks
 	{
 		private Masks() {
 		}
@@ -40,7 +40,7 @@ final class BusTimeUriMatcher
 		pathsBuilder = new BusTimePathsBuilder();
 	}
 
-	public UriMatcher buildUriMatcher() {
+	private UriMatcher buildUriMatcher() {
 		UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
 		uriMatcher.addURI(BusTimeContract.AUTHORITY,

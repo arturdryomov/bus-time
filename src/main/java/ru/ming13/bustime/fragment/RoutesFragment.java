@@ -15,7 +15,6 @@ import android.widget.ListView;
 
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.RoutesAdapter;
-import ru.ming13.bustime.bus.BusEvent;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.provider.BusTimeContract;

@@ -34,7 +34,7 @@
         <TextView
             android:text="@string/message_timetable_summary"
             android:textSize="@dimen/text_timetable_message_summary"
-            android:paddingTop="@dimen/space_ui_element"
+            android:paddingTop="@dimen/padding_timetable_message_summary"
             android:gravity="center_horizontal"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content" />
