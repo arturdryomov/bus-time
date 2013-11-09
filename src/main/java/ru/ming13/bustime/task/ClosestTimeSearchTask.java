@@ -39,12 +39,6 @@ public class ClosestTimeSearchTask extends AsyncTask<Void, Void, BusEvent>
 		try {
 			return getClosestTimePosition(timetableCursor);
 		} finally {
-			// This is really strange.
-			// If we wouldn’t reset the cursor there
-			// the timetable would display a wrong time sometimes.
-			timetableCursor.moveToFirst();
-			timetableCursor.moveToPrevious();
-
 			timetableCursor.close();
 		}
 	}
