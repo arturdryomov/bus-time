@@ -47,15 +47,15 @@ public final class SqlBuilder
 	}
 
 	public static String buildSortOrderClause(String... orderClauses) {
-		return StringUtils.join(",", orderClauses);
+		return StringUtils.join(orderClauses, ",");
 	}
 
 	public static String buildOptionalSelectionClause(String... selectionClauses) {
-		return StringUtils.join(" or ", selectionClauses);
+		return StringUtils.join(selectionClauses, " or ");
 	}
 
 	public static String buildRequiredSelectionClause(String... selectionClauses) {
-		return StringUtils.join(" and ", selectionClauses);
+		return StringUtils.join(selectionClauses, " and ");
 	}
 
 	public static String buildSelectionClause(String field) {
@@ -71,7 +71,7 @@ public final class SqlBuilder
 	}
 
 	public static String buildTableClause(String... tableClauses) {
-		return StringUtils.join(" ", tableClauses);
+		return StringUtils.join(tableClauses, " ");
 	}
 
 	public static String buildTableField(String table, String field) {
