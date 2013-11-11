@@ -103,11 +103,19 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 
 	@Override
 	public void onInfoWindowClick(Marker stationMarker) {
+		if (!isStationIdAvailable(stationMarker)) {
+			return;
+		}
+
 		long stationId = stationMarkerIds.get(stationMarker.getId());
 		String stationName = stationMarker.getTitle();
 		String stationDirection = stationMarker.getSnippet();
 
 		BusProvider.getBus().post(new StationSelectedEvent(stationId, stationName, stationDirection));
+	}
+
+	private boolean isStationIdAvailable(Marker stationMarker) {
+		return (stationMarkerIds != null) && (stationMarkerIds.containsKey(stationMarker.getId()));
 	}
 
 	private void setUpStations() {
