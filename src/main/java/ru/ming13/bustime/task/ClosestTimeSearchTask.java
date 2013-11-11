@@ -51,12 +51,18 @@ public class ClosestTimeSearchTask extends AsyncTask<Void, Void, BusEvent>
 		String currentTime = Time.current().toDatabaseString();
 
 		while (timetableCursor.moveToNext()) {
-			if (getTimeString(timetableCursor).compareTo(currentTime) > 0) {
+			if (isAfter(getTimeString(timetableCursor), currentTime)) {
 				return timetableCursor.getPosition();
 			}
 		}
 
 		return DEFAULT_TIME_POSITION;
+	}
+
+	private boolean isAfter(String time, String currentTime) {
+		int timeCompareResult = time.compareTo(currentTime);
+
+		return (timeCompareResult > 0) || (timeCompareResult == 0);
 	}
 
 	private String getTimeString(Cursor timetableCursor) {
