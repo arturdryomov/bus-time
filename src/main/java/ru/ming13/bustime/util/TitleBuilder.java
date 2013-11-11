@@ -1,7 +1,8 @@
 package ru.ming13.bustime.util;
 
 import android.content.Context;
-import android.text.TextUtils;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ru.ming13.bustime.R;
 
@@ -22,7 +23,7 @@ public final class TitleBuilder
 	}
 
 	public String buildStationTitle(String stationName, String stationDirection) {
-		if (TextUtils.isEmpty(stationDirection)) {
+		if (StringUtils.isEmpty(stationDirection)) {
 			return stationName;
 		}
 

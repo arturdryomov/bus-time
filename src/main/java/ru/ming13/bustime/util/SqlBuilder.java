@@ -1,6 +1,6 @@
 package ru.ming13.bustime.util;
 
-import android.text.TextUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public final class SqlBuilder
 {
@@ -47,15 +47,15 @@ public final class SqlBuilder
 	}
 
 	public static String buildSortOrderClause(String... orderClauses) {
-		return TextUtils.join(",", orderClauses);
+		return StringUtils.join(",", orderClauses);
 	}
 
 	public static String buildOptionalSelectionClause(String... selectionClauses) {
-		return TextUtils.join(" or ", selectionClauses);
+		return StringUtils.join(" or ", selectionClauses);
 	}
 
 	public static String buildRequiredSelectionClause(String... selectionClauses) {
-		return TextUtils.join(" and ", selectionClauses);
+		return StringUtils.join(" and ", selectionClauses);
 	}
 
 	public static String buildSelectionClause(String field) {
@@ -71,7 +71,7 @@ public final class SqlBuilder
 	}
 
 	public static String buildTableClause(String... tableClauses) {
-		return TextUtils.join(" ", tableClauses);
+		return StringUtils.join(" ", tableClauses);
 	}
 
 	public static String buildTableField(String table, String field) {

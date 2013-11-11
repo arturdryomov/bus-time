@@ -3,11 +3,12 @@ package ru.ming13.bustime.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import org.apache.commons.lang3.StringUtils;
 
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.provider.BusTimeContract;
@@ -77,10 +78,9 @@ public class StationsAdapter extends CursorAdapter
 	}
 
 	private int getStationDirectionVisibility(String stationDirection) {
-		if (TextUtils.isEmpty(stationDirection)) {
+		if (StringUtils.isEmpty(stationDirection)) {
 			return View.GONE;
-		}
-		else {
+		} else {
 			return View.VISIBLE;
 		}
 	}
