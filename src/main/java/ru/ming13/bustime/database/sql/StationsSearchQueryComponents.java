@@ -33,10 +33,8 @@ public class StationsSearchQueryComponents implements QueryComponents
 	@Override
 	public String getSelection() {
 		return SqlBuilder.buildOptionalSelectionClause(
-			SqlBuilder.buildLikeClause(DatabaseSchema.StationsColumns.NAME, searchQuery),
 			SqlBuilder.buildLikeClause(DatabaseSchema.StationsColumns.NAME, StringUtils.lowerCase(searchQuery)),
-			SqlBuilder.buildLikeClause(DatabaseSchema.StationsColumns.NAME, StringUtils.capitalize(searchQuery)),
-			SqlBuilder.buildLikeClause(DatabaseSchema.StationsColumns.NAME, StringUtils.upperCase(searchQuery)));
+			SqlBuilder.buildLikeClause(DatabaseSchema.StationsColumns.NAME, StringUtils.capitalize(StringUtils.lowerCase(searchQuery))));
 	}
 
 	@Override
