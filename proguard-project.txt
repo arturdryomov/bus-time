@@ -1,0 +1,52 @@
+# BugSense
+
+## Default
+
+-keep class com.bugsense.** { *; }
+
+## Line numbers
+
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile, LineNumberTable
+
+## Disable obfuscation
+
+-dontobfuscate
+
+
+# AppCompat
+
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
+
+
+# Otto
+
+## Default
+
+-keepclassmembers class ** {
+    @com.squareup.otto.Subscribe public *;
+    @com.squareup.otto.Produce public *;
+}
+
+
+# Google Play Services
+
+## Default
+
+-keep class * extends java.util.ListResourceBundle {
+    protected Object[][] getContents();
+}
+
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+-keepclassmembernames class * {
+    @ccom.google.android.gms.common.annotation.KeepName *;
+}
+
+-keepnames class * implements android.os.Parcelable {
+    public static final ** CREATOR;
+}

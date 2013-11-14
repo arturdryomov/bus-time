@@ -13,6 +13,14 @@ apply plugin: "android"
 android {
     compileSdkVersion 19
     buildToolsVersion "19"
+
+    buildTypes {
+        release {
+            proguardFile getDefaultProguardFile("proguard-android.txt")
+            proguardFile "proguard-project.txt"
+            runProguard true
+        }
+    }
 }
 
 
@@ -20,9 +28,9 @@ dependencies {
     repositories {
         mavenCentral()
 
-        maven { 
+        maven {
             url "http://www.bugsense.com/gradle/"
-        } 
+        }
     }
 
     compile "com.android.support:appcompat-v7:19.0.+"
