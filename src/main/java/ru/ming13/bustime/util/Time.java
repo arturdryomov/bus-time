@@ -67,10 +67,6 @@ public final class Time
 		}
 	}
 
-	public boolean isAfter(Time time) {
-		return this.date.equals(time.date) || this.date.after(time.date);
-	}
-
 	public boolean isWeekend() {
 		Calendar calendar = buildCalendar(date);
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);

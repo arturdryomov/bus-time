@@ -61,7 +61,7 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 	}
 
 	private LocationClient locationClient;
-	private Map<String, Long> stationMarkerIds;
+	private Map<String, Long> stationIds;
 
 	public static StationsMapFragment newInstance() {
 		return new StationsMapFragment();
@@ -107,7 +107,7 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 			return;
 		}
 
-		long stationId = stationMarkerIds.get(stationMarker.getId());
+		long stationId = stationIds.get(stationMarker.getId());
 		String stationName = stationMarker.getTitle();
 		String stationDirection = stationMarker.getSnippet();
 
@@ -115,7 +115,7 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 	}
 
 	private boolean isStationIdAvailable(Marker stationMarker) {
-		return (stationMarkerIds != null) && (stationMarkerIds.containsKey(stationMarker.getId()));
+		return (stationIds != null) && (stationIds.containsKey(stationMarker.getId()));
 	}
 
 	private void setUpStations() {
@@ -124,7 +124,7 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 	}
 
 	private void setUpStationsIds() {
-		stationMarkerIds = new ArrayMap<String, Long>();
+		stationIds = new ArrayMap<String, Long>();
 	}
 
 	private void setUpStationsContent() {
@@ -158,11 +158,11 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 	private void setUpStationsMarkers(Cursor stationsCursor) {
 		GoogleMap map = getMap();
 
-		stationMarkerIds.clear();
+		stationIds.clear();
 
 		while (stationsCursor.moveToNext()) {
 			Marker stationMarker = map.addMarker(buildStationMarkerOptions(stationsCursor));
-			stationMarkerIds.put(stationMarker.getId(), getStationId(stationsCursor));
+			stationIds.put(stationMarker.getId(), getStationId(stationsCursor));
 		}
 	}
 
@@ -269,7 +269,7 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 	private boolean isLocationFarAway(Location location) {
 		Location defaultLocation = convertLocation(getDefaultLocation());
 
-		return location.distanceTo(defaultLocation) >= Defaults.FAR_AWAY_DISTANCE_IN_METERS;
+		return location.distanceTo(defaultLocation) > Defaults.FAR_AWAY_DISTANCE_IN_METERS;
 	}
 
 	private Location convertLocation(LatLng latLng) {
