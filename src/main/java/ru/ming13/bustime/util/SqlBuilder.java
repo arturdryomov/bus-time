@@ -19,12 +19,6 @@ public final class SqlBuilder
 			.toString();
 	}
 
-	public static String buildConcatClause(String firstField, String secondField) {
-		return new StringBuilder()
-			.append("(select ").append(firstField).append(" || ").append(secondField).append(")")
-			.toString();
-	}
-
 	public static String buildIsNullClause(String field) {
 		return new StringBuilder()
 			.append(field).append(" is null")

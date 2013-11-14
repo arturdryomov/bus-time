@@ -33,29 +33,39 @@ public final class StationRoutesQueryComponents implements QueryComponents
 	}
 
 	private String getArrivalTimeProjection() {
-		return String.format("(select %s from %s where %s order by %s limit 1) as %s",
-			getArrivalTimeColumn(),
-			DatabaseSchema.Tables.TRIPS,
-			SqlBuilder.buildRequiredSelectionClause(
-				SqlBuilder.buildSelectionClause(
+		return new StringBuilder()
+			.append("(select ")
+				.append(getArrivalTimeColumn())
+			.append(" from ")
+				.append(DatabaseSchema.Tables.TRIPS)
+			.append(" where ")
+				.append(SqlBuilder.buildSelectionClause(
 					DatabaseSchema.TripsColumns.ROUTE_ID,
-					SqlBuilder.buildTableField(DatabaseSchema.Tables.ROUTES, DatabaseSchema.RoutesColumns._ID)),
-				String.format("%s in (%d, %d)",
-					DatabaseSchema.TripsColumns.TYPE_ID,
-					DatabaseSchema.TripTypesColumnsValues.FULL_WEEK_ID, timetableTypeId),
-				String.format("%s >= datetime('now', 'localtime')", BusTimeContract.Timetable.ARRIVAL_TIME)),
-			SqlBuilder.buildSortOrderClause(
-				DatabaseSchema.TripsColumns.HOUR, DatabaseSchema.TripsColumns.MINUTE),
-			BusTimeContract.Timetable.ARRIVAL_TIME);
+					SqlBuilder.buildTableField(DatabaseSchema.Tables.ROUTES, DatabaseSchema.RoutesColumns._ID)))
+				.append(" and ")
+				.append(DatabaseSchema.TripsColumns.TYPE_ID).append(" in (")
+					.append(DatabaseSchema.TripTypesColumnsValues.FULL_WEEK_ID)
+					.append(",")
+					.append(timetableTypeId)
+					.append(")")
+				.append(" and ")
+				.append(BusTimeContract.Timetable.ARRIVAL_TIME).append(" >= datetime('now', 'localtime')")
+			.append(" order by ")
+				.append(SqlBuilder.buildSortOrderClause(
+					DatabaseSchema.TripsColumns.HOUR, DatabaseSchema.TripsColumns.MINUTE))
+			.append(" limit 1) as ").append(BusTimeContract.Timetable.ARRIVAL_TIME)
+			.toString();
 	}
 
 	private String getArrivalTimeColumn() {
-		return String.format("datetime('now', 'localtime', 'start of day', + %s, + %s, + %s, + %s) as %s",
-			SqlBuilder.buildConcatClause(DatabaseSchema.TripsColumns.HOUR, "' hours'"),
-			SqlBuilder.buildConcatClause(DatabaseSchema.TripsColumns.MINUTE, "' minutes'"),
-			SqlBuilder.buildConcatClause(DatabaseSchema.RoutesAndStationsColumns.SHIFT_HOUR, "' hours'"),
-			SqlBuilder.buildConcatClause(DatabaseSchema.RoutesAndStationsColumns.SHIFT_MINUTE, "' minutes'"),
-			BusTimeContract.Timetable.ARRIVAL_TIME);
+		return new StringBuilder()
+			.append("datetime('now', 'localtime', 'start of day',")
+			.append("+ (select ").append(DatabaseSchema.TripsColumns.HOUR).append(" || ' hours'), ")
+			.append("+ (select ").append(DatabaseSchema.TripsColumns.MINUTE).append(" || ' minutes'), ")
+			.append("+ (select ").append(DatabaseSchema.RoutesAndStationsColumns.SHIFT_HOUR).append(" || ' hours'), ")
+			.append("+ (select ").append(DatabaseSchema.RoutesAndStationsColumns.SHIFT_MINUTE).append(" || ' minutes')) as ")
+			.append(BusTimeContract.Timetable.ARRIVAL_TIME)
+			.toString();
 	}
 
 	@Override

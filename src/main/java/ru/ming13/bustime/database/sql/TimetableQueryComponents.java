@@ -33,12 +33,14 @@ public final class TimetableQueryComponents implements QueryComponents
 	}
 
 	private String getArrivalTimeColumn() {
-		return String.format("datetime('now', 'localtime', 'start of day', + %s, + %s, + %s, + %s) as %s",
-			SqlBuilder.buildConcatClause(DatabaseSchema.TripsColumns.HOUR, "' hours'"),
-			SqlBuilder.buildConcatClause(DatabaseSchema.TripsColumns.MINUTE, "' minutes'"),
-			SqlBuilder.buildConcatClause(DatabaseSchema.RoutesAndStationsColumns.SHIFT_HOUR, "' hours'"),
-			SqlBuilder.buildConcatClause(DatabaseSchema.RoutesAndStationsColumns.SHIFT_MINUTE, "' minutes'"),
-			BusTimeContract.Timetable.ARRIVAL_TIME);
+		return new StringBuilder()
+			.append("datetime('now', 'localtime', 'start of day',")
+			.append("+ (select ").append(DatabaseSchema.TripsColumns.HOUR).append(" || ' hours'), ")
+			.append("+ (select ").append(DatabaseSchema.TripsColumns.MINUTE).append(" || ' minutes'), ")
+			.append("+ (select ").append(DatabaseSchema.RoutesAndStationsColumns.SHIFT_HOUR).append(" || ' hours'), ")
+			.append("+ (select ").append(DatabaseSchema.RoutesAndStationsColumns.SHIFT_MINUTE).append(" || ' minutes')) as ")
+			.append(BusTimeContract.Timetable.ARRIVAL_TIME)
+			.toString();
 	}
 
 	@Override
