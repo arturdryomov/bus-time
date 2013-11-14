@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.util.ArrayMap;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -22,7 +23,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import ru.ming13.bustime.R;
@@ -124,7 +124,7 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 	}
 
 	private void setUpStationsIds() {
-		stationMarkerIds = new HashMap<String, Long>();
+		stationMarkerIds = new ArrayMap<String, Long>();
 	}
 
 	private void setUpStationsContent() {
