@@ -26,7 +26,7 @@ public final class Time
 	}
 
 	private static SimpleDateFormat buildDatabaseTimeFormatter() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	}
 
 	private static PrettyTime buildRelativeTimeFormatter() {

@@ -49,7 +49,7 @@ public final class StationRoutesQueryComponents implements QueryComponents
 					.append(timetableTypeId)
 					.append(")")
 				.append(" and ")
-				.append(BusTimeContract.Timetable.ARRIVAL_TIME).append(" >= datetime('now', 'localtime')")
+				.append(BusTimeContract.Timetable.ARRIVAL_TIME).append(" >= strftime('%Y-%m-%d %H:%M', 'now', 'localtime')")
 			.append(" order by ")
 				.append(SqlBuilder.buildSortOrderClause(
 					DatabaseSchema.TripsColumns.HOUR, DatabaseSchema.TripsColumns.MINUTE))
@@ -59,7 +59,7 @@ public final class StationRoutesQueryComponents implements QueryComponents
 
 	private String getArrivalTimeColumn() {
 		return new StringBuilder()
-			.append("datetime('now', 'localtime', 'start of day',")
+			.append("strftime('%Y-%m-%d %H:%M', 'now', 'localtime', 'start of day',")
 			.append("+ (select ").append(DatabaseSchema.TripsColumns.HOUR).append(" || ' hours'), ")
 			.append("+ (select ").append(DatabaseSchema.TripsColumns.MINUTE).append(" || ' minutes'), ")
 			.append("+ (select ").append(DatabaseSchema.RoutesAndStationsColumns.SHIFT_HOUR).append(" || ' hours'), ")

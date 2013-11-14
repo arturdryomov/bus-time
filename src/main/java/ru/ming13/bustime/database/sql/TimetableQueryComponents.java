@@ -34,7 +34,7 @@ public final class TimetableQueryComponents implements QueryComponents
 
 	private String getArrivalTimeColumn() {
 		return new StringBuilder()
-			.append("datetime('now', 'localtime', 'start of day',")
+			.append("strftime('%Y-%m-%d %H:%M', 'now', 'localtime', 'start of day',")
 			.append("+ (select ").append(DatabaseSchema.TripsColumns.HOUR).append(" || ' hours'), ")
 			.append("+ (select ").append(DatabaseSchema.TripsColumns.MINUTE).append(" || ' minutes'), ")
 			.append("+ (select ").append(DatabaseSchema.RoutesAndStationsColumns.SHIFT_HOUR).append(" || ' hours'), ")
