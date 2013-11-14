@@ -10,7 +10,13 @@ public class BusTimeApplication extends Application
 	public void onCreate() {
 		super.onCreate();
 
-		setUpBugSense();
+		if (isBugSenseEnabled()) {
+			setUpBugSense();
+		}
+	}
+
+	private boolean isBugSenseEnabled() {
+		return !BuildConfig.DEBUG;
 	}
 
 	private void setUpBugSense() {
