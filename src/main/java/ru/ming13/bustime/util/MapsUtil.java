@@ -1,8 +1,10 @@
 package ru.ming13.bustime.util;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.IntentSender;
+import android.content.pm.ConfigurationInfo;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 
@@ -25,7 +27,17 @@ public final class MapsUtil
 		this.context = context;
 	}
 
-	public boolean areMapsAvailable() {
+	public boolean areMapsHardwareAvailable() {
+		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
+
+		int currentGlEsVersion = configurationInfo.reqGlEsVersion;
+		int requiredGlEsVersion = 0x00020000;
+
+		return currentGlEsVersion >= requiredGlEsVersion;
+	}
+
+	public boolean areMapsSoftwareAvailable() {
 		return getErrorCode() == ConnectionResult.SUCCESS;
 	}
 

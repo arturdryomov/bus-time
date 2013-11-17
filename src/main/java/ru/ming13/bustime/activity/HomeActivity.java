@@ -130,6 +130,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		getMenuInflater().inflate(R.menu.action_bar_home, menu);
 
 		setUpStationsSearch(menu);
+		setUpStationsMap(menu);
 
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -156,6 +157,16 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		stationsSearchQueryEdit.setHintTextColor(getResources().getColor(R.color.text_hint_search));
 	}
 
+	private void setUpStationsMap(Menu menu) {
+		if (!MapsUtil.with(this).areMapsHardwareAvailable()) {
+			hideStationsMap(menu);
+		}
+	}
+
+	private void hideStationsMap(Menu menu) {
+		menu.findItem(R.id.menu_stations_map).setVisible(false);
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
@@ -177,7 +188,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void startStationsMapActivity() {
-		if (MapsUtil.with(this).areMapsAvailable()) {
+		if (MapsUtil.with(this).areMapsSoftwareAvailable()) {
 			Intent intent = Intents.Builder.with(this).buildStationsMapIntent();
 			startActivity(intent);
 		} else {
