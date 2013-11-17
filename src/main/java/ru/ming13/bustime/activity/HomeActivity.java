@@ -33,7 +33,8 @@ import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.Preferences;
 
 
-public class HomeActivity extends ActionBarActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
+public class HomeActivity extends ActionBarActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener,
+	SearchView.OnCloseListener
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -136,11 +137,16 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void setUpStationsSearch(Menu menu) {
-		MenuItem stationsSearchMenuItem = menu.findItem(R.id.menu_stations_search);
-		SearchView stationsSearchView = (SearchView) MenuItemCompat.getActionView(stationsSearchMenuItem);
+		SearchView stationsSearchView = getStationsSearchView(menu);
 
 		setUpStationsSearchInformation(stationsSearchView);
 		setUpStationsSearchView(stationsSearchView);
+		setUpStationsSearchViewListeners(stationsSearchView);
+	}
+
+	private SearchView getStationsSearchView(Menu menu) {
+		MenuItem stationsSearchMenuItem = menu.findItem(R.id.menu_stations_search);
+		return (SearchView) MenuItemCompat.getActionView(stationsSearchMenuItem);
 	}
 
 	private void setUpStationsSearchInformation(SearchView stationsSearchView) {
@@ -157,19 +163,65 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		stationsSearchQueryEdit.setHintTextColor(getResources().getColor(R.color.text_hint_search));
 	}
 
+	private void setUpStationsSearchViewListeners(SearchView stationsSearchView) {
+		stationsSearchView.setOnCloseListener(this);
+	}
+
+	@Override
+	public boolean onClose() {
+		setUpOptionsMenu();
+
+		return false;
+	}
+
+	private void setUpOptionsMenu() {
+		supportInvalidateOptionsMenu();
+	}
+
 	private void setUpStationsMap(Menu menu) {
 		if (!MapsUtil.with(this).areMapsHardwareAvailable()) {
-			hideStationsMap(menu);
+			disableStationsMap(menu);
 		}
 	}
 
-	private void hideStationsMap(Menu menu) {
-		menu.findItem(R.id.menu_stations_map).setVisible(false);
+	private void disableStationsMap(Menu menu) {
+		MenuItem stationsMapMenuItem = menu.findItem(R.id.menu_stations_map);
+
+		stationsMapMenuItem.setVisible(false);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		setUpStationsMapVisibility(menu);
+
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	private void setUpStationsMapVisibility(Menu menu) {
+		if (isStationsSearchInAction(menu)) {
+			setUpStationsMapVisiblity(menu, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
+		} else {
+			setUpStationsMapVisiblity(menu, MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+		}
+	}
+
+	private boolean isStationsSearchInAction(Menu menu) {
+		return !getStationsSearchView(menu).isIconified();
+	}
+
+	private void setUpStationsMapVisiblity(Menu menu, int menuItemVisiblity) {
+		MenuItem stationsMapMenuItem = menu.findItem(R.id.menu_stations_map);
+
+		MenuItemCompat.setShowAsAction(stationsMapMenuItem, menuItemVisiblity);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
+			case R.id.menu_stations_search:
+				setUpOptionsMenu();
+				return true;
+
 			case R.id.menu_stations_map:
 				startStationsMapActivity();
 				return true;
