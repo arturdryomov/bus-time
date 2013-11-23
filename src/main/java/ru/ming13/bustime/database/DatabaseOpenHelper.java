@@ -12,6 +12,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper
 
 	private final Context context;
 
+	private SQLiteDatabase database;
+
 	public DatabaseOpenHelper(Context context) {
 		super(context, DatabaseSchema.DATABASE_NAME, null, DATABASE_VERSION);
 
@@ -28,10 +30,20 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper
 
 	@Override
 	public SQLiteDatabase getReadableDatabase() {
+		if (isDatabaseAvailable()) {
+			return database;
+		}
+
 		if (DatabaseImporter.isDatabaseImportRequired(context)) {
 			DatabaseImporter.importDatabase(context);
 		}
 
-		return super.getReadableDatabase();
+		database = super.getReadableDatabase();
+
+		return database;
+	}
+
+	private boolean isDatabaseAvailable() {
+		return (database != null) && (database.isOpen());
 	}
 }
