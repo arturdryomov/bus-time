@@ -12,81 +12,85 @@ public final class ListOrderAnimator
 {
 	private static final int ANIMATION_DURATION_IN_MILLIS = 300;
 
-	private final ListView list;
+	private final Interpolator animationInterpolator;
 
-	private final Interpolator interpolator;
-	private final SparseIntArray savedListItemPositions;
+	private final ListView list;
+	private final SparseIntArray savedListItemPositionsFromTop;
 
 	public ListOrderAnimator(ListView list) {
-		this.list = list;
+		this.animationInterpolator = new DecelerateInterpolator();
 
-		this.interpolator = new DecelerateInterpolator();
-		this.savedListItemPositions = new SparseIntArray(list.getCount());
+		this.list = list;
+		this.savedListItemPositionsFromTop = new SparseIntArray(list.getCount());
 	}
 
 	public void saveListState() {
-		for (int itemIndex = 0; itemIndex < list.getCount(); itemIndex++) {
-			int itemId = getListItemId(itemIndex);
-			int itemPositionFromTop = getListItemPositionFromTop(itemIndex);
+		for (int listItemPosition = 0; listItemPosition < list.getCount(); listItemPosition++) {
+			int listItemId = getListItemId(listItemPosition);
+			int listItemPositionFromTop = getListItemPositionFromTop(listItemPosition);
 
-			saveListItemPosition(itemId, itemPositionFromTop);
+			saveListItemPositionFromTop(listItemId, listItemPositionFromTop);
 		}
 	}
 
-	private int getListItemId(int itemIndex) {
-		return (int) list.getAdapter().getItemId(itemIndex);
+	private int getListItemId(int listItemPosition) {
+		return (int) list.getAdapter().getItemId(listItemPosition);
 	}
 
-	private int getListItemPositionFromTop(int itemIndex) {
-		int firstVisibleItemIndex = list.getFirstVisiblePosition();
-		int lastVisibleItemIndex = list.getLastVisiblePosition();
+	private int getListItemPositionFromTop(int listItemPosition) {
+		int firstVisibleListItemPosition = list.getFirstVisiblePosition();
+		int lastVisibleListItemPosition = list.getLastVisiblePosition();
 
-		if (itemIndex < firstVisibleItemIndex) {
+		if (listItemPosition < firstVisibleListItemPosition) {
 			return list.getTop() - list.getHeight() / 2;
 		}
 
-		if (itemIndex > lastVisibleItemIndex) {
+		if (listItemPosition > lastVisibleListItemPosition) {
 			return list.getBottom() + list.getHeight() / 2;
 		}
 
-		return list.getChildAt(itemIndex - firstVisibleItemIndex).getTop();
+		return list.getChildAt(listItemPosition - firstVisibleListItemPosition).getTop();
 	}
 
-	private void saveListItemPosition(int itemId, int itemPosition) {
-		savedListItemPositions.put(itemId, itemPosition);
+	private void saveListItemPositionFromTop(int listItemId, int listItemPosition) {
+		savedListItemPositionsFromTop.put(listItemId, listItemPosition);
 	}
 
 	public void animateReorderedListState() {
-		for (int itemVisibleIndex = 0; itemVisibleIndex < list.getChildCount(); itemVisibleIndex++) {
-			int itemId = getListItemId(getListItemIndex(itemVisibleIndex));
+		for (int listItemVisiblePosition = 0; listItemVisiblePosition < list.getChildCount(); listItemVisiblePosition++) {
+			int listItemId = getListItemId(getListItemPosition(listItemVisiblePosition));
 
-			if (!isListItemPositionSaved(itemId)) {
+			if (!isListItemPositionSaved(listItemId)) {
 				continue;
 			}
 
-			animateListItem(itemVisibleIndex, itemId);
+			animateListItem(listItemVisiblePosition, listItemId);
 		}
 	}
 
-	private int getListItemIndex(int itemVisibleIndex) {
-		return list.getFirstVisiblePosition() + itemVisibleIndex;
+	private int getListItemPosition(int listItemVisiblePosition) {
+		return list.getFirstVisiblePosition() + listItemVisiblePosition;
 	}
 
-	private boolean isListItemPositionSaved(int itemId) {
-		return savedListItemPositions.indexOfKey(itemId) >= 0;
+	private boolean isListItemPositionSaved(int listItemId) {
+		return savedListItemPositionsFromTop.indexOfKey(listItemId) >= 0;
 	}
 
-	private void animateListItem(int itemVisibleIndex, int itemId) {
-		View itemView = list.getChildAt(itemVisibleIndex);
+	private void animateListItem(int listItemVisiblePosition, int listItemId) {
+		View listItemView = list.getChildAt(listItemVisiblePosition);
 
-		int previousItemPositionFromTop = savedListItemPositions.get(itemId);
-		int currentItemPositionFromTop = itemView.getTop();
-		int itemPositionDelta = currentItemPositionFromTop - previousItemPositionFromTop;
+		int savedListItemPositionFromTop = loadListItemPositionFromTop(listItemId);
+		int currentListItemPositionFromTop = listItemView.getTop();
+		int listItemPositionFromTopDelta = currentListItemPositionFromTop - savedListItemPositionFromTop;
 
-		Animation animation = new TranslateAnimation(0, 0, -itemPositionDelta, 0);
-		animation.setInterpolator(interpolator);
+		Animation animation = new TranslateAnimation(0, 0, -listItemPositionFromTopDelta, 0);
+		animation.setInterpolator(animationInterpolator);
 		animation.setDuration(ANIMATION_DURATION_IN_MILLIS);
 
-		itemView.startAnimation(animation);
+		listItemView.startAnimation(animation);
+	}
+
+	private int loadListItemPositionFromTop(int listItemId) {
+		return savedListItemPositionsFromTop.get(listItemId);
 	}
 }
