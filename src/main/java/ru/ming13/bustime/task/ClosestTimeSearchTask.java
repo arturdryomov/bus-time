@@ -60,9 +60,7 @@ public class ClosestTimeSearchTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private boolean isAfter(String time, String currentTime) {
-		int timeCompareResult = time.compareTo(currentTime);
-
-		return (timeCompareResult > 0) || (timeCompareResult == 0);
+		return time.compareTo(currentTime) >= 0;
 	}
 
 	private String getTimeString(Cursor timetableCursor) {

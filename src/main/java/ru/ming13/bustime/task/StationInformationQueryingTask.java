@@ -41,10 +41,7 @@ public class StationInformationQueryingTask extends AsyncTask<Void, Void, BusEve
 	}
 
 	private Cursor queryStations() {
-		String selection = String.format("%s = ?", BusTimeContract.Stations._ID);
-		String[] selectionArguments = {String.valueOf(stationId)};
-
-		return contentResolver.query(getStationsUri(), null, selection, selectionArguments, null);
+		return contentResolver.query(getStationsUri(), null, null, null, null);
 	}
 
 	private BusEvent buildStationInformationQueriedEvent(Cursor stationsCursor) {

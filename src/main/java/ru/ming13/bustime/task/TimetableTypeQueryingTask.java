@@ -32,7 +32,7 @@ public class TimetableTypeQueryingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private int getTimetableTypeId() {
-		if (!isTimetableWeekDependent()) {
+		if (!isTimetableWeekPartDependent()) {
 			return BusTimeContract.Timetable.Type.FULL_WEEK;
 		}
 
@@ -43,7 +43,7 @@ public class TimetableTypeQueryingTask extends AsyncTask<Void, Void, BusEvent>
 		}
 	}
 
-	private boolean isTimetableWeekDependent() {
+	private boolean isTimetableWeekPartDependent() {
 		return getFullWeekTripsCount() == 0;
 	}
 

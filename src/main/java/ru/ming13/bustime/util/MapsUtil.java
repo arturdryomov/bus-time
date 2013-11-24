@@ -60,7 +60,8 @@ public final class MapsUtil
 
 	public void resolveError(ConnectionResult connectionResult) {
 		try {
-			connectionResult.startResolutionForResult((Activity) context, REQUEST_CODE);
+			Activity activity = (Activity) context;
+			connectionResult.startResolutionForResult(activity, REQUEST_CODE);
 		} catch (IntentSender.SendIntentException e) {
 			throw new RuntimeException();
 		}

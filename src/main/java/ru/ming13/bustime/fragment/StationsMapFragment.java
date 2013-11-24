@@ -213,20 +213,24 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 	}
 
 	private void setUpCameraPosition(Bundle state) {
-		if (isCameraPositionAvailable(state)) {
-			CameraPosition cameraPosition = restoreCameraPosition(state);
-			getMap().moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+		if (isCameraPositionSaved(state)) {
+			setUpSavedCameraPosition(state);
 		} else {
 			setUpLocationClient();
 		}
 	}
 
-	private boolean isCameraPositionAvailable(Bundle state) {
+	private boolean isCameraPositionSaved(Bundle state) {
 		return (state != null) && (restoreCameraPosition(state) != null);
 	}
 
 	private CameraPosition restoreCameraPosition(Bundle state) {
 		return state.getParcelable(Fragments.States.CAMERA_POSITION);
+	}
+
+	private void setUpSavedCameraPosition(Bundle state) {
+		CameraPosition cameraPosition = restoreCameraPosition(state);
+		getMap().moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 	}
 
 	private void setUpLocationClient() {

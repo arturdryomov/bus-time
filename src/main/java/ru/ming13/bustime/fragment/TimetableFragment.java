@@ -258,12 +258,6 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 		refreshRemainingTime();
 	}
 
-	private void refreshRemainingTime() {
-		if (isTimetableAdapterSet()) {
-			getTimetableAdapter().notifyDataSetChanged();
-		}
-	}
-
 	private void setUpTimer() {
 		timer = new Timer();
 		timer.start();
@@ -272,6 +266,12 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	@Subscribe
 	public void onTimeChanged(TimeChangedEvent event) {
 		refreshRemainingTime();
+	}
+
+	private void refreshRemainingTime() {
+		if (isTimetableAdapterSet()) {
+			getTimetableAdapter().notifyDataSetChanged();
+		}
 	}
 
 	private boolean isTimetableAdapterSet() {

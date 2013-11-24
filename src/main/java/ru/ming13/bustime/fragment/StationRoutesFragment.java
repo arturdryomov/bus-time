@@ -133,7 +133,7 @@ public class StationRoutesFragment extends ListFragment implements LoaderManager
 
 		setUpTimer();
 
-		setUpRoutesContentForce();
+		setUpRoutesContentForced();
 	}
 
 	private void setUpTimer() {
@@ -141,13 +141,13 @@ public class StationRoutesFragment extends ListFragment implements LoaderManager
 		timer.start();
 	}
 
-	private void setUpRoutesContentForce() {
+	private void setUpRoutesContentForced() {
 		getLoaderManager().initLoader(Loaders.STATION_ROUTES, null, this).forceLoad();
 	}
 
 	@Subscribe
 	public void onTimeChanged(TimeChangedEvent event) {
-		setUpRoutesContentForce();
+		setUpRoutesContentForced();
 	}
 
 	@Override

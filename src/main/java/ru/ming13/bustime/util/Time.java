@@ -67,23 +67,6 @@ public final class Time
 		}
 	}
 
-	public boolean isWeekend() {
-		Calendar calendar = buildCalendar(date);
-		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-		return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
-	}
-
-	public String toRelativeString(Context context) {
-		Time currentTime = Time.current();
-
-		if (this.equals(currentTime)) {
-			return context.getString(R.string.token_time_now);
-		}
-
-		return relativeTimeFormatter.setReference(currentTime.date).format(date);
-	}
-
 	public static Time current() {
 		Calendar calendar = Calendar.getInstance();
 
@@ -93,15 +76,27 @@ public final class Time
 		return new Time(calendar);
 	}
 
-	private boolean equals(Time time) {
-		return this.date.equals(time.date);
-	}
+	public boolean isWeekend() {
+		int dayOfWeek = buildCalendar(date).get(Calendar.DAY_OF_WEEK);
 
-	public String toSystemString(Context context) {
-		return DateFormat.getTimeFormat(context).format(date);
+		return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
 	}
 
 	public String toDatabaseString() {
 		return databaseTimeFormatter.format(date);
+	}
+
+	public String toRelativeString(Context context) {
+		Time currentTime = Time.current();
+
+		if (this.date.equals(currentTime.date)) {
+			return context.getString(R.string.token_time_now);
+		}
+
+		return relativeTimeFormatter.setReference(currentTime.date).format(date);
+	}
+
+	public String toSystemString(Context context) {
+		return DateFormat.getTimeFormat(context).format(date);
 	}
 }
