@@ -1,29 +1,29 @@
 # Bus Time
 
-This repository contains the source code for the Bus Time Android app.
-
-## Keys
-
-Retrieve your own.
-
-* [Google Maps API][Google Maps API link]
-* [BugSense][BugSense link]
-
-And apply them.
-
-```console
-$ cp src/main/res/xml/keys.template.xml src/main/res/values/keys.xml
-$ vim src/main/res/values/keys.xml
-```
+Provides Android application.
 
 ## Building
 
-The build requires JDK, Gradle and Android SDK (build-tools, SDK platform,
-Android support repository, Google repository).
+You will need JDK 1.6+, Android SDK 22+ and Gradle 1.8+ installed.
 
-```console
-$ gradle clean assembleRelease
-```
+1. Install required Android components.
 
-  [BugSense link]: https://www.bugsense.com
-  [Google Maps API link]: https://developers.google.com/maps/documentation/android/start
+  ```
+  $ android update sdk --no-ui --force --all --filter build-tools-19.0.0
+  $ android update sdk --no-ui --force --all --filter android-19
+  $ android update sdk --no-ui --force --all --filter extra-android-m2repository
+  $ android update sdk --no-ui --force --all --filter extra-google-m2repository
+  ```
+
+2. Set API keys.
+
+  ```
+  $ cp src/main/res/xml/keys.template.xml src/main/res/values/keys.xml
+  $ vi src/main/res/values/keys.xml
+  ```
+
+3. Build application.
+
+  ```
+  $ gradle clean assembleRelease
+  ```
