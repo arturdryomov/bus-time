@@ -20,6 +20,12 @@ android {
             proguardFile "config.proguard"
             runProguard true
         }
+
+        testing.initWith(buildTypes.release)
+        testing {
+            packageNameSuffix ".testing"
+            signingConfig android.signingConfigs.debug
+        }
     }
 }
 
