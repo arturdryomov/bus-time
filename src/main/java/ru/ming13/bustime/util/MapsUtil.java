@@ -15,7 +15,7 @@ import ru.ming13.bustime.fragment.GooglePlayServicesErrorDialog;
 
 public final class MapsUtil
 {
-	private static final int REQUEST_CODE = 0;
+	private static final int ERROR_DIALOG_REQUEST_CODE = 0;
 
 	private final Context context;
 
@@ -50,7 +50,7 @@ public final class MapsUtil
 	}
 
 	private void showErrorDialog(FragmentManager fragmentManager, int errorCode) {
-		DialogFragment dialog = GooglePlayServicesErrorDialog.newInstance(errorCode, REQUEST_CODE);
+		DialogFragment dialog = GooglePlayServicesErrorDialog.newInstance(errorCode, ERROR_DIALOG_REQUEST_CODE);
 		dialog.show(fragmentManager, GooglePlayServicesErrorDialog.TAG);
 	}
 
@@ -61,7 +61,7 @@ public final class MapsUtil
 	public void resolveError(ConnectionResult connectionResult) {
 		try {
 			Activity activity = (Activity) context;
-			connectionResult.startResolutionForResult(activity, REQUEST_CODE);
+			connectionResult.startResolutionForResult(activity, ERROR_DIALOG_REQUEST_CODE);
 		} catch (IntentSender.SendIntentException e) {
 			throw new RuntimeException();
 		}

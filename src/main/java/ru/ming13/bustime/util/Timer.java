@@ -3,14 +3,13 @@ package ru.ming13.bustime.util;
 import android.os.Handler;
 
 import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
 
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.TimeChangedEvent;
 
 public final class Timer implements Runnable
 {
-	private static final int UPDATE_PERIOD_IN_MINUTES = 1;
+	private static final int UPDATE_PERIOD_IN_MILLIS = 1 * 60 * 1000;
 
 	private final Handler timerHandler;
 
@@ -21,14 +20,18 @@ public final class Timer implements Runnable
 	public void start() {
 		stop();
 
-		timerHandler.postDelayed(this, calculateMillisecondsForNextMinute());
+		postponeMessage(calculateMillisForNextMinute());
 	}
 
 	public void stop() {
 		timerHandler.removeCallbacks(this);
 	}
 
-	private long calculateMillisecondsForNextMinute() {
+	private void postponeMessage(long postponeMillis) {
+		timerHandler.postDelayed(this, postponeMillis);
+	}
+
+	private long calculateMillisForNextMinute() {
 		Calendar currentTime = Calendar.getInstance();
 
 		Calendar nextMinuteTime = Calendar.getInstance();
@@ -41,16 +44,12 @@ public final class Timer implements Runnable
 
 	@Override
 	public void run() {
-		sendTimeChangedEvent();
+		sendMessage();
 
-		resume();
+		postponeMessage(UPDATE_PERIOD_IN_MILLIS);
 	}
 
-	private void sendTimeChangedEvent() {
+	private void sendMessage() {
 		BusProvider.getBus().post(new TimeChangedEvent());
-	}
-
-	private void resume() {
-		timerHandler.postDelayed(this, TimeUnit.MINUTES.toMillis(UPDATE_PERIOD_IN_MINUTES));
 	}
 }
