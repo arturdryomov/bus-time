@@ -273,16 +273,11 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void startRouteStationsActivity(long routeId, String routeNumber, String routeDescription) {
-		Uri routeStationsUri = getRouteStationsUri(routeId);
+		Uri routeStationsUri = BusTimeContract.Routes.buildRouteStationsUri(routeId);
 
 		Intent intent = Intents.Builder.with(this)
 			.buildRouteStationsIntent(routeStationsUri, routeNumber, routeDescription);
-
 		startActivity(intent);
-	}
-
-	private Uri getRouteStationsUri(long routeId) {
-		return BusTimeContract.Routes.buildRouteStationsUri(routeId);
 	}
 
 	@Subscribe
@@ -295,16 +290,11 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void startStationRoutesActivity(long stationId, String stationName, String stationDirection) {
-		Uri stationRoutesUri = getStationRoutesUri(stationId);
+		Uri stationRoutesUri = BusTimeContract.Stations.buildStationRoutesUri(stationId);
 
 		Intent intent = Intents.Builder.with(this)
 			.buildStationRoutesIntent(stationRoutesUri, stationName, stationDirection);
-
 		startActivity(intent);
-	}
-
-	private Uri getStationRoutesUri(long stationId) {
-		return BusTimeContract.Stations.buildStationRoutesUri(stationId);
 	}
 
 	@Override

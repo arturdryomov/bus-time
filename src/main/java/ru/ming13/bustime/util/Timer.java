@@ -20,14 +20,14 @@ public final class Timer implements Runnable
 	public void start() {
 		stop();
 
-		postponeMessage(calculateMillisForNextMinute());
+		postponeEvent(calculateMillisForNextMinute());
 	}
 
 	public void stop() {
 		timerHandler.removeCallbacks(this);
 	}
 
-	private void postponeMessage(long postponeMillis) {
+	private void postponeEvent(long postponeMillis) {
 		timerHandler.postDelayed(this, postponeMillis);
 	}
 
@@ -44,12 +44,12 @@ public final class Timer implements Runnable
 
 	@Override
 	public void run() {
-		sendMessage();
+		sendEvent();
 
-		postponeMessage(UPDATE_PERIOD_IN_MILLIS);
+		postponeEvent(UPDATE_PERIOD_IN_MILLIS);
 	}
 
-	private void sendMessage() {
+	private void sendEvent() {
 		BusProvider.getBus().post(new TimeChangedEvent());
 	}
 }

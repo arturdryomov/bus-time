@@ -67,18 +67,13 @@ public class StationRoutesActivity extends ActionBarActivity
 	}
 
 	private void startTimetableActivity(long routeId, String routeNumber) {
-		Uri timetableUri = getTimetableUri(routeId);
+		Uri timetableUri = BusTimeContract.Stations.buildStationTimetableUri(getRoutesUri(), routeId);
 		String stationName = getStationName();
 		String stationDirection = getStationDirection();
 
 		Intent intent = Intents.Builder.with(this)
 			.buildTimetableIntent(timetableUri, routeNumber, stationName, stationDirection);
-
 		startActivity(intent);
-	}
-
-	private Uri getTimetableUri(long routeId) {
-		return BusTimeContract.Stations.buildStationTimetableUri(getRoutesUri(), routeId);
 	}
 
 	@Override
