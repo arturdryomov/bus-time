@@ -13,6 +13,7 @@ import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StationSelectedEvent;
 import ru.ming13.bustime.fragment.StationsMapFragment;
 import ru.ming13.bustime.provider.BusTimeContract;
+import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
 
@@ -22,7 +23,12 @@ public class StationsMapActivity extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		setUpBars();
 		setUpFragment();
+	}
+
+	private void setUpBars() {
+		Bartender.with(this).showBarsBackground(this);
 	}
 
 	private void setUpFragment() {

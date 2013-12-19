@@ -29,6 +29,7 @@ import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StationSelectedEvent;
 import ru.ming13.bustime.provider.BusTimeContract;
+import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
 import ru.ming13.bustime.util.MapsUtil;
@@ -90,11 +91,12 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 
 		map.getUiSettings().setZoomControlsEnabled(Ui.ZOOM_ENABLED);
 
-		map.setPadding(0, getTopPadding(), 0, 0);
-	}
-
-	private int getTopPadding() {
-		return getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height);
+		Bartender bartender = Bartender.with(getActivity());
+		map.setPadding(
+			bartender.getLeftUiPadding(),
+			bartender.getTopUiPadding(),
+			bartender.getRightUiPadding(),
+			bartender.getBottomUiPadding());
 	}
 
 	private void setUpStationMarkersListener() {
