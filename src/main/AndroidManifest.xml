@@ -56,26 +56,22 @@
 
 		<activity
 			android:label="@string/title_stations"
-			android:launchMode="singleTop"
 			android:name=".activity.RouteStationsActivity">
 		</activity>
 
 		<activity
 			android:label="@string/title_stations"
-			android:launchMode="singleTop"
 			android:name=".activity.StationsMapActivity"
 			android:theme="@style/Theme.BusTime.Map">
 		</activity>
 
 		<activity
 			android:label="@string/title_routes"
-			android:launchMode="singleTop"
 			android:name=".activity.StationRoutesActivity">
 		</activity>
 
 		<activity
 			android:label="@string/title_timetable"
-			android:launchMode="singleTop"
 			android:name=".activity.TimetableActivity">
 		</activity>
 
