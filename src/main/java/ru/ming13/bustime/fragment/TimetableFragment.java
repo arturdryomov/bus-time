@@ -20,19 +20,17 @@ import com.squareup.otto.Subscribe;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.TimetableAdapter;
 import ru.ming13.bustime.bus.BusProvider;
-import ru.ming13.bustime.bus.ClosestTimeFoundEvent;
 import ru.ming13.bustime.bus.TimeChangedEvent;
-import ru.ming13.bustime.bus.TimetableTypeQueriedEvent;
+import ru.ming13.bustime.bus.TimetableInformationQueriedEvent;
 import ru.ming13.bustime.provider.BusTimeContract;
-import ru.ming13.bustime.task.ClosestTimeSearchTask;
-import ru.ming13.bustime.task.TimetableTypeQueryingTask;
+import ru.ming13.bustime.task.TimetableInformationQueryingTask;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
 import ru.ming13.bustime.util.Timer;
 
 public class TimetableFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
-	private static final int PREVIOUS_VISIBLE_TIMES_COUNT = 1;
+	private static final int PAST_VISIBLE_TRIPS_COUNT = 1;
 
 	public static TimetableFragment newInstance(Uri uri) {
 		TimetableFragment fragment = new TimetableFragment();
@@ -50,8 +48,10 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 		return arguments;
 	}
 
+	private int timetableType;
+	private int timetableClosestTripPosition;
+
 	private Timer timer;
-	private int type;
 
 	@Override
 	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 	private void setUpTimetableType(Bundle state) {
 		if (!isTimetableTypeAvailable(state)) {
-			TimetableTypeQueryingTask.execute(getActivity(), getTimetableUri());
+			TimetableInformationQueryingTask.execute(getActivity(), getTimetableUri());
 		} else {
 			setUpTimetable(restoreTimetableType(state));
 		}
@@ -92,12 +92,14 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	@Subscribe
-	public void onTimetableTypeQueried(TimetableTypeQueriedEvent event) {
+	public void onTimetableInformationQueried(TimetableInformationQueriedEvent event) {
+		this.timetableClosestTripPosition = event.getTimetableClosestTripPosition();
+
 		setUpTimetable(event.getTimetableType());
 	}
 
-	private void setUpTimetable(int type) {
-		this.type = type;
+	private void setUpTimetable(int timetableType) {
+		this.timetableType = timetableType;
 
 		setUpCurrentActionBar();
 
@@ -126,7 +128,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private int getLoaderId() {
-		switch (type) {
+		switch (timetableType) {
 			case BusTimeContract.Timetable.Type.FULL_WEEK:
 				return Loaders.FULL_WEEK_TIMETABLE;
 
@@ -147,7 +149,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private Uri getCurrentTimetableUri() {
-		return BusTimeContract.Timetable.buildTimetableUri(getTimetableUri(), type);
+		return BusTimeContract.Timetable.buildTimetableUri(getTimetableUri(), timetableType);
 	}
 
 	@Override
@@ -158,7 +160,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 			showMessage();
 		} else {
 			showTimetable();
-			setUpClosestTime();
+			showTimetableClosestTrip();
 		}
 	}
 
@@ -176,17 +178,14 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 		getView().findViewById(R.id.layout_message).setVisibility(View.GONE);
 	}
 
-	private void setUpClosestTime() {
-		ClosestTimeSearchTask.execute(getActivity(), getCurrentTimetableUri());
+	private void showTimetableClosestTrip() {
+		if (isTimetableClosestTripAvailable()) {
+			setSelection(timetableClosestTripPosition - PAST_VISIBLE_TRIPS_COUNT);
+		}
 	}
 
-	@Subscribe
-	public void onClosestTimeFound(ClosestTimeFoundEvent event) {
-		setUpClosestTime(event.getClosestTimePosition());
-	}
-
-	private void setUpClosestTime(int closestTimePosition) {
-		setSelection(closestTimePosition - PREVIOUS_VISIBLE_TIMES_COUNT);
+	private boolean isTimetableClosestTripAvailable() {
+		return timetableClosestTripPosition != 0;
 	}
 
 	private TimetableAdapter getTimetableAdapter() {
@@ -202,7 +201,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
 		super.onCreateOptionsMenu(menu, menuInflater);
 
-		if (!BusTimeContract.Timetable.Type.isWeekPartDependent(type)) {
+		if (!BusTimeContract.Timetable.Type.isWeekPartDependent(timetableType)) {
 			return;
 		}
 
@@ -213,7 +212,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 
-		switch (type) {
+		switch (timetableType) {
 			case BusTimeContract.Timetable.Type.WORKDAYS:
 				menu.findItem(R.id.menu_timetable_workdays).setChecked(true);
 				break;
@@ -233,12 +232,12 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 		switch (menuItem.getItemId()) {
 			case R.id.menu_timetable_workdays:
-				type = BusTimeContract.Timetable.Type.WORKDAYS;
+				timetableType = BusTimeContract.Timetable.Type.WORKDAYS;
 				setUpTimetableContent();
 				return true;
 
 			case R.id.menu_timetable_weekend:
-				type = BusTimeContract.Timetable.Type.WEEKEND;
+				timetableType = BusTimeContract.Timetable.Type.WEEKEND;
 				setUpTimetableContent();
 				return true;
 
@@ -299,6 +298,6 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private void saveTimetableType(Bundle state) {
-		state.putInt(Fragments.States.TIMETABLE_TYPE, type);
+		state.putInt(Fragments.States.TIMETABLE_TYPE, timetableType);
 	}
 }
