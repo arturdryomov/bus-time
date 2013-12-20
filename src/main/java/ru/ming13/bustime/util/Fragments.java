@@ -46,5 +46,9 @@ public final class Fragments
 		private static boolean isAdded(FragmentActivity activity) {
 			return activity.getSupportFragmentManager().findFragmentById(android.R.id.content) != null;
 		}
+
+		public static Fragment find(FragmentActivity activity, String fragmentTag) {
+			return activity.getSupportFragmentManager().findFragmentByTag(fragmentTag);
+		}
 	}
 }

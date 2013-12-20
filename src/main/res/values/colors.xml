@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<color name="background_action_bar">#0099cc</color>
-	<color name="background_action_bar_transparent">#95000000</color>
+	<color name="background_bar">#0099cc</color>
+	<color name="background_bar_transparent">#af000000</color>
 
 	<integer name="hue_map_marker_station">195</integer>
 

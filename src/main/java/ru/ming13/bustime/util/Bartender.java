@@ -46,7 +46,7 @@ public final class Bartender
 	private View buildBarView(LayoutParams barViewParams) {
 		View barView = new View(context);
 		barView.setLayoutParams(barViewParams);
-		barView.setBackgroundResource(R.color.background_action_bar_transparent);
+		barView.setBackgroundResource(R.color.background_bar_transparent);
 
 		return barView;
 	}

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
@@ -26,8 +27,12 @@ import ru.ming13.bustime.adapter.TabsPagerAdapter;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.bus.StationSelectedEvent;
+import ru.ming13.bustime.bus.UpdatesAcceptedEvent;
+import ru.ming13.bustime.bus.UpdatesDiscardedEvent;
+import ru.ming13.bustime.fragment.UpdatesBannerFragment;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.task.StationInformationQueryingTask;
+import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.MapsUtil;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.Preferences;
@@ -323,5 +328,33 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		int selectedTabPosition = getSupportActionBar().getSelectedNavigationIndex();
 
 		preferences.set(Preferences.Keys.SELECTED_TAB_POSITION, selectedTabPosition);
+	}
+
+	private void showUpdatesBanner() {
+		if (!isUpdatesBannerVisible()) {
+			UpdatesBannerFragment.newInstance().show(getSupportFragmentManager());
+		}
+	}
+
+	private boolean isUpdatesBannerVisible() {
+		return getUpdatesBanner() != null;
+	}
+
+	private UpdatesBannerFragment getUpdatesBanner() {
+		return (UpdatesBannerFragment) Fragments.Operator.find(this, UpdatesBannerFragment.TAG);
+	}
+
+	private void hideUpdatesBanner() {
+		getUpdatesBanner().hide(getSupportFragmentManager());
+	}
+
+	@Subscribe
+	public void onUpdatesAccepted(UpdatesAcceptedEvent event) {
+		hideUpdatesBanner();
+	}
+
+	@Subscribe
+	public void onUpdatesDiscarded(UpdatesDiscardedEvent event) {
+		hideUpdatesBanner();
 	}
 }

@@ -13,12 +13,17 @@
 
 	<!-- Actual dimensions. -->
 
+	<dimen name="margin_banner_separator">@dimen/space_ui_element</dimen>
+
+	<dimen name="padding_banner_button">@dimen/space_ui_element</dimen>
+	<dimen name="padding_banner_text">@dimen/space_ui_element_double</dimen>
 	<dimen name="padding_list">@dimen/space_ui_element_double</dimen>
 	<dimen name="padding_list_item">@dimen/space_ui_element</dimen>
 	<dimen name="padding_time_exact">@dimen/space_ui_element_double</dimen>
 	<dimen name="padding_timetable_message">40dp</dimen>
 	<dimen name="padding_timetable_message_summary">@dimen/space_ui_element</dimen>
 
+	<dimen name="text_banner">@dimen/text_small</dimen>
 	<dimen name="text_route_description">@dimen/text_medium</dimen>
 	<dimen name="text_route_number">@dimen/text_large</dimen>
 	<dimen name="text_route_time">@dimen/text_micro</dimen>
@@ -29,6 +34,7 @@
 	<dimen name="text_timetable_message_title">@dimen/text_large</dimen>
 	<dimen name="text_timetable_message_summary">@dimen/text_medium</dimen>
 
+	<dimen name="width_banner_separator">1dp</dimen>
 	<integer name="width_route_number">2</integer>
 
 </resources>
