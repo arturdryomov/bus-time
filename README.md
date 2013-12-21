@@ -25,5 +25,5 @@ You will need JDK 1.6, Android SDK 22 and Gradle 1.8 installed.
 3. Build application.
 
   ```
-  $ gradle clean assembleRelease
+  $ gradle clean assembleDebug
   ```
