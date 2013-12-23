@@ -21,9 +21,9 @@ android {
             runProguard true
         }
 
-        testing.initWith(buildTypes.release)
-        testing {
-            packageNameSuffix ".testing"
+        betaRelease.initWith(buildTypes.release)
+        betaRelease {
+            packageNameSuffix ".beta"
             signingConfig android.signingConfigs.debug
         }
     }
