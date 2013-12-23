@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
@@ -33,13 +32,12 @@ import ru.ming13.bustime.fragment.UpdatesBannerFragment;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.task.StationInformationQueryingTask;
 import ru.ming13.bustime.util.Fragments;
-import ru.ming13.bustime.util.MapsUtil;
 import ru.ming13.bustime.util.Intents;
+import ru.ming13.bustime.util.MapsUtil;
 import ru.ming13.bustime.util.Preferences;
 
 
-public class HomeActivity extends ActionBarActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener,
-	SearchView.OnCloseListener
+public class HomeActivity extends ActionBarActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +144,6 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 
 		setUpStationsSearchInformation(stationsSearchView);
 		setUpStationsSearchView(stationsSearchView);
-		setUpStationsSearchViewListeners(stationsSearchView);
 	}
 
 	private SearchView getStationsSearchView(Menu menu) {
@@ -156,7 +153,6 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 
 	private void setUpStationsSearchInformation(SearchView stationsSearchView) {
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-
 		stationsSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 	}
 
@@ -168,21 +164,6 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		stationsSearchQueryEdit.setHintTextColor(getResources().getColor(R.color.text_hint_search));
 	}
 
-	private void setUpStationsSearchViewListeners(SearchView stationsSearchView) {
-		stationsSearchView.setOnCloseListener(this);
-	}
-
-	@Override
-	public boolean onClose() {
-		setUpOptionsMenu();
-
-		return false;
-	}
-
-	private void setUpOptionsMenu() {
-		supportInvalidateOptionsMenu();
-	}
-
 	private void setUpStationsMap(Menu menu) {
 		if (!MapsUtil.with(this).areMapsHardwareAvailable()) {
 			disableStationsMap(menu);
@@ -191,42 +172,12 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 
 	private void disableStationsMap(Menu menu) {
 		MenuItem stationsMapMenuItem = menu.findItem(R.id.menu_stations_map);
-
 		stationsMapMenuItem.setVisible(false);
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		setUpStationsMapVisibility(menu);
-
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-	private void setUpStationsMapVisibility(Menu menu) {
-		if (isStationsSearchInAction(menu)) {
-			setUpStationsMapVisiblity(menu, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
-		} else {
-			setUpStationsMapVisiblity(menu, MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
-		}
-	}
-
-	private boolean isStationsSearchInAction(Menu menu) {
-		return !getStationsSearchView(menu).isIconified();
-	}
-
-	private void setUpStationsMapVisiblity(Menu menu, int menuItemVisiblity) {
-		MenuItem stationsMapMenuItem = menu.findItem(R.id.menu_stations_map);
-
-		MenuItemCompat.setShowAsAction(stationsMapMenuItem, menuItemVisiblity);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
-			case R.id.menu_stations_search:
-				setUpOptionsMenu();
-				return true;
-
 			case R.id.menu_stations_map:
 				startStationsMapActivity();
 				return true;

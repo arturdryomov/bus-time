@@ -13,7 +13,7 @@
 		android:id="@+id/menu_stations_map"
 		android:icon="@drawable/ic_menu_map"
 		android:title="@string/menu_stations_map"
-		appcompat:showAsAction="always"/>
+		appcompat:showAsAction="ifRoom"/>
 
 	<item
 		android:id="@+id/menu_rate_application"
