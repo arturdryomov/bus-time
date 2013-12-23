@@ -72,7 +72,7 @@ final class DatabaseImporter
 			return assetManager.open(DatabaseSchema.DATABASE_NAME);
 		}
 		catch (IOException e) {
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -81,7 +81,7 @@ final class DatabaseImporter
 			return new FileOutputStream(getLocalDatabaseFile());
 		}
 		catch (FileNotFoundException e) {
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -95,7 +95,7 @@ final class DatabaseImporter
 			inputStream.close();
 		}
 		catch (IOException e) {
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 	}
 }

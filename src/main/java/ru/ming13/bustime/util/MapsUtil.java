@@ -63,7 +63,7 @@ public final class MapsUtil
 			Activity activity = (Activity) context;
 			connectionResult.startResolutionForResult(activity, ERROR_DIALOG_REQUEST_CODE);
 		} catch (IntentSender.SendIntentException e) {
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 	}
 
