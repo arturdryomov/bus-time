@@ -22,7 +22,14 @@ You will need JDK 1.6, Android SDK 22 and Gradle 1.8 installed.
   $ vi src/main/res/values/keys.xml
   ```
 
-3. Build application.
+3. Set database.
+
+  ```
+  $ mkdir src/main/assets
+  $ cp bustime.db src/main/assets/bustime.db
+  ```
+
+4. Build application.
 
   ```
   $ gradle clean assembleDebug
