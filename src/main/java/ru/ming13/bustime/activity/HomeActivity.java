@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
@@ -26,10 +27,15 @@ import ru.ming13.bustime.adapter.TabsPagerAdapter;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.bus.StationSelectedEvent;
+import ru.ming13.bustime.bus.UpdatesAvailableEvent;
 import ru.ming13.bustime.bus.UpdatesAcceptedEvent;
 import ru.ming13.bustime.bus.UpdatesDiscardedEvent;
+import ru.ming13.bustime.bus.UpdatesFinishedEvent;
+import ru.ming13.bustime.bus.UpdatesForcedEvent;
 import ru.ming13.bustime.fragment.UpdatesBannerFragment;
 import ru.ming13.bustime.provider.BusTimeContract;
+import ru.ming13.bustime.task.DatabaseUpdateCheckingTask;
+import ru.ming13.bustime.task.DatabaseUpdatingTask;
 import ru.ming13.bustime.task.StationInformationQueryingTask;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
@@ -48,6 +54,8 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		setUpTabsPager();
 
 		setUpSelectedTab();
+
+		setUpDatabaseUpdates();
 	}
 
 	private void setUpTabs() {
@@ -112,6 +120,67 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		int selectedTabPosition = preferences.getInt(Preferences.Keys.SELECTED_TAB_POSITION);
 
 		getSupportActionBar().setSelectedNavigationItem(selectedTabPosition);
+	}
+
+	private void setUpDatabaseUpdates() {
+		DatabaseUpdateCheckingTask.execute(this);
+	}
+
+	@Subscribe
+	public void onUpdatesForced(UpdatesForcedEvent event) {
+		showProgress();
+
+		DatabaseUpdatingTask.execute(this);
+	}
+
+	private void showProgress() {
+		Toast.makeText(this, "Progress is showing.", Toast.LENGTH_LONG).show();
+	}
+
+	@Subscribe
+	public void onUpdatesFinished(UpdatesFinishedEvent event) {
+		hideProgress();
+	}
+
+	private void hideProgress() {
+		Toast.makeText(this, "Progress is not showing.", Toast.LENGTH_LONG).show();
+	}
+
+	@Subscribe
+	public void onUpdatesAvailable(UpdatesAvailableEvent event) {
+		showUpdatesBanner();
+	}
+
+	private void showUpdatesBanner() {
+		if (!isUpdatesBannerVisible()) {
+			UpdatesBannerFragment.newInstance().show(getSupportFragmentManager());
+		}
+	}
+
+	private boolean isUpdatesBannerVisible() {
+		return getUpdatesBanner() != null;
+	}
+
+	private UpdatesBannerFragment getUpdatesBanner() {
+		return (UpdatesBannerFragment) Fragments.Operator.find(this, UpdatesBannerFragment.TAG);
+	}
+
+	@Subscribe
+	public void onUpdatesAccepted(UpdatesAcceptedEvent event) {
+		hideUpdatesBanner();
+
+		showProgress();
+
+		DatabaseUpdatingTask.execute(this);
+	}
+
+	private void hideUpdatesBanner() {
+		getUpdatesBanner().hide(getSupportFragmentManager());
+	}
+
+	@Subscribe
+	public void onUpdatesDiscarded(UpdatesDiscardedEvent event) {
+		hideUpdatesBanner();
 	}
 
 	@Override
@@ -279,33 +348,5 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		int selectedTabPosition = getSupportActionBar().getSelectedNavigationIndex();
 
 		preferences.set(Preferences.Keys.SELECTED_TAB_POSITION, selectedTabPosition);
-	}
-
-	private void showUpdatesBanner() {
-		if (!isUpdatesBannerVisible()) {
-			UpdatesBannerFragment.newInstance().show(getSupportFragmentManager());
-		}
-	}
-
-	private boolean isUpdatesBannerVisible() {
-		return getUpdatesBanner() != null;
-	}
-
-	private UpdatesBannerFragment getUpdatesBanner() {
-		return (UpdatesBannerFragment) Fragments.Operator.find(this, UpdatesBannerFragment.TAG);
-	}
-
-	private void hideUpdatesBanner() {
-		getUpdatesBanner().hide(getSupportFragmentManager());
-	}
-
-	@Subscribe
-	public void onUpdatesAccepted(UpdatesAcceptedEvent event) {
-		hideUpdatesBanner();
-	}
-
-	@Subscribe
-	public void onUpdatesDiscarded(UpdatesDiscardedEvent event) {
-		hideUpdatesBanner();
 	}
 }

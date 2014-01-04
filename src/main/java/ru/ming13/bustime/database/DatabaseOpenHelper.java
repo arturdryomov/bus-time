@@ -8,14 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper
 {
-	private static final int DATABASE_VERSION = 4;
-
 	private final Context context;
 
 	private SQLiteDatabase database;
 
 	public DatabaseOpenHelper(Context context) {
-		super(context, DatabaseSchema.DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DatabaseSchema.DATABASE_NAME, null, DatabaseSchema.Versions.CURRENT);
 
 		this.context = context.getApplicationContext();
 	}

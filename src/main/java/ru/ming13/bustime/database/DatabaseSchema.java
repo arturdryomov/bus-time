@@ -11,6 +11,20 @@ public class DatabaseSchema
 
 	public static final String DATABASE_NAME = "bustime.db";
 
+	public static final class Versions
+	{
+		private Versions() {
+		}
+
+		// Split route number to number and description.
+		// Split station name to name and direction.
+		// Split times to hours and minutes.
+		// Use 24+ hours for trip times.
+		public static final int CURRENT = 2;
+
+		public static final int INITIAL = 1;
+	}
+
 	public static final class Tables
 	{
 		private Tables() {
