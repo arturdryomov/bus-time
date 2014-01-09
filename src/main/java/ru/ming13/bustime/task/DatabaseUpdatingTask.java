@@ -37,13 +37,13 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private void setServerDatabaseContent() {
-		InputStream serverDatabaseContent = new DatabaseBackend().getDatabaseContent();
+		InputStream serverDatabaseContent = DatabaseBackend.getInstance().getDatabaseContent();
 
 		if (serverDatabaseContent == null) {
 			return;
 		}
 
-		DatabaseOperator.with(context).setDatabaseContent(serverDatabaseContent);
+		DatabaseOperator.with(context).replaceDatabaseContent(serverDatabaseContent);
 	}
 
 	private void setLocalDatabaseVersion() {
@@ -52,7 +52,7 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private String getServerDatabaseVersion() {
-		return new DatabaseBackend().getDatabaseVersion();
+		return DatabaseBackend.getInstance().getDatabaseVersion();
 	}
 
 	@Override

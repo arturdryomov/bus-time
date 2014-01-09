@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import ru.ming13.bustime.util.Assets;
+
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper
 {
@@ -32,8 +34,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper
 			return database;
 		}
 
-		if (DatabaseImporter.isDatabaseImportRequired(context)) {
-			DatabaseImporter.importDatabase(context);
+		if (!DatabaseOperator.with(context).doesDatabaseExist()) {
+			DatabaseOperator.with(context).replaceDatabaseFile(Assets.getDatabaseContent(context));
 		}
 
 		database = super.getReadableDatabase();

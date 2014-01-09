@@ -9,7 +9,6 @@ import ru.ming13.bustime.backend.DatabaseBackend;
 import ru.ming13.bustime.bus.BusEvent;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.UpdatesAvailableEvent;
-import ru.ming13.bustime.bus.UpdatesForcedEvent;
 import ru.ming13.bustime.bus.UpdatesNotAvailableEvent;
 import ru.ming13.bustime.util.Preferences;
 
@@ -35,7 +34,7 @@ public class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
 		}
 
 		if (StringUtils.isEmpty(localDatabaseVersion)) {
-			return new UpdatesForcedEvent();
+			return new UpdatesAvailableEvent();
 		}
 
 		if (!localDatabaseVersion.equals(serverDatabaseVersion)) {
@@ -51,7 +50,7 @@ public class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private String getServerDatabaseVersion() {
-		return new DatabaseBackend().getDatabaseVersion();
+		return DatabaseBackend.getInstance().getDatabaseVersion();
 	}
 
 	@Override

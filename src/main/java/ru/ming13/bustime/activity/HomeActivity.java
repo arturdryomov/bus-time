@@ -18,7 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.ViewAnimator;
 
 import com.squareup.otto.Subscribe;
 
@@ -31,7 +31,6 @@ import ru.ming13.bustime.bus.UpdatesAvailableEvent;
 import ru.ming13.bustime.bus.UpdatesAcceptedEvent;
 import ru.ming13.bustime.bus.UpdatesDiscardedEvent;
 import ru.ming13.bustime.bus.UpdatesFinishedEvent;
-import ru.ming13.bustime.bus.UpdatesForcedEvent;
 import ru.ming13.bustime.fragment.UpdatesBannerFragment;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.task.DatabaseUpdateCheckingTask;
@@ -127,26 +126,6 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	@Subscribe
-	public void onUpdatesForced(UpdatesForcedEvent event) {
-		showProgress();
-
-		DatabaseUpdatingTask.execute(this);
-	}
-
-	private void showProgress() {
-		Toast.makeText(this, "Progress is showing.", Toast.LENGTH_LONG).show();
-	}
-
-	@Subscribe
-	public void onUpdatesFinished(UpdatesFinishedEvent event) {
-		hideProgress();
-	}
-
-	private void hideProgress() {
-		Toast.makeText(this, "Progress is not showing.", Toast.LENGTH_LONG).show();
-	}
-
-	@Subscribe
 	public void onUpdatesAvailable(UpdatesAvailableEvent event) {
 		showUpdatesBanner();
 	}
@@ -169,13 +148,38 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	public void onUpdatesAccepted(UpdatesAcceptedEvent event) {
 		hideUpdatesBanner();
 
-		showProgress();
+		startUpdates();
 
 		DatabaseUpdatingTask.execute(this);
 	}
 
 	private void hideUpdatesBanner() {
 		getUpdatesBanner().hide(getSupportFragmentManager());
+	}
+
+	private void startUpdates() {
+		showProgress();
+
+		DatabaseUpdatingTask.execute(this);
+	}
+
+	private void showProgress() {
+		ViewAnimator animator = (ViewAnimator) findViewById(R.id.animator);
+		animator.setDisplayedChild(animator.indexOfChild(findViewById(R.id.progress)));
+	}
+
+	@Subscribe
+	public void onUpdatesFinished(UpdatesFinishedEvent event) {
+		finishUpdates();
+	}
+
+	private void finishUpdates() {
+		hideProgress();
+	}
+
+	private void hideProgress() {
+		ViewAnimator animator = (ViewAnimator) findViewById(R.id.animator);
+		animator.setDisplayedChild(animator.indexOfChild(findViewById(R.id.pager_tabs)));
 	}
 
 	@Subscribe

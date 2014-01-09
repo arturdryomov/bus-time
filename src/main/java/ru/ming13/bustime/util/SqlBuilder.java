@@ -13,9 +13,34 @@ public final class SqlBuilder
 			.toString();
 	}
 
+	public static String buildAttachClause(String file, String alias) {
+		return new StringBuilder()
+			.append("attach '").append(file).append("' as ").append(alias)
+			.toString();
+	}
+
 	public static String buildCastIntegerClause(String field) {
 		return new StringBuilder()
 			.append("cast (").append(field).append(" as integer)")
+			.toString();
+	}
+
+	public static String buildDeleteClause(String table) {
+		return new StringBuilder()
+			.append("delete from ").append(table)
+			.toString();
+	}
+
+	public static String buildDetachClause(String alias) {
+		return new StringBuilder()
+			.append("detach ").append(alias)
+			.toString();
+	}
+
+	public static String buildInsertClause(String table, String alias) {
+		return new StringBuilder()
+			.append("insert into ").append(table)
+			.append(" select * from ").append(alias).append(".").append(table)
 			.toString();
 	}
 
