@@ -23,7 +23,7 @@
 	<dimen name="padding_timetable_message">40dp</dimen>
 	<dimen name="padding_timetable_message_summary">@dimen/space_ui_element</dimen>
 
-	<dimen name="text_banner">@dimen/text_small</dimen>
+	<dimen name="text_banner">@dimen/text_micro</dimen>
 	<dimen name="text_route_description">@dimen/text_medium</dimen>
 	<dimen name="text_route_number">@dimen/text_large</dimen>
 	<dimen name="text_route_time">@dimen/text_micro</dimen>
