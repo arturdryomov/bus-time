@@ -149,8 +149,6 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		hideUpdatesBanner();
 
 		startUpdates();
-
-		DatabaseUpdatingTask.execute(this);
 	}
 
 	private void hideUpdatesBanner() {

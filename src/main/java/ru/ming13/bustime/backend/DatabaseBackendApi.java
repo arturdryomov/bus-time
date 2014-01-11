@@ -6,9 +6,9 @@ import retrofit.http.Path;
 
 interface DatabaseBackendApi
 {
-	@GET("/db-updates/version/{schema}")
-	DatabaseVersion getDatabaseVersion(@Path("schema") int schemaVersion);
+	@GET("/databases/{schema}")
+	DatabaseInformation getDatabaseInformation(@Path("schema") int schemaVersion);
 
-	@GET("/db-updates/file/{schema}")
-	Response getDatabaseFile(@Path("schema") int schemaVersion);
+	@GET("/databases/{schema}/content")
+	Response getDatabaseContent(@Path("schema") int schemaVersion);
 }
