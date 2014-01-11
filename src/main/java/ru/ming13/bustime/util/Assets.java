@@ -12,7 +12,7 @@ public final class Assets
 	private Assets() {
 	}
 
-	public static InputStream getDatabaseContent(Context context) {
+	public static InputStream getDatabaseContents(Context context) {
 		try {
 			return context.getAssets().open(DatabaseSchema.DATABASE_NAME);
 		} catch (IOException e) {

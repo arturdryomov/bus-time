@@ -27,7 +27,7 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 	@Override
 	protected BusEvent doInBackground(Void... parameters) {
 		try {
-			setServerDatabaseContent();
+			setServerDatabaseContents();
 			setLocalDatabaseVersion();
 		} catch (RuntimeException e) {
 			return new UpdatesFinishedEvent();
@@ -36,19 +36,19 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 		return new UpdatesFinishedEvent();
 	}
 
-	private void setServerDatabaseContent() {
-		InputStream serverDatabaseContent = DatabaseBackend.getInstance().getDatabaseContent();
+	private void setServerDatabaseContents() {
+		InputStream serverDatabaseContents = DatabaseBackend.getInstance().getDatabaseContents();
 
-		if (serverDatabaseContent == null) {
+		if (serverDatabaseContents == null) {
 			return;
 		}
 
-		DatabaseOperator.with(context).replaceDatabaseContent(serverDatabaseContent);
+		DatabaseOperator.with(context).replaceDatabaseContents(serverDatabaseContents);
 	}
 
 	private void setLocalDatabaseVersion() {
 		Preferences preferences = Preferences.getDatabaseStateInstance(context);
-		preferences.set(Preferences.Keys.CONTENT_VERSION, getServerDatabaseVersion());
+		preferences.set(Preferences.Keys.CONTENTS_VERSION, getServerDatabaseVersion());
 	}
 
 	private String getServerDatabaseVersion() {

@@ -33,9 +33,9 @@ public final class DatabaseOperator
 		return context.getDatabasePath(DatabaseSchema.DATABASE_NAME).getAbsoluteFile();
 	}
 
-	public void replaceDatabaseFile(InputStream databaseContent) {
+	public void replaceDatabaseFile(InputStream databaseContents) {
 		try {
-			File tempDatabaseFile = buildTempFile(databaseContent);
+			File tempDatabaseFile = buildTempFile(databaseContents);
 			File databaseFile = buildDatabaseFile();
 
 			FileUtils.moveFile(tempDatabaseFile, databaseFile);
@@ -44,10 +44,10 @@ public final class DatabaseOperator
 		}
 	}
 
-	private File buildTempFile(InputStream fileContent) {
+	private File buildTempFile(InputStream fileContents) {
 		try {
 			File tempFile = File.createTempFile("bustime", null, context.getCacheDir());
-			FileUtils.copyInputStreamToFile(fileContent, tempFile);
+			FileUtils.copyInputStreamToFile(fileContents, tempFile);
 			return tempFile;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -56,17 +56,17 @@ public final class DatabaseOperator
 		}
 	}
 
-	public void replaceDatabaseContent(InputStream databaseContent) {
+	public void replaceDatabaseContents(InputStream databaseContents) {
 		SQLiteDatabase database = new DatabaseOpenHelper(context).getReadableDatabase();
-		File tempDatabaseFile = buildTempFile(databaseContent);
+		File tempDatabaseFile = buildTempFile(databaseContents);
 
-		deleteDatabaseContent(database);
-		insertDatabaseContent(database, tempDatabaseFile);
+		deleteDatabaseContents(database);
+		insertDatabaseContents(database, tempDatabaseFile);
 
 		tempDatabaseFile.delete();
 	}
 
-	private void deleteDatabaseContent(SQLiteDatabase database) {
+	private void deleteDatabaseContents(SQLiteDatabase database) {
 		try {
 			database.beginTransaction();
 
@@ -82,8 +82,8 @@ public final class DatabaseOperator
 		}
 	}
 
-	private void insertDatabaseContent(SQLiteDatabase database, File databaseContentFile) {
-		database.execSQL(SqlBuilder.buildAttachClause(databaseContentFile.getAbsolutePath(), "db"));
+	private void insertDatabaseContents(SQLiteDatabase database, File databaseContentsFile) {
+		database.execSQL(SqlBuilder.buildAttachClause(databaseContentsFile.getAbsolutePath(), "db"));
 
 		try {
 			database.beginTransaction();

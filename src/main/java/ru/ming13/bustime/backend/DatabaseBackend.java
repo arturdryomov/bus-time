@@ -39,9 +39,9 @@ public class DatabaseBackend
 		}
 	}
 
-	public InputStream getDatabaseContent() {
+	public InputStream getDatabaseContents() {
 		try {
-			return backendApi.getDatabaseContent(DatabaseSchema.Versions.CURRENT).getBody().in();
+			return backendApi.getDatabaseContents(DatabaseSchema.Versions.CURRENT).getBody().in();
 		} catch (IOException e) {
 			return null;
 		}

@@ -21,7 +21,7 @@ public final class Preferences
 		private Keys() {
 		}
 
-		public static final String CONTENT_VERSION = "content_version";
+		public static final String CONTENTS_VERSION = "contents_version";
 		public static final String SELECTED_TAB_POSITION = "selected_tab_position";
 	}
 
