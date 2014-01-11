@@ -1,5 +1,6 @@
 package ru.ming13.bustime.task;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -10,6 +11,7 @@ import ru.ming13.bustime.bus.BusEvent;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.UpdatesFinishedEvent;
 import ru.ming13.bustime.database.DatabaseOperator;
+import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Preferences;
 
 public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
@@ -27,8 +29,9 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 	@Override
 	protected BusEvent doInBackground(Void... parameters) {
 		try {
-			setServerDatabaseContents();
-			setLocalDatabaseVersion();
+			setUpServerDatabaseContents();
+			setUpLocalDatabaseVersion();
+			setUpContentsNotifications();
 		} catch (RuntimeException e) {
 			return new UpdatesFinishedEvent();
 		}
@@ -36,7 +39,7 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 		return new UpdatesFinishedEvent();
 	}
 
-	private void setServerDatabaseContents() {
+	private void setUpServerDatabaseContents() {
 		InputStream serverDatabaseContents = DatabaseBackend.getInstance().getDatabaseContents();
 
 		if (serverDatabaseContents == null) {
@@ -46,9 +49,16 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 		DatabaseOperator.with(context).replaceDatabaseContents(serverDatabaseContents);
 	}
 
-	private void setLocalDatabaseVersion() {
+	private void setUpLocalDatabaseVersion() {
 		Preferences preferences = Preferences.getDatabaseStateInstance(context);
 		preferences.set(Preferences.Keys.CONTENTS_VERSION, getServerDatabaseVersion());
+	}
+
+	private void setUpContentsNotifications() {
+		ContentResolver contentResolver = context.getContentResolver();
+
+		contentResolver.notifyChange(BusTimeContract.Routes.buildRoutesUri(), null);
+		contentResolver.notifyChange(BusTimeContract.Stations.buildStationsUri(), null);
 	}
 
 	private String getServerDatabaseVersion() {

@@ -38,13 +38,17 @@ public class BusTimeProvider extends ContentProvider
 
 		queryBuilder.setTables(queryComponents.getTables());
 
-		return queryBuilder.query(getDatabase(),
+		Cursor cursor = queryBuilder.query(getDatabase(),
 			queryComponents.getProjection(),
 			queryComponents.getSelection(),
 			queryComponents.getSelectionArguments(),
 			null,
 			null,
 			queryComponents.getSortOrder());
+
+		cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+		return cursor;
 	}
 
 	private QueryComponents buildQueryComponents(Uri uri) {
