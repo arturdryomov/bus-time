@@ -9,8 +9,10 @@
 
 	<TextView
 		android:text="@string/message_updates"
+		android:textAllCaps="true"
 		android:textColor="@android:color/white"
 		android:textSize="@dimen/text_banner"
+		android:textStyle="bold"
 		android:padding="@dimen/padding_banner_text"
 		android:layout_gravity="center_vertical"
 		android:layout_weight="1"

@@ -18,18 +18,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ViewAnimator;
 
 import com.squareup.otto.Subscribe;
 
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.TabsPagerAdapter;
+import ru.ming13.bustime.bus.BusEventsCollector;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.bus.StationSelectedEvent;
 import ru.ming13.bustime.bus.UpdatesAcceptedEvent;
+import ru.ming13.bustime.bus.UpdatesAvailableEvent;
 import ru.ming13.bustime.bus.UpdatesDiscardedEvent;
+import ru.ming13.bustime.bus.UpdatesFinishedEvent;
 import ru.ming13.bustime.fragment.UpdatesBannerFragment;
 import ru.ming13.bustime.provider.BusTimeContract;
+import ru.ming13.bustime.task.DatabaseUpdateCheckingTask;
+import ru.ming13.bustime.task.DatabaseUpdatingTask;
 import ru.ming13.bustime.task.StationInformationQueryingTask;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
@@ -39,15 +45,40 @@ import ru.ming13.bustime.util.Preferences;
 
 public class HomeActivity extends ActionBarActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
 {
+	private boolean areUpdatesDone;
+	private boolean isProgressVisible;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 
+		setUpSavedState(savedInstanceState);
+
 		setUpTabs();
 		setUpTabsPager();
 
 		setUpSelectedTab();
+
+		setUpProgress();
+		setUpDatabaseUpdates();
+	}
+
+	private void setUpSavedState(Bundle state) {
+		if (state == null) {
+			return;
+		}
+
+		areUpdatesDone = loadUpdatesDone(state);
+		isProgressVisible = loadProgressVisible(state);
+	}
+
+	private boolean loadUpdatesDone(Bundle state) {
+		return state.getBoolean("UPDATES_DONE");
+	}
+
+	private boolean loadProgressVisible(Bundle state) {
+		return state.getBoolean("PROGRESS_VISIBLE");
 	}
 
 	private void setUpTabs() {
@@ -112,6 +143,84 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		int selectedTabPosition = preferences.getInt(Preferences.Keys.SELECTED_TAB_POSITION);
 
 		getSupportActionBar().setSelectedNavigationItem(selectedTabPosition);
+	}
+
+	private void setUpProgress() {
+		if (isProgressVisible) {
+			showProgress();
+		}
+	}
+
+	private void showProgress() {
+		ViewAnimator animator = (ViewAnimator) findViewById(R.id.animator);
+		animator.setDisplayedChild(animator.indexOfChild(findViewById(R.id.progress)));
+	}
+
+	private void setUpDatabaseUpdates() {
+		if (!areUpdatesDone) {
+			DatabaseUpdateCheckingTask.execute(this);
+
+			saveUpdatesDone();
+		}
+	}
+
+	private void saveUpdatesDone() {
+		areUpdatesDone = true;
+	}
+
+	@Subscribe
+	public void onUpdatesAvailable(UpdatesAvailableEvent event) {
+		showUpdatesBanner();
+	}
+
+	private void showUpdatesBanner() {
+		if (!isUpdatesBannerVisible()) {
+			UpdatesBannerFragment.newInstance().show(getSupportFragmentManager());
+		}
+	}
+
+	private boolean isUpdatesBannerVisible() {
+		return getUpdatesBanner() != null;
+	}
+
+	private UpdatesBannerFragment getUpdatesBanner() {
+		return (UpdatesBannerFragment) Fragments.Operator.find(this, UpdatesBannerFragment.TAG);
+	}
+
+	@Subscribe
+	public void onUpdatesAccepted(UpdatesAcceptedEvent event) {
+		hideUpdatesBanner();
+
+		startUpdates();
+	}
+
+	private void hideUpdatesBanner() {
+		getUpdatesBanner().hide(getSupportFragmentManager());
+	}
+
+	private void startUpdates() {
+		showProgress();
+
+		DatabaseUpdatingTask.execute(this);
+	}
+
+	@Subscribe
+	public void onUpdatesFinished(UpdatesFinishedEvent event) {
+		finishUpdates();
+	}
+
+	private void finishUpdates() {
+		hideProgress();
+	}
+
+	private void hideProgress() {
+		ViewAnimator animator = (ViewAnimator) findViewById(R.id.animator);
+		animator.setDisplayedChild(animator.indexOfChild(findViewById(R.id.pager_tabs)));
+	}
+
+	@Subscribe
+	public void onUpdatesDiscarded(UpdatesDiscardedEvent event) {
+		hideUpdatesBanner();
 	}
 
 	@Override
@@ -258,6 +367,8 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		super.onResume();
 
 		BusProvider.getBus().register(this);
+
+		BusEventsCollector.getInstance().postCollectedEvents();
 	}
 
 	@Override
@@ -265,6 +376,29 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		super.onPause();
 
 		BusProvider.getBus().unregister(this);
+
+		BusProvider.getBus().register(BusEventsCollector.getInstance());
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		saveUpdatesDone(outState);
+		saveProgressVisible(outState);
+	}
+
+	private void saveUpdatesDone(Bundle state) {
+		state.putBoolean("UPDATES_DONE", areUpdatesDone);
+	}
+
+	private void saveProgressVisible(Bundle state) {
+		ViewAnimator animator = (ViewAnimator) findViewById(R.id.animator);
+
+		int visibleView = animator.getDisplayedChild();
+		int progressView = animator.indexOfChild(findViewById(R.id.progress));
+
+		state.putBoolean("PROGRESS_VISIBLE", visibleView == progressView);
 	}
 
 	@Override
@@ -279,33 +413,5 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		int selectedTabPosition = getSupportActionBar().getSelectedNavigationIndex();
 
 		preferences.set(Preferences.Keys.SELECTED_TAB_POSITION, selectedTabPosition);
-	}
-
-	private void showUpdatesBanner() {
-		if (!isUpdatesBannerVisible()) {
-			UpdatesBannerFragment.newInstance().show(getSupportFragmentManager());
-		}
-	}
-
-	private boolean isUpdatesBannerVisible() {
-		return getUpdatesBanner() != null;
-	}
-
-	private UpdatesBannerFragment getUpdatesBanner() {
-		return (UpdatesBannerFragment) Fragments.Operator.find(this, UpdatesBannerFragment.TAG);
-	}
-
-	private void hideUpdatesBanner() {
-		getUpdatesBanner().hide(getSupportFragmentManager());
-	}
-
-	@Subscribe
-	public void onUpdatesAccepted(UpdatesAcceptedEvent event) {
-		hideUpdatesBanner();
-	}
-
-	@Subscribe
-	public void onUpdatesDiscarded(UpdatesDiscardedEvent event) {
-		hideUpdatesBanner();
 	}
 }

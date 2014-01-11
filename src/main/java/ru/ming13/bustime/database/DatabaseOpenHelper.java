@@ -5,17 +5,17 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import ru.ming13.bustime.util.Assets;
+
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper
 {
-	private static final int DATABASE_VERSION = 4;
-
 	private final Context context;
 
 	private SQLiteDatabase database;
 
 	public DatabaseOpenHelper(Context context) {
-		super(context, DatabaseSchema.DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DatabaseSchema.DATABASE_NAME, null, DatabaseSchema.Versions.CURRENT);
 
 		this.context = context.getApplicationContext();
 	}
@@ -34,8 +34,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper
 			return database;
 		}
 
-		if (DatabaseImporter.isDatabaseImportRequired(context)) {
-			DatabaseImporter.importDatabase(context);
+		if (!DatabaseOperator.with(context).doesDatabaseExist()) {
+			DatabaseOperator.with(context).replaceDatabaseFile(Assets.getDatabaseContents(context));
 		}
 
 		database = super.getReadableDatabase();

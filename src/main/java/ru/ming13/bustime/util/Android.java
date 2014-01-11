@@ -10,7 +10,7 @@ import android.view.ViewConfiguration;
 
 import ru.ming13.bustime.R;
 
-public final class Android
+final class Android
 {
 	private Android() {
 	}

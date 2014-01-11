@@ -26,7 +26,7 @@ public final class Bartender
 		public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
 	}
 
-	private Context context;
+	private final Context context;
 
 	public static Bartender with(Context context) {
 		return new Bartender(context);
