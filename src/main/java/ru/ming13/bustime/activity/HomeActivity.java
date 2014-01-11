@@ -27,8 +27,8 @@ import ru.ming13.bustime.adapter.TabsPagerAdapter;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.bus.StationSelectedEvent;
-import ru.ming13.bustime.bus.UpdatesAvailableEvent;
 import ru.ming13.bustime.bus.UpdatesAcceptedEvent;
+import ru.ming13.bustime.bus.UpdatesAvailableEvent;
 import ru.ming13.bustime.bus.UpdatesDiscardedEvent;
 import ru.ming13.bustime.bus.UpdatesFinishedEvent;
 import ru.ming13.bustime.fragment.UpdatesBannerFragment;
@@ -44,10 +44,14 @@ import ru.ming13.bustime.util.Preferences;
 
 public class HomeActivity extends ActionBarActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
 {
+	private boolean areUpdatesDone;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
+
+		setUpSavedState(savedInstanceState);
 
 		setUpTabs();
 		setUpTabsPager();
@@ -55,6 +59,18 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		setUpSelectedTab();
 
 		setUpDatabaseUpdates();
+	}
+
+	private void setUpSavedState(Bundle state) {
+		if (state == null) {
+			return;
+		}
+
+		areUpdatesDone = loadUpdatesDone(state);
+	}
+
+	private boolean loadUpdatesDone(Bundle state) {
+		return state.getBoolean("UPDATES_DONE");
 	}
 
 	private void setUpTabs() {
@@ -122,7 +138,15 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void setUpDatabaseUpdates() {
-		DatabaseUpdateCheckingTask.execute(this);
+		if (!areUpdatesDone) {
+			DatabaseUpdateCheckingTask.execute(this);
+
+			saveUpdatesDone();
+		}
+	}
+
+	private void saveUpdatesDone() {
+		areUpdatesDone = true;
 	}
 
 	@Subscribe
@@ -336,6 +360,17 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		super.onPause();
 
 		BusProvider.getBus().unregister(this);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		saveUpdatesDone(outState);
+	}
+
+	private void saveUpdatesDone(Bundle state) {
+		state.putBoolean("UPDATES_DONE", areUpdatesDone);
 	}
 
 	@Override
