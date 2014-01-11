@@ -368,8 +368,6 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 
 		BusProvider.getBus().register(this);
 
-		BusProvider.getBus().unregister(BusEventsCollector.getInstance());
-
 		BusEventsCollector.getInstance().postCollectedEvents();
 	}
 

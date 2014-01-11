@@ -14,7 +14,8 @@ public final class BusTimeContract
 	}
 
 	public static final String AUTHORITY = "ru.ming13.bustime";
-	public static final Uri CONTENT_URI = buildContentUri();
+
+	private static final Uri CONTENT_URI = buildContentUri();
 
 	private static Uri buildContentUri() {
 		return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(AUTHORITY).build();

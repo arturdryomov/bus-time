@@ -16,7 +16,7 @@ import ru.ming13.bustime.util.Preferences;
 
 public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 {
-	private Context context;
+	private final Context context;
 
 	public static void execute(Context context) {
 		new DatabaseUpdatingTask(context).execute();
