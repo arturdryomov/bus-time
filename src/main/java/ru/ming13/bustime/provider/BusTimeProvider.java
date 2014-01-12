@@ -33,6 +33,14 @@ public class BusTimeProvider extends ContentProvider
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArguments, String sortOrder) {
+		try {
+			return query(uri);
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+	}
+
+	private Cursor query(Uri uri) {
 		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 		QueryComponents queryComponents = buildQueryComponents(uri);
 
