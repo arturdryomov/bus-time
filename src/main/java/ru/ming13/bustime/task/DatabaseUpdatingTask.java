@@ -41,11 +41,6 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 
 	private void setUpServerDatabaseContents() {
 		InputStream serverDatabaseContents = DatabaseBackend.getInstance().getDatabaseContents();
-
-		if (serverDatabaseContents == null) {
-			return;
-		}
-
 		DatabaseOperator.with(context).replaceDatabaseContents(serverDatabaseContents);
 	}
 

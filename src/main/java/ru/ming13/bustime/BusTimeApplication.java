@@ -10,16 +10,16 @@ public class BusTimeApplication extends Application
 	public void onCreate() {
 		super.onCreate();
 
-		if (isBugSenseEnabled()) {
-			setUpBugSense();
-		}
-	}
-
-	private boolean isBugSenseEnabled() {
-		return !BuildConfig.DEBUG;
+		setUpBugSense();
 	}
 
 	private void setUpBugSense() {
-		BugSenseHandler.initAndStartSession(this, getString(R.string.key_bugsense_project));
+		if (isReleaseBuild()) {
+			BugSenseHandler.initAndStartSession(this, getString(R.string.key_bugsense_project));
+		}
+	}
+
+	private boolean isReleaseBuild() {
+		return !BuildConfig.DEBUG;
 	}
 }

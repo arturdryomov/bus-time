@@ -43,7 +43,7 @@ public class DatabaseBackend
 		try {
 			return backendApi.getDatabaseContents(DatabaseSchema.Versions.CURRENT).getBody().in();
 		} catch (IOException e) {
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 }
