@@ -15,12 +15,6 @@ android {
     buildToolsVersion "19"
 
     buildTypes {
-        release {
-            proguardFile getDefaultProguardFile("proguard-android.txt")
-            proguardFile "config.proguard"
-            runProguard true
-        }
-
         betaRelease.initWith(buildTypes.release)
         betaRelease {
             packageNameSuffix ".beta"
@@ -28,7 +22,6 @@ android {
         }
     }
 }
-
 
 dependencies {
     repositories {
