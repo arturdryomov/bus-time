@@ -64,6 +64,8 @@ public final class DatabaseOperator
 		insertDatabaseContents(database, tempDatabaseFile);
 
 		tempDatabaseFile.delete();
+
+		database.close();
 	}
 
 	private void deleteDatabaseContents(SQLiteDatabase database) {
