@@ -16,10 +16,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(signingStoreFile)
-            storePassword signingStorePassword
-            keyAlias signingKeyAlias
-            keyPassword signingKeyPassword
+            storeFile file("store-file")
+            storePassword "store-password"
+            keyAlias "key-alias"
+            keyPassword "key-password"
         }
     }
 
