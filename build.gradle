@@ -14,8 +14,20 @@ android {
     compileSdkVersion 19
     buildToolsVersion "19"
 
+    signingConfigs {
+        release {
+            storeFile file(signingStoreFile)
+            storePassword signingStorePassword
+            keyAlias signingKeyAlias
+            keyPassword signingKeyPassword
+        }
+    }
+
     buildTypes {
-        betaRelease.initWith(buildTypes.release)
+        release {
+            signingConfig signingConfigs.release
+        }
+
         betaRelease {
             packageNameSuffix ".beta"
             signingConfig android.signingConfigs.debug
