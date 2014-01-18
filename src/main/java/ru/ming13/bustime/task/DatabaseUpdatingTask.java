@@ -29,9 +29,10 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 	@Override
 	protected BusEvent doInBackground(Void... parameters) {
 		try {
-			setUpServerDatabaseContents();
-			setUpLocalDatabaseVersion();
-			setUpContentsNotifications();
+			updateDatabaseContents();
+			updateDatabaseVersion();
+
+			notifyDatabaseContentsChange();
 		} catch (RuntimeException e) {
 			return new UpdatesFinishedEvent();
 		}
@@ -39,25 +40,25 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 		return new UpdatesFinishedEvent();
 	}
 
-	private void setUpServerDatabaseContents() {
+	private void updateDatabaseContents() {
 		InputStream serverDatabaseContents = DatabaseBackend.getInstance().getDatabaseContents();
 		DatabaseOperator.with(context).replaceDatabaseContents(serverDatabaseContents);
 	}
 
-	private void setUpLocalDatabaseVersion() {
+	private void updateDatabaseVersion() {
 		Preferences preferences = Preferences.getDatabaseStateInstance(context);
 		preferences.set(Preferences.Keys.CONTENTS_VERSION, getServerDatabaseVersion());
 	}
 
-	private void setUpContentsNotifications() {
+	private String getServerDatabaseVersion() {
+		return DatabaseBackend.getInstance().getDatabaseVersion();
+	}
+
+	private void notifyDatabaseContentsChange() {
 		ContentResolver contentResolver = context.getContentResolver();
 
 		contentResolver.notifyChange(BusTimeContract.Routes.buildRoutesUri(), null);
 		contentResolver.notifyChange(BusTimeContract.Stations.buildStationsUri(), null);
-	}
-
-	private String getServerDatabaseVersion() {
-		return DatabaseBackend.getInstance().getDatabaseVersion();
 	}
 
 	@Override
