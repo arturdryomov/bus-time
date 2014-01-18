@@ -45,6 +45,15 @@ import ru.ming13.bustime.util.Preferences;
 
 public class HomeActivity extends ActionBarActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
 {
+	private static final class SavedState
+	{
+		private SavedState() {
+		}
+
+		public static final String PROGRESS_VISIBLE = "PROGRESS_VISIBLE";
+		public static final String UPDATES_DONE = "UPDATES_DONE";
+	}
+
 	private boolean areUpdatesDone;
 	private boolean isProgressVisible;
 
@@ -74,11 +83,11 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private boolean loadUpdatesDone(Bundle state) {
-		return state.getBoolean("UPDATES_DONE");
+		return state.getBoolean(SavedState.UPDATES_DONE);
 	}
 
 	private boolean loadProgressVisible(Bundle state) {
-		return state.getBoolean("PROGRESS_VISIBLE");
+		return state.getBoolean(SavedState.PROGRESS_VISIBLE);
 	}
 
 	private void setUpTabs() {
@@ -389,7 +398,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void saveUpdatesDone(Bundle state) {
-		state.putBoolean("UPDATES_DONE", areUpdatesDone);
+		state.putBoolean(SavedState.UPDATES_DONE, areUpdatesDone);
 	}
 
 	private void saveProgressVisible(Bundle state) {
@@ -398,7 +407,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		int visibleView = animator.getDisplayedChild();
 		int progressView = animator.indexOfChild(findViewById(R.id.progress));
 
-		state.putBoolean("PROGRESS_VISIBLE", visibleView == progressView);
+		state.putBoolean(SavedState.PROGRESS_VISIBLE, visibleView == progressView);
 	}
 
 	@Override
