@@ -25,7 +25,7 @@ public class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	@Override
-	protected BusEvent doInBackground(Void... paramteters) {
+	protected BusEvent doInBackground(Void... parameters) {
 		String localDatabaseVersion = getLocalDatabaseVersion();
 		String serverDatabaseVersion = getServerDatabaseVersion();
 
