@@ -16,6 +16,7 @@ import ru.ming13.bustime.fragment.GooglePlayServicesErrorDialog;
 public final class MapsUtil
 {
 	private static final int ERROR_DIALOG_REQUEST_CODE = 0;
+	private static final int REQUIRED_GL_ES_VERSION = 0x00020000;
 
 	private final Context context;
 
@@ -32,9 +33,8 @@ public final class MapsUtil
 		ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
 
 		int currentGlEsVersion = configurationInfo.reqGlEsVersion;
-		int requiredGlEsVersion = 0x00020000;
 
-		return currentGlEsVersion >= requiredGlEsVersion;
+		return currentGlEsVersion >= REQUIRED_GL_ES_VERSION;
 	}
 
 	public boolean areMapsSoftwareAvailable() {
