@@ -23,7 +23,7 @@ import android.widget.ViewAnimator;
 import com.squareup.otto.Subscribe;
 
 import ru.ming13.bustime.R;
-import ru.ming13.bustime.adapter.TabsPagerAdapter;
+import ru.ming13.bustime.adapter.TabPagerAdapter;
 import ru.ming13.bustime.bus.BusEventsCollector;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
@@ -84,8 +84,8 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	private void setUpTabs() {
 		ActionBar actionBar = getSupportActionBar();
 
-		actionBar.addTab(buildTab(R.string.title_routes), TabsPagerAdapter.TabsPositions.ROUTES);
-		actionBar.addTab(buildTab(R.string.title_stations), TabsPagerAdapter.TabsPositions.STATIONS);
+		actionBar.addTab(buildTab(R.string.title_routes), TabPagerAdapter.TabPosition.ROUTES);
+		actionBar.addTab(buildTab(R.string.title_stations), TabPagerAdapter.TabPosition.STATIONS);
 	}
 
 	private ActionBar.Tab buildTab(int tabTitleResourceId) {
@@ -122,7 +122,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private PagerAdapter buildTabsPagerAdapter() {
-		return new TabsPagerAdapter(getSupportFragmentManager());
+		return new TabPagerAdapter(getSupportFragmentManager());
 	}
 
 	@Override
@@ -405,10 +405,10 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	protected void onDestroy() {
 		super.onDestroy();
 
-		saveSeletectedTab();
+		saveSelectedTab();
 	}
 
-	private void saveSeletectedTab() {
+	private void saveSelectedTab() {
 		Preferences preferences = Preferences.getApplicationStateInstance(this);
 		int selectedTabPosition = getSupportActionBar().getSelectedNavigationIndex();
 

@@ -7,30 +7,30 @@ import android.support.v4.app.FragmentPagerAdapter;
 import ru.ming13.bustime.fragment.RoutesFragment;
 import ru.ming13.bustime.fragment.StationsFragment;
 
-public class TabsPagerAdapter extends FragmentPagerAdapter
+public class TabPagerAdapter extends FragmentPagerAdapter
 {
-	private static final int TABS_COUNT = 2;
+	private static final int TAB_COUNT = 2;
 
-	public static final class TabsPositions
+	public static final class TabPosition
 	{
-		private TabsPositions() {
+		private TabPosition() {
 		}
 
 		public static final int ROUTES = 0;
 		public static final int STATIONS = 1;
 	}
 
-	public TabsPagerAdapter(FragmentManager fragmentManager) {
+	public TabPagerAdapter(FragmentManager fragmentManager) {
 		super(fragmentManager);
 	}
 
 	@Override
 	public Fragment getItem(int position) {
 		switch (position) {
-			case TabsPositions.ROUTES:
+			case TabPosition.ROUTES:
 				return RoutesFragment.newInstance();
 
-			case TabsPositions.STATIONS:
+			case TabPosition.STATIONS:
 				return StationsFragment.newInstance();
 
 			default:
@@ -40,6 +40,6 @@ public class TabsPagerAdapter extends FragmentPagerAdapter
 
 	@Override
 	public int getCount() {
-		return TABS_COUNT;
+		return TAB_COUNT;
 	}
 }
