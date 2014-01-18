@@ -80,16 +80,12 @@ public class StationRoutesActivity extends ActionBarActivity
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 			case android.R.id.home:
-				callUpActivity();
+				finish();
 				return true;
 
 			default:
 				return super.onOptionsItemSelected(menuItem);
 		}
-	}
-
-	private void callUpActivity() {
-		finish();
 	}
 
 	@Override
