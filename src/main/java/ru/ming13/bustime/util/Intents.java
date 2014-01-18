@@ -92,9 +92,8 @@ public final class Intents
 			String feedbackSubject = context.getString(R.string.email_feedback_subject);
 
 			String feedbackUri = String.format("mailto:%s?subject=%s", feedbackAddress, feedbackSubject);
-			Intent feedbackIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse(feedbackUri));
 
-			return Intent.createChooser(feedbackIntent, null);
+			return new Intent(Intent.ACTION_SENDTO, Uri.parse(feedbackUri));
 		}
 	}
 }
