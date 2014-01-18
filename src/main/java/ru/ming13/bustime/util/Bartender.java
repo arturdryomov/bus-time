@@ -91,7 +91,7 @@ public final class Bartender
 	}
 
 	private boolean isNavigationBarAvailable() {
-		return Android.isIceCreamSandwitch() && !Android.hasMenuKey(context) && !Android.hasBackKey();
+		return Android.isIceCreamSandwichOrLater() && !Android.hasHardwareMenuKey(context) && !Android.hasHardwareBackKey();
 	}
 
 	private LayoutParams buildNavigationBarViewParams() {

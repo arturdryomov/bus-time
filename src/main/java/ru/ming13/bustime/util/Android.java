@@ -15,16 +15,16 @@ final class Android
 	private Android() {
 	}
 
-	public static boolean isIceCreamSandwitch() {
+	public static boolean isIceCreamSandwichOrLater() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 	}
 
-	public static boolean hasBackKey() {
+	public static boolean hasHardwareBackKey() {
 		return KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
 	}
 
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-	public static boolean hasMenuKey(Context context) {
+	public static boolean hasHardwareMenuKey(Context context) {
 		return ViewConfiguration.get(context).hasPermanentMenuKey();
 	}
 
