@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:0.6.+"
+        classpath "com.android.tools.build:gradle:0.8.+"
     }
 }
 
@@ -13,6 +13,11 @@ apply plugin: "android"
 android {
     compileSdkVersion 19
     buildToolsVersion "19"
+
+    packagingOptions {
+        exclude "META-INF/LICENSE.txt"
+        exclude "META-INF/NOTICE.txt"
+    }
 
     signingConfigs {
         release {
