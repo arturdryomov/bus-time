@@ -193,7 +193,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private UpdatesBannerFragment getUpdatesBanner() {
-		return (UpdatesBannerFragment) Fragments.Operator.find(this, UpdatesBannerFragment.TAG);
+		return (UpdatesBannerFragment) Fragments.Operator.get(this, UpdatesBannerFragment.TAG);
 	}
 
 	@Subscribe

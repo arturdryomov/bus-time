@@ -32,8 +32,8 @@ public final class Fragments
 		private Operator() {
 		}
 
-		public static void add(FragmentActivity activity, Fragment fragment) {
-			if (isAdded(activity)) {
+		public static void set(FragmentActivity activity, Fragment fragment) {
+			if (isSet(activity)) {
 				return;
 			}
 
@@ -43,11 +43,11 @@ public final class Fragments
 				.commit();
 		}
 
-		private static boolean isAdded(FragmentActivity activity) {
+		private static boolean isSet(FragmentActivity activity) {
 			return activity.getSupportFragmentManager().findFragmentById(android.R.id.content) != null;
 		}
 
-		public static Fragment find(FragmentActivity activity, String fragmentTag) {
+		public static Fragment get(FragmentActivity activity, String fragmentTag) {
 			return activity.getSupportFragmentManager().findFragmentByTag(fragmentTag);
 		}
 	}

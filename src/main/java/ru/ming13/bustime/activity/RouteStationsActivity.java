@@ -47,7 +47,7 @@ public class RouteStationsActivity extends ActionBarActivity
 	}
 
 	private void setUpFragment() {
-		Fragments.Operator.add(this, buildFragment());
+		Fragments.Operator.set(this, buildFragment());
 	}
 
 	private Fragment buildFragment() {
