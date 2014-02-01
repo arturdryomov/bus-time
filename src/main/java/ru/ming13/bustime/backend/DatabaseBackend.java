@@ -11,7 +11,7 @@ import ru.ming13.bustime.database.DatabaseSchema;
 
 public class DatabaseBackend
 {
-	private static final String SERVER_URL = "http://server.local:5000";
+	private static final String API_URL = "http://server.local:5000";
 
 	private final DatabaseBackendApi backendApi;
 
@@ -25,7 +25,7 @@ public class DatabaseBackend
 
 	private DatabaseBackendApi buildBackendApi() {
 		RestAdapter backendAdapter = new RestAdapter.Builder()
-			.setServer(SERVER_URL)
+			.setEndpoint(API_URL)
 			.build();
 
 		return backendAdapter.create(DatabaseBackendApi.class);
