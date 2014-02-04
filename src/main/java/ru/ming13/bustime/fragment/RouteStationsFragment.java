@@ -14,7 +14,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import ru.ming13.bustime.R;
-import ru.ming13.bustime.adapter.StationsAdapter;
+import ru.ming13.bustime.adapter.RouteStationsAdapter;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StationSelectedEvent;
 import ru.ming13.bustime.provider.BusTimeContract;
@@ -61,7 +61,7 @@ public class RouteStationsFragment extends ListFragment implements LoaderManager
 	}
 
 	private ListAdapter buildStationsAdapter() {
-		return new StationsAdapter(getActivity());
+		return new RouteStationsAdapter(getActivity());
 	}
 
 	private void setUpStationsContent() {
@@ -82,8 +82,8 @@ public class RouteStationsFragment extends ListFragment implements LoaderManager
 		getStationsAdapter().swapCursor(stationsCursor);
 	}
 
-	private StationsAdapter getStationsAdapter() {
-		return (StationsAdapter) getListAdapter();
+	private RouteStationsAdapter getStationsAdapter() {
+		return (RouteStationsAdapter) getListAdapter();
 	}
 
 	@Override

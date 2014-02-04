@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="horizontal"
-	android:background="@color/background_bar_transparent"
+	android:background="@color/background_banner"
 	android:clickable="true"
 	android:layout_gravity="bottom"
 	android:layout_width="match_parent"
@@ -9,7 +9,7 @@
 
 	<TextView
 		android:text="@string/message_updates"
-		android:textColor="@android:color/white"
+		android:textColor="@color/text_banner"
 		android:textSize="@dimen/text_banner"
 		android:padding="@dimen/padding_banner_text"
 		android:layout_gravity="center_vertical"
