@@ -4,7 +4,7 @@
 	<color name="background_banner">#af000000</color>
 	<color name="background_bar">#0099cc</color>
 	<color name="background_bar_transparent">#af000000</color>
-	<color name="background_indicator_station">@android:color/darker_gray</color>
+	<color name="background_indicator_station">#0099cc</color>
 
 	<integer name="hue_map_marker_station">195</integer>
 
