@@ -33,7 +33,6 @@ public class RoutesAdapter extends CursorAdapter
 		RouteViewHolder routeViewHolder = buildRouteViewHolder(routeView);
 
 		setUpRouteViewHolder(routeView, routeViewHolder);
-		setUpRouteInformation(routesCursor, routeViewHolder);
 
 		return routeView;
 	}
@@ -55,6 +54,17 @@ public class RoutesAdapter extends CursorAdapter
 		routeView.setTag(routeViewHolder);
 	}
 
+	@Override
+	public void bindView(View routeView, Context context, Cursor routesCursor) {
+		RouteViewHolder routeViewHolder = getRouteViewHolder(routeView);
+
+		setUpRouteInformation(routesCursor, routeViewHolder);
+	}
+
+	private RouteViewHolder getRouteViewHolder(View routeView) {
+		return (RouteViewHolder) routeView.getTag();
+	}
+
 	private void setUpRouteInformation(Cursor routesCursor, RouteViewHolder routeViewHolder) {
 		String routeNumber = getRouteNumber(routesCursor);
 		String routeDescription = getRouteDescription(routesCursor);
@@ -71,16 +81,5 @@ public class RoutesAdapter extends CursorAdapter
 	private String getRouteDescription(Cursor routesCursor) {
 		return routesCursor.getString(
 			routesCursor.getColumnIndex(BusTimeContract.Routes.DESCRIPTION));
-	}
-
-	@Override
-	public void bindView(View routeView, Context context, Cursor routesCursor) {
-		RouteViewHolder routeViewHolder = getRouteViewHolder(routeView);
-
-		setUpRouteInformation(routesCursor, routeViewHolder);
-	}
-
-	private RouteViewHolder getRouteViewHolder(View routeView) {
-		return (RouteViewHolder) routeView.getTag();
 	}
 }

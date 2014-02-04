@@ -37,7 +37,6 @@ public class RouteStationsAdapter extends CursorAdapter
 		StationViewHolder stationViewHolder = buildStationViewHolder(stationView);
 
 		setUpStationViewHolder(stationView, stationViewHolder);
-		setUpStationInformation(stationsCursor, stationViewHolder);
 
 		return stationView;
 	}
@@ -58,6 +57,17 @@ public class RouteStationsAdapter extends CursorAdapter
 
 	private void setUpStationViewHolder(View stationView, StationViewHolder stationViewHolder) {
 		stationView.setTag(stationViewHolder);
+	}
+
+	@Override
+	public void bindView(View stationView, Context context, Cursor stationsCursor) {
+		StationViewHolder stationViewHolder = getStationViewHolder(stationView);
+
+		setUpStationInformation(stationsCursor, stationViewHolder);
+	}
+
+	private StationViewHolder getStationViewHolder(View stationView) {
+		return (StationViewHolder) stationView.getTag();
 	}
 
 	private void setUpStationInformation(Cursor stationsCursor, StationViewHolder stationViewHolder) {
@@ -100,16 +110,5 @@ public class RouteStationsAdapter extends CursorAdapter
 		} else {
 			return View.VISIBLE;
 		}
-	}
-
-	@Override
-	public void bindView(View stationView, Context context, Cursor stationsCursor) {
-		StationViewHolder stationViewHolder = getStationViewHolder(stationView);
-
-		setUpStationInformation(stationsCursor, stationViewHolder);
-	}
-
-	private StationViewHolder getStationViewHolder(View stationView) {
-		return (StationViewHolder) stationView.getTag();
 	}
 }

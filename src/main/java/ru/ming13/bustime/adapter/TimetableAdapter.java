@@ -34,7 +34,6 @@ public class TimetableAdapter extends CursorAdapter
 		TimeViewHolder timeViewHolder = buildTimeViewHolder(timeView);
 
 		setUpTimeViewHolder(timeView, timeViewHolder);
-		setUpTimeInformation(context, timetableCursor, timeViewHolder);
 
 		return timeView;
 	}
@@ -56,6 +55,17 @@ public class TimetableAdapter extends CursorAdapter
 		timeView.setTag(timeViewHolder);
 	}
 
+	@Override
+	public void bindView(View timeView, Context context, Cursor timetableCursor) {
+		TimeViewHolder timeViewHolder = getTimeViewHolder(timeView);
+
+		setUpTimeInformation(context, timetableCursor, timeViewHolder);
+	}
+
+	private TimeViewHolder getTimeViewHolder(View timeView) {
+		return (TimeViewHolder) timeView.getTag();
+	}
+
 	private void setUpTimeInformation(Context context, Cursor timetableCursor, TimeViewHolder timeViewHolder) {
 		Time time = Time.from(getArrivalTime(timetableCursor));
 
@@ -66,16 +76,5 @@ public class TimetableAdapter extends CursorAdapter
 	private String getArrivalTime(Cursor timetableCursor) {
 		return timetableCursor.getString(
 			timetableCursor.getColumnIndex(BusTimeContract.Timetable.ARRIVAL_TIME));
-	}
-
-	@Override
-	public void bindView(View timeView, Context context, Cursor timetableCursor) {
-		TimeViewHolder timeViewHolder = getTimeViewHolder(timeView);
-
-		setUpTimeInformation(context, timetableCursor, timeViewHolder);
-	}
-
-	private TimeViewHolder getTimeViewHolder(View timeView) {
-		return (TimeViewHolder) timeView.getTag();
 	}
 }
