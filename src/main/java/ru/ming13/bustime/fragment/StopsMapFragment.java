@@ -140,7 +140,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private Uri getStopsUri() {
-		return BusTimeContract.Stops.buildStopsUri();
+		return BusTimeContract.Stops.getStopsUri();
 	}
 
 	@Override
@@ -224,15 +224,15 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private boolean isCameraPositionSaved(Bundle state) {
-		return (state != null) && (restoreCameraPosition(state) != null);
+		return (state != null) && (loadCameraPosition(state) != null);
 	}
 
-	private CameraPosition restoreCameraPosition(Bundle state) {
+	private CameraPosition loadCameraPosition(Bundle state) {
 		return state.getParcelable(Fragments.States.CAMERA_POSITION);
 	}
 
 	private void setUpSavedCameraPosition(Bundle state) {
-		CameraPosition cameraPosition = restoreCameraPosition(state);
+		CameraPosition cameraPosition = loadCameraPosition(state);
 		getMap().moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 	}
 

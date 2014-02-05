@@ -46,7 +46,7 @@ public class StopLoadingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private Uri getStopsUri() {
-		return BusTimeContract.Stops.buildStopsUri();
+		return BusTimeContract.Stops.getStopsUri();
 	}
 
 	private Stop getStop(Cursor stopsCursor) {

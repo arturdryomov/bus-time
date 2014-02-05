@@ -5,7 +5,6 @@ import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
@@ -244,7 +243,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void startShowingSearchResult(Intent searchResultIntent) {
-		long stopId = BusTimeContract.Stops.getSearchStopId(searchResultIntent.getData());
+		long stopId = BusTimeContract.Stops.getStopsSearchId(searchResultIntent.getData());
 
 		StopLoadingTask.execute(this, stopId);
 	}
@@ -345,9 +344,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void startRouteStopsActivity(Route route) {
-		Uri routeStopsUri = BusTimeContract.Routes.buildRouteStopsUri(route.getId());
-
-		Intent intent = Intents.Builder.with(this).buildRouteStopsIntent(routeStopsUri, route);
+		Intent intent = Intents.Builder.with(this).buildRouteStopsIntent(route);
 		startActivity(intent);
 	}
 
@@ -357,9 +354,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void startStopRoutesActivity(Stop stop) {
-		Uri stopRoutesUri = BusTimeContract.Stops.buildStopsRoutesUri(stop.getId());
-
-		Intent intent = Intents.Builder.with(this).buildStopRoutesIntent(stopRoutesUri, stop);
+		Intent intent = Intents.Builder.with(this).buildStopRoutesIntent(stop);
 		startActivity(intent);
 	}
 

@@ -50,7 +50,7 @@ public class RouteStopsActivity extends ActionBarActivity
 	}
 
 	private Uri getStopsUri() {
-		return getIntent().getParcelableExtra(Intents.Extras.URI);
+		return BusTimeContract.Stops.getStopsUri(getRoute().getId());
 	}
 
 	@Subscribe
@@ -59,9 +59,7 @@ public class RouteStopsActivity extends ActionBarActivity
 	}
 
 	private void startTimetableActivity(Stop stop) {
-		Uri timetableUri = BusTimeContract.Routes.buildRouteTimetableUri(getStopsUri(), stop.getId());
-
-		Intent intent = Intents.Builder.with(this).buildTimetableIntent(timetableUri, getRoute(), stop);
+		Intent intent = Intents.Builder.with(this).buildTimetableIntent(getRoute(), stop);
 		startActivity(intent);
 	}
 

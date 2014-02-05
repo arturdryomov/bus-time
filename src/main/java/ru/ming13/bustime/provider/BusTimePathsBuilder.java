@@ -29,12 +29,8 @@ final class BusTimePathsBuilder
 		return String.format("%s/%s/%s", Segments.STOPS, stopNumber, Segments.ROUTES);
 	}
 
-	public String buildRouteTimetablePath(String routeNumber, String stopNumber) {
+	public String buildTimetablePath(String routeNumber, String stopNumber) {
 		return String.format("%s/%s/%s/%s", Segments.ROUTES, routeNumber, Segments.STOPS, stopNumber);
-	}
-
-	public String buildStopTimetablePath(String routeNumber, String stopNumber) {
-		return String.format("%s/%s/%s/%s", Segments.STOPS, stopNumber, Segments.ROUTES, routeNumber);
 	}
 
 	public String buildStopsSearchPath(String searchQuery) {

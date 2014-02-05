@@ -10,7 +10,6 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import ru.ming13.bustime.R;
@@ -58,11 +57,7 @@ public class RouteStopsFragment extends ListFragment implements LoaderManager.Lo
 	}
 
 	private void setUpStopsAdapter() {
-		setListAdapter(buildStopsAdapter());
-	}
-
-	private ListAdapter buildStopsAdapter() {
-		return new RouteStopsAdapter(getActivity());
+		setListAdapter(new RouteStopsAdapter(getActivity()));
 	}
 
 	private void setUpStopsContent() {

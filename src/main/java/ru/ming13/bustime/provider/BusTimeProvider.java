@@ -73,11 +73,8 @@ public class BusTimeProvider extends ContentProvider
 			case BusTimeUriMatcher.Codes.STOP_ROUTES:
 				return buildStopRoutesQueryComponents(uri);
 
-			case BusTimeUriMatcher.Codes.ROUTE_TIMETABLE:
-				return buildRouteTimetableQueryComponents(uri);
-
-			case BusTimeUriMatcher.Codes.STOP_TIMETABLE:
-				return buildStopTimetableQueryComponents(uri);
+			case BusTimeUriMatcher.Codes.TIMETABLE:
+				return buildTimetableQueryComponents(uri);
 
 			case BusTimeUriMatcher.Codes.STOPS_SEARCH:
 				return buildStopsSearchQueryComponents(uri);
@@ -96,36 +93,28 @@ public class BusTimeProvider extends ContentProvider
 	}
 
 	private QueryComponents buildRouteStopsQueryComponents(Uri uri) {
-		long routeId = BusTimeContract.Routes.getStopsRouteId(uri);
+		long routeId = BusTimeContract.Routes.getRouteId(uri);
 
 		return new RouteStopsQueryComponents(routeId);
 	}
 
 	private QueryComponents buildStopRoutesQueryComponents(Uri uri) {
-		long stopId = BusTimeContract.Stops.getRoutesStopId(uri);
+		long stopId = BusTimeContract.Stops.getStopId(uri);
 		long timetableTypeId = BusTimeContract.Timetable.Type.currentWeekPartDependent();
 
 		return new StopsRoutesQueryComponents(stopId, timetableTypeId);
 	}
 
-	private QueryComponents buildRouteTimetableQueryComponents(Uri uri) {
-		long routeId = BusTimeContract.Routes.getTimetableRouteId(uri);
-		long stopId = BusTimeContract.Routes.getTimetableStopId(uri);
-		long typeId = BusTimeContract.Timetable.getTimetableType(uri);
-
-		return new TimetableQueryComponents(routeId, stopId, typeId);
-	}
-
-	private QueryComponents buildStopTimetableQueryComponents(Uri uri) {
-		long routeId = BusTimeContract.Stops.getTimetableRouteId(uri);
-		long stopId = BusTimeContract.Stops.getTimetableStopId(uri);
-		long typeId = BusTimeContract.Timetable.getTimetableType(uri);
+	private QueryComponents buildTimetableQueryComponents(Uri uri) {
+		long routeId = BusTimeContract.Timetable.getRouteId(uri);
+		long stopId = BusTimeContract.Timetable.getStopId(uri);
+		long typeId = BusTimeContract.Timetable.getTimetableTypeId(uri);
 
 		return new TimetableQueryComponents(routeId, stopId, typeId);
 	}
 
 	private QueryComponents buildStopsSearchQueryComponents(Uri uri) {
-		String searchQuery = BusTimeContract.Stops.getSearchStopsQuery(uri);
+		String searchQuery = BusTimeContract.Stops.getStopsSearchQuery(uri);
 
 		return new StopsSearchQueryComponents(searchQuery);
 	}

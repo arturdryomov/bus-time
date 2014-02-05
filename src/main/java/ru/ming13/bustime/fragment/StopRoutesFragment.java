@@ -10,7 +10,6 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.squareup.otto.Subscribe;
@@ -65,11 +64,7 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 	}
 
 	private void setUpRoutesAdapter() {
-		setListAdapter(buildRoutesAdapter());
-	}
-
-	private ListAdapter buildRoutesAdapter() {
-		return new StopRoutesAdapter(getActivity());
+		setListAdapter(new StopRoutesAdapter(getActivity()));
 	}
 
 	private void setUpRoutesContent() {

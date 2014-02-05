@@ -15,9 +15,6 @@ import ru.ming13.bustime.fragment.GooglePlayServicesErrorDialog;
 
 public final class MapsUtil
 {
-	private static final int ERROR_DIALOG_REQUEST_CODE = 0;
-	private static final int REQUIRED_GL_ES_VERSION = 0x00020000;
-
 	private final Context context;
 
 	public static MapsUtil with(Context context) {
@@ -32,9 +29,10 @@ public final class MapsUtil
 		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 		ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
 
+		int requiredGlEsVersion = 0x00020000;
 		int currentGlEsVersion = configurationInfo.reqGlEsVersion;
 
-		return currentGlEsVersion >= REQUIRED_GL_ES_VERSION;
+		return currentGlEsVersion >= requiredGlEsVersion;
 	}
 
 	public boolean areMapsSoftwareAvailable() {
@@ -50,7 +48,7 @@ public final class MapsUtil
 	}
 
 	private void showErrorDialog(FragmentManager fragmentManager, int errorCode) {
-		DialogFragment dialog = GooglePlayServicesErrorDialog.newInstance(errorCode, ERROR_DIALOG_REQUEST_CODE);
+		DialogFragment dialog = GooglePlayServicesErrorDialog.newInstance(errorCode, 0);
 		dialog.show(fragmentManager, GooglePlayServicesErrorDialog.TAG);
 	}
 
@@ -61,7 +59,7 @@ public final class MapsUtil
 	public void resolveError(ConnectionResult connectionResult) {
 		try {
 			Activity activity = (Activity) context;
-			connectionResult.startResolutionForResult(activity, ERROR_DIALOG_REQUEST_CODE);
+			connectionResult.startResolutionForResult(activity, 0);
 		} catch (IntentSender.SendIntentException e) {
 			throw new RuntimeException(e);
 		}

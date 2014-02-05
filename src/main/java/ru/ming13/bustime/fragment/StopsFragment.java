@@ -10,7 +10,6 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import ru.ming13.bustime.R;
@@ -45,11 +44,7 @@ public class StopsFragment extends ListFragment implements LoaderManager.LoaderC
 	}
 
 	private void setUpStopsAdapter() {
-		setListAdapter(buildStopsAdapter());
-	}
-
-	private ListAdapter buildStopsAdapter() {
-		return new StopsAdapter(getActivity());
+		setListAdapter(new StopsAdapter(getActivity()));
 	}
 
 	private void setUpStopsContent() {
@@ -62,7 +57,7 @@ public class StopsFragment extends ListFragment implements LoaderManager.LoaderC
 	}
 
 	private Uri getStopsUri() {
-		return BusTimeContract.Stops.buildStopsUri();
+		return BusTimeContract.Stops.getStopsUri();
 	}
 
 	@Override

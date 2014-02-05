@@ -8,11 +8,11 @@ import android.os.AsyncTask;
 
 import ru.ming13.bustime.bus.BusEvent;
 import ru.ming13.bustime.bus.BusProvider;
-import ru.ming13.bustime.bus.TimetableInformationQueriedEvent;
+import ru.ming13.bustime.bus.TimetableInformationLoadedEvent;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Time;
 
-public class TimetableInformationQueryingTask extends AsyncTask<Void, Void, BusEvent>
+public class TimetableInformationLoadingTask extends AsyncTask<Void, Void, BusEvent>
 {
 	private static final int DEFAULT_TIME_POSITION = 0;
 
@@ -20,10 +20,10 @@ public class TimetableInformationQueryingTask extends AsyncTask<Void, Void, BusE
 	private final Uri timetableUri;
 
 	public static void execute(Context context, Uri timetableUri) {
-		new TimetableInformationQueryingTask(context, timetableUri).execute();
+		new TimetableInformationLoadingTask(context, timetableUri).execute();
 	}
 
-	private TimetableInformationQueryingTask(Context context, Uri timetableUri) {
+	private TimetableInformationLoadingTask(Context context, Uri timetableUri) {
 		this.contentResolver = context.getContentResolver();
 		this.timetableUri = timetableUri;
 	}
@@ -33,7 +33,7 @@ public class TimetableInformationQueryingTask extends AsyncTask<Void, Void, BusE
 		int currentTimetableType = getCurrentTimetableType();
 		int closestTripPosition = getClosestTimePosition(currentTimetableType);
 
-		return new TimetableInformationQueriedEvent(currentTimetableType, closestTripPosition);
+		return new TimetableInformationLoadedEvent(currentTimetableType, closestTripPosition);
 	}
 
 	private int getCurrentTimetableType() {
@@ -53,7 +53,7 @@ public class TimetableInformationQueryingTask extends AsyncTask<Void, Void, BusE
 	}
 
 	private int getFullWeekTripsCount() {
-		Cursor timetableCursor = queryFullWeekTimetable();
+		Cursor timetableCursor = loadFullWeekTimetable();
 
 		try {
 			return timetableCursor.getCount();
@@ -62,17 +62,20 @@ public class TimetableInformationQueryingTask extends AsyncTask<Void, Void, BusE
 		}
 	}
 
-	private Cursor queryFullWeekTimetable() {
+	private Cursor loadFullWeekTimetable() {
 		return contentResolver.query(getFullWeekTimetableUri(), null, null, null, null);
 	}
 
 	private Uri getFullWeekTimetableUri() {
-		return BusTimeContract.Timetable.buildTimetableUri(
-			timetableUri, BusTimeContract.Timetable.Type.FULL_WEEK);
+		return getTimetableUri(BusTimeContract.Timetable.Type.FULL_WEEK);
+	}
+
+	private Uri getTimetableUri(int timetableType) {
+		return BusTimeContract.Timetable.getTimetableUri(timetableUri, timetableType);
 	}
 
 	private int getClosestTimePosition(int timetableType) {
-		Cursor timetableCursor = queryTimetable(timetableType);
+		Cursor timetableCursor = loadTimetable(timetableType);
 
 		try {
 			return getClosestTimePosition(timetableCursor);
@@ -81,12 +84,8 @@ public class TimetableInformationQueryingTask extends AsyncTask<Void, Void, BusE
 		}
 	}
 
-	private Cursor queryTimetable(int timetableType) {
+	private Cursor loadTimetable(int timetableType) {
 		return contentResolver.query(getTimetableUri(timetableType), null, null, null, null);
-	}
-
-	private Uri getTimetableUri(int timetableType) {
-		return BusTimeContract.Timetable.buildTimetableUri(timetableUri, timetableType);
 	}
 
 	private int getClosestTimePosition(Cursor timetableCursor) {
@@ -111,9 +110,9 @@ public class TimetableInformationQueryingTask extends AsyncTask<Void, Void, BusE
 	}
 
 	@Override
-	protected void onPostExecute(BusEvent timetableInformationQueriedEvent) {
-		super.onPostExecute(timetableInformationQueriedEvent);
+	protected void onPostExecute(BusEvent busEvent) {
+		super.onPostExecute(busEvent);
 
-		BusProvider.getBus().post(timetableInformationQueriedEvent);
+		BusProvider.getBus().post(busEvent);
 	}
 }

@@ -57,7 +57,7 @@ public class RoutesFragment extends ListFragment implements LoaderManager.Loader
 	}
 
 	private Uri getRoutesUri() {
-		return BusTimeContract.Routes.buildRoutesUri();
+		return BusTimeContract.Routes.getRoutesUri();
 	}
 
 	@Override

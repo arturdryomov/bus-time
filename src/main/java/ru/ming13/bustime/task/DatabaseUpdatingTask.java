@@ -57,8 +57,8 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 	private void notifyDatabaseContentsChange() {
 		ContentResolver contentResolver = context.getContentResolver();
 
-		contentResolver.notifyChange(BusTimeContract.Routes.buildRoutesUri(), null);
-		contentResolver.notifyChange(BusTimeContract.Stops.buildStopsUri(), null);
+		contentResolver.notifyChange(BusTimeContract.Routes.getRoutesUri(), null);
+		contentResolver.notifyChange(BusTimeContract.Stops.getStopsUri(), null);
 	}
 
 	@Override

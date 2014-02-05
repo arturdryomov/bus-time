@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 
 import com.squareup.otto.Subscribe;
 
@@ -21,9 +20,9 @@ import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.TimetableAdapter;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.TimeChangedEvent;
-import ru.ming13.bustime.bus.TimetableInformationQueriedEvent;
+import ru.ming13.bustime.bus.TimetableInformationLoadedEvent;
 import ru.ming13.bustime.provider.BusTimeContract;
-import ru.ming13.bustime.task.TimetableInformationQueryingTask;
+import ru.ming13.bustime.task.TimetableInformationLoadingTask;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
 import ru.ming13.bustime.util.Timer;
@@ -73,17 +72,17 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 	private void setUpTimetableType(Bundle state) {
 		if (!isTimetableTypeAvailable(state)) {
-			TimetableInformationQueryingTask.execute(getActivity(), getTimetableUri());
+			TimetableInformationLoadingTask.execute(getActivity(), getTimetableUri());
 		} else {
-			setUpTimetable(restoreTimetableType(state));
+			setUpTimetable(loadTimetableType(state));
 		}
 	}
 
 	private boolean isTimetableTypeAvailable(Bundle state) {
-		return (state != null) && (restoreTimetableType(state) >= 0);
+		return (state != null) && (loadTimetableType(state) >= 0);
 	}
 
-	private int restoreTimetableType(Bundle state) {
+	private int loadTimetableType(Bundle state) {
 		return state.getInt(Fragments.States.TIMETABLE_TYPE, -1);
 	}
 
@@ -92,7 +91,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	@Subscribe
-	public void onTimetableInformationQueried(TimetableInformationQueriedEvent event) {
+	public void onTimetableInformationLoaded(TimetableInformationLoadedEvent event) {
 		this.timetableClosestTripPosition = event.getTimetableClosestTripPosition();
 
 		setUpTimetable(event.getTimetableType());
@@ -116,11 +115,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private void setUpTimetableAdapter() {
-		setListAdapter(buildTimetableAdapter());
-	}
-
-	private ListAdapter buildTimetableAdapter() {
-		return new TimetableAdapter(getActivity());
+		setListAdapter(new TimetableAdapter(getActivity()));
 	}
 
 	private void setUpTimetableContent() {
@@ -149,7 +144,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private Uri getCurrentTimetableUri() {
-		return BusTimeContract.Timetable.buildTimetableUri(getTimetableUri(), timetableType);
+		return BusTimeContract.Timetable.getTimetableUri(getTimetableUri(), timetableType);
 	}
 
 	@Override

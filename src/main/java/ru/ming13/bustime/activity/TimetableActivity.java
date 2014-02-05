@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import ru.ming13.bustime.fragment.TimetableFragment;
 import ru.ming13.bustime.model.Route;
 import ru.ming13.bustime.model.Stop;
+import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.TitleBuilder;
@@ -57,7 +58,7 @@ public class TimetableActivity extends ActionBarActivity
 	}
 
 	private Uri getTimetableUri() {
-		return getIntent().getParcelableExtra(Intents.Extras.URI);
+		return BusTimeContract.Timetable.getTimetableUri(getRoute().getId(), getStop().getId());
 	}
 
 	@Override

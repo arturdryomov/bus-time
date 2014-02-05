@@ -45,6 +45,7 @@ public final class Bartender
 
 	private View buildBarView(LayoutParams barViewParams) {
 		View barView = new View(context);
+
 		barView.setLayoutParams(barViewParams);
 		barView.setBackgroundResource(R.color.background_bar_transparent);
 
@@ -52,8 +53,7 @@ public final class Bartender
 	}
 
 	private LayoutParams buildStatusBarViewParams() {
-		LayoutParams statusBarViewParams = new LayoutParams(
-			ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight());
+		LayoutParams statusBarViewParams = new LayoutParams(LayoutParams.MATCH_PARENT, getStatusBarHeight());
 
 		statusBarViewParams.gravity = Gravity.TOP;
 
