@@ -9,7 +9,7 @@ import java.io.InputStream;
 import ru.ming13.bustime.backend.DatabaseBackend;
 import ru.ming13.bustime.bus.BusEvent;
 import ru.ming13.bustime.bus.BusProvider;
-import ru.ming13.bustime.bus.UpdatesFinishedEvent;
+import ru.ming13.bustime.bus.DatabaseUpdateFinishedEvent;
 import ru.ming13.bustime.database.DatabaseOperator;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Preferences;
@@ -34,24 +34,20 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 
 			notifyDatabaseContentsChange();
 		} catch (RuntimeException e) {
-			return new UpdatesFinishedEvent();
+			return new DatabaseUpdateFinishedEvent();
 		}
 
-		return new UpdatesFinishedEvent();
+		return new DatabaseUpdateFinishedEvent();
 	}
 
 	private void updateDatabaseContents() {
-		InputStream serverDatabaseContents = DatabaseBackend.getInstance().getDatabaseContents();
+		InputStream serverDatabaseContents = DatabaseBackend.create().getDatabaseContents();
 		DatabaseOperator.with(context).replaceDatabaseContents(serverDatabaseContents);
 	}
 
 	private void updateDatabaseVersion() {
 		Preferences preferences = Preferences.getDatabaseStateInstance(context);
-		preferences.set(Preferences.Keys.CONTENTS_VERSION, getServerDatabaseVersion());
-	}
-
-	private String getServerDatabaseVersion() {
-		return DatabaseBackend.getInstance().getDatabaseVersion();
+		preferences.set(Preferences.Keys.CONTENTS_VERSION, DatabaseBackend.create().getDatabaseVersion());
 	}
 
 	private void notifyDatabaseContentsChange() {

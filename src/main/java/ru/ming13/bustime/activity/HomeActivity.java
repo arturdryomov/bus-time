@@ -25,13 +25,13 @@ import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.TabPagerAdapter;
 import ru.ming13.bustime.bus.BusEventsCollector;
 import ru.ming13.bustime.bus.BusProvider;
+import ru.ming13.bustime.bus.DatabaseUpdateAcceptedEvent;
+import ru.ming13.bustime.bus.DatabaseUpdateAvailableEvent;
+import ru.ming13.bustime.bus.DatabaseUpdateDiscardedEvent;
+import ru.ming13.bustime.bus.DatabaseUpdateFinishedEvent;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.bus.StopSelectedEvent;
-import ru.ming13.bustime.bus.UpdatesAcceptedEvent;
-import ru.ming13.bustime.bus.UpdatesAvailableEvent;
-import ru.ming13.bustime.bus.UpdatesDiscardedEvent;
-import ru.ming13.bustime.bus.UpdatesFinishedEvent;
-import ru.ming13.bustime.fragment.UpdatesBannerFragment;
+import ru.ming13.bustime.fragment.DatabaseUpdateBanner;
 import ru.ming13.bustime.model.Route;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
@@ -52,10 +52,10 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		}
 
 		public static final String PROGRESS_VISIBLE = "PROGRESS_VISIBLE";
-		public static final String UPDATES_DONE = "UPDATES_DONE";
+		public static final String DATABASE_UPDATE_DONE = "DATABASE_UPDATE_DONE";
 	}
 
-	private boolean areUpdatesDone;
+	private boolean isDatabaseUpdateDone;
 	private boolean isProgressVisible;
 
 	@Override
@@ -71,7 +71,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		setUpSelectedTab();
 
 		setUpProgress();
-		setUpDatabaseUpdates();
+		setUpDatabaseUpdate();
 	}
 
 	private void setUpSavedState(Bundle state) {
@@ -79,12 +79,12 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 			return;
 		}
 
-		areUpdatesDone = loadUpdatesDone(state);
+		isDatabaseUpdateDone = loadDatabaseUpdateDone(state);
 		isProgressVisible = loadProgressVisible(state);
 	}
 
-	private boolean loadUpdatesDone(Bundle state) {
-		return state.getBoolean(SavedState.UPDATES_DONE);
+	private boolean loadDatabaseUpdateDone(Bundle state) {
+		return state.getBoolean(SavedState.DATABASE_UPDATE_DONE);
 	}
 
 	private boolean loadProgressVisible(Bundle state) {
@@ -166,60 +166,60 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		animator.setDisplayedChild(animator.indexOfChild(findViewById(R.id.progress)));
 	}
 
-	private void setUpDatabaseUpdates() {
-		if (!areUpdatesDone) {
+	private void setUpDatabaseUpdate() {
+		if (!isDatabaseUpdateDone) {
 			DatabaseUpdateCheckingTask.execute(this);
 
-			saveUpdatesDone();
+			saveDatabaseUpdateDone();
 		}
 	}
 
-	private void saveUpdatesDone() {
-		areUpdatesDone = true;
+	private void saveDatabaseUpdateDone() {
+		isDatabaseUpdateDone = true;
 	}
 
 	@Subscribe
-	public void onUpdatesAvailable(UpdatesAvailableEvent event) {
-		showUpdatesBanner();
+	public void onDatabaseUpdateAvailable(DatabaseUpdateAvailableEvent event) {
+		showDatabaseUpdateBanner();
 	}
 
-	private void showUpdatesBanner() {
-		if (!isUpdatesBannerVisible()) {
-			UpdatesBannerFragment.newInstance().show(getSupportFragmentManager());
+	private void showDatabaseUpdateBanner() {
+		if (!isDatabaseUpdateBannerVisible()) {
+			DatabaseUpdateBanner.newInstance().show(getSupportFragmentManager());
 		}
 	}
 
-	private boolean isUpdatesBannerVisible() {
-		return getUpdatesBanner() != null;
+	private boolean isDatabaseUpdateBannerVisible() {
+		return getDatabaseUpdateBanner() != null;
 	}
 
-	private UpdatesBannerFragment getUpdatesBanner() {
-		return (UpdatesBannerFragment) Fragments.Operator.get(this, UpdatesBannerFragment.TAG);
+	private DatabaseUpdateBanner getDatabaseUpdateBanner() {
+		return (DatabaseUpdateBanner) Fragments.Operator.get(this, DatabaseUpdateBanner.TAG);
 	}
 
 	@Subscribe
-	public void onUpdatesAccepted(UpdatesAcceptedEvent event) {
-		hideUpdatesBanner();
+	public void onDatabaseUpdateAccepted(DatabaseUpdateAcceptedEvent event) {
+		hideDatabaseUpdateBanner();
 
-		startUpdates();
+		startDatabaseUpdate();
 	}
 
-	private void hideUpdatesBanner() {
-		getUpdatesBanner().hide(getSupportFragmentManager());
+	private void hideDatabaseUpdateBanner() {
+		getDatabaseUpdateBanner().hide(getSupportFragmentManager());
 	}
 
-	private void startUpdates() {
+	private void startDatabaseUpdate() {
 		showProgress();
 
 		DatabaseUpdatingTask.execute(this);
 	}
 
 	@Subscribe
-	public void onUpdatesFinished(UpdatesFinishedEvent event) {
-		finishUpdates();
+	public void onDatabaseUpdateFinished(DatabaseUpdateFinishedEvent event) {
+		finishDatabaseUpdate();
 	}
 
-	private void finishUpdates() {
+	private void finishDatabaseUpdate() {
 		hideProgress();
 	}
 
@@ -229,8 +229,8 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	@Subscribe
-	public void onUpdatesDiscarded(UpdatesDiscardedEvent event) {
-		hideUpdatesBanner();
+	public void onDatabaseUpdatesDiscarded(DatabaseUpdateDiscardedEvent event) {
+		hideDatabaseUpdateBanner();
 	}
 
 	@Override
@@ -380,12 +380,12 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		saveUpdatesDone(outState);
+		saveDatabaseUpdateDone(outState);
 		saveProgressVisible(outState);
 	}
 
-	private void saveUpdatesDone(Bundle state) {
-		state.putBoolean(SavedState.UPDATES_DONE, areUpdatesDone);
+	private void saveDatabaseUpdateDone(Bundle state) {
+		state.putBoolean(SavedState.DATABASE_UPDATE_DONE, isDatabaseUpdateDone);
 	}
 
 	private void saveProgressVisible(Bundle state) {

@@ -15,7 +15,7 @@ public class DatabaseBackend
 
 	private final DatabaseBackendApi backendApi;
 
-	public static DatabaseBackend getInstance() {
+	public static DatabaseBackend create() {
 		return new DatabaseBackend();
 	}
 

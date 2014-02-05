@@ -10,20 +10,20 @@ import android.widget.ImageButton;
 
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
-import ru.ming13.bustime.bus.UpdatesAcceptedEvent;
-import ru.ming13.bustime.bus.UpdatesDiscardedEvent;
+import ru.ming13.bustime.bus.DatabaseUpdateAcceptedEvent;
+import ru.ming13.bustime.bus.DatabaseUpdateDiscardedEvent;
 
-public class UpdatesBannerFragment extends Fragment implements View.OnClickListener
+public class DatabaseUpdateBanner extends Fragment implements View.OnClickListener
 {
-	public static final String TAG = "UPDATES_BANNER";
+	public static final String TAG = "DATABASE_UPDATES_BANNER";
 
-	public static UpdatesBannerFragment newInstance() {
-		return new UpdatesBannerFragment();
+	public static DatabaseUpdateBanner newInstance() {
+		return new DatabaseUpdateBanner();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
-		return layoutInflater.inflate(R.layout.fragment_banner_updates, container, false);
+		return layoutInflater.inflate(R.layout.fragment_banner_database_update, container, false);
 	}
 
 	public void show(FragmentManager fragmentManager) {
@@ -61,23 +61,15 @@ public class UpdatesBannerFragment extends Fragment implements View.OnClickListe
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.button_accept:
-				sendAcceptEvent();
+				BusProvider.getBus().post(new DatabaseUpdateAcceptedEvent());
 				break;
 
 			case R.id.button_discard:
-				sendDiscardEvent();
+				BusProvider.getBus().post(new DatabaseUpdateDiscardedEvent());
 				break;
 
 			default:
 				break;
 		}
-	}
-
-	private void sendAcceptEvent() {
-		BusProvider.getBus().post(new UpdatesAcceptedEvent());
-	}
-
-	private void sendDiscardEvent() {
-		BusProvider.getBus().post(new UpdatesDiscardedEvent());
 	}
 }

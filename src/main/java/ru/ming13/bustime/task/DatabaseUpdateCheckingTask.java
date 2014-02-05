@@ -8,8 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import ru.ming13.bustime.backend.DatabaseBackend;
 import ru.ming13.bustime.bus.BusEvent;
 import ru.ming13.bustime.bus.BusProvider;
-import ru.ming13.bustime.bus.UpdatesAvailableEvent;
-import ru.ming13.bustime.bus.UpdatesNotAvailableEvent;
+import ru.ming13.bustime.bus.DatabaseUpdateAvailableEvent;
+import ru.ming13.bustime.bus.DatabaseUpdateNotAvailableEvent;
 import ru.ming13.bustime.util.Preferences;
 
 public class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
@@ -30,18 +30,18 @@ public class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
 		String serverDatabaseVersion = getServerDatabaseVersion();
 
 		if (StringUtils.isBlank(serverDatabaseVersion)) {
-			return new UpdatesNotAvailableEvent();
+			return new DatabaseUpdateNotAvailableEvent();
 		}
 
 		if (StringUtils.isBlank(localDatabaseVersion)) {
-			return new UpdatesAvailableEvent();
+			return new DatabaseUpdateAvailableEvent();
 		}
 
 		if (!localDatabaseVersion.equals(serverDatabaseVersion)) {
-			return new UpdatesAvailableEvent();
+			return new DatabaseUpdateAvailableEvent();
 		}
 
-		return new UpdatesNotAvailableEvent();
+		return new DatabaseUpdateNotAvailableEvent();
 	}
 
 	private String getLocalDatabaseVersion() {
@@ -50,7 +50,7 @@ public class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private String getServerDatabaseVersion() {
-		return DatabaseBackend.getInstance().getDatabaseVersion();
+		return DatabaseBackend.create().getDatabaseVersion();
 	}
 
 	@Override

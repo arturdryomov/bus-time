@@ -15,7 +15,7 @@
 
 	<string name="message_timetable_title">Рейсов нет</string>
 	<string name="message_timetable_summary">Сегодня рейсов не ожидается</string>
-	<string name="message_updates">Доступны обновления</string>
+	<string name="message_updates">Доступно обновление</string>
 
 	<string name="search_hint">Поиск остановок</string>
 
