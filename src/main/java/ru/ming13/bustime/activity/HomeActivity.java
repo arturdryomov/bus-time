@@ -33,10 +33,12 @@ import ru.ming13.bustime.bus.UpdatesAvailableEvent;
 import ru.ming13.bustime.bus.UpdatesDiscardedEvent;
 import ru.ming13.bustime.bus.UpdatesFinishedEvent;
 import ru.ming13.bustime.fragment.UpdatesBannerFragment;
+import ru.ming13.bustime.model.Route;
+import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.task.DatabaseUpdateCheckingTask;
 import ru.ming13.bustime.task.DatabaseUpdatingTask;
-import ru.ming13.bustime.task.StopInformationQueryingTask;
+import ru.ming13.bustime.task.StopLoadingTask;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.MapsUtil;
@@ -244,7 +246,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	private void startShowingSearchResult(Intent searchResultIntent) {
 		long stopId = BusTimeContract.Stops.getSearchStopId(searchResultIntent.getData());
 
-		StopInformationQueryingTask.execute(this, stopId);
+		StopLoadingTask.execute(this, stopId);
 	}
 
 	@Override
@@ -339,35 +341,25 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 
 	@Subscribe
 	public void onRouteSelected(RouteSelectedEvent event) {
-		long routeId = event.getRouteId();
-		String routeNumber = event.getRouteNumber();
-		String routeDescription = event.getRouteDescription();
-
-		startRouteStopsActivity(routeId, routeNumber, routeDescription);
+		startRouteStopsActivity(event.getRoute());
 	}
 
-	private void startRouteStopsActivity(long routeId, String routeNumber, String routeDescription) {
-		Uri routeStopsUri = BusTimeContract.Routes.buildRouteStopsUri(routeId);
+	private void startRouteStopsActivity(Route route) {
+		Uri routeStopsUri = BusTimeContract.Routes.buildRouteStopsUri(route.getId());
 
-		Intent intent = Intents.Builder.with(this)
-			.buildRouteStopsIntent(routeStopsUri, routeNumber, routeDescription);
+		Intent intent = Intents.Builder.with(this).buildRouteStopsIntent(routeStopsUri, route);
 		startActivity(intent);
 	}
 
 	@Subscribe
 	public void onStopSelected(StopSelectedEvent event) {
-		long stopId = event.getStopId();
-		String stopName = event.getStopName();
-		String stopDirection = event.getStopDirection();
-
-		startStopRoutesActivity(stopId, stopName, stopDirection);
+		startStopRoutesActivity(event.getStop());
 	}
 
-	private void startStopRoutesActivity(long stopId, String stopName, String stopDirection) {
-		Uri stopRoutesUri = BusTimeContract.Stops.buildStopsRoutesUri(stopId);
+	private void startStopRoutesActivity(Stop stop) {
+		Uri stopRoutesUri = BusTimeContract.Stops.buildStopsRoutesUri(stop.getId());
 
-		Intent intent = Intents.Builder.with(this)
-			.buildStopRoutesIntent(stopRoutesUri, stopName, stopDirection);
+		Intent intent = Intents.Builder.with(this).buildStopRoutesIntent(stopRoutesUri, stop);
 		startActivity(intent);
 	}
 

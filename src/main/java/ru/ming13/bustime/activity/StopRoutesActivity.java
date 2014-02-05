@@ -12,6 +12,8 @@ import com.squareup.otto.Subscribe;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.fragment.StopRoutesFragment;
+import ru.ming13.bustime.model.Route;
+import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
@@ -32,18 +34,11 @@ public class StopRoutesActivity extends ActionBarActivity
 	}
 
 	private String buildSubtitle() {
-		String stopName = getStopName();
-		String stopDirection = getStopDirection();
-
-		return TitleBuilder.with(this).buildStopTitle(stopName, stopDirection);
+		return TitleBuilder.with(this).buildStopTitle(getStop());
 	}
 
-	private String getStopName() {
-		return getIntent().getStringExtra(Intents.Extras.STOP_NAME);
-	}
-
-	private String getStopDirection() {
-		return getIntent().getStringExtra(Intents.Extras.STOP_DIRECTION);
+	private Stop getStop() {
+		return getIntent().getParcelableExtra(Intents.Extras.STOP);
 	}
 
 	private void setUpFragment() {
@@ -60,19 +55,13 @@ public class StopRoutesActivity extends ActionBarActivity
 
 	@Subscribe
 	public void onRouteSelected(RouteSelectedEvent event) {
-		long routeId = event.getRouteId();
-		String routeNumber = event.getRouteNumber();
-
-		startTimetableActivity(routeId, routeNumber);
+		startTimetableActivity(event.getRoute());
 	}
 
-	private void startTimetableActivity(long routeId, String routeNumber) {
-		Uri timetableUri = BusTimeContract.Stops.buildStopTimetableUri(getRoutesUri(), routeId);
-		String stopName = getStopName();
-		String stopDirection = getStopDirection();
+	private void startTimetableActivity(Route route) {
+		Uri timetableUri = BusTimeContract.Stops.buildStopTimetableUri(getRoutesUri(), route.getId());
 
-		Intent intent = Intents.Builder.with(this)
-			.buildTimetableIntent(timetableUri, routeNumber, stopName, stopDirection);
+		Intent intent = Intents.Builder.with(this).buildTimetableIntent(timetableUri, route, getStop());
 		startActivity(intent);
 	}
 

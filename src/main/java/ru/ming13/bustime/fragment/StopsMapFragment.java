@@ -28,6 +28,7 @@ import java.util.Map;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
+import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
@@ -113,7 +114,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 		String stopName = stopMarker.getTitle();
 		String stopDirection = stopMarker.getSnippet();
 
-		BusProvider.getBus().post(new StopSelectedEvent(stopId, stopName, stopDirection));
+		BusProvider.getBus().post(new StopSelectedEvent(new Stop(stopId, stopName, stopDirection)));
 	}
 
 	private boolean isStopIdAvailable(Marker stopMarker) {

@@ -12,6 +12,7 @@ import com.squareup.otto.Subscribe;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
 import ru.ming13.bustime.fragment.StopsMapFragment;
+import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
@@ -41,18 +42,13 @@ public class StopsMapActivity extends ActionBarActivity
 
 	@Subscribe
 	public void onStopSelected(StopSelectedEvent event) {
-		long stopId = event.getStopId();
-		String stopName = event.getStopName();
-		String stopDirection = event.getStopDirection();
-
-		startStopRoutesActivity(stopId, stopName, stopDirection);
+		startStopRoutesActivity(event.getStop());
 	}
 
-	private void startStopRoutesActivity(long stopId, String stopName, String stopDirection) {
-		Uri stopRoutesUri = BusTimeContract.Stops.buildStopsRoutesUri(stopId);
+	private void startStopRoutesActivity(Stop stop) {
+		Uri stopRoutesUri = BusTimeContract.Stops.buildStopsRoutesUri(stop.getId());
 
-		Intent intent = Intents.Builder.with(this)
-			.buildStopRoutesIntent(stopRoutesUri, stopName, stopDirection);
+		Intent intent = Intents.Builder.with(this).buildStopRoutesIntent(stopRoutesUri, stop);
 		startActivity(intent);
 	}
 

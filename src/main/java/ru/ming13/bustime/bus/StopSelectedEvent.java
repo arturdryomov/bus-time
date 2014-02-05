@@ -1,26 +1,16 @@
 package ru.ming13.bustime.bus;
 
+import ru.ming13.bustime.model.Stop;
+
 public class StopSelectedEvent implements BusEvent
 {
-	private final long stopId;
-	private final String stopName;
-	private final String stopDirection;
+	private final Stop stop;
 
-	public StopSelectedEvent(long stopId, String stopName, String stopDirection) {
-		this.stopId = stopId;
-		this.stopName = stopName;
-		this.stopDirection = stopDirection;
+	public StopSelectedEvent(Stop stop) {
+		this.stop = stop;
 	}
 
-	public long getStopId() {
-		return stopId;
-	}
-
-	public String getStopName() {
-		return stopName;
-	}
-
-	public String getStopDirection() {
-		return stopDirection;
+	public Stop getStop() {
+		return stop;
 	}
 }

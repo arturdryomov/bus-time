@@ -5,6 +5,8 @@ import android.content.Context;
 import org.apache.commons.lang3.StringUtils;
 
 import ru.ming13.bustime.R;
+import ru.ming13.bustime.model.Route;
+import ru.ming13.bustime.model.Stop;
 
 public final class TitleBuilder
 {
@@ -18,15 +20,15 @@ public final class TitleBuilder
 		this.context = context;
 	}
 
-	public String buildRouteTitle(String routeNumber, String routeDescription) {
-		return context.getString(R.string.mask_route_title, routeNumber, routeDescription);
+	public String buildRouteTitle(Route route) {
+		return context.getString(R.string.mask_route_title, route.getNumber(), route.getDescription());
 	}
 
-	public String buildStopTitle(String stopName, String stopDirection) {
-		if (StringUtils.isEmpty(stopDirection)) {
-			return stopName;
+	public String buildStopTitle(Stop stop) {
+		if (StringUtils.isEmpty(stop.getDirection())) {
+			return stop.getName();
 		}
 
-		return context.getString(R.string.mask_stop_title, stopName, stopDirection);
+		return context.getString(R.string.mask_stop_title, stop.getName(), stop.getDirection());
 	}
 }

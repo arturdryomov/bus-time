@@ -10,13 +10,13 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.RoutesAdapter;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
+import ru.ming13.bustime.model.Route;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Loaders;
 
@@ -44,11 +44,7 @@ public class RoutesFragment extends ListFragment implements LoaderManager.Loader
 	}
 
 	private void setUpRoutesAdapter() {
-		setListAdapter(buildRoutesAdapter());
-	}
-
-	private ListAdapter buildRoutesAdapter() {
-		return new RoutesAdapter(getActivity());
+		setListAdapter(new RoutesAdapter(getActivity()));
 	}
 
 	private void setUpRoutesContent() {
@@ -82,10 +78,10 @@ public class RoutesFragment extends ListFragment implements LoaderManager.Loader
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 
-		sendRouteSelectedEvent(id, position);
+		BusProvider.getBus().post(new RouteSelectedEvent(getRoute(id, position)));
 	}
 
-	private void sendRouteSelectedEvent(long routeId, int routePosition) {
+	private Route getRoute(long routeId, int routePosition) {
 		Cursor routesCursor = getRoutesCursor(routePosition);
 
 		String routeNumber = routesCursor.getString(
@@ -93,7 +89,7 @@ public class RoutesFragment extends ListFragment implements LoaderManager.Loader
 		String routeDescription = routesCursor.getString(
 			routesCursor.getColumnIndex(BusTimeContract.Routes.DESCRIPTION));
 
-		BusProvider.getBus().post(new RouteSelectedEvent(routeId, routeNumber, routeDescription));
+		return new Route(routeId, routeNumber, routeDescription);
 	}
 
 	private Cursor getRoutesCursor(int routePosition) {

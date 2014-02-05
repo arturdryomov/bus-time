@@ -7,6 +7,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
 import ru.ming13.bustime.fragment.TimetableFragment;
+import ru.ming13.bustime.model.Route;
+import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.TitleBuilder;
@@ -27,11 +29,11 @@ public class TimetableActivity extends ActionBarActivity
 	}
 
 	private String buildTitle() {
-		return getRouteNumber();
+		return getRoute().getNumber();
 	}
 
-	private String getRouteNumber() {
-		return getIntent().getStringExtra(Intents.Extras.ROUTE_NUMBER);
+	private Route getRoute() {
+		return getIntent().getParcelableExtra(Intents.Extras.ROUTE);
 	}
 
 	private void setUpSubtitle() {
@@ -39,18 +41,11 @@ public class TimetableActivity extends ActionBarActivity
 	}
 
 	private String buildSubtitle() {
-		String stopName = getStopName();
-		String stopDirection = getStopDirection();
-
-		return TitleBuilder.with(this).buildStopTitle(stopName, stopDirection);
+		return TitleBuilder.with(this).buildStopTitle(getStop());
 	}
 
-	private String getStopName() {
-		return getIntent().getStringExtra(Intents.Extras.STOP_NAME);
-	}
-
-	private String getStopDirection() {
-		return getIntent().getStringExtra(Intents.Extras.STOP_DIRECTION);
+	private Stop getStop() {
+		return getIntent().getParcelableExtra(Intents.Extras.STOP);
 	}
 
 	private void setUpFragment() {

@@ -17,6 +17,7 @@ import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.RouteStopsAdapter;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
+import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
@@ -95,10 +96,10 @@ public class RouteStopsFragment extends ListFragment implements LoaderManager.Lo
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 
-		sendStopSelectedEvent(id, position);
+		BusProvider.getBus().post(new StopSelectedEvent(getStop(id, position)));
 	}
 
-	private void sendStopSelectedEvent(long stopId, int stopPosition) {
+	private Stop getStop(long stopId, int stopPosition) {
 		Cursor stopsCursor = getStopsCursor(stopPosition);
 
 		String stopName = stopsCursor.getString(
@@ -106,7 +107,7 @@ public class RouteStopsFragment extends ListFragment implements LoaderManager.Lo
 		String stopDirection = stopsCursor.getString(
 			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
 
-		BusProvider.getBus().post(new StopSelectedEvent(stopId, stopName, stopDirection));
+		return new Stop(stopId, stopName, stopDirection);
 	}
 
 	private Cursor getStopsCursor(int stopPosition) {

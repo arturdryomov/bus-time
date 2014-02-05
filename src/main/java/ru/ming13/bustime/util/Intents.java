@@ -9,6 +9,8 @@ import ru.ming13.bustime.activity.RouteStopsActivity;
 import ru.ming13.bustime.activity.StopRoutesActivity;
 import ru.ming13.bustime.activity.StopsMapActivity;
 import ru.ming13.bustime.activity.TimetableActivity;
+import ru.ming13.bustime.model.Route;
+import ru.ming13.bustime.model.Stop;
 
 public final class Intents
 {
@@ -20,11 +22,8 @@ public final class Intents
 		private Extras() {
 		}
 
-		public static final String ROUTE_DESCRIPTION = "route_description";
-		public static final String ROUTE_NUMBER = "route_number";
-
-		public static final String STOP_DIRECTION = "stop_direction";
-		public static final String STOP_NAME = "stop_name";
+		public static final String ROUTE = "route";
+		public static final String STOP = "stop";
 
 		public static final String URI = "uri";
 	}
@@ -41,34 +40,31 @@ public final class Intents
 			this.context = context;
 		}
 
-		public Intent buildRouteStopsIntent(Uri stopsUri, String routeNumber, String routeDescription) {
-			Intent intent = new Intent(context, RouteStopsActivity.class);
-			intent.putExtra(Extras.URI, stopsUri);
-			intent.putExtra(Extras.ROUTE_NUMBER, routeNumber);
-			intent.putExtra(Extras.ROUTE_DESCRIPTION, routeDescription);
-
-			return intent;
-		}
-
 		public Intent buildStopsMapIntent() {
 			return new Intent(context, StopsMapActivity.class);
 		}
 
-		public Intent buildStopRoutesIntent(Uri routesUri, String stopName, String stopDirection) {
-			Intent intent = new Intent(context, StopRoutesActivity.class);
-			intent.putExtra(Extras.URI, routesUri);
-			intent.putExtra(Extras.STOP_NAME, stopName);
-			intent.putExtra(Extras.STOP_DIRECTION, stopDirection);
+		public Intent buildRouteStopsIntent(Uri stopsUri, Route route) {
+			Intent intent = new Intent(context, RouteStopsActivity.class);
+			intent.putExtra(Extras.URI, stopsUri);
+			intent.putExtra(Extras.ROUTE, route);
 
 			return intent;
 		}
 
-		public Intent buildTimetableIntent(Uri timetableUri, String routeNumber, String stopName, String stopDirection) {
+		public Intent buildStopRoutesIntent(Uri routesUri, Stop stop) {
+			Intent intent = new Intent(context, StopRoutesActivity.class);
+			intent.putExtra(Extras.URI, routesUri);
+			intent.putExtra(Extras.STOP, stop);
+
+			return intent;
+		}
+
+		public Intent buildTimetableIntent(Uri timetableUri, Route route, Stop stop) {
 			Intent intent = new Intent(context, TimetableActivity.class);
 			intent.putExtra(Extras.URI, timetableUri);
-			intent.putExtra(Extras.ROUTE_NUMBER, routeNumber);
-			intent.putExtra(Extras.STOP_NAME, stopName);
-			intent.putExtra(Extras.STOP_DIRECTION, stopDirection);
+			intent.putExtra(Extras.ROUTE, route);
+			intent.putExtra(Extras.STOP, stop);
 
 			return intent;
 		}

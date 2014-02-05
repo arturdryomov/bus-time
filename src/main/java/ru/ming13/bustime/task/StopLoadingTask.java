@@ -9,49 +9,54 @@ import android.os.AsyncTask;
 import ru.ming13.bustime.bus.BusEvent;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
+import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 
-public class StopInformationQueryingTask extends AsyncTask<Void, Void, BusEvent>
+public class StopLoadingTask extends AsyncTask<Void, Void, BusEvent>
 {
 	private final ContentResolver contentResolver;
 	private final long stopId;
 
 	public static void execute(Context context, long stopId) {
-		new StopInformationQueryingTask(context, stopId).execute();
+		new StopLoadingTask(context, stopId).execute();
 	}
 
-	private StopInformationQueryingTask(Context context, long stopId) {
+	private StopLoadingTask(Context context, long stopId) {
 		this.contentResolver = context.getContentResolver();
 		this.stopId = stopId;
 	}
 
 	@Override
 	protected BusEvent doInBackground(Void... parameters) {
-		return buildStopInformationQueriedEvent();
+		return new StopSelectedEvent(loadStop());
 	}
 
-	private BusEvent buildStopInformationQueriedEvent() {
-		Cursor stopsCursor = queryStops();
+	private Stop loadStop() {
+		Cursor stopsCursor = loadStops();
 
 		try {
-			return buildStopInformationQueriedEvent(stopsCursor);
+			return getStop(stopsCursor);
 		} finally {
 			stopsCursor.close();
 		}
 	}
 
-	private Cursor queryStops() {
+	private Cursor loadStops() {
 		return contentResolver.query(getStopsUri(), null, null, null, null);
 	}
 
-	private BusEvent buildStopInformationQueriedEvent(Cursor stopsCursor) {
+	private Uri getStopsUri() {
+		return BusTimeContract.Stops.buildStopsUri();
+	}
+
+	private Stop getStop(Cursor stopsCursor) {
 		stopsCursor.moveToPosition(getStopPosition(stopsCursor));
 
 		long stopId = getStopId(stopsCursor);
 		String stopName = getStopName(stopsCursor);
 		String stopDirection = getStopDirection(stopsCursor);
 
-		return new StopSelectedEvent(stopId, stopName, stopDirection);
+		return new Stop(stopId, stopName, stopDirection);
 	}
 
 	private int getStopPosition(Cursor stopsCursor) {
@@ -77,10 +82,6 @@ public class StopInformationQueryingTask extends AsyncTask<Void, Void, BusEvent>
 	private String getStopDirection(Cursor stopsCursor) {
 		return stopsCursor.getString(
 			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
-	}
-
-	private Uri getStopsUri() {
-		return BusTimeContract.Stops.buildStopsUri();
 	}
 
 	@Override

@@ -12,6 +12,8 @@ import com.squareup.otto.Subscribe;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
 import ru.ming13.bustime.fragment.RouteStopsFragment;
+import ru.ming13.bustime.model.Route;
+import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
@@ -32,18 +34,11 @@ public class RouteStopsActivity extends ActionBarActivity
 	}
 
 	private String buildSubtitle() {
-		String routeNumber = getRouteNumber();
-		String routeDescription = getRouteDescription();
-
-		return TitleBuilder.with(this).buildRouteTitle(routeNumber, routeDescription);
+		return TitleBuilder.with(this).buildRouteTitle(getRoute());
 	}
 
-	private String getRouteNumber() {
-		return getIntent().getStringExtra(Intents.Extras.ROUTE_NUMBER);
-	}
-
-	private String getRouteDescription() {
-		return getIntent().getStringExtra(Intents.Extras.ROUTE_DESCRIPTION);
+	private Route getRoute() {
+		return getIntent().getParcelableExtra(Intents.Extras.ROUTE);
 	}
 
 	private void setUpFragment() {
@@ -60,19 +55,13 @@ public class RouteStopsActivity extends ActionBarActivity
 
 	@Subscribe
 	public void onStopSelected(StopSelectedEvent event) {
-		long stopId = event.getStopId();
-		String stopName = event.getStopName();
-		String stopDirection = event.getStopDirection();
-
-		startTimetableActivity(stopId, stopName, stopDirection);
+		startTimetableActivity(event.getStop());
 	}
 
-	private void startTimetableActivity(long stopId, String stopName, String stopDirection) {
-		Uri timetableUri = BusTimeContract.Routes.buildRouteTimetableUri(getStopsUri(), stopId);
-		String routeNumber = getRouteNumber();
+	private void startTimetableActivity(Stop stop) {
+		Uri timetableUri = BusTimeContract.Routes.buildRouteTimetableUri(getStopsUri(), stop.getId());
 
-		Intent intent = Intents.Builder.with(this)
-			.buildTimetableIntent(timetableUri, routeNumber, stopName, stopDirection);
+		Intent intent = Intents.Builder.with(this).buildTimetableIntent(timetableUri, getRoute(), stop);
 		startActivity(intent);
 	}
 
