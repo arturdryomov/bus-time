@@ -10,14 +10,14 @@ import android.view.MenuItem;
 import com.squareup.otto.Subscribe;
 
 import ru.ming13.bustime.bus.BusProvider;
-import ru.ming13.bustime.bus.StationSelectedEvent;
-import ru.ming13.bustime.fragment.RouteStationsFragment;
+import ru.ming13.bustime.bus.StopSelectedEvent;
+import ru.ming13.bustime.fragment.RouteStopsFragment;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.TitleBuilder;
 
-public class RouteStationsActivity extends ActionBarActivity
+public class RouteStopsActivity extends ActionBarActivity
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,28 +51,28 @@ public class RouteStationsActivity extends ActionBarActivity
 	}
 
 	private Fragment buildFragment() {
-		return RouteStationsFragment.newInstance(getStationsUri());
+		return RouteStopsFragment.newInstance(getStopsUri());
 	}
 
-	private Uri getStationsUri() {
+	private Uri getStopsUri() {
 		return getIntent().getParcelableExtra(Intents.Extras.URI);
 	}
 
 	@Subscribe
-	public void onStationSelected(StationSelectedEvent event) {
-		long stationId = event.getStationId();
-		String stationName = event.getStationName();
-		String stationDirection = event.getStationDirection();
+	public void onStopSelected(StopSelectedEvent event) {
+		long stopId = event.getStopId();
+		String stopName = event.getStopName();
+		String stopDirection = event.getStopDirection();
 
-		startTimetableActivity(stationId, stationName, stationDirection);
+		startTimetableActivity(stopId, stopName, stopDirection);
 	}
 
-	private void startTimetableActivity(long stationId, String stationName, String stationDirection) {
-		Uri timetableUri = BusTimeContract.Routes.buildRouteTimetableUri(getStationsUri(), stationId);
+	private void startTimetableActivity(long stopId, String stopName, String stopDirection) {
+		Uri timetableUri = BusTimeContract.Routes.buildRouteTimetableUri(getStopsUri(), stopId);
 		String routeNumber = getRouteNumber();
 
 		Intent intent = Intents.Builder.with(this)
-			.buildTimetableIntent(timetableUri, routeNumber, stationName, stationDirection);
+			.buildTimetableIntent(timetableUri, routeNumber, stopName, stopDirection);
 		startActivity(intent);
 	}
 

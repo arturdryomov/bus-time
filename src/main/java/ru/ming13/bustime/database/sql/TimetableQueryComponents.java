@@ -7,12 +7,12 @@ import ru.ming13.bustime.util.SqlBuilder;
 public final class TimetableQueryComponents implements QueryComponents
 {
 	private final long routeId;
-	private final long stationId;
+	private final long stopId;
 	private final long tripTypeId;
 
-	public TimetableQueryComponents(long routeId, long stationId, long tripTypeId) {
+	public TimetableQueryComponents(long routeId, long stopId, long tripTypeId) {
 		this.routeId = routeId;
-		this.stationId = stationId;
+		this.stopId = stopId;
 		this.tripTypeId = tripTypeId;
 	}
 
@@ -22,7 +22,7 @@ public final class TimetableQueryComponents implements QueryComponents
 			DatabaseSchema.Tables.TRIPS,
 			SqlBuilder.buildJoinClause(
 				DatabaseSchema.Tables.TRIPS, DatabaseSchema.TripsColumns.ROUTE_ID,
-				DatabaseSchema.Tables.ROUTES_AND_STATIONS, DatabaseSchema.RoutesAndStationsColumns.ROUTE_ID));
+				DatabaseSchema.Tables.ROUTES_AND_STOPS, DatabaseSchema.RoutesAndStopsColumns.ROUTE_ID));
 	}
 
 	@Override
@@ -37,8 +37,8 @@ public final class TimetableQueryComponents implements QueryComponents
 			.append("strftime('%Y-%m-%d %H:%M', 'now', 'localtime', 'start of day',")
 			.append("+ (select ").append(DatabaseSchema.TripsColumns.HOUR).append(" || ' hours'), ")
 			.append("+ (select ").append(DatabaseSchema.TripsColumns.MINUTE).append(" || ' minutes'), ")
-			.append("+ (select ").append(DatabaseSchema.RoutesAndStationsColumns.SHIFT_HOUR).append(" || ' hours'), ")
-			.append("+ (select ").append(DatabaseSchema.RoutesAndStationsColumns.SHIFT_MINUTE).append(" || ' minutes')) as ")
+			.append("+ (select ").append(DatabaseSchema.RoutesAndStopsColumns.SHIFT_HOUR).append(" || ' hours'), ")
+			.append("+ (select ").append(DatabaseSchema.RoutesAndStopsColumns.SHIFT_MINUTE).append(" || ' minutes')) as ")
 			.append(BusTimeContract.Timetable.ARRIVAL_TIME)
 			.toString();
 	}
@@ -47,9 +47,9 @@ public final class TimetableQueryComponents implements QueryComponents
 	public String getSelection() {
 		return SqlBuilder.buildRequiredSelectionClause(
 			SqlBuilder.buildSelectionClause(SqlBuilder.buildTableField(
-				DatabaseSchema.Tables.ROUTES_AND_STATIONS, DatabaseSchema.RoutesAndStationsColumns.ROUTE_ID)),
+				DatabaseSchema.Tables.ROUTES_AND_STOPS, DatabaseSchema.RoutesAndStopsColumns.ROUTE_ID)),
 			SqlBuilder.buildSelectionClause(SqlBuilder.buildTableField(
-				DatabaseSchema.Tables.ROUTES_AND_STATIONS, DatabaseSchema.RoutesAndStationsColumns.STATION_ID)),
+				DatabaseSchema.Tables.ROUTES_AND_STOPS, DatabaseSchema.RoutesAndStopsColumns.STOP_ID)),
 			SqlBuilder.buildSelectionClause(
 				DatabaseSchema.TripsColumns.TYPE_ID));
 	}
@@ -58,7 +58,7 @@ public final class TimetableQueryComponents implements QueryComponents
 	public String[] getSelectionArguments() {
 		return new String[]{
 			String.valueOf(routeId),
-			String.valueOf(stationId),
+			String.valueOf(stopId),
 			String.valueOf(tripTypeId)};
 	}
 

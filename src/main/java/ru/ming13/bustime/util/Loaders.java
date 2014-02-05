@@ -6,10 +6,10 @@ public final class Loaders
 	}
 
 	public static final int ROUTES = 1;
-	public static final int STATIONS = 2;
+	public static final int STOPS = 2;
 
-	public static final int ROUTE_STATIONS = 3;
-	public static final int STATION_ROUTES = 4;
+	public static final int ROUTE_STOPS = 3;
+	public static final int STOP_ROUTES = 4;
 
 	public static final int FULL_WEEK_TIMETABLE = 5;
 	public static final int WORKDAYS_TIMETABLE = 6;

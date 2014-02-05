@@ -27,7 +27,7 @@ import ru.ming13.bustime.adapter.TabPagerAdapter;
 import ru.ming13.bustime.bus.BusEventsCollector;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
-import ru.ming13.bustime.bus.StationSelectedEvent;
+import ru.ming13.bustime.bus.StopSelectedEvent;
 import ru.ming13.bustime.bus.UpdatesAcceptedEvent;
 import ru.ming13.bustime.bus.UpdatesAvailableEvent;
 import ru.ming13.bustime.bus.UpdatesDiscardedEvent;
@@ -36,7 +36,7 @@ import ru.ming13.bustime.fragment.UpdatesBannerFragment;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.task.DatabaseUpdateCheckingTask;
 import ru.ming13.bustime.task.DatabaseUpdatingTask;
-import ru.ming13.bustime.task.StationInformationQueryingTask;
+import ru.ming13.bustime.task.StopInformationQueryingTask;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.MapsUtil;
@@ -94,7 +94,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		ActionBar actionBar = getSupportActionBar();
 
 		actionBar.addTab(buildTab(R.string.title_routes), TabPagerAdapter.TabPosition.ROUTES);
-		actionBar.addTab(buildTab(R.string.title_stations), TabPagerAdapter.TabPosition.STATIONS);
+		actionBar.addTab(buildTab(R.string.title_stops), TabPagerAdapter.TabPosition.STOPS);
 	}
 
 	private ActionBar.Tab buildTab(int tabTitleResourceId) {
@@ -242,62 +242,62 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void startShowingSearchResult(Intent searchResultIntent) {
-		long stationId = BusTimeContract.Stations.getSearchStationId(searchResultIntent.getData());
+		long stopId = BusTimeContract.Stops.getSearchStopId(searchResultIntent.getData());
 
-		StationInformationQueryingTask.execute(this, stationId);
+		StopInformationQueryingTask.execute(this, stopId);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.action_bar_home, menu);
 
-		setUpStationsSearch(menu);
-		setUpStationsMap(menu);
+		setUpStopsSearch(menu);
+		setUpStopsMap(menu);
 
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	private void setUpStationsSearch(Menu menu) {
-		SearchView stationsSearchView = getStationsSearchView(menu);
+	private void setUpStopsSearch(Menu menu) {
+		SearchView stopsSearchView = getStopsSearchView(menu);
 
-		setUpStationsSearchInformation(stationsSearchView);
-		setUpStationsSearchView(stationsSearchView);
+		setUpStopsSearchInformation(stopsSearchView);
+		setUpStopsSearchView(stopsSearchView);
 	}
 
-	private SearchView getStationsSearchView(Menu menu) {
-		MenuItem stationsSearchMenuItem = menu.findItem(R.id.menu_stations_search);
-		return (SearchView) MenuItemCompat.getActionView(stationsSearchMenuItem);
+	private SearchView getStopsSearchView(Menu menu) {
+		MenuItem stopsSearchMenuItem = menu.findItem(R.id.menu_stops_search);
+		return (SearchView) MenuItemCompat.getActionView(stopsSearchMenuItem);
 	}
 
-	private void setUpStationsSearchInformation(SearchView stationsSearchView) {
+	private void setUpStopsSearchInformation(SearchView stopsSearchView) {
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		stationsSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		stopsSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 	}
 
-	private void setUpStationsSearchView(SearchView stationsSearchView) {
-		LinearLayout stationsSearchPlate = (LinearLayout) stationsSearchView.findViewById(R.id.search_plate);
-		EditText stationsSearchQueryEdit = (EditText) stationsSearchView.findViewById(R.id.search_src_text);
+	private void setUpStopsSearchView(SearchView stopsSearchView) {
+		LinearLayout stopsSearchPlate = (LinearLayout) stopsSearchView.findViewById(R.id.search_plate);
+		EditText stopsSearchQueryEdit = (EditText) stopsSearchView.findViewById(R.id.search_src_text);
 
-		stationsSearchPlate.setBackgroundResource(R.drawable.abc_textfield_search_default_holo_dark);
-		stationsSearchQueryEdit.setHintTextColor(getResources().getColor(R.color.text_hint_search));
+		stopsSearchPlate.setBackgroundResource(R.drawable.abc_textfield_search_default_holo_dark);
+		stopsSearchQueryEdit.setHintTextColor(getResources().getColor(R.color.text_hint_search));
 	}
 
-	private void setUpStationsMap(Menu menu) {
+	private void setUpStopsMap(Menu menu) {
 		if (!MapsUtil.with(this).areMapsHardwareAvailable()) {
-			disableStationsMap(menu);
+			disableStopsMap(menu);
 		}
 	}
 
-	private void disableStationsMap(Menu menu) {
-		MenuItem stationsMapMenuItem = menu.findItem(R.id.menu_stations_map);
-		stationsMapMenuItem.setVisible(false);
+	private void disableStopsMap(Menu menu) {
+		MenuItem stopsMapMenuItem = menu.findItem(R.id.menu_stops_map);
+		stopsMapMenuItem.setVisible(false);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
-			case R.id.menu_stations_map:
-				startStationsMapActivity();
+			case R.id.menu_stops_map:
+				startStopsMapActivity();
 				return true;
 
 			case R.id.menu_rate_application:
@@ -313,9 +313,9 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		}
 	}
 
-	private void startStationsMapActivity() {
+	private void startStopsMapActivity() {
 		if (MapsUtil.with(this).areMapsSoftwareAvailable()) {
-			Intent intent = Intents.Builder.with(this).buildStationsMapIntent();
+			Intent intent = Intents.Builder.with(this).buildStopsMapIntent();
 			startActivity(intent);
 		} else {
 			MapsUtil.with(this).showErrorDialog(getSupportFragmentManager());
@@ -343,31 +343,31 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		String routeNumber = event.getRouteNumber();
 		String routeDescription = event.getRouteDescription();
 
-		startRouteStationsActivity(routeId, routeNumber, routeDescription);
+		startRouteStopsActivity(routeId, routeNumber, routeDescription);
 	}
 
-	private void startRouteStationsActivity(long routeId, String routeNumber, String routeDescription) {
-		Uri routeStationsUri = BusTimeContract.Routes.buildRouteStationsUri(routeId);
+	private void startRouteStopsActivity(long routeId, String routeNumber, String routeDescription) {
+		Uri routeStopsUri = BusTimeContract.Routes.buildRouteStopsUri(routeId);
 
 		Intent intent = Intents.Builder.with(this)
-			.buildRouteStationsIntent(routeStationsUri, routeNumber, routeDescription);
+			.buildRouteStopsIntent(routeStopsUri, routeNumber, routeDescription);
 		startActivity(intent);
 	}
 
 	@Subscribe
-	public void onStationSelected(StationSelectedEvent event) {
-		long stationId = event.getStationId();
-		String stationName = event.getStationName();
-		String stationDirection = event.getStationDirection();
+	public void onStopSelected(StopSelectedEvent event) {
+		long stopId = event.getStopId();
+		String stopName = event.getStopName();
+		String stopDirection = event.getStopDirection();
 
-		startStationRoutesActivity(stationId, stationName, stationDirection);
+		startStopRoutesActivity(stopId, stopName, stopDirection);
 	}
 
-	private void startStationRoutesActivity(long stationId, String stationName, String stationDirection) {
-		Uri stationRoutesUri = BusTimeContract.Stations.buildStationRoutesUri(stationId);
+	private void startStopRoutesActivity(long stopId, String stopName, String stopDirection) {
+		Uri stopRoutesUri = BusTimeContract.Stops.buildStopsRoutesUri(stopId);
 
 		Intent intent = Intents.Builder.with(this)
-			.buildStationRoutesIntent(stationRoutesUri, stationName, stationDirection);
+			.buildStopRoutesIntent(stopRoutesUri, stopName, stopDirection);
 		startActivity(intent);
 	}
 

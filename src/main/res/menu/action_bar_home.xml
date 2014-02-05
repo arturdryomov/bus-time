@@ -3,16 +3,16 @@
 	  xmlns:appcompat="http://schemas.android.com/apk/res-auto">
 
 	<item
-		android:id="@+id/menu_stations_search"
+		android:id="@+id/menu_stops_search"
 		android:icon="@drawable/ic_menu_search"
-		android:title="@string/menu_stations_search"
+		android:title="@string/menu_stops_search"
 		appcompat:showAsAction="always|collapseActionView"
 		appcompat:actionViewClass="android.support.v7.widget.SearchView"/>
 
 	<item
-		android:id="@+id/menu_stations_map"
+		android:id="@+id/menu_stops_map"
 		android:icon="@drawable/ic_menu_map"
-		android:title="@string/menu_stations_map"
+		android:title="@string/menu_stops_map"
 		appcompat:showAsAction="ifRoom"/>
 
 	<item

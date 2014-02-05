@@ -10,34 +10,34 @@ final class BusTimePathsBuilder
 		}
 
 		public static final String ROUTES = "routes";
-		public static final String STATIONS = "stations";
+		public static final String STOPS = "stops";
 	}
 
 	public String buildRoutesPath() {
 		return Segments.ROUTES;
 	}
 
-	public String buildStationsPath() {
-		return Segments.STATIONS;
+	public String buildStopsPath() {
+		return Segments.STOPS;
 	}
 
-	public String buildRouteStationsPath(String routeNumber) {
-		return String.format("%s/%s/%s", Segments.ROUTES, routeNumber, Segments.STATIONS);
+	public String buildRouteStopsPath(String routeNumber) {
+		return String.format("%s/%s/%s", Segments.ROUTES, routeNumber, Segments.STOPS);
 	}
 
-	public String buildStationRoutesPath(String stationNumber) {
-		return String.format("%s/%s/%s", Segments.STATIONS, stationNumber, Segments.ROUTES);
+	public String buildStopRoutesPath(String stopNumber) {
+		return String.format("%s/%s/%s", Segments.STOPS, stopNumber, Segments.ROUTES);
 	}
 
-	public String buildRouteTimetablePath(String routeNumber, String stationNumber) {
-		return String.format("%s/%s/%s/%s", Segments.ROUTES, routeNumber, Segments.STATIONS, stationNumber);
+	public String buildRouteTimetablePath(String routeNumber, String stopNumber) {
+		return String.format("%s/%s/%s/%s", Segments.ROUTES, routeNumber, Segments.STOPS, stopNumber);
 	}
 
-	public String buildStationTimetablePath(String routeNumber, String stationNumber) {
-		return String.format("%s/%s/%s/%s", Segments.STATIONS, stationNumber, Segments.ROUTES, routeNumber);
+	public String buildStopTimetablePath(String routeNumber, String stopNumber) {
+		return String.format("%s/%s/%s/%s", Segments.STOPS, stopNumber, Segments.ROUTES, routeNumber);
 	}
 
-	public String buildStationSearchPath(String searchQuery) {
+	public String buildStopsSearchPath(String searchQuery) {
 		return String.format("%s/%s", SearchManager.SUGGEST_URI_PATH_QUERY, searchQuery);
 	}
 }

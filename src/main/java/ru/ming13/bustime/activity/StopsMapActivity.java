@@ -10,14 +10,14 @@ import android.view.MenuItem;
 import com.squareup.otto.Subscribe;
 
 import ru.ming13.bustime.bus.BusProvider;
-import ru.ming13.bustime.bus.StationSelectedEvent;
-import ru.ming13.bustime.fragment.StationsMapFragment;
+import ru.ming13.bustime.bus.StopSelectedEvent;
+import ru.ming13.bustime.fragment.StopsMapFragment;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
 
-public class StationsMapActivity extends ActionBarActivity
+public class StopsMapActivity extends ActionBarActivity
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,23 +36,23 @@ public class StationsMapActivity extends ActionBarActivity
 	}
 
 	private Fragment buildFragment() {
-		return StationsMapFragment.newInstance();
+		return StopsMapFragment.newInstance();
 	}
 
 	@Subscribe
-	public void onStationSelected(StationSelectedEvent event) {
-		long stationId = event.getStationId();
-		String stationName = event.getStationName();
-		String stationDirection = event.getStationDirection();
+	public void onStopSelected(StopSelectedEvent event) {
+		long stopId = event.getStopId();
+		String stopName = event.getStopName();
+		String stopDirection = event.getStopDirection();
 
-		startStationRoutesActivity(stationId, stationName, stationDirection);
+		startStopRoutesActivity(stopId, stopName, stopDirection);
 	}
 
-	private void startStationRoutesActivity(long stationId, String stationName, String stationDirection) {
-		Uri stationRoutesUri = BusTimeContract.Stations.buildStationRoutesUri(stationId);
+	private void startStopRoutesActivity(long stopId, String stopName, String stopDirection) {
+		Uri stopRoutesUri = BusTimeContract.Stops.buildStopsRoutesUri(stopId);
 
 		Intent intent = Intents.Builder.with(this)
-			.buildStationRoutesIntent(stationRoutesUri, stationName, stationDirection);
+			.buildStopRoutesIntent(stopRoutesUri, stopName, stopDirection);
 		startActivity(intent);
 	}
 

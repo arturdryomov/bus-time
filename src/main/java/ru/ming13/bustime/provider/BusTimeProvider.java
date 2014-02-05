@@ -11,11 +11,11 @@ import android.net.Uri;
 
 import ru.ming13.bustime.database.DatabaseOpenHelper;
 import ru.ming13.bustime.database.sql.QueryComponents;
-import ru.ming13.bustime.database.sql.RouteStationsQueryComponents;
+import ru.ming13.bustime.database.sql.RouteStopsQueryComponents;
 import ru.ming13.bustime.database.sql.RoutesQueryComponents;
-import ru.ming13.bustime.database.sql.StationRoutesQueryComponents;
-import ru.ming13.bustime.database.sql.StationsQueryComponents;
-import ru.ming13.bustime.database.sql.StationsSearchQueryComponents;
+import ru.ming13.bustime.database.sql.StopsRoutesQueryComponents;
+import ru.ming13.bustime.database.sql.StopsQueryComponents;
+import ru.ming13.bustime.database.sql.StopsSearchQueryComponents;
 import ru.ming13.bustime.database.sql.TimetableQueryComponents;
 
 public class BusTimeProvider extends ContentProvider
@@ -64,23 +64,23 @@ public class BusTimeProvider extends ContentProvider
 			case BusTimeUriMatcher.Codes.ROUTES:
 				return buildRoutesQueryComponents();
 
-			case BusTimeUriMatcher.Codes.STATIONS:
-				return buildStationsQueryComponents();
+			case BusTimeUriMatcher.Codes.STOPS:
+				return buildStopsQueryComponents();
 
-			case BusTimeUriMatcher.Codes.ROUTE_STATIONS:
-				return buildRouteStationsQueryComponents(uri);
+			case BusTimeUriMatcher.Codes.ROUTE_STOPS:
+				return buildRouteStopsQueryComponents(uri);
 
-			case BusTimeUriMatcher.Codes.STATION_ROUTES:
-				return buildStationRoutesQueryComponents(uri);
+			case BusTimeUriMatcher.Codes.STOP_ROUTES:
+				return buildStopRoutesQueryComponents(uri);
 
 			case BusTimeUriMatcher.Codes.ROUTE_TIMETABLE:
 				return buildRouteTimetableQueryComponents(uri);
 
-			case BusTimeUriMatcher.Codes.STATION_TIMETABLE:
-				return buildStationTimetableQueryComponents(uri);
+			case BusTimeUriMatcher.Codes.STOP_TIMETABLE:
+				return buildStopTimetableQueryComponents(uri);
 
-			case BusTimeUriMatcher.Codes.STATIONS_SEARCH:
-				return buildStationsSearchQueryComponents(uri);
+			case BusTimeUriMatcher.Codes.STOPS_SEARCH:
+				return buildStopsSearchQueryComponents(uri);
 
 			default:
 				throw new IllegalArgumentException(buildUnsupportedUriDetailMessage(uri));
@@ -91,43 +91,43 @@ public class BusTimeProvider extends ContentProvider
 		return new RoutesQueryComponents();
 	}
 
-	private QueryComponents buildStationsQueryComponents() {
-		return new StationsQueryComponents();
+	private QueryComponents buildStopsQueryComponents() {
+		return new StopsQueryComponents();
 	}
 
-	private QueryComponents buildRouteStationsQueryComponents(Uri uri) {
-		long routeId = BusTimeContract.Routes.getStationsRouteId(uri);
+	private QueryComponents buildRouteStopsQueryComponents(Uri uri) {
+		long routeId = BusTimeContract.Routes.getStopsRouteId(uri);
 
-		return new RouteStationsQueryComponents(routeId);
+		return new RouteStopsQueryComponents(routeId);
 	}
 
-	private QueryComponents buildStationRoutesQueryComponents(Uri uri) {
-		long stationId = BusTimeContract.Stations.getRoutesStationId(uri);
+	private QueryComponents buildStopRoutesQueryComponents(Uri uri) {
+		long stopId = BusTimeContract.Stops.getRoutesStopId(uri);
 		long timetableTypeId = BusTimeContract.Timetable.Type.currentWeekPartDependent();
 
-		return new StationRoutesQueryComponents(stationId, timetableTypeId);
+		return new StopsRoutesQueryComponents(stopId, timetableTypeId);
 	}
 
 	private QueryComponents buildRouteTimetableQueryComponents(Uri uri) {
 		long routeId = BusTimeContract.Routes.getTimetableRouteId(uri);
-		long stationId = BusTimeContract.Routes.getTimetableStationId(uri);
+		long stopId = BusTimeContract.Routes.getTimetableStopId(uri);
 		long typeId = BusTimeContract.Timetable.getTimetableType(uri);
 
-		return new TimetableQueryComponents(routeId, stationId, typeId);
+		return new TimetableQueryComponents(routeId, stopId, typeId);
 	}
 
-	private QueryComponents buildStationTimetableQueryComponents(Uri uri) {
-		long routeId = BusTimeContract.Stations.getTimetableRouteId(uri);
-		long stationId = BusTimeContract.Stations.getTimetableStationId(uri);
+	private QueryComponents buildStopTimetableQueryComponents(Uri uri) {
+		long routeId = BusTimeContract.Stops.getTimetableRouteId(uri);
+		long stopId = BusTimeContract.Stops.getTimetableStopId(uri);
 		long typeId = BusTimeContract.Timetable.getTimetableType(uri);
 
-		return new TimetableQueryComponents(routeId, stationId, typeId);
+		return new TimetableQueryComponents(routeId, stopId, typeId);
 	}
 
-	private QueryComponents buildStationsSearchQueryComponents(Uri uri) {
-		String searchQuery = BusTimeContract.Stations.getSearchStationQuery(uri);
+	private QueryComponents buildStopsSearchQueryComponents(Uri uri) {
+		String searchQuery = BusTimeContract.Stops.getSearchStopsQuery(uri);
 
-		return new StationsSearchQueryComponents(searchQuery);
+		return new StopsSearchQueryComponents(searchQuery);
 	}
 
 	private String buildUnsupportedUriDetailMessage(Uri unsupportedUri) {

@@ -16,8 +16,9 @@ public class DatabaseSchema
 		private Versions() {
 		}
 
+		// Rename stations to stops.
 		// Split route number to number and description.
-		// Split station name to name and direction.
+		// Split stop name to name and direction.
 		// Split times to hours and minutes.
 		// Use 24+ hours for trip times.
 		public static final int CURRENT = 2;
@@ -33,8 +34,8 @@ public class DatabaseSchema
 		public static final String ROUTES = "Routes";
 		public static final String TRIP_TYPES = "TripTypes";
 		public static final String TRIPS = "Trips";
-		public static final String STATIONS = "Stations";
-		public static final String ROUTES_AND_STATIONS = "RoutesAndStations";
+		public static final String STOPS = "Stops";
+		public static final String ROUTES_AND_STOPS = "RoutesAndStops";
 	}
 
 	public static final class RoutesColumns implements BaseColumns
@@ -75,9 +76,9 @@ public class DatabaseSchema
 		public static final String MINUTE = "minute";
 	}
 
-	public static final class StationsColumns implements BaseColumns
+	public static final class StopsColumns implements BaseColumns
 	{
-		private StationsColumns() {
+		private StopsColumns() {
 		}
 
 		public static final String NAME = "name";
@@ -86,13 +87,13 @@ public class DatabaseSchema
 		public static final String LATITUDE = "latitude";
 	}
 
-	public static final class RoutesAndStationsColumns implements BaseColumns
+	public static final class RoutesAndStopsColumns implements BaseColumns
 	{
-		private RoutesAndStationsColumns() {
+		private RoutesAndStopsColumns() {
 		}
 
 		public static final String ROUTE_ID = "route_id";
-		public static final String STATION_ID = "station_id";
+		public static final String STOP_ID = "stop_id";
 		public static final String SHIFT_HOUR = "shift_hour";
 		public static final String SHIFT_MINUTE = "shift_minute";
 	}

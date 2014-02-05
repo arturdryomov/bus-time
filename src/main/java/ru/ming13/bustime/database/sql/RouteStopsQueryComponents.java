@@ -4,34 +4,34 @@ import ru.ming13.bustime.database.DatabaseSchema;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.SqlBuilder;
 
-public final class RouteStationsQueryComponents implements QueryComponents
+public final class RouteStopsQueryComponents implements QueryComponents
 {
 	private final long routeId;
 
-	public RouteStationsQueryComponents(long routeId) {
+	public RouteStopsQueryComponents(long routeId) {
 		this.routeId = routeId;
 	}
 
 	@Override
 	public String getTables() {
 		return SqlBuilder.buildTableClause(
-			DatabaseSchema.Tables.ROUTES_AND_STATIONS,
+			DatabaseSchema.Tables.ROUTES_AND_STOPS,
 			SqlBuilder.buildJoinClause(
-				DatabaseSchema.Tables.ROUTES_AND_STATIONS, DatabaseSchema.RoutesAndStationsColumns.STATION_ID,
-				DatabaseSchema.Tables.STATIONS, DatabaseSchema.StationsColumns._ID));
+				DatabaseSchema.Tables.ROUTES_AND_STOPS, DatabaseSchema.RoutesAndStopsColumns.STOP_ID,
+				DatabaseSchema.Tables.STOPS, DatabaseSchema.StopsColumns._ID));
 	}
 
 	@Override
 	public String[] getProjection() {
 		return new String[]{
-			BusTimeContract.Stations._ID,
-			BusTimeContract.Stations.NAME,
-			BusTimeContract.Stations.DIRECTION};
+			BusTimeContract.Stops._ID,
+			BusTimeContract.Stops.NAME,
+			BusTimeContract.Stops.DIRECTION};
 	}
 
 	@Override
 	public String getSelection() {
-		return SqlBuilder.buildSelectionClause(DatabaseSchema.RoutesAndStationsColumns.ROUTE_ID);
+		return SqlBuilder.buildSelectionClause(DatabaseSchema.RoutesAndStopsColumns.ROUTE_ID);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public final class RouteStationsQueryComponents implements QueryComponents
 	@Override
 	public String getSortOrder() {
 		return SqlBuilder.buildSortOrderClause(
-			DatabaseSchema.RoutesAndStationsColumns.SHIFT_HOUR,
-			DatabaseSchema.RoutesAndStationsColumns.SHIFT_MINUTE);
+			DatabaseSchema.RoutesAndStopsColumns.SHIFT_HOUR,
+			DatabaseSchema.RoutesAndStopsColumns.SHIFT_MINUTE);
 	}
 }

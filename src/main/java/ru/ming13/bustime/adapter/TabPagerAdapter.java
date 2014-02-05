@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import ru.ming13.bustime.fragment.RoutesFragment;
-import ru.ming13.bustime.fragment.StationsFragment;
+import ru.ming13.bustime.fragment.StopsFragment;
 
 public class TabPagerAdapter extends FragmentPagerAdapter
 {
@@ -17,7 +17,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter
 		}
 
 		public static final int ROUTES = 0;
-		public static final int STATIONS = 1;
+		public static final int STOPS = 1;
 	}
 
 	public TabPagerAdapter(FragmentManager fragmentManager) {
@@ -30,8 +30,8 @@ public class TabPagerAdapter extends FragmentPagerAdapter
 			case TabPosition.ROUTES:
 				return RoutesFragment.newInstance();
 
-			case TabPosition.STATIONS:
-				return StationsFragment.newInstance();
+			case TabPosition.STOPS:
+				return StopsFragment.newInstance();
 
 			default:
 				return null;

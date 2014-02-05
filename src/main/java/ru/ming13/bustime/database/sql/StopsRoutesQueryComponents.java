@@ -4,22 +4,22 @@ import ru.ming13.bustime.database.DatabaseSchema;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.SqlBuilder;
 
-public final class StationRoutesQueryComponents implements QueryComponents
+public final class StopsRoutesQueryComponents implements QueryComponents
 {
-	private final long stationId;
+	private final long stopId;
 	private final long timetableTypeId;
 
-	public StationRoutesQueryComponents(long stationId, long timetableTypeId) {
-		this.stationId = stationId;
+	public StopsRoutesQueryComponents(long stopId, long timetableTypeId) {
+		this.stopId = stopId;
 		this.timetableTypeId = timetableTypeId;
 	}
 
 	@Override
 	public String getTables() {
 		return SqlBuilder.buildTableClause(
-			DatabaseSchema.Tables.ROUTES_AND_STATIONS,
+			DatabaseSchema.Tables.ROUTES_AND_STOPS,
 			SqlBuilder.buildJoinClause(
-				DatabaseSchema.Tables.ROUTES_AND_STATIONS, DatabaseSchema.RoutesAndStationsColumns.ROUTE_ID,
+				DatabaseSchema.Tables.ROUTES_AND_STOPS, DatabaseSchema.RoutesAndStopsColumns.ROUTE_ID,
 				DatabaseSchema.Tables.ROUTES, DatabaseSchema.RoutesColumns._ID));
 	}
 
@@ -62,20 +62,20 @@ public final class StationRoutesQueryComponents implements QueryComponents
 			.append("strftime('%Y-%m-%d %H:%M', 'now', 'localtime', 'start of day',")
 			.append("+ (select ").append(DatabaseSchema.TripsColumns.HOUR).append(" || ' hours'), ")
 			.append("+ (select ").append(DatabaseSchema.TripsColumns.MINUTE).append(" || ' minutes'), ")
-			.append("+ (select ").append(DatabaseSchema.RoutesAndStationsColumns.SHIFT_HOUR).append(" || ' hours'), ")
-			.append("+ (select ").append(DatabaseSchema.RoutesAndStationsColumns.SHIFT_MINUTE).append(" || ' minutes')) as ")
+			.append("+ (select ").append(DatabaseSchema.RoutesAndStopsColumns.SHIFT_HOUR).append(" || ' hours'), ")
+			.append("+ (select ").append(DatabaseSchema.RoutesAndStopsColumns.SHIFT_MINUTE).append(" || ' minutes')) as ")
 			.append(BusTimeContract.Timetable.ARRIVAL_TIME)
 			.toString();
 	}
 
 	@Override
 	public String getSelection() {
-		return SqlBuilder.buildSelectionClause(DatabaseSchema.RoutesAndStationsColumns.STATION_ID);
+		return SqlBuilder.buildSelectionClause(DatabaseSchema.RoutesAndStopsColumns.STOP_ID);
 	}
 
 	@Override
 	public String[] getSelectionArguments() {
-		return new String[]{String.valueOf(stationId)};
+		return new String[]{String.valueOf(stopId)};
 	}
 
 	@Override

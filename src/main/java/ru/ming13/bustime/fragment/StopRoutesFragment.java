@@ -16,7 +16,7 @@ import android.widget.ListView;
 import com.squareup.otto.Subscribe;
 
 import ru.ming13.bustime.R;
-import ru.ming13.bustime.adapter.StationRoutesAdapter;
+import ru.ming13.bustime.adapter.StopRoutesAdapter;
 import ru.ming13.bustime.animation.ListOrderAnimator;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
@@ -26,10 +26,10 @@ import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
 import ru.ming13.bustime.util.Timer;
 
-public class StationRoutesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
+public class StopRoutesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
-	public static StationRoutesFragment newInstance(Uri uri) {
-		StationRoutesFragment fragment = new StationRoutesFragment();
+	public static StopRoutesFragment newInstance(Uri uri) {
+		StopRoutesFragment fragment = new StopRoutesFragment();
 
 		fragment.setArguments(buildArguments(uri));
 
@@ -68,11 +68,11 @@ public class StationRoutesFragment extends ListFragment implements LoaderManager
 	}
 
 	private ListAdapter buildRoutesAdapter() {
-		return new StationRoutesAdapter(getActivity());
+		return new StopRoutesAdapter(getActivity());
 	}
 
 	private void setUpRoutesContent() {
-		getLoaderManager().initLoader(Loaders.STATION_ROUTES, null, this);
+		getLoaderManager().initLoader(Loaders.STOP_ROUTES, null, this);
 	}
 
 	@Override
@@ -94,8 +94,8 @@ public class StationRoutesFragment extends ListFragment implements LoaderManager
 		animator.animateReorderedListState();
 	}
 
-	private StationRoutesAdapter getRoutesAdapter() {
-		return (StationRoutesAdapter) getListAdapter();
+	private StopRoutesAdapter getRoutesAdapter() {
+		return (StopRoutesAdapter) getListAdapter();
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class StationRoutesFragment extends ListFragment implements LoaderManager
 	}
 
 	private void setUpRoutesContentForced() {
-		getLoaderManager().initLoader(Loaders.STATION_ROUTES, null, this).forceLoad();
+		getLoaderManager().initLoader(Loaders.STOP_ROUTES, null, this).forceLoad();
 	}
 
 	@Subscribe

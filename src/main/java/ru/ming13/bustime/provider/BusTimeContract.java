@@ -64,18 +64,18 @@ public final class BusTimeContract
 			return buildContentUri(getPathsBuilder().buildRoutesPath());
 		}
 
-		public static Uri buildRouteStationsUri(long routeId) {
-			return buildContentUri(getPathsBuilder().buildRouteStationsPath(String.valueOf(routeId)));
+		public static Uri buildRouteStopsUri(long routeId) {
+			return buildContentUri(getPathsBuilder().buildRouteStopsPath(String.valueOf(routeId)));
 		}
 
-		public static Uri buildRouteTimetableUri(Uri routeStationsUri, long stationId) {
-			return buildContentUri(routeStationsUri, stationId);
+		public static Uri buildRouteTimetableUri(Uri routeStopsUri, long stopId) {
+			return buildContentUri(routeStopsUri, stopId);
 		}
 
-		public static long getStationsRouteId(Uri routeStationsUri) {
+		public static long getStopsRouteId(Uri routeStopsUri) {
 			final int routeIdSegmentPosition = 1;
 
-			return parseId(routeStationsUri, routeIdSegmentPosition);
+			return parseId(routeStopsUri, routeIdSegmentPosition);
 		}
 
 		public static long getTimetableRouteId(Uri routeTimetableUri) {
@@ -84,62 +84,62 @@ public final class BusTimeContract
 			return parseId(routeTimetableUri, routeIdSegmentPosition);
 		}
 
-		public static long getTimetableStationId(Uri routeTimetableUri) {
-			final int stationIdSegmentPosition = 3;
+		public static long getTimetableStopId(Uri routeTimetableUri) {
+			final int stopIdSegmentPosition = 3;
 
-			return parseId(routeTimetableUri, stationIdSegmentPosition);
+			return parseId(routeTimetableUri, stopIdSegmentPosition);
 		}
 	}
 
-	private interface StationsColumns
+	private interface StopsColumns
 	{
-		String NAME = DatabaseSchema.StationsColumns.NAME;
-		String DIRECTION = DatabaseSchema.StationsColumns.DIRECTION;
-		String LATITUDE = DatabaseSchema.StationsColumns.LATITUDE;
-		String LONGITUDE = DatabaseSchema.StationsColumns.LONGITUDE;
+		String NAME = DatabaseSchema.StopsColumns.NAME;
+		String DIRECTION = DatabaseSchema.StopsColumns.DIRECTION;
+		String LATITUDE = DatabaseSchema.StopsColumns.LATITUDE;
+		String LONGITUDE = DatabaseSchema.StopsColumns.LONGITUDE;
 	}
 
-	public static final class Stations implements BaseColumns, StationsColumns
+	public static final class Stops implements BaseColumns, StopsColumns
 	{
-		private Stations() {
+		private Stops() {
 		}
 
-		public static Uri buildStationsUri() {
-			return buildContentUri(getPathsBuilder().buildStationsPath());
+		public static Uri buildStopsUri() {
+			return buildContentUri(getPathsBuilder().buildStopsPath());
 		}
 
-		public static Uri buildStationRoutesUri(long stationId) {
-			return buildContentUri(getPathsBuilder().buildStationRoutesPath(String.valueOf(stationId)));
+		public static Uri buildStopsRoutesUri(long stopId) {
+			return buildContentUri(getPathsBuilder().buildStopRoutesPath(String.valueOf(stopId)));
 		}
 
-		public static Uri buildStationTimetableUri(Uri stationRoutesUri, long routeId) {
-			return buildContentUri(stationRoutesUri, routeId);
+		public static Uri buildStopTimetableUri(Uri stopRoutesUri, long routeId) {
+			return buildContentUri(stopRoutesUri, routeId);
 		}
 
-		public static long getRoutesStationId(Uri stationRoutesUri) {
-			final int stationIdSegmentPosition = 1;
+		public static long getRoutesStopId(Uri stopRoutesUri) {
+			final int stopIdSegmentPosition = 1;
 
-			return parseId(stationRoutesUri, stationIdSegmentPosition);
+			return parseId(stopRoutesUri, stopIdSegmentPosition);
 		}
 
-		public static long getTimetableRouteId(Uri stationTimetableUri) {
+		public static long getTimetableRouteId(Uri stopTimetableUri) {
 			final int routeIdSegmentPosition = 3;
 
-			return parseId(stationTimetableUri, routeIdSegmentPosition);
+			return parseId(stopTimetableUri, routeIdSegmentPosition);
 		}
 
-		public static long getTimetableStationId(Uri stationTimetableUri) {
-			final int stationIdSegmentIndex = 1;
+		public static long getTimetableStopId(Uri stopTimetableUri) {
+			final int stopIdSegmentIndex = 1;
 
-			return parseId(stationTimetableUri, stationIdSegmentIndex);
+			return parseId(stopTimetableUri, stopIdSegmentIndex);
 		}
 
-		public static long getSearchStationId(Uri stationUri) {
-			return parseId(stationUri);
+		public static long getSearchStopId(Uri stopUri) {
+			return parseId(stopUri);
 		}
 
-		public static String getSearchStationQuery(Uri stationsSearchUri) {
-			return stationsSearchUri.getLastPathSegment();
+		public static String getSearchStopsQuery(Uri stopsSearchUri) {
+			return stopsSearchUri.getLastPathSegment();
 		}
 	}
 

@@ -4,10 +4,10 @@
 	android:layout_height="?android:attr/listPreferredItemHeight">
 
 	<ImageView
-		android:id="@+id/indicator_station"
-		android:src="@drawable/ic_indicator_station_circle"
+		android:id="@+id/indicator_stop"
+		android:src="@drawable/ic_indicator_stop_circle"
 		android:scaleType="center"
-		android:layout_width="@dimen/width_indicator_station"
+		android:layout_width="@dimen/width_indicator_stop"
 		android:layout_height="match_parent"/>
 
 	<LinearLayout
@@ -19,7 +19,7 @@
 
 		<TextView
 			android:id="@+id/text_name"
-			android:textSize="@dimen/text_station_name"
+			android:textSize="@dimen/text_stop_name"
 			android:singleLine="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
@@ -27,7 +27,7 @@
 		<TextView
 			android:id="@+id/text_direction"
 			android:textColor="@color/text_time_relative"
-			android:textSize="@dimen/text_station_direction"
+			android:textSize="@dimen/text_stop_direction"
 			android:singleLine="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>

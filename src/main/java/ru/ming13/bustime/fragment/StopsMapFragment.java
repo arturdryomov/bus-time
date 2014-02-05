@@ -27,14 +27,14 @@ import java.util.Map;
 
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
-import ru.ming13.bustime.bus.StationSelectedEvent;
+import ru.ming13.bustime.bus.StopSelectedEvent;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
 import ru.ming13.bustime.util.MapsUtil;
 
-public class StationsMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>,
+public class StopsMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>,
 	GoogleMap.OnInfoWindowClickListener,
 	GooglePlayServicesClient.ConnectionCallbacks,
 	GooglePlayServicesClient.OnConnectionFailedListener
@@ -62,10 +62,10 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 	}
 
 	private LocationClient locationClient;
-	private Map<String, Long> stationIds;
+	private Map<String, Long> stopIds;
 
-	public static StationsMapFragment newInstance() {
-		return new StationsMapFragment();
+	public static StopsMapFragment newInstance() {
+		return new StopsMapFragment();
 	}
 
 	@Override
@@ -73,14 +73,14 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 		super.onActivityCreated(savedInstanceState);
 
 		setUpMap();
-		setUpStations();
+		setUpStops();
 
 		setUpCameraPosition(savedInstanceState);
 	}
 
 	private void setUpMap() {
 		setUpUi();
-		setUpStationMarkersListener();
+		setUpStopMarkersListener();
 	}
 
 	private void setUpUi() {
@@ -99,119 +99,119 @@ public class StationsMapFragment extends SupportMapFragment implements LoaderMan
 			bartender.getBottomUiPadding());
 	}
 
-	private void setUpStationMarkersListener() {
+	private void setUpStopMarkersListener() {
 		getMap().setOnInfoWindowClickListener(this);
 	}
 
 	@Override
-	public void onInfoWindowClick(Marker stationMarker) {
-		if (!isStationIdAvailable(stationMarker)) {
+	public void onInfoWindowClick(Marker stopMarker) {
+		if (!isStopIdAvailable(stopMarker)) {
 			return;
 		}
 
-		long stationId = stationIds.get(stationMarker.getId());
-		String stationName = stationMarker.getTitle();
-		String stationDirection = stationMarker.getSnippet();
+		long stopId = stopIds.get(stopMarker.getId());
+		String stopName = stopMarker.getTitle();
+		String stopDirection = stopMarker.getSnippet();
 
-		BusProvider.getBus().post(new StationSelectedEvent(stationId, stationName, stationDirection));
+		BusProvider.getBus().post(new StopSelectedEvent(stopId, stopName, stopDirection));
 	}
 
-	private boolean isStationIdAvailable(Marker stationMarker) {
-		return (stationIds != null) && (stationIds.containsKey(stationMarker.getId()));
+	private boolean isStopIdAvailable(Marker stopMarker) {
+		return (stopIds != null) && (stopIds.containsKey(stopMarker.getId()));
 	}
 
-	private void setUpStations() {
-		setUpStationsIds();
-		setUpStationsContent();
+	private void setUpStops() {
+		setUpStopsIds();
+		setUpStopsContent();
 	}
 
-	private void setUpStationsIds() {
-		stationIds = new ArrayMap<String, Long>();
+	private void setUpStopsIds() {
+		stopIds = new ArrayMap<String, Long>();
 	}
 
-	private void setUpStationsContent() {
-		getLoaderManager().initLoader(Loaders.STATIONS, null, this);
+	private void setUpStopsContent() {
+		getLoaderManager().initLoader(Loaders.STOPS, null, this);
 	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int loaderId, Bundle loaderArguments) {
-		return new CursorLoader(getActivity(), getStationsUri(), null, null, null, null);
+		return new CursorLoader(getActivity(), getStopsUri(), null, null, null, null);
 	}
 
-	private Uri getStationsUri() {
-		return BusTimeContract.Stations.buildStationsUri();
+	private Uri getStopsUri() {
+		return BusTimeContract.Stops.buildStopsUri();
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> stationsLoader, Cursor stationsCursor) {
-		setUpStationsCursor(stationsCursor);
-		setUpStationsMarkers(stationsCursor);
+	public void onLoadFinished(Loader<Cursor> stopsLoader, Cursor stopsCursor) {
+		setUpStopsCursor(stopsCursor);
+		setUpStopsMarkers(stopsCursor);
 	}
 
-	private void setUpStationsCursor(Cursor stationsCursor) {
-		if (stationsCursor.isBeforeFirst()) {
+	private void setUpStopsCursor(Cursor stopsCursor) {
+		if (stopsCursor.isBeforeFirst()) {
 			return;
 		}
 
-		stationsCursor.moveToFirst();
-		stationsCursor.moveToPrevious();
+		stopsCursor.moveToFirst();
+		stopsCursor.moveToPrevious();
 	}
 
-	private void setUpStationsMarkers(Cursor stationsCursor) {
+	private void setUpStopsMarkers(Cursor stopsCursor) {
 		GoogleMap map = getMap();
 
-		stationIds.clear();
+		stopIds.clear();
 
-		while (stationsCursor.moveToNext()) {
-			Marker stationMarker = map.addMarker(buildStationMarkerOptions(stationsCursor));
-			stationIds.put(stationMarker.getId(), getStationId(stationsCursor));
+		while (stopsCursor.moveToNext()) {
+			Marker stopMarker = map.addMarker(buildStopMarkerOptions(stopsCursor));
+			stopIds.put(stopMarker.getId(), getStopId(stopsCursor));
 		}
 	}
 
-	private MarkerOptions buildStationMarkerOptions(Cursor stationsCursor) {
-		String stationName = getStationName(stationsCursor);
-		String stationDirection = getStationDirection(stationsCursor);
-		double stationLatitude = getStationLatitude(stationsCursor);
-		double stationLongitude = getStationLongitude(stationsCursor);
+	private MarkerOptions buildStopMarkerOptions(Cursor stopsCursor) {
+		String stopName = getStopName(stopsCursor);
+		String stopDirection = getStopDirection(stopsCursor);
+		double stopLatitude = getStopLatitude(stopsCursor);
+		double stopLongitude = getStopLongitude(stopsCursor);
 
 		return new MarkerOptions()
-			.title(stationName)
-			.snippet(stationDirection)
-			.position(new LatLng(stationLatitude, stationLongitude))
-			.icon(BitmapDescriptorFactory.defaultMarker(getStationMarkerHue()));
+			.title(stopName)
+			.snippet(stopDirection)
+			.position(new LatLng(stopLatitude, stopLongitude))
+			.icon(BitmapDescriptorFactory.defaultMarker(getStopMarkerHue()));
 	}
 
-	private String getStationName(Cursor stationsCursor) {
-		return stationsCursor.getString(
-			stationsCursor.getColumnIndex(BusTimeContract.Stations.NAME));
+	private String getStopName(Cursor stopsCursor) {
+		return stopsCursor.getString(
+			stopsCursor.getColumnIndex(BusTimeContract.Stops.NAME));
 	}
 
-	private String getStationDirection(Cursor stationsCursor) {
-		return stationsCursor.getString(
-			stationsCursor.getColumnIndex(BusTimeContract.Stations.DIRECTION));
+	private String getStopDirection(Cursor stopsCursor) {
+		return stopsCursor.getString(
+			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
 	}
 
-	private double getStationLatitude(Cursor stationsCursor) {
-		return stationsCursor.getDouble(
-			stationsCursor.getColumnIndex(BusTimeContract.Stations.LATITUDE));
+	private double getStopLatitude(Cursor stopsCursor) {
+		return stopsCursor.getDouble(
+			stopsCursor.getColumnIndex(BusTimeContract.Stops.LATITUDE));
 	}
 
-	private double getStationLongitude(Cursor stationsCursor) {
-		return stationsCursor.getDouble(
-			stationsCursor.getColumnIndex(BusTimeContract.Stations.LONGITUDE));
+	private double getStopLongitude(Cursor stopsCursor) {
+		return stopsCursor.getDouble(
+			stopsCursor.getColumnIndex(BusTimeContract.Stops.LONGITUDE));
 	}
 
-	private float getStationMarkerHue() {
-		return getResources().getInteger(R.integer.hue_map_marker_station);
+	private float getStopMarkerHue() {
+		return getResources().getInteger(R.integer.hue_map_marker_stop);
 	}
 
-	private long getStationId(Cursor stationsCursor) {
-		return stationsCursor.getLong(
-			stationsCursor.getColumnIndex(BusTimeContract.Stations._ID));
+	private long getStopId(Cursor stopsCursor) {
+		return stopsCursor.getLong(
+			stopsCursor.getColumnIndex(BusTimeContract.Stops._ID));
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> stationsLoader) {
+	public void onLoaderReset(Loader<Cursor> stopsLoader) {
 	}
 
 	private void setUpCameraPosition(Bundle state) {

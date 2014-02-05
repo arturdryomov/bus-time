@@ -10,15 +10,15 @@ final class BusTimeUriMatcher
 		}
 
 		public static final int ROUTES = 1;
-		public static final int STATIONS = 2;
+		public static final int STOPS = 2;
 
-		public static final int ROUTE_STATIONS = 3;
-		public static final int STATION_ROUTES = 4;
+		public static final int ROUTE_STOPS = 3;
+		public static final int STOP_ROUTES = 4;
 
 		public static final int ROUTE_TIMETABLE = 5;
-		public static final int STATION_TIMETABLE = 6;
+		public static final int STOP_TIMETABLE = 6;
 
-		public static final int STATIONS_SEARCH = 7;
+		public static final int STOPS_SEARCH = 7;
 	}
 
 	private static final class Masks
@@ -46,20 +46,20 @@ final class BusTimeUriMatcher
 		uriMatcher.addURI(BusTimeContract.AUTHORITY,
 			pathsBuilder.buildRoutesPath(), Codes.ROUTES);
 		uriMatcher.addURI(BusTimeContract.AUTHORITY,
-			pathsBuilder.buildStationsPath(), Codes.STATIONS);
+			pathsBuilder.buildStopsPath(), Codes.STOPS);
 
 		uriMatcher.addURI(BusTimeContract.AUTHORITY,
-			pathsBuilder.buildRouteStationsPath(Masks.NUMBER), Codes.ROUTE_STATIONS);
+			pathsBuilder.buildRouteStopsPath(Masks.NUMBER), Codes.ROUTE_STOPS);
 		uriMatcher.addURI(BusTimeContract.AUTHORITY,
-			pathsBuilder.buildStationRoutesPath(Masks.NUMBER), Codes.STATION_ROUTES);
+			pathsBuilder.buildStopRoutesPath(Masks.NUMBER), Codes.STOP_ROUTES);
 
 		uriMatcher.addURI(BusTimeContract.AUTHORITY,
 			pathsBuilder.buildRouteTimetablePath(Masks.NUMBER, Masks.NUMBER), Codes.ROUTE_TIMETABLE);
 		uriMatcher.addURI(BusTimeContract.AUTHORITY,
-			pathsBuilder.buildStationTimetablePath(Masks.NUMBER, Masks.NUMBER), Codes.STATION_TIMETABLE);
+			pathsBuilder.buildStopTimetablePath(Masks.NUMBER, Masks.NUMBER), Codes.STOP_TIMETABLE);
 
 		uriMatcher.addURI(BusTimeContract.AUTHORITY,
-			pathsBuilder.buildStationSearchPath(Masks.SYMBOLS), Codes.STATIONS_SEARCH);
+			pathsBuilder.buildStopsSearchPath(Masks.SYMBOLS), Codes.STOPS_SEARCH);
 
 		return uriMatcher;
 	}

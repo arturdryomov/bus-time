@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 
 import ru.ming13.bustime.R;
-import ru.ming13.bustime.activity.RouteStationsActivity;
-import ru.ming13.bustime.activity.StationRoutesActivity;
-import ru.ming13.bustime.activity.StationsMapActivity;
+import ru.ming13.bustime.activity.RouteStopsActivity;
+import ru.ming13.bustime.activity.StopRoutesActivity;
+import ru.ming13.bustime.activity.StopsMapActivity;
 import ru.ming13.bustime.activity.TimetableActivity;
 
 public final class Intents
@@ -23,8 +23,8 @@ public final class Intents
 		public static final String ROUTE_DESCRIPTION = "route_description";
 		public static final String ROUTE_NUMBER = "route_number";
 
-		public static final String STATION_DIRECTION = "station_direction";
-		public static final String STATION_NAME = "station_name";
+		public static final String STOP_DIRECTION = "stop_direction";
+		public static final String STOP_NAME = "stop_name";
 
 		public static final String URI = "uri";
 	}
@@ -41,34 +41,34 @@ public final class Intents
 			this.context = context;
 		}
 
-		public Intent buildRouteStationsIntent(Uri stationsUri, String routeNumber, String routeDescription) {
-			Intent intent = new Intent(context, RouteStationsActivity.class);
-			intent.putExtra(Extras.URI, stationsUri);
+		public Intent buildRouteStopsIntent(Uri stopsUri, String routeNumber, String routeDescription) {
+			Intent intent = new Intent(context, RouteStopsActivity.class);
+			intent.putExtra(Extras.URI, stopsUri);
 			intent.putExtra(Extras.ROUTE_NUMBER, routeNumber);
 			intent.putExtra(Extras.ROUTE_DESCRIPTION, routeDescription);
 
 			return intent;
 		}
 
-		public Intent buildStationsMapIntent() {
-			return new Intent(context, StationsMapActivity.class);
+		public Intent buildStopsMapIntent() {
+			return new Intent(context, StopsMapActivity.class);
 		}
 
-		public Intent buildStationRoutesIntent(Uri routesUri, String stationName, String stationDirection) {
-			Intent intent = new Intent(context, StationRoutesActivity.class);
+		public Intent buildStopRoutesIntent(Uri routesUri, String stopName, String stopDirection) {
+			Intent intent = new Intent(context, StopRoutesActivity.class);
 			intent.putExtra(Extras.URI, routesUri);
-			intent.putExtra(Extras.STATION_NAME, stationName);
-			intent.putExtra(Extras.STATION_DIRECTION, stationDirection);
+			intent.putExtra(Extras.STOP_NAME, stopName);
+			intent.putExtra(Extras.STOP_DIRECTION, stopDirection);
 
 			return intent;
 		}
 
-		public Intent buildTimetableIntent(Uri timetableUri, String routeNumber, String stationName, String stationDirection) {
+		public Intent buildTimetableIntent(Uri timetableUri, String routeNumber, String stopName, String stopDirection) {
 			Intent intent = new Intent(context, TimetableActivity.class);
 			intent.putExtra(Extras.URI, timetableUri);
 			intent.putExtra(Extras.ROUTE_NUMBER, routeNumber);
-			intent.putExtra(Extras.STATION_NAME, stationName);
-			intent.putExtra(Extras.STATION_DIRECTION, stationDirection);
+			intent.putExtra(Extras.STOP_NAME, stopName);
+			intent.putExtra(Extras.STOP_DIRECTION, stopDirection);
 
 			return intent;
 		}

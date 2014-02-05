@@ -75,8 +75,8 @@ public final class DatabaseOperator
 			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.ROUTES));
 			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.TRIP_TYPES));
 			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.TRIPS));
-			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.STATIONS));
-			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.ROUTES_AND_STATIONS));
+			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.STOPS));
+			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.ROUTES_AND_STOPS));
 
 			database.setTransactionSuccessful();
 		} finally {
@@ -93,8 +93,8 @@ public final class DatabaseOperator
 			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.ROUTES, "db"));
 			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.TRIP_TYPES, "db"));
 			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.TRIPS, "db"));
-			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.STATIONS, "db"));
-			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.ROUTES_AND_STATIONS, "db"));
+			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.STOPS, "db"));
+			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.ROUTES_AND_STOPS, "db"));
 
 			database.setTransactionSuccessful();
 		} finally {

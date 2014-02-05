@@ -14,7 +14,7 @@ import ru.ming13.bustime.R;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Time;
 
-public class StationRoutesAdapter extends CursorAdapter
+public class StopRoutesAdapter extends CursorAdapter
 {
 	private static final class RouteViewHolder
 	{
@@ -25,7 +25,7 @@ public class StationRoutesAdapter extends CursorAdapter
 
 	private final LayoutInflater layoutInflater;
 
-	public StationRoutesAdapter(Context context) {
+	public StopRoutesAdapter(Context context) {
 		super(context, null, 0);
 
 		layoutInflater = LayoutInflater.from(context);
@@ -42,7 +42,7 @@ public class StationRoutesAdapter extends CursorAdapter
 	}
 
 	private View buildRouteView(ViewGroup viewGroup) {
-		return layoutInflater.inflate(R.layout.list_item_station_route, viewGroup, false);
+		return layoutInflater.inflate(R.layout.list_item_stop_route, viewGroup, false);
 	}
 
 	private RouteViewHolder buildRouteViewHolder(View routeView) {

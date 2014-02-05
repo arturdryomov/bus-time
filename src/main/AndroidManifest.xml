@@ -65,19 +65,19 @@
 		</activity>
 
 		<activity
-			android:label="@string/title_stations"
-			android:name=".activity.RouteStationsActivity">
+			android:label="@string/title_stops"
+			android:name=".activity.RouteStopsActivity">
 		</activity>
 
 		<activity
-			android:label="@string/title_stations"
-			android:name=".activity.StationsMapActivity"
+			android:label="@string/title_stops"
+			android:name=".activity.StopsMapActivity"
 			android:theme="@style/Theme.BusTime.Map">
 		</activity>
 
 		<activity
 			android:label="@string/title_routes"
-			android:name=".activity.StationRoutesActivity">
+			android:name=".activity.StopRoutesActivity">
 		</activity>
 
 		<activity

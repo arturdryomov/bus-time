@@ -39,18 +39,18 @@ public class TimetableActivity extends ActionBarActivity
 	}
 
 	private String buildSubtitle() {
-		String stationName = getStationName();
-		String stationDirection = getStationDirection();
+		String stopName = getStopName();
+		String stopDirection = getStopDirection();
 
-		return TitleBuilder.with(this).buildStationTitle(stationName, stationDirection);
+		return TitleBuilder.with(this).buildStopTitle(stopName, stopDirection);
 	}
 
-	private String getStationName() {
-		return getIntent().getStringExtra(Intents.Extras.STATION_NAME);
+	private String getStopName() {
+		return getIntent().getStringExtra(Intents.Extras.STOP_NAME);
 	}
 
-	private String getStationDirection() {
-		return getIntent().getStringExtra(Intents.Extras.STATION_DIRECTION);
+	private String getStopDirection() {
+		return getIntent().getStringExtra(Intents.Extras.STOP_DIRECTION);
 	}
 
 	private void setUpFragment() {

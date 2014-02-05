@@ -22,11 +22,11 @@ public final class TitleBuilder
 		return context.getString(R.string.mask_route_title, routeNumber, routeDescription);
 	}
 
-	public String buildStationTitle(String stationName, String stationDirection) {
-		if (StringUtils.isEmpty(stationDirection)) {
-			return stationName;
+	public String buildStopTitle(String stopName, String stopDirection) {
+		if (StringUtils.isEmpty(stopDirection)) {
+			return stopName;
 		}
 
-		return context.getString(R.string.mask_station_title, stationName, stationDirection);
+		return context.getString(R.string.mask_stop_title, stopName, stopDirection);
 	}
 }

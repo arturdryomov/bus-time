@@ -4,21 +4,21 @@ import ru.ming13.bustime.database.DatabaseSchema;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.SqlBuilder;
 
-public final class StationsQueryComponents implements QueryComponents
+public final class StopsQueryComponents implements QueryComponents
 {
 	@Override
 	public String getTables() {
-		return DatabaseSchema.Tables.STATIONS;
+		return DatabaseSchema.Tables.STOPS;
 	}
 
 	@Override
 	public String[] getProjection() {
 		return new String[]{
-			BusTimeContract.Stations._ID,
-			BusTimeContract.Stations.NAME,
-			BusTimeContract.Stations.DIRECTION,
-			BusTimeContract.Stations.LATITUDE,
-			BusTimeContract.Stations.LONGITUDE};
+			BusTimeContract.Stops._ID,
+			BusTimeContract.Stops.NAME,
+			BusTimeContract.Stops.DIRECTION,
+			BusTimeContract.Stops.LATITUDE,
+			BusTimeContract.Stops.LONGITUDE};
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public final class StationsQueryComponents implements QueryComponents
 	@Override
 	public String getSortOrder() {
 		return SqlBuilder.buildSortOrderClause(
-			DatabaseSchema.StationsColumns.NAME,
-			DatabaseSchema.StationsColumns.DIRECTION);
+			DatabaseSchema.StopsColumns.NAME,
+			DatabaseSchema.StopsColumns.DIRECTION);
 	}
 }

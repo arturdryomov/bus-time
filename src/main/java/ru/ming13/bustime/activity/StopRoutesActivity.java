@@ -11,13 +11,13 @@ import com.squareup.otto.Subscribe;
 
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
-import ru.ming13.bustime.fragment.StationRoutesFragment;
+import ru.ming13.bustime.fragment.StopRoutesFragment;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.TitleBuilder;
 
-public class StationRoutesActivity extends ActionBarActivity
+public class StopRoutesActivity extends ActionBarActivity
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,18 +32,18 @@ public class StationRoutesActivity extends ActionBarActivity
 	}
 
 	private String buildSubtitle() {
-		String stationName = getStationName();
-		String stationDirection = getStationDirection();
+		String stopName = getStopName();
+		String stopDirection = getStopDirection();
 
-		return TitleBuilder.with(this).buildStationTitle(stationName, stationDirection);
+		return TitleBuilder.with(this).buildStopTitle(stopName, stopDirection);
 	}
 
-	private String getStationName() {
-		return getIntent().getStringExtra(Intents.Extras.STATION_NAME);
+	private String getStopName() {
+		return getIntent().getStringExtra(Intents.Extras.STOP_NAME);
 	}
 
-	private String getStationDirection() {
-		return getIntent().getStringExtra(Intents.Extras.STATION_DIRECTION);
+	private String getStopDirection() {
+		return getIntent().getStringExtra(Intents.Extras.STOP_DIRECTION);
 	}
 
 	private void setUpFragment() {
@@ -51,7 +51,7 @@ public class StationRoutesActivity extends ActionBarActivity
 	}
 
 	private Fragment buildFragment() {
-		return StationRoutesFragment.newInstance(getRoutesUri());
+		return StopRoutesFragment.newInstance(getRoutesUri());
 	}
 
 	private Uri getRoutesUri() {
@@ -67,12 +67,12 @@ public class StationRoutesActivity extends ActionBarActivity
 	}
 
 	private void startTimetableActivity(long routeId, String routeNumber) {
-		Uri timetableUri = BusTimeContract.Stations.buildStationTimetableUri(getRoutesUri(), routeId);
-		String stationName = getStationName();
-		String stationDirection = getStationDirection();
+		Uri timetableUri = BusTimeContract.Stops.buildStopTimetableUri(getRoutesUri(), routeId);
+		String stopName = getStopName();
+		String stopDirection = getStopDirection();
 
 		Intent intent = Intents.Builder.with(this)
-			.buildTimetableIntent(timetableUri, routeNumber, stationName, stationDirection);
+			.buildTimetableIntent(timetableUri, routeNumber, stopName, stopDirection);
 		startActivity(intent);
 	}
 
