@@ -50,7 +50,7 @@ public class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private String getServerDatabaseVersion() {
-		return DatabaseBackend.create().getDatabaseVersion();
+		return DatabaseBackend.with(context).getDatabaseVersion();
 	}
 
 	@Override

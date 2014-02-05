@@ -23,7 +23,7 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private DatabaseUpdatingTask(Context context) {
-		this.context = context;
+		this.context = context.getApplicationContext();
 	}
 
 	@Override
@@ -41,13 +41,13 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private void updateDatabaseContents() {
-		InputStream serverDatabaseContents = DatabaseBackend.create().getDatabaseContents();
+		InputStream serverDatabaseContents = DatabaseBackend.with(context).getDatabaseContents();
 		DatabaseOperator.with(context).replaceDatabaseContents(serverDatabaseContents);
 	}
 
 	private void updateDatabaseVersion() {
 		Preferences preferences = Preferences.getDatabaseStateInstance(context);
-		preferences.set(Preferences.Keys.CONTENTS_VERSION, DatabaseBackend.create().getDatabaseVersion());
+		preferences.set(Preferences.Keys.CONTENTS_VERSION, DatabaseBackend.with(context).getDatabaseVersion());
 	}
 
 	private void notifyDatabaseContentsChange() {

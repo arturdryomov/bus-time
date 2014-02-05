@@ -1,5 +1,7 @@
 package ru.ming13.bustime.backend;
 
+import android.content.Context;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -7,25 +9,24 @@ import java.io.InputStream;
 
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import ru.ming13.bustime.R;
 import ru.ming13.bustime.database.DatabaseSchema;
 
 public class DatabaseBackend
 {
-	private static final String API_URL = "http://server.local:5000";
-
 	private final DatabaseBackendApi backendApi;
 
-	public static DatabaseBackend create() {
-		return new DatabaseBackend();
+	public static DatabaseBackend with(Context context) {
+		return new DatabaseBackend(context);
 	}
 
-	private DatabaseBackend() {
-		this.backendApi = buildBackendApi();
+	private DatabaseBackend(Context context) {
+		this.backendApi = buildBackendApi(context);
 	}
 
-	private DatabaseBackendApi buildBackendApi() {
+	private DatabaseBackendApi buildBackendApi(Context context) {
 		RestAdapter backendAdapter = new RestAdapter.Builder()
-			.setEndpoint(API_URL)
+			.setEndpoint(context.getString(R.string.url_backend))
 			.build();
 
 		return backendAdapter.create(DatabaseBackendApi.class);

@@ -2,8 +2,9 @@
 
 assets/
 
-# API keys
+# Private information
 
 keys.xml
+urls.xml
 
 # Use global .gitignore for your IDE
