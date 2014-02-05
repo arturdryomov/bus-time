@@ -93,7 +93,7 @@ public class StopRoutesAdapter extends CursorAdapter
 	private String getRouteTime(Context context, Cursor routesCursor) {
 		String routeTime = getRouteTime(routesCursor);
 
-		if (StringUtils.isEmpty(routeTime)) {
+		if (StringUtils.isBlank(routeTime)) {
 			return context.getString(R.string.token_no_trips);
 		}
 

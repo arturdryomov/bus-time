@@ -25,7 +25,7 @@ public final class TitleBuilder
 	}
 
 	public String buildStopTitle(Stop stop) {
-		if (StringUtils.isEmpty(stop.getDirection())) {
+		if (StringUtils.isBlank(stop.getDirection())) {
 			return stop.getName();
 		}
 

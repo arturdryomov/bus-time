@@ -88,7 +88,7 @@ public class StopsAdapter extends CursorAdapter
 	}
 
 	private int getStopDirectionVisibility(String stopDirection) {
-		if (StringUtils.isEmpty(stopDirection)) {
+		if (StringUtils.isBlank(stopDirection)) {
 			return View.GONE;
 		} else {
 			return View.VISIBLE;

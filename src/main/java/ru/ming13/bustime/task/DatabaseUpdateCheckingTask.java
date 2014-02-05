@@ -29,11 +29,11 @@ public class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
 		String localDatabaseVersion = getLocalDatabaseVersion();
 		String serverDatabaseVersion = getServerDatabaseVersion();
 
-		if (StringUtils.isEmpty(serverDatabaseVersion)) {
+		if (StringUtils.isBlank(serverDatabaseVersion)) {
 			return new UpdatesNotAvailableEvent();
 		}
 
-		if (StringUtils.isEmpty(localDatabaseVersion)) {
+		if (StringUtils.isBlank(localDatabaseVersion)) {
 			return new UpdatesAvailableEvent();
 		}
 
