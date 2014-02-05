@@ -42,7 +42,7 @@ public class RouteStopsAdapter extends CursorAdapter
 	}
 
 	private View buildStopView(ViewGroup viewGroup) {
-		return layoutInflater.inflate(R.layout.list_item_route_stop, viewGroup, false);
+		return layoutInflater.inflate(R.layout.view_list_item_route_stop, viewGroup, false);
 	}
 
 	private StopViewHolder buildStopViewHolder(View stopView) {

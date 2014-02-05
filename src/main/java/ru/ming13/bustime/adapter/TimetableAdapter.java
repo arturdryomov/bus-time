@@ -39,7 +39,7 @@ public class TimetableAdapter extends CursorAdapter
 	}
 
 	private View buildTimeView(ViewGroup viewGroup) {
-		return layoutInflater.inflate(R.layout.list_item_time, viewGroup, false);
+		return layoutInflater.inflate(R.layout.view_list_item_time, viewGroup, false);
 	}
 
 	private TimeViewHolder buildTimeViewHolder(View timeView) {

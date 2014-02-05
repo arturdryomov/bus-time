@@ -29,7 +29,7 @@ public class DatabaseUpdateBanner extends Fragment implements View.OnClickListen
 	public void show(FragmentManager fragmentManager) {
 		fragmentManager
 			.beginTransaction()
-			.setCustomAnimations(R.anim.slide_in_banner_updates, R.anim.slide_out_banner_updates)
+			.setCustomAnimations(R.anim.slide_up, R.anim.slide_down)
 			.add(android.R.id.content, this, TAG)
 			.commit();
 	}
@@ -37,7 +37,7 @@ public class DatabaseUpdateBanner extends Fragment implements View.OnClickListen
 	public void hide(FragmentManager fragmentManager) {
 		fragmentManager
 			.beginTransaction()
-			.setCustomAnimations(R.anim.slide_in_banner_updates, R.anim.slide_out_banner_updates)
+			.setCustomAnimations(R.anim.slide_up, R.anim.slide_down)
 			.remove(this)
 			.commit();
 	}
