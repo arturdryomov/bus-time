@@ -1,12 +1,10 @@
 package ru.ming13.bustime.database;
 
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import ru.ming13.bustime.util.Assets;
-
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper
 {

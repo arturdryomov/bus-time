@@ -1,6 +1,5 @@
 package ru.ming13.bustime.database;
 
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -11,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import ru.ming13.bustime.util.SqlBuilder;
-
 
 public final class DatabaseOperator
 {

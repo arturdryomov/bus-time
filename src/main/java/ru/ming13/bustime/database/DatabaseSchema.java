@@ -1,8 +1,6 @@
 package ru.ming13.bustime.database;
 
-
 import android.provider.BaseColumns;
-
 
 public class DatabaseSchema
 {

@@ -1,6 +1,5 @@
 package ru.ming13.bustime.activity;
 
-
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -42,7 +41,6 @@ import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.MapsUtil;
 import ru.ming13.bustime.util.Preferences;
-
 
 public class HomeActivity extends ActionBarActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
 {
