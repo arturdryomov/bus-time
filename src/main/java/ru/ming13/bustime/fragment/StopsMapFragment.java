@@ -301,7 +301,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 		MapsUtil mapsUtil = MapsUtil.with(getActivity());
 
 		if (mapsUtil.isResolvable(connectionResult)) {
-			mapsUtil.resolveError(connectionResult);
+			mapsUtil.resolve(connectionResult);
 		} else {
 			mapsUtil.showErrorDialog(getFragmentManager(), connectionResult);
 		}

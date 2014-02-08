@@ -15,7 +15,7 @@ import ru.ming13.bustime.bus.DatabaseUpdateDiscardedEvent;
 
 public class DatabaseUpdateBanner extends Fragment implements View.OnClickListener
 {
-	public static final String TAG = "DATABASE_UPDATES_BANNER";
+	public static final String TAG = "DATABASE_UPDATE_BANNER";
 
 	public static DatabaseUpdateBanner newInstance() {
 		return new DatabaseUpdateBanner();

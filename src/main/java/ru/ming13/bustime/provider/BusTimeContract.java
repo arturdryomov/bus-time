@@ -97,7 +97,7 @@ public final class BusTimeContract
 			public static final int WORKDAYS = DatabaseSchema.TripTypesColumnsValues.WORKDAY_ID;
 			public static final int WEEKEND = DatabaseSchema.TripTypesColumnsValues.WEEKEND_ID;
 
-			public static long currentWeekPartDependent() {
+			public static int currentWeekPartDependent() {
 				if (Time.current().isWeekend()) {
 					return WEEKEND;
 				} else {
@@ -130,7 +130,7 @@ public final class BusTimeContract
 			return parseId(timetableUri, stopIdSegmentPosition);
 		}
 
-		public static long getTimetableTypeId(Uri timetableUri) {
+		public static int getTimetableType(Uri timetableUri) {
 			return parseParameter(timetableUri, Timetable.TYPE);
 		}
 	}
@@ -155,8 +155,8 @@ public final class BusTimeContract
 		return Long.valueOf(uri.getPathSegments().get(segmentPosition));
 	}
 
-	private static long parseParameter(Uri uri, String key) {
-		return Long.valueOf(uri.getQueryParameter(key));
+	private static int parseParameter(Uri uri, String key) {
+		return Integer.valueOf(uri.getQueryParameter(key));
 	}
 
 	private static BusTimePathsBuilder getPathsBuilder() {

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -29,6 +28,7 @@ import ru.ming13.bustime.bus.DatabaseUpdateAvailableEvent;
 import ru.ming13.bustime.bus.DatabaseUpdateDiscardedEvent;
 import ru.ming13.bustime.bus.DatabaseUpdateFinishedEvent;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
+import ru.ming13.bustime.bus.StopLoadedEvent;
 import ru.ming13.bustime.bus.StopSelectedEvent;
 import ru.ming13.bustime.fragment.DatabaseUpdateBanner;
 import ru.ming13.bustime.model.Route;
@@ -125,12 +125,8 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	private void setUpTabsPager() {
 		ViewPager tabsPager = getTabsPager();
 
-		tabsPager.setAdapter(buildTabsPagerAdapter());
+		tabsPager.setAdapter(new TabPagerAdapter(getSupportFragmentManager()));
 		tabsPager.setOnPageChangeListener(this);
-	}
-
-	private PagerAdapter buildTabsPagerAdapter() {
-		return new TabPagerAdapter(getSupportFragmentManager());
 	}
 
 	@Override
@@ -147,8 +143,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void setUpSelectedTab() {
-		Preferences preferences = Preferences.getApplicationStateInstance(this);
-		int selectedTabPosition = preferences.getInt(Preferences.Keys.SELECTED_TAB_POSITION);
+		int selectedTabPosition = Preferences.with(this).getHomeTabPosition();
 
 		getSupportActionBar().setSelectedNavigationItem(selectedTabPosition);
 	}
@@ -351,6 +346,11 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		startStopRoutesActivity(event.getStop());
 	}
 
+	@Subscribe
+	public void onStopLoaded(StopLoadedEvent event) {
+		startStopRoutesActivity(event.getStop());
+	}
+
 	private void startStopRoutesActivity(Stop stop) {
 		Intent intent = Intents.Builder.with(this).buildStopRoutesIntent(stop);
 		startActivity(intent);
@@ -403,9 +403,8 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void saveSelectedTab() {
-		Preferences preferences = Preferences.getApplicationStateInstance(this);
 		int selectedTabPosition = getSupportActionBar().getSelectedNavigationIndex();
 
-		preferences.set(Preferences.Keys.SELECTED_TAB_POSITION, selectedTabPosition);
+		Preferences.with(this).setHomeTabPosition(selectedTabPosition);
 	}
 }

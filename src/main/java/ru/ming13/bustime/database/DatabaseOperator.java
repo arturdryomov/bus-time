@@ -23,7 +23,7 @@ public final class DatabaseOperator
 		this.context = context.getApplicationContext();
 	}
 
-	public boolean doesDatabaseExist() {
+	public boolean databaseExists() {
 		return buildDatabaseFile().exists();
 	}
 
@@ -62,7 +62,6 @@ public final class DatabaseOperator
 		insertDatabaseContents(database, tempDatabaseFile);
 
 		tempDatabaseFile.delete();
-
 		database.close();
 	}
 
@@ -70,11 +69,11 @@ public final class DatabaseOperator
 		try {
 			database.beginTransaction();
 
-			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.ROUTES));
-			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.TRIP_TYPES));
-			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.TRIPS));
-			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.STOPS));
 			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.ROUTES_AND_STOPS));
+			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.TRIPS));
+			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.TRIP_TYPES));
+			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.ROUTES));
+			database.execSQL(SqlBuilder.buildDeleteClause(DatabaseSchema.Tables.STOPS));
 
 			database.setTransactionSuccessful();
 		} finally {

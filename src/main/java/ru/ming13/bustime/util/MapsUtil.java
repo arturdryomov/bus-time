@@ -47,6 +47,10 @@ public final class MapsUtil
 		showErrorDialog(fragmentManager, getErrorCode());
 	}
 
+	public void showErrorDialog(FragmentManager fragmentManager, ConnectionResult connectionResult) {
+		showErrorDialog(fragmentManager, connectionResult.getErrorCode());
+	}
+
 	private void showErrorDialog(FragmentManager fragmentManager, int errorCode) {
 		DialogFragment dialog = GooglePlayServicesErrorDialog.newInstance(errorCode, 0);
 		dialog.show(fragmentManager, GooglePlayServicesErrorDialog.TAG);
@@ -56,16 +60,12 @@ public final class MapsUtil
 		return connectionResult.hasResolution();
 	}
 
-	public void resolveError(ConnectionResult connectionResult) {
+	public void resolve(ConnectionResult connectionResult) {
 		try {
 			Activity activity = (Activity) context;
 			connectionResult.startResolutionForResult(activity, 0);
 		} catch (IntentSender.SendIntentException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	public void showErrorDialog(FragmentManager fragmentManager, ConnectionResult connectionResult) {
-		showErrorDialog(fragmentManager, connectionResult.getErrorCode());
 	}
 }

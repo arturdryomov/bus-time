@@ -7,22 +7,15 @@ import org.apache.commons.lang3.StringUtils;
 
 public final class Preferences
 {
-	private static final class Locations
-	{
-		private Locations() {
-		}
+	private static final String LOCATION = "state";
 
-		public static final String APPLICATION_STATE = "application_state";
-		public static final String DATABASE_STATE = "database_state";
-	}
-
-	public static final class Keys
+	private static final class Keys
 	{
 		private Keys() {
 		}
 
-		public static final String CONTENTS_VERSION = "contents_version";
-		public static final String SELECTED_TAB_POSITION = "selected_tab_position";
+		public static final String DATABASE_VERSION = "database_version";
+		public static final String HOME_TAB_POSITION = "home_tab_position";
 	}
 
 	private static final class Defaults
@@ -36,31 +29,43 @@ public final class Preferences
 
 	private final SharedPreferences preferences;
 
-	public static Preferences getApplicationStateInstance(Context context) {
-		return new Preferences(context, Locations.APPLICATION_STATE);
+	public static Preferences with(Context context) {
+		return new Preferences(context);
 	}
 
-	public static Preferences getDatabaseStateInstance(Context context) {
-		return new Preferences(context, Locations.DATABASE_STATE);
+	private Preferences(Context context) {
+		preferences = context.getSharedPreferences(LOCATION, Context.MODE_PRIVATE);
 	}
 
-	private Preferences(Context context, String location) {
-		preferences = context.getSharedPreferences(location, Context.MODE_PRIVATE);
+	public String getDatabaseVersion() {
+		return getString(Keys.DATABASE_VERSION);
 	}
 
-	public int getInt(String key) {
-		return preferences.getInt(key, Defaults.INT);
-	}
-
-	public String getString(String key) {
+	private String getString(String key) {
 		return preferences.getString(key, Defaults.STRING);
 	}
 
-	public void set(String key, int value) {
-		preferences.edit().putInt(key, value).commit();
+	public void setDatabaseVersion(String databaseVersion) {
+		set(Keys.DATABASE_VERSION, databaseVersion);
 	}
 
-	public void set(String key, String value) {
+	private void set(String key, String value) {
 		preferences.edit().putString(key, value).commit();
+	}
+
+	public int getHomeTabPosition() {
+		return getInt(Keys.HOME_TAB_POSITION);
+	}
+
+	private int getInt(String key) {
+		return preferences.getInt(key, Defaults.INT);
+	}
+
+	public void setHomeTabPosition(int homeTabPosition) {
+		set(Keys.HOME_TAB_POSITION, homeTabPosition);
+	}
+
+	private void set(String key, int value) {
+		preferences.edit().putInt(key, value).commit();
 	}
 }

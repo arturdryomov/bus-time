@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 
 import ru.ming13.bustime.bus.BusEvent;
 import ru.ming13.bustime.bus.BusProvider;
-import ru.ming13.bustime.bus.StopSelectedEvent;
+import ru.ming13.bustime.bus.StopLoadedEvent;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 
@@ -28,7 +28,7 @@ public class StopLoadingTask extends AsyncTask<Void, Void, BusEvent>
 
 	@Override
 	protected BusEvent doInBackground(Void... parameters) {
-		return new StopSelectedEvent(loadStop());
+		return new StopLoadedEvent(loadStop());
 	}
 
 	private Stop loadStop() {
@@ -52,7 +52,6 @@ public class StopLoadingTask extends AsyncTask<Void, Void, BusEvent>
 	private Stop getStop(Cursor stopsCursor) {
 		stopsCursor.moveToPosition(getStopPosition(stopsCursor));
 
-		long stopId = getStopId(stopsCursor);
 		String stopName = getStopName(stopsCursor);
 		String stopDirection = getStopDirection(stopsCursor);
 

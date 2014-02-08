@@ -37,14 +37,10 @@ public class TimetableInformationLoadingTask extends AsyncTask<Void, Void, BusEv
 	}
 
 	private int getCurrentTimetableType() {
-		if (!isTimetableWeekPartDependent()) {
-			return BusTimeContract.Timetable.Type.FULL_WEEK;
-		}
-
-		if (Time.current().isWeekend()) {
-			return BusTimeContract.Timetable.Type.WEEKEND;
+		if (isTimetableWeekPartDependent()) {
+			return BusTimeContract.Timetable.Type.currentWeekPartDependent();
 		} else {
-			return BusTimeContract.Timetable.Type.WORKDAYS;
+			return BusTimeContract.Timetable.Type.FULL_WEEK;
 		}
 	}
 

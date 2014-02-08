@@ -29,28 +29,34 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 	@Override
 	protected BusEvent doInBackground(Void... parameters) {
 		try {
-			updateDatabaseContents();
-			updateDatabaseVersion();
+			changeLocalDatabaseContents();
+			changeLocalDatabaseVersion();
 
-			notifyDatabaseContentsChange();
+			notifyLocalDatabaseContentsChange();
+
+			return new DatabaseUpdateFinishedEvent();
 		} catch (RuntimeException e) {
 			return new DatabaseUpdateFinishedEvent();
 		}
-
-		return new DatabaseUpdateFinishedEvent();
 	}
 
-	private void updateDatabaseContents() {
-		InputStream serverDatabaseContents = DatabaseBackend.with(context).getDatabaseContents();
-		DatabaseOperator.with(context).replaceDatabaseContents(serverDatabaseContents);
+	private void changeLocalDatabaseContents() {
+		DatabaseOperator.with(context).replaceDatabaseContents(getServerDatabaseContents());
 	}
 
-	private void updateDatabaseVersion() {
-		Preferences preferences = Preferences.getDatabaseStateInstance(context);
-		preferences.set(Preferences.Keys.CONTENTS_VERSION, DatabaseBackend.with(context).getDatabaseVersion());
+	private InputStream getServerDatabaseContents() {
+		return DatabaseBackend.with(context).getDatabaseContents();
 	}
 
-	private void notifyDatabaseContentsChange() {
+	private void changeLocalDatabaseVersion() {
+		Preferences.with(context).setDatabaseVersion(getServerDatabaseVersion());
+	}
+
+	private String getServerDatabaseVersion() {
+		return DatabaseBackend.with(context).getDatabaseVersion();
+	}
+
+	private void notifyLocalDatabaseContentsChange() {
 		ContentResolver contentResolver = context.getContentResolver();
 
 		contentResolver.notifyChange(BusTimeContract.Routes.getRoutesUri(), null);

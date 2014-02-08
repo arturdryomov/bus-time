@@ -108,7 +108,7 @@ public class BusTimeProvider extends ContentProvider
 	private QueryComponents buildTimetableQueryComponents(Uri uri) {
 		long routeId = BusTimeContract.Timetable.getRouteId(uri);
 		long stopId = BusTimeContract.Timetable.getStopId(uri);
-		long typeId = BusTimeContract.Timetable.getTimetableTypeId(uri);
+		long typeId = BusTimeContract.Timetable.getTimetableType(uri);
 
 		return new TimetableQueryComponents(routeId, stopId, typeId);
 	}

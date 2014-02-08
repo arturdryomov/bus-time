@@ -124,9 +124,6 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 	private int getLoaderId() {
 		switch (timetableType) {
-			case BusTimeContract.Timetable.Type.FULL_WEEK:
-				return Loaders.FULL_WEEK_TIMETABLE;
-
 			case BusTimeContract.Timetable.Type.WORKDAYS:
 				return Loaders.WORKDAYS_TIMETABLE;
 

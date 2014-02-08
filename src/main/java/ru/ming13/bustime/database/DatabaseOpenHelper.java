@@ -32,7 +32,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper
 			return database;
 		}
 
-		if (!DatabaseOperator.with(context).doesDatabaseExist()) {
+		if (!DatabaseOperator.with(context).databaseExists()) {
 			DatabaseOperator.with(context).replaceDatabaseFile(Assets.getDatabaseContents(context));
 		}
 

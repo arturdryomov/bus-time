@@ -11,24 +11,24 @@ public final class Timer implements Runnable
 {
 	private static final int UPDATE_PERIOD_IN_MILLIS = 1 * 60 * 1000;
 
-	private final Handler timerHandler;
+	private final Handler timerSchedule;
 
 	public Timer() {
-		timerHandler = new Handler();
+		timerSchedule = new Handler();
 	}
 
 	public void start() {
 		stop();
 
-		postponeEvent(calculateMillisForNextMinute());
+		schedule(calculateMillisForNextMinute());
 	}
 
 	public void stop() {
-		timerHandler.removeCallbacks(this);
+		timerSchedule.removeCallbacks(this);
 	}
 
-	private void postponeEvent(long postponeMillis) {
-		timerHandler.postDelayed(this, postponeMillis);
+	private void schedule(long scheduleMillis) {
+		timerSchedule.postDelayed(this, scheduleMillis);
 	}
 
 	private long calculateMillisForNextMinute() {
@@ -44,12 +44,12 @@ public final class Timer implements Runnable
 
 	@Override
 	public void run() {
-		sendEvent();
+		sendNotification();
 
-		postponeEvent(UPDATE_PERIOD_IN_MILLIS);
+		schedule(UPDATE_PERIOD_IN_MILLIS);
 	}
 
-	private void sendEvent() {
+	private void sendNotification() {
 		BusProvider.getBus().post(new TimeChangedEvent());
 	}
 }
