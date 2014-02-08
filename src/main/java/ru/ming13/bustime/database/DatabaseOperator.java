@@ -31,12 +31,17 @@ public final class DatabaseOperator
 		return context.getDatabasePath(DatabaseSchema.DATABASE_NAME).getAbsoluteFile();
 	}
 
+	public String getDatabasePath() {
+		return buildDatabaseFile().getPath();
+	}
+
 	public void replaceDatabaseFile(InputStream databaseContents) {
 		try {
 			File tempDatabaseFile = buildTempFile(databaseContents);
 			File databaseFile = buildDatabaseFile();
 
-			FileUtils.moveFile(tempDatabaseFile, databaseFile);
+			FileUtils.copyFile(tempDatabaseFile, databaseFile);
+			tempDatabaseFile.delete();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

@@ -28,20 +28,60 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper
 
 	@Override
 	public SQLiteDatabase getReadableDatabase() {
-		if (isDatabaseAvailable()) {
+		if (databaseAvailable()) {
 			return database;
 		}
 
-		if (!DatabaseOperator.with(context).databaseExists()) {
-			DatabaseOperator.with(context).replaceDatabaseFile(Assets.getDatabaseContents(context));
+		if (!databaseExists()) {
+			createDatabase();
+			changeDatabaseVersion();
 		}
 
-		database = super.getReadableDatabase();
+		if (!databaseHasCurrentVersion()) {
+			createDatabase();
+			changeDatabaseVersion();
+		}
+
+		database = openReadableDatabase();
 
 		return database;
 	}
 
-	private boolean isDatabaseAvailable() {
+	private boolean databaseAvailable() {
 		return (database != null) && (database.isOpen());
+	}
+
+	private boolean databaseExists() {
+		return DatabaseOperator.with(context).databaseExists();
+	}
+
+	private void createDatabase() {
+		DatabaseOperator.with(context).replaceDatabaseFile(Assets.getDatabaseContents(context));
+	}
+
+	private void changeDatabaseVersion() {
+		SQLiteDatabase database = openWriteableDatabase();
+		database.setVersion(DatabaseSchema.Versions.CURRENT);
+		database.close();
+	}
+
+	private SQLiteDatabase openWriteableDatabase() {
+		return SQLiteDatabase.openDatabase(getDatabasePath(), null, SQLiteDatabase.OPEN_READWRITE);
+	}
+
+	private String getDatabasePath() {
+		return DatabaseOperator.with(context).getDatabasePath();
+	}
+
+	private boolean databaseHasCurrentVersion() {
+		SQLiteDatabase database = openReadableDatabase();
+		int databaseVersion = database.getVersion();
+		database.close();
+
+		return databaseVersion == DatabaseSchema.Versions.CURRENT;
+	}
+
+	private SQLiteDatabase openReadableDatabase() {
+		return SQLiteDatabase.openDatabase(getDatabasePath(), null, SQLiteDatabase.OPEN_READONLY);
 	}
 }
