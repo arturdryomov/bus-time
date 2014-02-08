@@ -57,7 +57,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 		public static final double LOCATION_LATITUDE = 55.533391;
 		public static final double LOCATION_LONGITUDE = 28.650013;
 
-		public static final int FAR_AWAY_DISTANCE_IN_METERS = 30000;
+		public static final int FAR_AWAY_DISTANCE_IN_METERS = 20000;
 
 		public static final int ZOOM = 15;
 	}
