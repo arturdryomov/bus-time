@@ -93,11 +93,13 @@ public class RouteStopsAdapter extends CursorAdapter
 	}
 
 	private int getStopIndicator(Cursor stopsCursor) {
-		if (stopsCursor.getPosition() == 0) {
+		int stopPosition = stopsCursor.getPosition();
+
+		if (stopPosition == 0) {
 			return R.drawable.ic_indicator_stop_line_first;
 		}
 
-		if (stopsCursor.getPosition() == stopsCursor.getCount() - 1) {
+		if (stopPosition == stopsCursor.getCount() - 1) {
 			return R.drawable.ic_indicator_stop_line_last;
 		}
 
