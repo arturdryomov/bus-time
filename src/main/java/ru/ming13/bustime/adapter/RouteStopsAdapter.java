@@ -20,7 +20,9 @@ public class RouteStopsAdapter extends CursorAdapter
 	{
 		public TextView nameTextView;
 		public TextView directionTextView;
-		public ImageView indicatorImageView;
+		public ImageView markerFirstImageView;
+		public ImageView markerMiddleImageView;
+		public ImageView markerLastImageView;
 	}
 
 	private final LayoutInflater layoutInflater;
@@ -50,7 +52,9 @@ public class RouteStopsAdapter extends CursorAdapter
 
 		stopViewHolder.nameTextView = (TextView) stopView.findViewById(R.id.text_name);
 		stopViewHolder.directionTextView = (TextView) stopView.findViewById(R.id.text_direction);
-		stopViewHolder.indicatorImageView = (ImageView) stopView.findViewById(R.id.indicator_stop);
+		stopViewHolder.markerFirstImageView = (ImageView) stopView.findViewById(R.id.image_marker_first);
+		stopViewHolder.markerMiddleImageView = (ImageView) stopView.findViewById(R.id.image_marker_middle);
+		stopViewHolder.markerLastImageView = (ImageView) stopView.findViewById(R.id.image_marker_last);
 
 		return stopViewHolder;
 	}
@@ -64,6 +68,7 @@ public class RouteStopsAdapter extends CursorAdapter
 		StopViewHolder stopViewHolder = getStopViewHolder(stopView);
 
 		setUpStopInformation(stopsCursor, stopViewHolder);
+		setUpStopInformationVisibility(stopsCursor, stopViewHolder);
 	}
 
 	private StopViewHolder getStopViewHolder(View stopView) {
@@ -73,13 +78,9 @@ public class RouteStopsAdapter extends CursorAdapter
 	private void setUpStopInformation(Cursor stopsCursor, StopViewHolder stopViewHolder) {
 		String stopName = getStopName(stopsCursor);
 		String stopDirection = getStopDirection(stopsCursor);
-		int stopIndicator = getStopIndicator(stopsCursor);
 
 		stopViewHolder.nameTextView.setText(stopName);
 		stopViewHolder.directionTextView.setText(stopDirection);
-		stopViewHolder.indicatorImageView.setBackgroundResource(stopIndicator);
-
-		stopViewHolder.directionTextView.setVisibility(getStopDirectionVisibility(stopDirection));
 	}
 
 	private String getStopName(Cursor stopsCursor) {
@@ -92,25 +93,38 @@ public class RouteStopsAdapter extends CursorAdapter
 			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
 	}
 
-	private int getStopIndicator(Cursor stopsCursor) {
-		int stopPosition = stopsCursor.getPosition();
-
-		if (stopPosition == 0) {
-			return R.drawable.ic_indicator_stop_line_first;
-		}
-
-		if (stopPosition == stopsCursor.getCount() - 1) {
-			return R.drawable.ic_indicator_stop_line_last;
-		}
-
-		return R.drawable.ic_indicator_stop_line_middle;
+	private void setUpStopInformationVisibility(Cursor stopsCursor, StopViewHolder stopViewHolder) {
+		setUpStopMarkerVisibility(stopsCursor, stopViewHolder);
+		setUpStopDirectionVisibility(stopsCursor, stopViewHolder);
 	}
 
-	private int getStopDirectionVisibility(String stopDirection) {
-		if (StringUtils.isBlank(stopDirection)) {
-			return View.GONE;
+	private void setUpStopMarkerVisibility(Cursor stopsCursor, StopViewHolder stopViewHolder) {
+		if (stopsCursor.isFirst()) {
+			stopViewHolder.markerFirstImageView.setVisibility(View.VISIBLE);
+			stopViewHolder.markerMiddleImageView.setVisibility(View.GONE);
+			stopViewHolder.markerLastImageView.setVisibility(View.GONE);
+
+			return;
+		}
+
+		if (stopsCursor.isLast()) {
+			stopViewHolder.markerFirstImageView.setVisibility(View.GONE);
+			stopViewHolder.markerMiddleImageView.setVisibility(View.GONE);
+			stopViewHolder.markerLastImageView.setVisibility(View.VISIBLE);
+
+			return;
+		}
+
+		stopViewHolder.markerFirstImageView.setVisibility(View.GONE);
+		stopViewHolder.markerMiddleImageView.setVisibility(View.VISIBLE);
+		stopViewHolder.markerLastImageView.setVisibility(View.GONE);
+	}
+
+	private void setUpStopDirectionVisibility(Cursor stopsCursor, StopViewHolder stopViewHolder) {
+		if (StringUtils.isBlank(getStopDirection(stopsCursor))) {
+			stopViewHolder.directionTextView.setVisibility(View.GONE);
 		} else {
-			return View.VISIBLE;
+			stopViewHolder.directionTextView.setVisibility(View.VISIBLE);
 		}
 	}
 }

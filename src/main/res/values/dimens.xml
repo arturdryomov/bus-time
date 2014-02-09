@@ -13,19 +13,20 @@
 
 	<!-- Actual dimensions. -->
 
+	<dimen name="height_marker_stop_line">64dp</dimen>
+	<dimen name="height_marker_stop_line_half">32dp</dimen>
+
 	<dimen name="margin_banner_separator">@dimen/space_ui_element</dimen>
 
 	<dimen name="padding_banner_button">@dimen/space_ui_element</dimen>
 	<dimen name="padding_banner_text">@dimen/space_ui_element_double</dimen>
-	<dimen name="padding_indicator_stop_circle">32dp</dimen>
-	<dimen name="padding_indicator_stop_line">19dp</dimen>
 	<dimen name="padding_list">@dimen/space_ui_element_double</dimen>
 	<dimen name="padding_list_item">@dimen/space_ui_element</dimen>
 	<dimen name="padding_time_exact">@dimen/space_ui_element_double</dimen>
 	<dimen name="padding_timetable_message">40dp</dimen>
 	<dimen name="padding_timetable_message_summary">@dimen/space_ui_element</dimen>
 
-	<dimen name="size_indicator_stop_circle">14dp</dimen>
+	<dimen name="size_marker_stop_circle">14dp</dimen>
 
 	<dimen name="text_banner">@dimen/text_micro</dimen>
 	<dimen name="text_route_description">@dimen/text_medium</dimen>
@@ -39,7 +40,8 @@
 	<dimen name="text_timetable_message_summary">@dimen/text_medium</dimen>
 
 	<dimen name="width_banner_separator">1dp</dimen>
-	<dimen name="width_indicator_stop">40dp</dimen>
+	<dimen name="width_marker_stop">40dp</dimen>
+	<dimen name="width_marker_stop_line">2dp</dimen>
 	<integer name="width_route_number">2</integer>
 
 </resources>

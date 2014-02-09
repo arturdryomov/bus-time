@@ -3,12 +3,40 @@
 	android:layout_width="match_parent"
 	android:layout_height="?android:attr/listPreferredItemHeight">
 
-	<ImageView
-		android:id="@+id/indicator_stop"
-		android:src="@drawable/ic_indicator_stop_circle"
-		android:scaleType="center"
-		android:layout_width="@dimen/width_indicator_stop"
-		android:layout_height="match_parent"/>
+	<FrameLayout
+		android:layout_width="@dimen/width_marker_stop"
+		android:layout_height="match_parent">
+
+		<ImageView
+			android:src="@drawable/ic_marker_stop_circle"
+			android:scaleType="center"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
+
+		<ImageView
+			android:id="@+id/image_marker_first"
+			android:src="@drawable/ic_marker_stop_line_half"
+			android:scaleType="center"
+			android:layout_gravity="bottom"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+		<ImageView
+			android:id="@+id/image_marker_middle"
+			android:src="@drawable/ic_marker_stop_line"
+			android:scaleType="center"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+		<ImageView
+			android:id="@+id/image_marker_last"
+			android:src="@drawable/ic_marker_stop_line_half"
+			android:scaleType="center"
+			android:layout_gravity="top"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+	</FrameLayout>
 
 	<LinearLayout
 		android:orientation="vertical"

@@ -61,6 +61,7 @@ public class StopsAdapter extends CursorAdapter
 		StopViewHolder stopViewHolder = getStopViewHolder(stopView);
 
 		setUpStopInformation(stopsCursor, stopViewHolder);
+		setUpStopInformationVisibility(stopsCursor, stopViewHolder);
 	}
 
 	private StopViewHolder getStopViewHolder(View stopView) {
@@ -73,8 +74,6 @@ public class StopsAdapter extends CursorAdapter
 
 		stopViewHolder.nameTextView.setText(stopName);
 		stopViewHolder.directionTextView.setText(stopDirection);
-
-		stopViewHolder.directionTextView.setVisibility(getStopDirectionVisibility(stopDirection));
 	}
 
 	private String getStopName(Cursor stopsCursor) {
@@ -87,11 +86,15 @@ public class StopsAdapter extends CursorAdapter
 			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
 	}
 
-	private int getStopDirectionVisibility(String stopDirection) {
-		if (StringUtils.isBlank(stopDirection)) {
-			return View.GONE;
+	private void setUpStopInformationVisibility(Cursor stopsCursor, StopViewHolder stopViewHolder) {
+		setUpStopDirectionVisibility(stopsCursor, stopViewHolder);
+	}
+
+	private void setUpStopDirectionVisibility(Cursor stopsCursor, StopViewHolder stopViewHolder) {
+		if (StringUtils.isBlank(getStopDirection(stopsCursor))) {
+			stopViewHolder.directionTextView.setVisibility(View.GONE);
 		} else {
-			return View.VISIBLE;
+			stopViewHolder.directionTextView.setVisibility(View.VISIBLE);
 		}
 	}
 }
