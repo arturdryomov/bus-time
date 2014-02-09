@@ -27,7 +27,7 @@ public class StopsMapActivity extends ActionBarActivity
 	}
 
 	private void setUpBars() {
-		Bartender.with(this).showBarsBackground(this);
+		Bartender.with(this).showSystemBarsBackground(this);
 	}
 
 	private void setUpFragment() {

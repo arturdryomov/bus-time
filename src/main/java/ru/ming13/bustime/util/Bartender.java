@@ -36,11 +36,13 @@ public final class Bartender
 		this.context = context;
 	}
 
-	public void showBarsBackground(Activity activity) {
-		ViewGroup activityView = (ViewGroup) activity.getWindow().getDecorView();
+	public void showSystemBarsBackground(Activity activity) {
+		if (Android.isKitKatOrLater()) {
+			ViewGroup activityView = (ViewGroup) activity.getWindow().getDecorView();
 
-		activityView.addView(buildBarView(buildStatusBarViewParams()));
-		activityView.addView(buildBarView(buildNavigationBarViewParams()));
+			activityView.addView(buildBarView(buildStatusBarViewParams()));
+			activityView.addView(buildBarView(buildNavigationBarViewParams()));
+		}
 	}
 
 	private View buildBarView(LayoutParams barViewParams) {
@@ -121,6 +123,10 @@ public final class Bartender
 	}
 
 	public int getBottomUiPadding() {
+		if (!Android.isKitKatOrLater()) {
+			return SystemDimensions.DEFAULT_VALUE;
+		}
+
 		if (isNavigationBarBottom()) {
 			return getNavigationBarHeight();
 		} else {
@@ -133,6 +139,10 @@ public final class Bartender
 	}
 
 	public int getRightUiPadding() {
+		if (!Android.isKitKatOrLater()) {
+			return SystemDimensions.DEFAULT_VALUE;
+		}
+
 		if (isNavigationBarBottom()) {
 			return SystemDimensions.DEFAULT_VALUE;
 		} else {
@@ -141,7 +151,11 @@ public final class Bartender
 	}
 
 	public int getTopUiPadding() {
-		return getStatusBarHeight() + getActionBarHeight();
+		if (Android.isKitKatOrLater()) {
+			return getStatusBarHeight() + getActionBarHeight();
+		} else {
+			return getActionBarHeight();
+		}
 	}
 
 	private int getActionBarHeight() {

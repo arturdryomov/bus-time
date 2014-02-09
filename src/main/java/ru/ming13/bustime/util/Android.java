@@ -19,6 +19,10 @@ final class Android
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 	}
 
+	public static boolean isKitKatOrLater() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+	}
+
 	public static boolean hasHardwareBackKey() {
 		return KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
 	}
