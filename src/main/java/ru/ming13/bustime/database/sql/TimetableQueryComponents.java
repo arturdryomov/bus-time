@@ -35,10 +35,10 @@ public final class TimetableQueryComponents implements QueryComponents
 	private String getArrivalTimeColumn() {
 		return new StringBuilder()
 			.append("strftime('%Y-%m-%d %H:%M', 'now', 'localtime', 'start of day',")
-			.append("+ (select ").append(DatabaseSchema.TripsColumns.HOUR).append(" || ' hours'), ")
-			.append("+ (select ").append(DatabaseSchema.TripsColumns.MINUTE).append(" || ' minutes'), ")
-			.append("+ (select ").append(DatabaseSchema.RoutesAndStopsColumns.SHIFT_HOUR).append(" || ' hours'), ")
-			.append("+ (select ").append(DatabaseSchema.RoutesAndStopsColumns.SHIFT_MINUTE).append(" || ' minutes')) as ")
+			.append(DatabaseSchema.TripsColumns.HOUR).append(" || ' hours', ")
+			.append(DatabaseSchema.TripsColumns.MINUTE).append(" || ' minutes', ")
+			.append(DatabaseSchema.RoutesAndStopsColumns.SHIFT_HOUR).append(" || ' hours', ")
+			.append(DatabaseSchema.RoutesAndStopsColumns.SHIFT_MINUTE).append(" || ' minutes') as ")
 			.append(BusTimeContract.Timetable.ARRIVAL_TIME)
 			.toString();
 	}
