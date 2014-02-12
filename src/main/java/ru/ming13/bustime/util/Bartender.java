@@ -151,11 +151,11 @@ public final class Bartender
 	}
 
 	public int getTopUiPadding() {
-		if (Android.isKitKatOrLater()) {
-			return getStatusBarHeight() + getActionBarHeight();
-		} else {
+		if (!Android.isKitKatOrLater()) {
 			return getActionBarHeight();
 		}
+
+		return getStatusBarHeight() + getActionBarHeight();
 	}
 
 	private int getActionBarHeight() {

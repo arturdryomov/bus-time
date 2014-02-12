@@ -29,8 +29,8 @@ public final class MapsUtil
 		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 		ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
 
-		int requiredGlEsVersion = 0x00020000;
 		int currentGlEsVersion = configurationInfo.reqGlEsVersion;
+		int requiredGlEsVersion = 0x00020000;
 
 		return currentGlEsVersion >= requiredGlEsVersion;
 	}
@@ -52,8 +52,8 @@ public final class MapsUtil
 	}
 
 	private void showErrorDialog(FragmentManager fragmentManager, int errorCode) {
-		DialogFragment dialog = GooglePlayServicesErrorDialog.newInstance(errorCode, 0);
-		dialog.show(fragmentManager, GooglePlayServicesErrorDialog.TAG);
+		DialogFragment errorDialog = GooglePlayServicesErrorDialog.newInstance(errorCode, 0);
+		errorDialog.show(fragmentManager, GooglePlayServicesErrorDialog.TAG);
 	}
 
 	public boolean isResolvable(ConnectionResult connectionResult) {
