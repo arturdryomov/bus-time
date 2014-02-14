@@ -14,13 +14,7 @@ public class DatabaseSchema
 		private Versions() {
 		}
 
-		// Rename stations to stops.
-		// Split route number to number and description.
-		// Split stop name to name and direction.
-		// Split times to hours and minutes.
-		// Use 24+ hours for trip times.
 		public static final int CURRENT = 2;
-
 		public static final int INITIAL = 1;
 	}
 
