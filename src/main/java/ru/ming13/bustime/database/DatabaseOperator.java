@@ -60,7 +60,7 @@ public final class DatabaseOperator
 	}
 
 	public void replaceDatabaseContents(InputStream databaseContents) {
-		SQLiteDatabase database = new DatabaseOpenHelper(context).getReadableDatabase();
+		SQLiteDatabase database = new DatabaseOpenHelper(context).getWritableDatabase();
 		File tempDatabaseFile = buildTempFile(databaseContents);
 
 		deleteDatabaseContents(database);
