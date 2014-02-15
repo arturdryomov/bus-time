@@ -39,11 +39,6 @@ android {
         release {
             signingConfig signingConfigs.release
         }
-
-        betaRelease {
-            packageNameSuffix ".beta"
-            signingConfig android.signingConfigs.debug
-        }
     }
 }
 
