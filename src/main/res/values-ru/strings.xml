@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="title_routes">Маршруты</string>
+	<string name="title_stops">Остановки</string>
+	<string name="title_timetable">Расписание</string>
+
+	<string name="menu_rate_application">Оценить приложение</string>
+	<string name="menu_send_feedback">Написать разработчику</string>
+	<string name="menu_stops_map">Карта остановок</string>
+	<string name="menu_stops_search">Поиск остановок</string>
+	<string name="menu_timetable_type">Тип расписания</string>
+	<string name="menu_timetable_type_weekend">Выходные дни</string>
+	<string name="menu_timetable_type_workdays">Рабочие дни</string>
+
+	<string name="message_timetable_title">Рейсов нет</string>
+	<string name="message_timetable_summary">Сегодня рейсов не ожидается</string>
+	<string name="message_updates">Доступно обновление</string>
+
+	<string name="search_hint">Поиск остановок</string>
+
+	<string name="token_no_trips">сегодня рейсов больше не ожидается</string>
+	<string name="token_time_now">прямо сейчас</string>
+
+</resources>

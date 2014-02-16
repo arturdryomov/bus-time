@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="email_feedback_address" translatable="false">artur.dryomov@gmail.com</string>
+	<string name="email_feedback_subject" translatable="false">Bus Time Feedback</string>
+
+</resources>

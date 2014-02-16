@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+	   android:shape="rectangle">
+
+	<solid
+		android:color="@color/background_marker_stop"/>
+
+	<size
+		android:height="@dimen/height_marker_stop_line"
+		android:width="@dimen/width_marker_stop_line"/>
+
+</shape>

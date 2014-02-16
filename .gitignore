@@ -1,24 +1,10 @@
-# Android
-
-bin/
-gen*/
-
-project.properties
-
-# Maven
-
-target/
-
-# Application assets
+# Assets
 
 assets/
 
-# API keys
+# Private information
 
-apis.xml
-
-# URLs
-
+keys.xml
 urls.xml
 
 # Use global .gitignore for your IDE

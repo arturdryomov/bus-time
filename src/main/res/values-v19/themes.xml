@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="Theme.BusTime.Map" parent="Theme.BusTime">
+		<item name="android:actionBarStyle">@style/Theme.BusTime.Map.ActionBar</item>
+		<item name="android:windowActionBarOverlay">true</item>
+		<item name="android:windowTranslucentNavigation">true</item>
+		<item name="android:windowTranslucentStatus">true</item>
+	</style>
+
+	<style name="Theme.BusTime.Map.ActionBar" parent="Theme.BusTime.ActionBar">
+		<item name="android:background">@drawable/bg_action_bar_map</item>
+	</style>
+
+</resources>
