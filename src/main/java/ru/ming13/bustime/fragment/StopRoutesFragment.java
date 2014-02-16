@@ -21,6 +21,7 @@ import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.bus.TimeChangedEvent;
 import ru.ming13.bustime.model.Route;
+import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
@@ -28,18 +29,18 @@ import ru.ming13.bustime.util.Timer;
 
 public class StopRoutesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
-	public static StopRoutesFragment newInstance(Uri uri) {
+	public static StopRoutesFragment newInstance(Stop stop) {
 		StopRoutesFragment fragment = new StopRoutesFragment();
 
-		fragment.setArguments(buildArguments(uri));
+		fragment.setArguments(buildArguments(stop));
 
 		return fragment;
 	}
 
-	private static Bundle buildArguments(Uri uri) {
+	private static Bundle buildArguments(Stop stop) {
 		Bundle arguments = new Bundle();
 
-		arguments.putParcelable(Fragments.Arguments.URI, uri);
+		arguments.putParcelable(Fragments.Arguments.STOP, stop);
 
 		return arguments;
 	}
@@ -77,7 +78,11 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 	}
 
 	private Uri getRoutesUri() {
-		return getArguments().getParcelable(Fragments.Arguments.URI);
+		return BusTimeContract.Routes.getRoutesUri(getStop().getId());
+	}
+
+	private Stop getStop() {
+		return getArguments().getParcelable(Fragments.Arguments.STOP);
 	}
 
 	@Override
