@@ -62,13 +62,8 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		setContentView(R.layout.activity_home);
 
 		setUpSavedState(savedInstanceState);
+		setUpUi();
 
-		setUpTabs();
-		setUpTabsPager();
-
-		setUpSelectedTab();
-
-		setUpProgress();
 		setUpDatabaseUpdate();
 	}
 
@@ -87,6 +82,14 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 
 	private boolean loadProgressVisible(Bundle state) {
 		return state.getBoolean(SavedState.PROGRESS_VISIBLE);
+	}
+
+	private void setUpUi() {
+		setUpTabs();
+		setUpTabsPager();
+		setUpSelectedTab();
+
+		setUpProgress();
 	}
 
 	private void setUpTabs() {
