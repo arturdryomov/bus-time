@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="application_name" translatable="false">Bus Time</string>
+
+	<string name="title_routes">Routes</string>
+	<string name="title_stops">Stops</string>
+	<string name="title_timetable">Timetable</string>
+
+	<string name="menu_rate_application">Rate the application</string>
+	<string name="menu_send_feedback">Send feedback</string>
+	<string name="menu_stops_map">Stops map</string>
+	<string name="menu_stops_search">Stops search</string>
+	<string name="menu_timetable_type">Timetable type</string>
+	<string name="menu_timetable_type_weekend">Weekend</string>
+	<string name="menu_timetable_type_workdays">Workdays</string>
+
+	<string name="message_timetable_title">No trips</string>
+	<string name="message_timetable_summary">There are no trips today</string>
+	<string name="message_updates">Update is available</string>
+
+	<string name="search_hint">Search stops</string>
+
+	<string name="token_no_trips">no trips today left</string>
+	<string name="token_time_now">right now</string>
+
+	<string name="mask_route_title" translatable="false">%1$s • %2$s</string>
+	<string name="mask_stop_title" translatable="false">%1$s — %2$s</string>
+
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	  xmlns:appcompat="http://schemas.android.com/apk/res-auto">
+
+	<item
+		android:id="@+id/menu_stops_search"
+		android:icon="@drawable/ic_menu_search"
+		android:title="@string/menu_stops_search"
+		appcompat:showAsAction="always|collapseActionView"
+		appcompat:actionViewClass="android.support.v7.widget.SearchView"/>
+
+	<item
+		android:id="@+id/menu_stops_map"
+		android:icon="@drawable/ic_menu_map"
+		android:title="@string/menu_stops_map"
+		appcompat:showAsAction="ifRoom"/>
+
+	<item
+		android:id="@+id/menu_rate_application"
+		android:title="@string/menu_rate_application"
+		appcompat:showAsAction="never"/>
+
+	<item
+		android:id="@+id/menu_send_feedback"
+		android:title="@string/menu_send_feedback"
+		appcompat:showAsAction="never"/>
+
+</menu>

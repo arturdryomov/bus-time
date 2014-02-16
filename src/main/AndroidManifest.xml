@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="ru.ming13.bustime"
+	android:versionCode="100"
+	android:versionName="1.0.0"
+	android:installLocation="auto">
+
+	<uses-permission
+		android:name="android.permission.ACCESS_FINE_LOCATION"/>
+	<uses-permission
+		android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission
+		android:name="android.permission.INTERNET"/>
+	<uses-permission
+		android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission
+		android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+
+	<uses-feature
+		android:name="android.hardware.location"
+		android:required="false"/>
+	<uses-feature
+		android:name="android.hardware.location.gps"
+		android:required="false"/>
+	<uses-feature
+		android:name="android.hardware.location.network"
+		android:required="false"/>
+
+	<uses-feature
+		android:glEsVersion="0x00020000"
+		android:required="false"/>
+
+	<uses-sdk
+		android:minSdkVersion="8"
+		android:targetSdkVersion="19"/>
+
+	<application
+		android:icon="@drawable/ic_launcher"
+		android:label="@string/application_name"
+		android:theme="@style/Theme.BusTime">
+
+		<meta-data
+			android:name="com.google.android.maps.v2.API_KEY"
+			android:value="@string/key_google_maps"/>
+
+		<activity
+			android:launchMode="singleTop"
+			android:name=".activity.HomeActivity"
+			android:theme="@style/Theme.BusTime.Home">
+
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH"/>
+			</intent-filter>
+
+			<meta-data
+				android:name="android.app.searchable"
+				android:resource="@xml/search"/>
+
+		</activity>
+
+		<activity
+			android:label="@string/title_stops"
+			android:name=".activity.StopsMapActivity"
+			android:theme="@style/Theme.BusTime.Map">
+		</activity>
+
+		<activity
+			android:label="@string/title_stops"
+			android:name=".activity.RouteStopsActivity">
+		</activity>
+
+		<activity
+			android:label="@string/title_routes"
+			android:name=".activity.StopRoutesActivity">
+		</activity>
+
+		<activity
+			android:label="@string/title_timetable"
+			android:name=".activity.TimetableActivity">
+		</activity>
+
+		<provider
+			android:authorities="ru.ming13.bustime"
+			android:exported="false"
+			android:name=".provider.BusTimeProvider">
+		</provider>
+
+	</application>
+
+</manifest>
