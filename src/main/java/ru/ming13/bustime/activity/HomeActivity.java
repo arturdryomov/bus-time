@@ -331,7 +331,12 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 
 	private void startFeedbackSending() {
 		Intent intent = Intents.Builder.with(this).buildFeedbackIntent();
-		startActivity(intent);
+
+		try {
+			startActivity(intent);
+		} catch (ActivityNotFoundException e) {
+			startActivity(Intent.createChooser(intent, null));
+		}
 	}
 
 	@Subscribe
