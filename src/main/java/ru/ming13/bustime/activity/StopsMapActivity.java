@@ -2,18 +2,16 @@ package ru.ming13.bustime.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
 import com.squareup.otto.Subscribe;
 
+import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
-import ru.ming13.bustime.fragment.StopsMapFragment;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.util.Bartender;
-import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
 
 public class StopsMapActivity extends ActionBarActivity
@@ -21,21 +19,13 @@ public class StopsMapActivity extends ActionBarActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_stops_map);
 
 		setUpBars();
-		setUpFragment();
 	}
 
 	private void setUpBars() {
 		Bartender.with(this).showSystemBarsBackground(this);
-	}
-
-	private void setUpFragment() {
-		Fragments.Operator.set(this, buildFragment());
-	}
-
-	private Fragment buildFragment() {
-		return StopsMapFragment.newInstance();
 	}
 
 	@Subscribe
