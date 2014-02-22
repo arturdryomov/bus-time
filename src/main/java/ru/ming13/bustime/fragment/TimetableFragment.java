@@ -21,6 +21,8 @@ import ru.ming13.bustime.adapter.TimetableAdapter;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.TimeChangedEvent;
 import ru.ming13.bustime.bus.TimetableInformationLoadedEvent;
+import ru.ming13.bustime.model.Route;
+import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.task.TimetableInformationLoadingTask;
 import ru.ming13.bustime.util.Fragments;
@@ -31,18 +33,19 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 {
 	private static final int PAST_VISIBLE_TRIPS_COUNT = 1;
 
-	public static TimetableFragment newInstance(Uri uri) {
+	public static TimetableFragment newInstance(Route route, Stop stop) {
 		TimetableFragment fragment = new TimetableFragment();
 
-		fragment.setArguments(buildArguments(uri));
+		fragment.setArguments(buildArguments(route, stop));
 
 		return fragment;
 	}
 
-	private static Bundle buildArguments(Uri uri) {
+	private static Bundle buildArguments(Route route, Stop stop) {
 		Bundle arguments = new Bundle();
 
-		arguments.putParcelable(Fragments.Arguments.URI, uri);
+		arguments.putParcelable(Fragments.Arguments.ROUTE, route);
+		arguments.putParcelable(Fragments.Arguments.STOP, stop);
 
 		return arguments;
 	}
@@ -87,7 +90,15 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private Uri getTimetableUri() {
-		return getArguments().getParcelable(Fragments.Arguments.URI);
+		return BusTimeContract.Timetable.getTimetableUri(getRoute().getId(), getStop().getId());
+	}
+
+	private Route getRoute() {
+		return getArguments().getParcelable(Fragments.Arguments.ROUTE);
+	}
+
+	private Stop getStop() {
+		return getArguments().getParcelable(Fragments.Arguments.STOP);
 	}
 
 	@Subscribe

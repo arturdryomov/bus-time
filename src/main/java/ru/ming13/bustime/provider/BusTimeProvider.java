@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
@@ -13,8 +14,8 @@ import ru.ming13.bustime.database.DatabaseOpenHelper;
 import ru.ming13.bustime.database.sql.QueryComponents;
 import ru.ming13.bustime.database.sql.RouteStopsQueryComponents;
 import ru.ming13.bustime.database.sql.RoutesQueryComponents;
-import ru.ming13.bustime.database.sql.StopsRoutesQueryComponents;
 import ru.ming13.bustime.database.sql.StopsQueryComponents;
+import ru.ming13.bustime.database.sql.StopsRoutesQueryComponents;
 import ru.ming13.bustime.database.sql.StopsSearchQueryComponents;
 import ru.ming13.bustime.database.sql.TimetableQueryComponents;
 
@@ -36,6 +37,8 @@ public class BusTimeProvider extends ContentProvider
 		try {
 			return query(uri);
 		} catch (IllegalArgumentException e) {
+			return null;
+		} catch (SQLiteException e) {
 			return null;
 		}
 	}
