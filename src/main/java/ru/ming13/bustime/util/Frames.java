@@ -1,6 +1,5 @@
 package ru.ming13.bustime.util;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.widget.TextView;
 
@@ -22,13 +21,8 @@ public final class Frames
 		return Android.isTablet(activity) && !Android.isPortrait(activity);
 	}
 
-	public void setLeftFrame(Fragment fragment, String title) {
-		setFrameFragment(fragment, R.id.container_left_frame);
+	public void setLeftFrameTitle(String title) {
 		setFrameTitle(title, R.id.text_left_frame);
-	}
-
-	private void setFrameFragment(Fragment fragment, int fragmentContainerId) {
-		Fragments.Operator.set(activity, fragment, fragmentContainerId);
 	}
 
 	private void setFrameTitle(String title, int titleViewId) {
@@ -36,8 +30,7 @@ public final class Frames
 		titleView.setText(title);
 	}
 
-	public void setRightFrame(Fragment fragment, String title) {
-		setFrameFragment(fragment, R.id.container_right_frame);
+	public void setRightFrameTitle(String title) {
 		setFrameTitle(title, R.id.text_right_frame);
 	}
 }

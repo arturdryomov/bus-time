@@ -13,6 +13,7 @@
 
 	<color name="text_application_name">#dfffffff</color>
 	<color name="text_hint_search">#80ffffff</color>
+	<color name="text_message">#777777</color>
 	<color name="text_route_time">#777777</color>
 	<color name="text_time_relative">#777777</color>
 	<color name="text_banner">#cdffffff</color>

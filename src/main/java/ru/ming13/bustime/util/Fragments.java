@@ -16,6 +16,8 @@ public final class Fragments
 		public static final String ROUTE = "route";
 		public static final String STOP = "stop";
 
+		public static final String MESSAGE = "message";
+
 		public static final String REQUEST_CODE = "request_code";
 		public static final String ERROR_CODE = "error_code";
 	}
@@ -53,6 +55,14 @@ public final class Fragments
 			activity.getSupportFragmentManager()
 				.beginTransaction()
 				.add(container, fragment)
+				.commit();
+		}
+
+		public static void reset(FragmentActivity activity, Fragment fragment, int container) {
+			activity.getSupportFragmentManager()
+				.beginTransaction()
+				.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+				.replace(container, fragment)
 				.commit();
 		}
 

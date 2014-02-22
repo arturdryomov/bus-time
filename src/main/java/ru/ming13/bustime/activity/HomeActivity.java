@@ -100,8 +100,11 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void setUpFrames() {
-		Frames.at(this).setLeftFrame(RoutesFragment.newInstance(), getString(R.string.title_routes));
-		Frames.at(this).setRightFrame(StopsFragment.newInstance(), getString(R.string.title_stops));
+		Frames.at(this).setLeftFrameTitle(getString(R.string.title_routes));
+		Frames.at(this).setRightFrameTitle(getString(R.string.title_stops));
+
+		Fragments.Operator.set(this, RoutesFragment.newInstance(), R.id.container_left_frame);
+		Fragments.Operator.set(this, StopsFragment.newInstance(), R.id.container_right_frame);
 	}
 
 	private void setUpTabs() {
