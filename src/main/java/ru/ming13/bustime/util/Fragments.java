@@ -45,8 +45,23 @@ public final class Fragments
 				.commit();
 		}
 
+		public static void set(FragmentActivity activity, Fragment fragment, int container) {
+			if (isSet(activity, container)) {
+				return;
+			}
+
+			activity.getSupportFragmentManager()
+				.beginTransaction()
+				.add(container, fragment)
+				.commit();
+		}
+
 		private static boolean isSet(FragmentActivity activity) {
 			return activity.getSupportFragmentManager().findFragmentById(android.R.id.content) != null;
+		}
+
+		private static boolean isSet(FragmentActivity activity, int container) {
+			return activity.getSupportFragmentManager().findFragmentById(container) != null;
 		}
 
 		public static Fragment get(FragmentActivity activity, String fragmentTag) {
