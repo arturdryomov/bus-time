@@ -10,6 +10,7 @@ import ru.ming13.bustime.fragment.TimetableFragment;
 import ru.ming13.bustime.model.Route;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.util.Fragments;
+import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.TitleBuilder;
 
@@ -19,7 +20,11 @@ public class TimetableActivity extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setUpUi();
+		if (Frames.at(this).areAvailable()) {
+			finish();
+		} else {
+			setUpUi();
+		}
 	}
 
 	private void setUpUi() {
@@ -59,7 +64,7 @@ public class TimetableActivity extends ActionBarActivity
 	}
 
 	private void setUpTimetableFragment() {
-		Fragments.Operator.at(this).set(buildTimetableFragment(), R.layout.activity_container);
+		Fragments.Operator.at(this).set(buildTimetableFragment(), R.id.container_fragment);
 	}
 
 	private Fragment buildTimetableFragment() {
