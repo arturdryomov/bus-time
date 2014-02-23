@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="Theme.BusTime" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+		<item name="android:actionBarStyle">@style/Theme.BusTime.ActionBar</item>
+		<item name="android:windowBackground">@color/background_frame_window</item>
+	</style>
+
+</resources>
