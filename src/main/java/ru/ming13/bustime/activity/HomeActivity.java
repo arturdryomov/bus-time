@@ -103,8 +103,8 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		Frames.at(this).setLeftFrameTitle(getString(R.string.title_routes));
 		Frames.at(this).setRightFrameTitle(getString(R.string.title_stops));
 
-		Fragments.Operator.set(this, RoutesFragment.newInstance(), R.id.container_left_frame);
-		Fragments.Operator.set(this, StopsFragment.newInstance(), R.id.container_right_frame);
+		Fragments.Operator.at(this).set(RoutesFragment.newInstance(), R.id.container_left_frame);
+		Fragments.Operator.at(this).set(StopsFragment.newInstance(), R.id.container_right_frame);
 	}
 
 	private void setUpTabs() {
@@ -205,7 +205,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private DatabaseUpdateBanner getDatabaseUpdateBanner() {
-		return (DatabaseUpdateBanner) Fragments.Operator.get(this, DatabaseUpdateBanner.TAG);
+		return (DatabaseUpdateBanner) Fragments.Operator.at(this).get(DatabaseUpdateBanner.TAG);
 	}
 
 	@Subscribe

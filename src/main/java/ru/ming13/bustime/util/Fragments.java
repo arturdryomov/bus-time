@@ -2,6 +2,7 @@ package ru.ming13.bustime.util;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 
 public final class Fragments
 {
@@ -33,49 +34,43 @@ public final class Fragments
 
 	public static final class Operator
 	{
-		private Operator() {
+		private final FragmentActivity activity;
+
+		public static Operator at(FragmentActivity activity) {
+			return new Operator(activity);
 		}
 
-		public static void set(FragmentActivity activity, Fragment fragment) {
-			if (isSet(activity)) {
-				return;
+		private Operator(FragmentActivity activity) {
+			this.activity = activity;
+		}
+
+		public void set(Fragment fragment, int fragmentContainerId) {
+			if (!isSet(fragmentContainerId)) {
+				getFragmentManager()
+					.beginTransaction()
+					.add(fragmentContainerId, fragment)
+					.commit();
 			}
-
-			activity.getSupportFragmentManager()
-				.beginTransaction()
-				.add(android.R.id.content, fragment)
-				.commit();
 		}
 
-		public static void set(FragmentActivity activity, Fragment fragment, int container) {
-			if (isSet(activity, container)) {
-				return;
-			}
-
-			activity.getSupportFragmentManager()
-				.beginTransaction()
-				.add(container, fragment)
-				.commit();
+		private boolean isSet(int fragmentContainerId) {
+			return getFragmentManager().findFragmentById(fragmentContainerId) != null;
 		}
 
-		public static void reset(FragmentActivity activity, Fragment fragment, int container) {
-			activity.getSupportFragmentManager()
+		private FragmentManager getFragmentManager() {
+			return activity.getSupportFragmentManager();
+		}
+
+		public void reset(Fragment fragment, int fragmentContainerId) {
+			getFragmentManager()
 				.beginTransaction()
 				.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-				.replace(container, fragment)
+				.replace(fragmentContainerId, fragment)
 				.commit();
 		}
 
-		private static boolean isSet(FragmentActivity activity) {
-			return activity.getSupportFragmentManager().findFragmentById(android.R.id.content) != null;
-		}
-
-		private static boolean isSet(FragmentActivity activity, int container) {
-			return activity.getSupportFragmentManager().findFragmentById(container) != null;
-		}
-
-		public static Fragment get(FragmentActivity activity, String fragmentTag) {
-			return activity.getSupportFragmentManager().findFragmentByTag(fragmentTag);
+		public Fragment get(String fragmentTag) {
+			return getFragmentManager().findFragmentByTag(fragmentTag);
 		}
 	}
 }

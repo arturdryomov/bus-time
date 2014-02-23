@@ -63,19 +63,11 @@ public class StopRoutesActivity extends ActionBarActivity
 	}
 
 	private void setUpEmptyFrame() {
-		Fragments.Operator.set(this, buildMessageFragment(), R.id.container_right_frame);
+		Fragments.Operator.at(this).set(buildMessageFragment(), R.id.container_right_frame);
 	}
 
 	private Fragment buildMessageFragment() {
 		return MessageFragment.newInstance(getString(R.string.message_no_route));
-	}
-
-	private void setUpRoutesFragment() {
-		if (Frames.at(this).areAvailable()) {
-			Fragments.Operator.set(this, buildRoutesFragment(), R.id.container_left_frame);
-		} else {
-			Fragments.Operator.set(this, buildRoutesFragment(), R.id.container_fragment);
-		}
 	}
 
 	private void setUpSubtitle() {
@@ -84,6 +76,14 @@ public class StopRoutesActivity extends ActionBarActivity
 
 	private void setUpContainer() {
 		setContentView(R.layout.activity_container);
+	}
+
+	private void setUpRoutesFragment() {
+		if (Frames.at(this).areAvailable()) {
+			Fragments.Operator.at(this).set(buildRoutesFragment(), R.id.container_left_frame);
+		} else {
+			Fragments.Operator.at(this).set(buildRoutesFragment(), R.id.container_fragment);
+		}
 	}
 
 	private Fragment buildRoutesFragment() {
@@ -104,7 +104,7 @@ public class StopRoutesActivity extends ActionBarActivity
 	}
 
 	private void setUpTimetableFragment(Route route) {
-		Fragments.Operator.reset(this, buildTimetableFragment(route), R.id.container_right_frame);
+		Fragments.Operator.at(this).reset(buildTimetableFragment(route), R.id.container_right_frame);
 	}
 
 	private Fragment buildTimetableFragment(Route route) {

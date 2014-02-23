@@ -30,7 +30,7 @@ public class MessageFragment extends Fragment
 
 	@Override
 	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
-		return layoutInflater.inflate(R.layout.fragment_frame_empty, container, false);
+		return layoutInflater.inflate(R.layout.fragment_message, container, false);
 	}
 
 	@Override

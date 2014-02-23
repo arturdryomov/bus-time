@@ -63,7 +63,7 @@ public class RouteStopsActivity extends ActionBarActivity
 	}
 
 	private void setUpEmptyFrame() {
-		Fragments.Operator.set(this, buildMessageFragment(), R.id.container_right_frame);
+		Fragments.Operator.at(this).set(buildMessageFragment(), R.id.container_right_frame);
 	}
 
 	private Fragment buildMessageFragment() {
@@ -80,9 +80,9 @@ public class RouteStopsActivity extends ActionBarActivity
 
 	private void setUpStopsFragment() {
 		if (Frames.at(this).areAvailable()) {
-			Fragments.Operator.set(this, buildStopsFragment(), R.id.container_left_frame);
+			Fragments.Operator.at(this).set(buildStopsFragment(), R.id.container_left_frame);
 		} else {
-			Fragments.Operator.set(this, buildStopsFragment(), R.id.container_fragment);
+			Fragments.Operator.at(this).set(buildStopsFragment(), R.id.container_fragment);
 		}
 	}
 
@@ -104,7 +104,7 @@ public class RouteStopsActivity extends ActionBarActivity
 	}
 
 	private void setUpTimetableFragment(Stop stop) {
-		Fragments.Operator.reset(this, buildTimetableFragment(stop), R.id.container_right_frame);
+		Fragments.Operator.at(this).reset(buildTimetableFragment(stop), R.id.container_right_frame);
 	}
 
 	private Fragment buildTimetableFragment(Stop stop) {
