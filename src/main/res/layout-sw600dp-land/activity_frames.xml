@@ -26,7 +26,7 @@
 		<FrameLayout
 			android:background="@drawable/bg_frame"
 			android:padding="@dimen/size_frame_border"
-			android:layout_margin="8dp"
+			android:layout_margin="@dimen/padding_frame"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
 			android:layout_height="0dp">
@@ -59,7 +59,7 @@
 		<FrameLayout
 			android:background="@drawable/bg_frame"
 			android:padding="@dimen/size_frame_border"
-			android:layout_margin="8dp"
+			android:layout_margin="@dimen/padding_frame"
 			android:layout_weight="1"
 			android:layout_width="match_parent"
 			android:layout_height="0dp">
