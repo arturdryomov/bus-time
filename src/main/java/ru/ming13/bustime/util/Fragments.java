@@ -44,6 +44,18 @@ public final class Fragments
 			this.activity = activity;
 		}
 
+		public Fragment get(int fragmentContainerId) {
+			return getFragmentManager().findFragmentById(fragmentContainerId);
+		}
+
+		private FragmentManager getFragmentManager() {
+			return activity.getSupportFragmentManager();
+		}
+
+		public Fragment get(String fragmentTag) {
+			return getFragmentManager().findFragmentByTag(fragmentTag);
+		}
+
 		public void set(Fragment fragment, int fragmentContainerId) {
 			if (!isSet(fragmentContainerId)) {
 				getFragmentManager()
@@ -57,11 +69,8 @@ public final class Fragments
 			return getFragmentManager().findFragmentById(fragmentContainerId) != null;
 		}
 
-		private FragmentManager getFragmentManager() {
-			return activity.getSupportFragmentManager();
-		}
 
-		public void reset(Fragment fragment, int fragmentContainerId) {
+		public void resetFading(Fragment fragment, int fragmentContainerId) {
 			getFragmentManager()
 				.beginTransaction()
 				.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -69,8 +78,12 @@ public final class Fragments
 				.commit();
 		}
 
-		public Fragment get(String fragmentTag) {
-			return getFragmentManager().findFragmentByTag(fragmentTag);
+		public void resetSliding(Fragment fragment, int fragmentContainerId) {
+			getFragmentManager()
+				.beginTransaction()
+				.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+				.replace(fragmentContainerId, fragment)
+				.commit();
 		}
 	}
 }

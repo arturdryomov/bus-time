@@ -104,7 +104,11 @@ public class RouteStopsActivity extends ActionBarActivity
 	}
 
 	private void setUpTimetableFragment(Stop stop) {
-		Fragments.Operator.at(this).reset(buildTimetableFragment(stop), R.id.container_right_frame);
+		if (Fragments.Operator.at(this).get(R.id.container_right_frame) instanceof MessageFragment) {
+			Fragments.Operator.at(this).resetSliding(buildTimetableFragment(stop), R.id.container_right_frame);
+		} else {
+			Fragments.Operator.at(this).resetFading(buildTimetableFragment(stop), R.id.container_right_frame);
+		}
 	}
 
 	private Fragment buildTimetableFragment(Stop stop) {
