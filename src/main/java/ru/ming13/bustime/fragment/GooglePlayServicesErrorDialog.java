@@ -10,7 +10,7 @@ import ru.ming13.bustime.util.Fragments;
 
 public class GooglePlayServicesErrorDialog extends DialogFragment
 {
-	public static final String TAG = "GPS_ERROR_DIALOG";
+	public static final String TAG = "gps_error_dialog";
 
 	public static GooglePlayServicesErrorDialog newInstance(int errorCode, int requestCode) {
 		GooglePlayServicesErrorDialog dialog = new GooglePlayServicesErrorDialog();

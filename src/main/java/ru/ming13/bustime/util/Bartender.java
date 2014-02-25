@@ -1,7 +1,6 @@
 package ru.ming13.bustime.util;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,17 +25,17 @@ public final class Bartender
 		public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
 	}
 
-	private final Context context;
+	private final Activity activity;
 
-	public static Bartender with(Context context) {
-		return new Bartender(context);
+	public static Bartender at(Activity activity) {
+		return new Bartender(activity);
 	}
 
-	private Bartender(Context context) {
-		this.context = context;
+	private Bartender(Activity activity) {
+		this.activity = activity;
 	}
 
-	public void showSystemBarsBackground(Activity activity) {
+	public void showSystemBarsBackground() {
 		if (Android.isKitKatOrLater()) {
 			ViewGroup activityView = (ViewGroup) activity.getWindow().getDecorView();
 
@@ -46,7 +45,7 @@ public final class Bartender
 	}
 
 	private View buildBarView(LayoutParams barViewParams) {
-		View barView = new View(context);
+		View barView = new View(activity);
 
 		barView.setLayoutParams(barViewParams);
 		barView.setBackgroundResource(R.color.background_bar_transparent);
@@ -71,17 +70,17 @@ public final class Bartender
 	}
 
 	private int getSystemDimension(String systemDimension) {
-		int systemDimensionId = context.getResources().getIdentifier(systemDimension, "dimen", "android");
+		int systemDimensionId = activity.getResources().getIdentifier(systemDimension, "dimen", "android");
 
 		if (systemDimensionId == SystemDimensions.INVALID_ID) {
 			return SystemDimensions.DEFAULT_VALUE;
 		}
 
-		return context.getResources().getDimensionPixelSize(systemDimensionId);
+		return activity.getResources().getDimensionPixelSize(systemDimensionId);
 	}
 
 	private boolean isNavigationBarBottom() {
-		return Android.isTablet(context) || Android.isPortrait(context);
+		return Android.isTablet(activity) || Android.isPortrait(activity);
 	}
 
 	private int getNavigationBarWidth() {
@@ -93,7 +92,7 @@ public final class Bartender
 	}
 
 	private boolean isNavigationBarAvailable() {
-		return Android.isIceCreamSandwichOrLater() && !Android.hasHardwareMenuKey(context) && !Android.hasHardwareBackKey();
+		return Android.isIceCreamSandwichOrLater() && !Android.hasHardwareMenuKey(activity) && !Android.hasHardwareBackKey();
 	}
 
 	private LayoutParams buildNavigationBarViewParams() {
@@ -115,7 +114,7 @@ public final class Bartender
 			return SystemDimensions.DEFAULT_VALUE;
 		}
 
-		if (Android.isPortrait(context)) {
+		if (Android.isPortrait(activity)) {
 			return getSystemDimension(SystemDimensions.NAVIGATION_BAR_HEIGHT_PORTRAIT);
 		} else {
 			return getSystemDimension(SystemDimensions.NAVIGATION_BAR_HEIGHT_LANDSCAPE);
@@ -159,6 +158,6 @@ public final class Bartender
 	}
 
 	private int getActionBarHeight() {
-		return context.getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height);
+		return activity.getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height);
 	}
 }

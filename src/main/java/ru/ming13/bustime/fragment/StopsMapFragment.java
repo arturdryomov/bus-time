@@ -92,7 +92,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 
 		map.getUiSettings().setZoomControlsEnabled(Ui.ZOOM_ENABLED);
 
-		Bartender bartender = Bartender.with(getActivity());
+		Bartender bartender = Bartender.at(getActivity());
 		map.setPadding(
 			bartender.getLeftUiPadding(),
 			bartender.getTopUiPadding(),

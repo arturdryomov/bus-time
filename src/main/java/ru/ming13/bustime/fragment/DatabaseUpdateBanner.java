@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
@@ -15,7 +14,7 @@ import ru.ming13.bustime.bus.DatabaseUpdateDiscardedEvent;
 
 public class DatabaseUpdateBanner extends Fragment implements View.OnClickListener
 {
-	public static final String TAG = "DATABASE_UPDATE_BANNER";
+	public static final String TAG = "database_update_banner";
 
 	public static DatabaseUpdateBanner newInstance() {
 		return new DatabaseUpdateBanner();
@@ -50,11 +49,8 @@ public class DatabaseUpdateBanner extends Fragment implements View.OnClickListen
 	}
 
 	private void setUpButtonsListener() {
-		ImageButton acceptButton = (ImageButton) getView().findViewById(R.id.button_accept);
-		ImageButton discardButton = (ImageButton) getView().findViewById(R.id.button_discard);
-
-		acceptButton.setOnClickListener(this);
-		discardButton.setOnClickListener(this);
+		getView().findViewById(R.id.button_accept).setOnClickListener(this);
+		getView().findViewById(R.id.button_discard).setOnClickListener(this);
 	}
 
 	@Override
