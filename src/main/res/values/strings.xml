@@ -15,6 +15,8 @@
 	<string name="menu_timetable_type_weekend">Weekend</string>
 	<string name="menu_timetable_type_workdays">Workdays</string>
 
+	<string name="message_no_route">Route is not selected</string>
+	<string name="message_no_stop">Stop is not selected</string>
 	<string name="message_timetable_title">No trips</string>
 	<string name="message_timetable_summary">There are no trips today</string>
 	<string name="message_updates">Update is available</string>

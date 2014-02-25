@@ -13,6 +13,8 @@
 	<string name="menu_timetable_type_weekend">Выходные дни</string>
 	<string name="menu_timetable_type_workdays">Рабочие дни</string>
 
+	<string name="message_no_route">Маршрут не выбран</string>
+	<string name="message_no_stop">Остановка не выбрана</string>
 	<string name="message_timetable_title">Рейсов нет</string>
 	<string name="message_timetable_summary">Сегодня рейсов не ожидается</string>
 	<string name="message_updates">Доступно обновление</string>

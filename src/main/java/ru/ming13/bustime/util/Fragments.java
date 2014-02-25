@@ -2,6 +2,7 @@ package ru.ming13.bustime.util;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 
 public final class Fragments
 {
@@ -15,6 +16,8 @@ public final class Fragments
 
 		public static final String ROUTE = "route";
 		public static final String STOP = "stop";
+
+		public static final String MESSAGE = "message";
 
 		public static final String REQUEST_CODE = "request_code";
 		public static final String ERROR_CODE = "error_code";
@@ -31,26 +34,56 @@ public final class Fragments
 
 	public static final class Operator
 	{
-		private Operator() {
+		private final FragmentActivity activity;
+
+		public static Operator at(FragmentActivity activity) {
+			return new Operator(activity);
 		}
 
-		public static void set(FragmentActivity activity, Fragment fragment) {
-			if (isSet(activity)) {
-				return;
-			}
+		private Operator(FragmentActivity activity) {
+			this.activity = activity;
+		}
 
-			activity.getSupportFragmentManager()
+		public Fragment get(int fragmentContainerId) {
+			return getFragmentManager().findFragmentById(fragmentContainerId);
+		}
+
+		private FragmentManager getFragmentManager() {
+			return activity.getSupportFragmentManager();
+		}
+
+		public Fragment get(String fragmentTag) {
+			return getFragmentManager().findFragmentByTag(fragmentTag);
+		}
+
+		public void set(Fragment fragment, int fragmentContainerId) {
+			if (!isSet(fragmentContainerId)) {
+				getFragmentManager()
+					.beginTransaction()
+					.add(fragmentContainerId, fragment)
+					.commit();
+			}
+		}
+
+		private boolean isSet(int fragmentContainerId) {
+			return getFragmentManager().findFragmentById(fragmentContainerId) != null;
+		}
+
+
+		public void resetFading(Fragment fragment, int fragmentContainerId) {
+			getFragmentManager()
 				.beginTransaction()
-				.add(android.R.id.content, fragment)
+				.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+				.replace(fragmentContainerId, fragment)
 				.commit();
 		}
 
-		private static boolean isSet(FragmentActivity activity) {
-			return activity.getSupportFragmentManager().findFragmentById(android.R.id.content) != null;
-		}
-
-		public static Fragment get(FragmentActivity activity, String fragmentTag) {
-			return activity.getSupportFragmentManager().findFragmentByTag(fragmentTag);
+		public void resetSliding(Fragment fragment, int fragmentContainerId) {
+			getFragmentManager()
+				.beginTransaction()
+				.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+				.replace(fragmentContainerId, fragment)
+				.commit();
 		}
 	}
 }
