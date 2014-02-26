@@ -5,10 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
+import ru.ming13.bustime.R;
 import ru.ming13.bustime.fragment.TimetableFragment;
 import ru.ming13.bustime.model.Route;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.util.Fragments;
+import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.TitleBuilder;
 
@@ -18,16 +20,26 @@ public class TimetableActivity extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		if (Frames.at(this).areAvailable()) {
+			finish();
+		} else {
+			setUpUi();
+		}
+	}
+
+	private void setUpUi() {
 		setUpTitle();
 		setUpSubtitle();
-		setUpFragment();
+
+		setUpContainer();
+		setUpTimetableFragment();
 	}
 
 	private void setUpTitle() {
-		getSupportActionBar().setTitle(buildTitle());
+		getSupportActionBar().setTitle(buildRouteTitle());
 	}
 
-	private String buildTitle() {
+	private String buildRouteTitle() {
 		return getRoute().getNumber();
 	}
 
@@ -36,10 +48,10 @@ public class TimetableActivity extends ActionBarActivity
 	}
 
 	private void setUpSubtitle() {
-		getSupportActionBar().setSubtitle(buildSubtitle());
+		getSupportActionBar().setSubtitle(buildStopSubtitle());
 	}
 
-	private String buildSubtitle() {
+	private String buildStopSubtitle() {
 		return TitleBuilder.with(this).buildStopTitle(getStop());
 	}
 
@@ -47,11 +59,15 @@ public class TimetableActivity extends ActionBarActivity
 		return getIntent().getParcelableExtra(Intents.Extras.STOP);
 	}
 
-	private void setUpFragment() {
-		Fragments.Operator.set(this, buildFragment());
+	private void setUpContainer() {
+		setContentView(R.layout.activity_container);
 	}
 
-	private Fragment buildFragment() {
+	private void setUpTimetableFragment() {
+		Fragments.Operator.at(this).set(buildTimetableFragment(), R.id.container_fragment);
+	}
+
+	private Fragment buildTimetableFragment() {
 		return TimetableFragment.newInstance(getRoute(), getStop());
 	}
 

@@ -5,6 +5,9 @@
 	<color name="background_bar">#0099cc</color>
 	<color name="background_bar_transparent">#af000000</color>
 	<color name="background_marker_stop">#0099cc</color>
+	<color name="background_frame">#fff3f3f3</color>
+	<color name="background_frame_border">@android:color/darker_gray</color>
+	<color name="background_frame_window">#ddd</color>
 
 	<integer name="hue_marker_stop">195</integer>
 

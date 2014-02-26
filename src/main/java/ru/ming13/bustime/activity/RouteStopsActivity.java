@@ -8,12 +8,16 @@ import android.view.MenuItem;
 
 import com.squareup.otto.Subscribe;
 
+import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
+import ru.ming13.bustime.fragment.MessageFragment;
 import ru.ming13.bustime.fragment.RouteStopsFragment;
+import ru.ming13.bustime.fragment.TimetableFragment;
 import ru.ming13.bustime.model.Route;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.util.Fragments;
+import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.TitleBuilder;
 
@@ -23,15 +27,27 @@ public class RouteStopsActivity extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setUpSubtitle();
-		setUpFragment();
+		setUpUi();
 	}
 
-	private void setUpSubtitle() {
-		getSupportActionBar().setSubtitle(buildSubtitle());
+	private void setUpUi() {
+		if (Frames.at(this).areAvailable()) {
+			setUpTitle();
+			setUpFrames();
+			setUpEmptyFrame();
+		} else {
+			setUpSubtitle();
+			setUpContainer();
+		}
+
+		setUpStopsFragment();
 	}
 
-	private String buildSubtitle() {
+	private void setUpTitle() {
+		getSupportActionBar().setTitle(buildRouteTitle());
+	}
+
+	private String buildRouteTitle() {
 		return TitleBuilder.with(this).buildRouteTitle(getRoute());
 	}
 
@@ -39,17 +55,64 @@ public class RouteStopsActivity extends ActionBarActivity
 		return getIntent().getParcelableExtra(Intents.Extras.ROUTE);
 	}
 
-	private void setUpFragment() {
-		Fragments.Operator.set(this, buildFragment());
+	private void setUpFrames() {
+		setContentView(R.layout.activity_frames);
+
+		Frames.at(this).setLeftFrameTitle(getString(R.string.title_stops));
+		Frames.at(this).setRightFrameTitle(getString(R.string.title_timetable));
 	}
 
-	private Fragment buildFragment() {
+	private void setUpEmptyFrame() {
+		Fragments.Operator.at(this).set(buildMessageFragment(), R.id.container_right_frame);
+	}
+
+	private Fragment buildMessageFragment() {
+		return MessageFragment.newInstance(getString(R.string.message_no_stop));
+	}
+
+	private void setUpSubtitle() {
+		getSupportActionBar().setSubtitle(buildRouteTitle());
+	}
+
+	private void setUpContainer() {
+		setContentView(R.layout.activity_container);
+	}
+
+	private void setUpStopsFragment() {
+		if (Frames.at(this).areAvailable()) {
+			Fragments.Operator.at(this).set(buildStopsFragment(), R.id.container_left_frame);
+		} else {
+			Fragments.Operator.at(this).set(buildStopsFragment(), R.id.container_fragment);
+		}
+	}
+
+	private Fragment buildStopsFragment() {
 		return RouteStopsFragment.newInstance(getRoute());
 	}
 
 	@Subscribe
 	public void onStopSelected(StopSelectedEvent event) {
-		startTimetableActivity(event.getStop());
+		setUpTimetable(event.getStop());
+	}
+
+	private void setUpTimetable(Stop stop) {
+		if (Frames.at(this).areAvailable()) {
+			setUpTimetableFragment(stop);
+		} else {
+			startTimetableActivity(stop);
+		}
+	}
+
+	private void setUpTimetableFragment(Stop stop) {
+		if (Fragments.Operator.at(this).get(R.id.container_right_frame) instanceof MessageFragment) {
+			Fragments.Operator.at(this).resetSliding(buildTimetableFragment(stop), R.id.container_right_frame);
+		} else {
+			Fragments.Operator.at(this).resetFading(buildTimetableFragment(stop), R.id.container_right_frame);
+		}
+	}
+
+	private Fragment buildTimetableFragment(Stop stop) {
+		return TimetableFragment.newInstance(getRoute(), stop);
 	}
 
 	private void startTimetableActivity(Stop stop) {

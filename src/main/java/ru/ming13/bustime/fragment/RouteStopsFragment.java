@@ -20,6 +20,7 @@ import ru.ming13.bustime.model.Route;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Fragments;
+import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Loaders;
 
 public class RouteStopsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
@@ -53,8 +54,15 @@ public class RouteStopsFragment extends ListFragment implements LoaderManager.Lo
 	}
 
 	private void setUpStops() {
+		setUpStopsList();
 		setUpStopsAdapter();
 		setUpStopsContent();
+	}
+
+	private void setUpStopsList() {
+		if (Frames.at(getActivity()).areAvailable()) {
+			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		}
 	}
 
 	private void setUpStopsAdapter() {

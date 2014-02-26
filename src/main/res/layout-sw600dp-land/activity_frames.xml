@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal"
+	android:baselineAligned="false"
+	android:padding="@dimen/padding_frame"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1">
+
+		<TextView
+			android:id="@+id/text_left_frame"
+			android:text="@string/title_routes"
+			android:textAllCaps="true"
+			android:textSize="@dimen/text_frame_title"
+			android:textStyle="bold"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="@dimen/padding_frame"
+			android:layout_marginTop="@dimen/padding_frame"/>
+
+		<FrameLayout
+			android:background="@drawable/bg_frame"
+			android:padding="@dimen/size_frame_border"
+			android:layout_margin="@dimen/padding_frame"
+			android:layout_weight="1"
+			android:layout_width="match_parent"
+			android:layout_height="0dp">
+
+			<FrameLayout
+				android:id="@+id/container_left_frame"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"/>
+
+		</FrameLayout>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1">
+
+		<TextView
+			android:id="@+id/text_right_frame"
+			android:textAllCaps="true"
+			android:textSize="@dimen/text_frame_title"
+			android:textStyle="bold"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="@dimen/padding_frame"
+			android:layout_marginTop="@dimen/padding_frame"/>
+
+		<FrameLayout
+			android:background="@drawable/bg_frame"
+			android:padding="@dimen/size_frame_border"
+			android:layout_margin="@dimen/padding_frame"
+			android:layout_weight="1"
+			android:layout_width="match_parent"
+			android:layout_height="0dp">
+
+			<FrameLayout
+				android:id="@+id/container_right_frame"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"/>
+
+		</FrameLayout>
+
+	</LinearLayout>
+
+</LinearLayout>

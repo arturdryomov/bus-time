@@ -24,6 +24,7 @@ import ru.ming13.bustime.model.Route;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Fragments;
+import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Loaders;
 import ru.ming13.bustime.util.Timer;
 
@@ -60,8 +61,15 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 	}
 
 	private void setUpRoutes() {
+		setUpRoutesList();
 		setUpRoutesAdapter();
 		setUpRoutesContent();
+	}
+
+	private void setUpRoutesList() {
+		if (Frames.at(getActivity()).areAvailable()) {
+			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		}
 	}
 
 	private void setUpRoutesAdapter() {

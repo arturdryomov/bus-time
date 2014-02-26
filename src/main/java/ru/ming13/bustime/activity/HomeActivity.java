@@ -31,6 +31,8 @@ import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.bus.StopLoadedEvent;
 import ru.ming13.bustime.bus.StopSelectedEvent;
 import ru.ming13.bustime.fragment.DatabaseUpdateBanner;
+import ru.ming13.bustime.fragment.RoutesFragment;
+import ru.ming13.bustime.fragment.StopsFragment;
 import ru.ming13.bustime.model.Route;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
@@ -38,6 +40,7 @@ import ru.ming13.bustime.task.DatabaseUpdateCheckingTask;
 import ru.ming13.bustime.task.DatabaseUpdatingTask;
 import ru.ming13.bustime.task.StopLoadingTask;
 import ru.ming13.bustime.util.Fragments;
+import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.MapsUtil;
 import ru.ming13.bustime.util.Preferences;
@@ -85,11 +88,23 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void setUpUi() {
-		setUpTabs();
-		setUpTabsPager();
-		setUpSelectedTab();
+		if (Frames.at(this).areAvailable()) {
+			setUpFrames();
+		} else {
+			setUpTabs();
+			setUpTabsPager();
+			setUpSelectedTab();
+		}
 
 		setUpProgress();
+	}
+
+	private void setUpFrames() {
+		Frames.at(this).setLeftFrameTitle(getString(R.string.title_routes));
+		Frames.at(this).setRightFrameTitle(getString(R.string.title_stops));
+
+		Fragments.Operator.at(this).set(RoutesFragment.newInstance(), R.id.container_left_frame);
+		Fragments.Operator.at(this).set(StopsFragment.newInstance(), R.id.container_right_frame);
 	}
 
 	private void setUpTabs() {
@@ -190,7 +205,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private DatabaseUpdateBanner getDatabaseUpdateBanner() {
-		return (DatabaseUpdateBanner) Fragments.Operator.get(this, DatabaseUpdateBanner.TAG);
+		return (DatabaseUpdateBanner) Fragments.Operator.at(this).get(DatabaseUpdateBanner.TAG);
 	}
 
 	@Subscribe
@@ -221,7 +236,12 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 
 	private void hideProgress() {
 		ViewAnimator animator = (ViewAnimator) findViewById(R.id.animator);
-		animator.setDisplayedChild(animator.indexOfChild(findViewById(R.id.pager_tabs)));
+
+		if (Frames.at(this).areAvailable()) {
+			animator.setDisplayedChild(animator.indexOfChild(findViewById(R.id.layout_frames)));
+		} else {
+			animator.setDisplayedChild(animator.indexOfChild(findViewById(R.id.pager_tabs)));
+		}
 	}
 
 	@Subscribe
@@ -407,7 +427,13 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	protected void onDestroy() {
 		super.onDestroy();
 
-		saveSelectedTab();
+		if (isTabSelected()) {
+			saveSelectedTab();
+		}
+	}
+
+	private boolean isTabSelected() {
+		return getSupportActionBar().getSelectedNavigationIndex() > 0;
 	}
 
 	private void saveSelectedTab() {

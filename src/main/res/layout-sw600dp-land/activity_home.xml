@@ -6,10 +6,9 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<android.support.v4.view.ViewPager
-		android:id="@+id/pager_tabs"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"/>
+	<include
+		android:id="@+id/layout_frames"
+		layout="@layout/activity_frames"/>
 
 	<ProgressBar
 		android:id="@+id/progress"
