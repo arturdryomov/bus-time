@@ -433,7 +433,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private boolean isTabSelected() {
-		return getSupportActionBar().getSelectedNavigationIndex() > 0;
+		return getSupportActionBar().getSelectedNavigationIndex() >= 0;
 	}
 
 	private void saveSelectedTab() {
