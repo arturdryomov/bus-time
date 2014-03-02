@@ -34,31 +34,27 @@ public final class Fragments
 
 	public static final class Operator
 	{
-		private final FragmentActivity activity;
+		private final FragmentManager fragmentManager;
 
 		public static Operator at(FragmentActivity activity) {
 			return new Operator(activity);
 		}
 
 		private Operator(FragmentActivity activity) {
-			this.activity = activity;
+			this.fragmentManager = activity.getSupportFragmentManager();
 		}
 
 		public Fragment get(int fragmentContainerId) {
-			return getFragmentManager().findFragmentById(fragmentContainerId);
-		}
-
-		private FragmentManager getFragmentManager() {
-			return activity.getSupportFragmentManager();
+			return fragmentManager.findFragmentById(fragmentContainerId);
 		}
 
 		public Fragment get(String fragmentTag) {
-			return getFragmentManager().findFragmentByTag(fragmentTag);
+			return fragmentManager.findFragmentByTag(fragmentTag);
 		}
 
 		public void set(Fragment fragment, int fragmentContainerId) {
 			if (!isSet(fragmentContainerId)) {
-				getFragmentManager()
+				fragmentManager
 					.beginTransaction()
 					.add(fragmentContainerId, fragment)
 					.commit();
@@ -66,12 +62,11 @@ public final class Fragments
 		}
 
 		private boolean isSet(int fragmentContainerId) {
-			return getFragmentManager().findFragmentById(fragmentContainerId) != null;
+			return get(fragmentContainerId) != null;
 		}
 
-
 		public void resetFading(Fragment fragment, int fragmentContainerId) {
-			getFragmentManager()
+			fragmentManager
 				.beginTransaction()
 				.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
 				.replace(fragmentContainerId, fragment)
@@ -79,7 +74,7 @@ public final class Fragments
 		}
 
 		public void resetSliding(Fragment fragment, int fragmentContainerId) {
-			getFragmentManager()
+			fragmentManager
 				.beginTransaction()
 				.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
 				.replace(fragmentContainerId, fragment)

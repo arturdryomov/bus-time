@@ -303,7 +303,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 		if (mapsUtil.isResolvable(connectionResult)) {
 			mapsUtil.resolve(connectionResult);
 		} else {
-			mapsUtil.showErrorDialog(getFragmentManager(), connectionResult);
+			mapsUtil.showErrorDialog(connectionResult);
 		}
 	}
 

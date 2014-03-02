@@ -54,8 +54,8 @@ public class DatabaseUpdateBanner extends Fragment implements View.OnClickListen
 	}
 
 	@Override
-	public void onClick(View view) {
-		switch (view.getId()) {
+	public void onClick(View button) {
+		switch (button.getId()) {
 			case R.id.button_accept:
 				BusProvider.getBus().post(new DatabaseUpdateAcceptedEvent());
 				break;

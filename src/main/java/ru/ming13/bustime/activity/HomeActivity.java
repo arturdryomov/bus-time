@@ -335,7 +335,7 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 			Intent intent = Intents.Builder.with(this).buildStopsMapIntent();
 			startActivity(intent);
 		} else {
-			MapsUtil.with(this).showErrorDialog(getSupportFragmentManager());
+			MapsUtil.with(this).showErrorDialog();
 		}
 	}
 
