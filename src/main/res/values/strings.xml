@@ -4,6 +4,7 @@
 	<string name="application_name" translatable="false">Bus Time</string>
 
 	<string name="title_routes">Routes</string>
+	<string name="title_stop">Stop</string>
 	<string name="title_stops">Stops</string>
 	<string name="title_timetable">Timetable</string>
 
