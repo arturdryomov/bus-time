@@ -25,6 +25,17 @@ public final class Bartender
 		public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
 	}
 
+	private static final class SystemBooleans
+	{
+		private SystemBooleans() {
+		}
+
+		public static final boolean DEFAULT_VALUE = false;
+		public static final int INVALID_ID = 0;
+
+		public static final String NAVIGATION_BAR_AVAILABLE = "config_showNavigationBar";
+	}
+
 	private final Activity activity;
 
 	public static Bartender at(Activity activity) {
@@ -92,7 +103,17 @@ public final class Bartender
 	}
 
 	private boolean isNavigationBarAvailable() {
-		return Android.isIceCreamSandwichOrLater() && !Android.hasHardwareMenuKey(activity);
+		return getSystemBoolean(SystemBooleans.NAVIGATION_BAR_AVAILABLE);
+	}
+
+	private boolean getSystemBoolean(String systemBoolean) {
+		int systemBooleanId = activity.getResources().getIdentifier(systemBoolean, "bool", "android");
+
+		if (systemBooleanId == SystemBooleans.INVALID_ID) {
+			return SystemBooleans.DEFAULT_VALUE;
+		}
+
+		return activity.getResources().getBoolean(systemBooleanId);
 	}
 
 	private LayoutParams buildNavigationBarViewParams() {
