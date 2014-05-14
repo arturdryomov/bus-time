@@ -52,10 +52,16 @@ public class StopLoadingTask extends AsyncTask<Void, Void, BusEvent>
 	private Stop getStop(Cursor stopsCursor) {
 		stopsCursor.moveToPosition(getStopPosition(stopsCursor));
 
-		String stopName = getStopName(stopsCursor);
-		String stopDirection = getStopDirection(stopsCursor);
+		String stopName = stopsCursor.getString(
+			stopsCursor.getColumnIndex(BusTimeContract.Stops.NAME));
+		String stopDirection = stopsCursor.getString(
+			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
+		double stopLatitude = stopsCursor.getDouble(
+			stopsCursor.getColumnIndex(BusTimeContract.Stops.LATITUDE));
+		double stopLongitude = stopsCursor.getDouble(
+			stopsCursor.getColumnIndex(BusTimeContract.Stops.LONGITUDE));
 
-		return new Stop(stopId, stopName, stopDirection);
+		return new Stop(stopId, stopName, stopDirection, stopLatitude, stopLongitude);
 	}
 
 	private int getStopPosition(Cursor stopsCursor) {
@@ -71,16 +77,6 @@ public class StopLoadingTask extends AsyncTask<Void, Void, BusEvent>
 	private long getStopId(Cursor stopsCursor) {
 		return stopsCursor.getLong(
 			stopsCursor.getColumnIndex(BusTimeContract.Stops._ID));
-	}
-
-	private String getStopName(Cursor stopsCursor) {
-		return stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.NAME));
-	}
-
-	private String getStopDirection(Cursor stopsCursor) {
-		return stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
 	}
 
 	@Override
