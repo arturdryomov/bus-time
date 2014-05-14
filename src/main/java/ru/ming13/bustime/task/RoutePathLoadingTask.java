@@ -9,16 +9,20 @@ import java.util.List;
 
 import ru.ming13.bustime.bus.BusEvent;
 import ru.ming13.bustime.bus.BusProvider;
-import ru.ming13.bustime.bus.RouteDirectionLoadedEvent;
+import ru.ming13.bustime.bus.RoutePathLoadedEvent;
 import ru.ming13.bustime.direction.Navigator;
 
-public class RouteDirectionLoadingTask extends AsyncTask<Void, Void, BusEvent>
+public class RoutePathLoadingTask extends AsyncTask<Void, Void, BusEvent>
 {
 	private final Navigator navigator;
 
 	private final List<LatLng> stopPositions;
 
-	public RouteDirectionLoadingTask(List<LatLng> stopPositions) {
+	public static void execute(List<LatLng> stopPositions) {
+		new RoutePathLoadingTask(stopPositions).execute();
+	}
+
+	private RoutePathLoadingTask(List<LatLng> stopPositions) {
 		this.navigator = new Navigator();
 
 		this.stopPositions = stopPositions;
@@ -26,10 +30,20 @@ public class RouteDirectionLoadingTask extends AsyncTask<Void, Void, BusEvent>
 
 	@Override
 	protected BusEvent doInBackground(Void... voids) {
-		return new RouteDirectionLoadedEvent(getDirectionPartitions());
+		return new RoutePathLoadedEvent(getPathPositions(getPathPartitions()));
 	}
 
-	private List<List<LatLng>> getDirectionPartitions() {
+	private List<LatLng> getPathPositions(List<List<LatLng>> partitions) {
+		List<LatLng> positions = new ArrayList<LatLng>();
+
+		for (List<LatLng> partition : partitions) {
+			positions.addAll(partition);
+		}
+
+		return positions;
+	}
+
+	private List<List<LatLng>> getPathPartitions() {
 		List<List<LatLng>> partitions = new ArrayList<List<LatLng>>();
 
 		for (List<LatLng> positionsPartition : partitionPositions(stopPositions, getPositionsPartitionSize())) {
