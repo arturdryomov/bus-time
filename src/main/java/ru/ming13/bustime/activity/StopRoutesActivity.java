@@ -12,6 +12,7 @@ import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.fragment.MessageFragment;
+import ru.ming13.bustime.fragment.StopMapFragment;
 import ru.ming13.bustime.fragment.StopRoutesFragment;
 import ru.ming13.bustime.fragment.TimetableFragment;
 import ru.ming13.bustime.model.Route;
@@ -87,7 +88,7 @@ public class StopRoutesActivity extends ActionBarActivity
 	}
 
 	private Fragment buildRoutesFragment() {
-		return StopRoutesFragment.newInstance(getStop());
+		return StopMapFragment.newInstance(getStop());
 	}
 
 	@Subscribe
