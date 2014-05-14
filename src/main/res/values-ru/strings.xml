@@ -2,6 +2,7 @@
 <resources>
 
 	<string name="title_routes">Маршруты</string>
+	<string name="title_stop">Остановка</string>
 	<string name="title_stops">Остановки</string>
 	<string name="title_timetable">Расписание</string>
 

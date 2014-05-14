@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.squareup.otto.Subscribe;
@@ -121,15 +122,31 @@ public class StopRoutesActivity extends ActionBarActivity
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.action_bar_stop_routes, menu);
+
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 			case android.R.id.home:
 				finish();
 				return true;
 
+			case R.id.menu_stops_map:
+				startStopMapActivity();
+				return true;
+
 			default:
 				return super.onOptionsItemSelected(menuItem);
 		}
+	}
+
+	private void startStopMapActivity() {
+		Intent intent = Intents.Builder.with(this).buildStopMapIntent(getStop());
+		startActivity(intent);
 	}
 
 	@Override

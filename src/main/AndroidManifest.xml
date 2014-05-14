@@ -70,8 +70,20 @@
 		</activity>
 
 		<activity
+			android:label="@string/title_stop"
+			android:name=".activity.StopMapActivity"
+			android:theme="@style/Theme.BusTime.Map">
+		</activity>
+
+		<activity
 			android:label="@string/title_stops"
 			android:name=".activity.RouteStopsActivity">
+		</activity>
+
+		<activity
+			android:label="@string/title_stops"
+			android:name=".activity.RouteStopsMapActivity"
+			android:theme="@style/Theme.BusTime.Map">
 		</activity>
 
 		<activity

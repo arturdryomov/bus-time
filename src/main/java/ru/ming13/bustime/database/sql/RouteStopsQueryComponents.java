@@ -26,7 +26,9 @@ public final class RouteStopsQueryComponents implements QueryComponents
 		return new String[]{
 			BusTimeContract.Stops._ID,
 			BusTimeContract.Stops.NAME,
-			BusTimeContract.Stops.DIRECTION};
+			BusTimeContract.Stops.DIRECTION,
+			BusTimeContract.Stops.LATITUDE,
+			BusTimeContract.Stops.LONGITUDE};
 	}
 
 	@Override
