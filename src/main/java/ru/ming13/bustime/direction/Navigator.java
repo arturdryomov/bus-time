@@ -13,7 +13,15 @@ import retrofit.RetrofitError;
 
 public class Navigator
 {
-	public static final String MAPS_URL = "https://maps.googleapis.com/maps/api";
+	public static final class Constraints
+	{
+		private Constraints() {
+		}
+
+		public static final int WAYPOINTS_COUNT = 8;
+	}
+
+	private static final String MAPS_URL = "https://maps.googleapis.com/maps/api";
 
 	private final DirectionsApi directionsApi;
 
