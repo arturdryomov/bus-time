@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -51,7 +52,7 @@ public class Navigator
 	}
 
 	private String formatPosition(LatLng position) {
-		return String.format("%f,%f", position.latitude, position.longitude);
+		return String.format(Locale.US, "%f,%f", position.latitude, position.longitude);
 	}
 
 	private String formatPositions(List<LatLng> positions) {
