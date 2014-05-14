@@ -17,11 +17,7 @@ public class Navigator
 
 	private final DirectionsApi directionsApi;
 
-	public static Navigator getInstance() {
-		return new Navigator();
-	}
-
-	private Navigator() {
+	public Navigator() {
 		this.directionsApi = buildDirectionsApi();
 	}
 
@@ -38,8 +34,7 @@ public class Navigator
 			DirectionsInformation directionsInformation = directionsApi.getDirectionsInformation(
 				formatPosition(originPosition),
 				formatPosition(destinationPosition),
-				formatPositions(waypointPositions),
-				false);
+				formatPositions(waypointPositions));
 
 			return parseDirectionPolylinePositions(directionsInformation);
 		} catch (RetrofitError e) {
@@ -62,8 +57,8 @@ public class Navigator
 	}
 
 	private List<LatLng> parseDirectionPolylinePositions(DirectionsInformation directionsInformation) {
-		String polylinePositions = directionsInformation.getPolylinesPositions().get(0);
+		final int routePosition = 0;
 
-		return PolyUtil.decode(polylinePositions);
+		return PolyUtil.decode(directionsInformation.getPolylinePositions(routePosition));
 	}
 }

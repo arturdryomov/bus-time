@@ -2,7 +2,6 @@ package ru.ming13.bustime.direction;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DirectionsInformation
@@ -30,13 +29,7 @@ public class DirectionsInformation
 	@SerializedName("routes")
 	private List<Route> routes;
 
-	public List<String> getPolylinesPositions() {
-		List<String> polylinesPositions = new ArrayList<String>();
-
-		for (Route route : routes) {
-			polylinesPositions.add(route.getPolyline().getPositions());
-		}
-
-		return polylinesPositions;
+	public String getPolylinePositions(int routePosition) {
+		return routes.get(routePosition).getPolyline().getPositions();
 	}
 }
