@@ -30,31 +30,21 @@ public class RoutePathLoadingTask extends AsyncTask<Void, Void, BusEvent>
 
 	@Override
 	protected BusEvent doInBackground(Void... voids) {
-		return new RoutePathLoadedEvent(getPathPositions(getPathPartitions()));
+		return new RoutePathLoadedEvent(getPathPositions());
 	}
 
-	private List<LatLng> getPathPositions(List<List<LatLng>> partitions) {
+	private List<LatLng> getPathPositions() {
 		List<LatLng> positions = new ArrayList<LatLng>();
-
-		for (List<LatLng> partition : partitions) {
-			positions.addAll(partition);
-		}
-
-		return positions;
-	}
-
-	private List<List<LatLng>> getPathPartitions() {
-		List<List<LatLng>> partitions = new ArrayList<List<LatLng>>();
 
 		for (List<LatLng> positionsPartition : partitionPositions(stopPositions, getPositionsPartitionSize())) {
 			LatLng originPosition = positionsPartition.get(0);
 			LatLng destinationPosition = positionsPartition.get(positionsPartition.size() - 1);
 			List<LatLng> waypointPositions = positionsPartition.subList(1, positionsPartition.size() - 1);
 
-			partitions.add(navigator.getDirectionPolylinePositions(originPosition, destinationPosition, waypointPositions));
+			positions.addAll(navigator.getDirectionPolylinePositions(originPosition, destinationPosition, waypointPositions));
 		}
 
-		return partitions;
+		return positions;
 	}
 
 	private List<List<LatLng>> partitionPositions(List<LatLng> positions, int partitionSize) {
