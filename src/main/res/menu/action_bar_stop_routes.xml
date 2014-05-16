@@ -3,9 +3,9 @@
 	  xmlns:appcompat="http://schemas.android.com/apk/res-auto">
 
 	<item
-		android:id="@+id/menu_stops_map"
+		android:id="@+id/menu_map"
 		android:icon="@drawable/ic_menu_map"
-		android:title="@string/menu_stops_map"
+		android:title="@string/menu_map"
 		appcompat:showAsAction="always"/>
 
 </menu>

@@ -30,7 +30,7 @@ import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
 
-public class RouteStopsMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>
+public class RouteMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
 	private static final class Ui
 	{
@@ -52,8 +52,8 @@ public class RouteStopsMapFragment extends SupportMapFragment implements LoaderM
 		public static final int ZOOM = 11;
 	}
 
-	public static RouteStopsMapFragment newInstance(Route route) {
-		RouteStopsMapFragment fragment = new RouteStopsMapFragment();
+	public static RouteMapFragment newInstance(Route route) {
+		RouteMapFragment fragment = new RouteMapFragment();
 
 		fragment.setArguments(buildArguments(route));
 

@@ -135,7 +135,7 @@ public class RouteStopsActivity extends ActionBarActivity
 				finish();
 				return true;
 
-			case R.id.menu_stops_map:
+			case R.id.menu_map:
 				startRouteStopsMapActivity();
 				return true;
 
@@ -145,7 +145,7 @@ public class RouteStopsActivity extends ActionBarActivity
 	}
 
 	private void startRouteStopsMapActivity() {
-		Intent intent = Intents.Builder.with(this).buildRouteStopsMapIntent(getRoute());
+		Intent intent = Intents.Builder.with(this).buildRouteMapIntent(getRoute());
 		startActivity(intent);
 	}
 

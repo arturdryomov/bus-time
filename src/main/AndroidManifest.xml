@@ -76,14 +76,14 @@
 		</activity>
 
 		<activity
-			android:label="@string/title_stops"
-			android:name=".activity.RouteStopsActivity">
+			android:label="@string/title_route"
+			android:name=".activity.RouteMapActivity"
+			android:theme="@style/Theme.BusTime.Map">
 		</activity>
 
 		<activity
 			android:label="@string/title_stops"
-			android:name=".activity.RouteStopsMapActivity"
-			android:theme="@style/Theme.BusTime.Map">
+			android:name=".activity.RouteStopsActivity">
 		</activity>
 
 		<activity

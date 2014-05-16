@@ -135,7 +135,7 @@ public class StopRoutesActivity extends ActionBarActivity
 				finish();
 				return true;
 
-			case R.id.menu_stops_map:
+			case R.id.menu_map:
 				startStopMapActivity();
 				return true;
 

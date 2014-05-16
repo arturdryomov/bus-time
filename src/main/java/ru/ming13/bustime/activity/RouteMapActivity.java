@@ -6,14 +6,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
 import ru.ming13.bustime.R;
-import ru.ming13.bustime.fragment.RouteStopsMapFragment;
+import ru.ming13.bustime.fragment.RouteMapFragment;
 import ru.ming13.bustime.model.Route;
 import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.TitleBuilder;
 
-public class RouteStopsMapActivity extends ActionBarActivity
+public class RouteMapActivity extends ActionBarActivity
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class RouteStopsMapActivity extends ActionBarActivity
 	}
 
 	private Fragment buildMapFragment() {
-		return RouteStopsMapFragment.newInstance(getRoute());
+		return RouteMapFragment.newInstance(getRoute());
 	}
 
 	@Override

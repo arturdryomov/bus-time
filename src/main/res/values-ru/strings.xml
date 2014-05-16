@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="title_route">Маршрут</string>
 	<string name="title_routes">Маршруты</string>
 	<string name="title_stop">Остановка</string>
 	<string name="title_stops">Остановки</string>
 	<string name="title_timetable">Расписание</string>
 
+	<string name="menu_map">Карта</string>
 	<string name="menu_rate_application">Оценить приложение</string>
 	<string name="menu_send_feedback">Написать разработчику</string>
 	<string name="menu_stops_map">Карта остановок</string>
