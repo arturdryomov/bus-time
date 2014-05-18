@@ -113,8 +113,12 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 		long stopId = stopIds.get(stopMarker.getId());
 		String stopName = stopMarker.getTitle();
 		String stopDirection = stopMarker.getSnippet();
+		double stopLatitude = stopMarker.getPosition().latitude;
+		double stopLongitude = stopMarker.getPosition().longitude;
 
-		BusProvider.getBus().post(new StopSelectedEvent(new Stop(stopId, stopName, stopDirection)));
+		Stop stop = new Stop(stopId, stopName, stopDirection, stopLatitude, stopLongitude);
+
+		BusProvider.getBus().post(new StopSelectedEvent(stop));
 	}
 
 	private boolean isStopIdAvailable(Marker stopMarker) {
@@ -303,7 +307,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 		if (mapsUtil.isResolvable(connectionResult)) {
 			mapsUtil.resolve(connectionResult);
 		} else {
-			mapsUtil.showErrorDialog(getFragmentManager(), connectionResult);
+			mapsUtil.showErrorDialog(connectionResult);
 		}
 	}
 

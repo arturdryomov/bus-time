@@ -88,8 +88,12 @@ public class StopsFragment extends ListFragment implements LoaderManager.LoaderC
 			stopsCursor.getColumnIndex(BusTimeContract.Stops.NAME));
 		String stopDirection = stopsCursor.getString(
 			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
+		double stopLatitude = stopsCursor.getDouble(
+			stopsCursor.getColumnIndex(BusTimeContract.Stops.LATITUDE));
+		double stopLongitude = stopsCursor.getDouble(
+			stopsCursor.getColumnIndex(BusTimeContract.Stops.LONGITUDE));
 
-		return new Stop(stopId, stopName, stopDirection);
+		return new Stop(stopId, stopName, stopDirection, stopLatitude, stopLongitude);
 	}
 
 	private Cursor getStopsCursor(int stopPosition) {

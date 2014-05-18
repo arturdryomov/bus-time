@@ -3,10 +3,13 @@
 
 	<string name="application_name" translatable="false">Bus Time</string>
 
+	<string name="title_route">Route</string>
 	<string name="title_routes">Routes</string>
+	<string name="title_stop">Stop</string>
 	<string name="title_stops">Stops</string>
 	<string name="title_timetable">Timetable</string>
 
+	<string name="menu_map">Map</string>
 	<string name="menu_rate_application">Rate the application</string>
 	<string name="menu_send_feedback">Send feedback</string>
 	<string name="menu_stops_map">Stops map</string>

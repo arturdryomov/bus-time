@@ -1,12 +1,11 @@
 package ru.ming13.bustime.util;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.ConfigurationInfo;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -15,18 +14,18 @@ import ru.ming13.bustime.fragment.GooglePlayServicesErrorDialog;
 
 public final class MapsUtil
 {
-	private final Context context;
+	private final FragmentActivity activity;
 
-	public static MapsUtil with(Context context) {
-		return new MapsUtil(context);
+	public static MapsUtil with(FragmentActivity activity) {
+		return new MapsUtil(activity);
 	}
 
-	private MapsUtil(Context context) {
-		this.context = context;
+	private MapsUtil(FragmentActivity activity) {
+		this.activity = activity;
 	}
 
 	public boolean areMapsHardwareAvailable() {
-		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
 		ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
 
 		int currentGlEsVersion = configurationInfo.reqGlEsVersion;
@@ -40,20 +39,20 @@ public final class MapsUtil
 	}
 
 	private int getErrorCode() {
-		return GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+		return GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
 	}
 
-	public void showErrorDialog(FragmentManager fragmentManager) {
-		showErrorDialog(fragmentManager, getErrorCode());
+	public void showErrorDialog() {
+		showErrorDialog(getErrorCode());
 	}
 
-	public void showErrorDialog(FragmentManager fragmentManager, ConnectionResult connectionResult) {
-		showErrorDialog(fragmentManager, connectionResult.getErrorCode());
+	public void showErrorDialog(ConnectionResult connectionResult) {
+		showErrorDialog(connectionResult.getErrorCode());
 	}
 
-	private void showErrorDialog(FragmentManager fragmentManager, int errorCode) {
+	private void showErrorDialog(int errorCode) {
 		DialogFragment errorDialog = GooglePlayServicesErrorDialog.newInstance(errorCode, 0);
-		errorDialog.show(fragmentManager, GooglePlayServicesErrorDialog.TAG);
+		errorDialog.show(activity.getSupportFragmentManager(), GooglePlayServicesErrorDialog.TAG);
 	}
 
 	public boolean isResolvable(ConnectionResult connectionResult) {
@@ -62,7 +61,6 @@ public final class MapsUtil
 
 	public void resolve(ConnectionResult connectionResult) {
 		try {
-			Activity activity = (Activity) context;
 			connectionResult.startResolutionForResult(activity, 0);
 		} catch (IntentSender.SendIntentException e) {
 			throw new RuntimeException(e);

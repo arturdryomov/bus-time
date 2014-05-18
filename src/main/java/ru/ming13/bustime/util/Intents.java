@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 
 import ru.ming13.bustime.R;
+import ru.ming13.bustime.activity.RouteMapActivity;
 import ru.ming13.bustime.activity.RouteStopsActivity;
+import ru.ming13.bustime.activity.StopMapActivity;
 import ru.ming13.bustime.activity.StopRoutesActivity;
 import ru.ming13.bustime.activity.StopsMapActivity;
 import ru.ming13.bustime.activity.TimetableActivity;
@@ -51,6 +53,20 @@ public final class Intents
 
 		public Intent buildStopsMapIntent() {
 			return new Intent(context, StopsMapActivity.class);
+		}
+
+		public Intent buildRouteMapIntent(Route route) {
+			Intent intent = new Intent(context, RouteMapActivity.class);
+			intent.putExtra(Extras.ROUTE, route);
+
+			return intent;
+		}
+
+		public Intent buildStopMapIntent(Stop stop) {
+			Intent intent = new Intent(context, StopMapActivity.class);
+			intent.putExtra(Extras.STOP, stop);
+
+			return intent;
 		}
 
 		public Intent buildRouteStopsIntent(Route route) {
