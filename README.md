@@ -4,12 +4,12 @@ Provides Android application.
 
 ## Building
 
-You will need JDK 1.6, Android SDK 22 and Gradle 1.12 installed.
+You will need JDK 1.6 and Android SDK 22 installed.
 
 1. Install required Android components.
 
   ```
-  $ android update sdk --no-ui --force --all --filter build-tools-19.1
+  $ android update sdk --no-ui --force --all --filter build-tools-20.0.0
   $ android update sdk --no-ui --force --all --filter android-19
   $ android update sdk --no-ui --force --all --filter extra-android-m2repository
   $ android update sdk --no-ui --force --all --filter extra-google-m2repository
@@ -39,5 +39,5 @@ You will need JDK 1.6, Android SDK 22 and Gradle 1.12 installed.
 5. Build application.
 
   ```
-  $ gradle clean assembleDebug
+  $ ./gradlew clean assembleDebug
   ```
