@@ -3,13 +3,7 @@ package ru.ming13.bustime.util;
 import android.content.Context;
 import android.text.format.DateFormat;
 
-import org.ocpsoft.prettytime.PrettyTime;
-import org.ocpsoft.prettytime.units.JustNow;
-import org.ocpsoft.prettytime.units.Millisecond;
-import org.ocpsoft.prettytime.units.Second;
-
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -17,28 +11,6 @@ import ru.ming13.bustime.R;
 
 public final class Time
 {
-	private static final SimpleDateFormat databaseTimeFormatter;
-	private static final PrettyTime relativeTimeFormatter;
-
-	static {
-		databaseTimeFormatter = buildDatabaseTimeFormatter();
-		relativeTimeFormatter = buildRelativeTimeFormatter();
-	}
-
-	private static SimpleDateFormat buildDatabaseTimeFormatter() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	}
-
-	private static PrettyTime buildRelativeTimeFormatter() {
-		PrettyTime formatter = new PrettyTime();
-
-		formatter.removeUnit(Second.class);
-		formatter.removeUnit(Millisecond.class);
-		formatter.removeUnit(JustNow.class);
-
-		return formatter;
-	}
-
 	private final Date date;
 
 	public static Time from(String databaseTimeString) {
@@ -61,7 +33,7 @@ public final class Time
 
 	private static Date buildDate(String databaseTimeString) {
 		try {
-			return databaseTimeFormatter.parse(databaseTimeString);
+			return Formatters.getDatabaseTimeFormatter().parse(databaseTimeString);
 		} catch (ParseException e) {
 			return new Date();
 		}
@@ -83,7 +55,7 @@ public final class Time
 	}
 
 	public String toDatabaseString() {
-		return databaseTimeFormatter.format(date);
+		return Formatters.getDatabaseTimeFormatter().format(date);
 	}
 
 	public String toRelativeString(Context context) {
@@ -93,7 +65,7 @@ public final class Time
 			return context.getString(R.string.token_time_now);
 		}
 
-		return relativeTimeFormatter.setReference(currentTime.date).format(date);
+		return Formatters.getRelativeTimeFormatter().setReference(currentTime.date).format(date);
 	}
 
 	public String toSystemString(Context context) {

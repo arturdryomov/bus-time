@@ -90,6 +90,15 @@
 			android:name=".activity.TimetableActivity">
 		</activity>
 
+		<receiver
+			android:name=".receiver.LocaleReceiver">
+
+			<intent-filter>
+				<action android:name="android.intent.action.LOCALE_CHANGED"/>
+			</intent-filter>
+
+		</receiver>
+
 		<provider
 			android:authorities="ru.ming13.bustime"
 			android:exported="false"
