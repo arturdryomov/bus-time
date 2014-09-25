@@ -1,10 +1,27 @@
-# Assets
+# Gradle
 
-assets/
+.gradle/
+build/
 
-# Private information
+# Android Studio
+
+.idea/
+*.iml
+
+# Android SDK
+
+local.properties
+
+# Databases
+
+*.db
+
+# APIs
 
 keys.xml
 urls.xml
 
-# Use global .gitignore for your IDE
+# Keys
+
+*.keystore
+signing.properties

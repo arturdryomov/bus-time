@@ -4,31 +4,43 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:0.10.+"
+        classpath "com.android.tools.build:gradle:0.12.+"
+        classpath "com.jakewharton.sdkmanager:gradle-plugin:0.12.+"
     }
 }
 
+apply plugin: "android-sdk-manager"
 apply plugin: "android"
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.1"
+    buildToolsVersion "20"
 
-    packagingOptions {
-        exclude "META-INF/LICENSE.txt"
-        exclude "META-INF/NOTICE.txt"
+    defaultConfig {
+        def versionMajor = 1
+        def versionMinor = 2
+        def versionPatch = 0
+
+        versionName buildVersionName(versionMajor, versionMinor, versionPatch)
+        versionCode buildVersionCode(versionMajor, versionMinor, versionPatch)
+
+        minSdkVersion 8
+        targetSdkVersion 19
+
+        resConfigs "nodpi", "mdpi", "hdpi", "xhdpi", "xxhdpi"
+        resConfigs "en", "ru"
     }
 
     signingConfigs {
-        def signingFile = file("signing.properties")
-        def signingProperties = new Properties()
-
         release {
+            def signingFile = file("signing.properties")
+            def signingProperties = new Properties()
+
             if (signingFile.exists()) {
                 signingProperties.load(signingFile.newInputStream())
 
-                storeFile file(signingProperties["store.file"])
-                storePassword signingProperties["store.password"]
+                storeFile file(signingProperties["keystore.file"])
+                storePassword signingProperties["keystore.password"]
                 keyAlias signingProperties["key.alias"]
                 keyPassword signingProperties["key.password"]
             }
@@ -41,9 +53,18 @@ android {
         }
     }
 
-    lintOptions {
-        abortOnError false
+    packagingOptions {
+        exclude "META-INF/LICENSE.txt"
+        exclude "META-INF/NOTICE.txt"
     }
+}
+
+def buildVersionName(versionMajor, versionMinor, versionPatch) {
+    return "${versionMajor}.${versionMinor}.${versionPatch}"
+}
+
+def buildVersionCode(versionMajor, versionMinor, versionPatch) {
+    return versionMajor * 10 ** 2 + versionMinor * 10 ** 1 + versionPatch * 10 ** 0
 }
 
 dependencies {
@@ -60,4 +81,10 @@ dependencies {
     compile "commons-io:commons-io:2.4"
     compile "org.apache.commons:commons-lang3:3.3.+"
     compile "org.ocpsoft.prettytime:prettytime:3.2.5.Final"
+}
+
+task generateWrapper(type: Wrapper) {
+    description "Generates Gradle wrapper."
+
+    gradleVersion = "1.12"
 }
