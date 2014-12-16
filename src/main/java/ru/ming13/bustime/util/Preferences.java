@@ -50,7 +50,7 @@ public final class Preferences
 	}
 
 	private void set(String key, String value) {
-		preferences.edit().putString(key, value).commit();
+		preferences.edit().putString(key, value).apply();
 	}
 
 	public int getHomeTabPosition() {
@@ -66,6 +66,6 @@ public final class Preferences
 	}
 
 	private void set(String key, int value) {
-		preferences.edit().putInt(key, value).commit();
+		preferences.edit().putInt(key, value).apply();
 	}
 }

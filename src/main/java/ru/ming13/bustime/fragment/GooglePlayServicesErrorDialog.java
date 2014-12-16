@@ -2,6 +2,7 @@ package ru.ming13.bustime.fragment;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -29,6 +30,7 @@ public class GooglePlayServicesErrorDialog extends DialogFragment
 		return arguments;
 	}
 
+	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		return GooglePlayServicesUtil.getErrorDialog(getErrorCode(), getActivity(), getRequestCode());

@@ -179,6 +179,6 @@ public final class Bartender
 	}
 
 	private int getActionBarHeight() {
-		return activity.getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height);
+		return activity.getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height_material);
 	}
 }

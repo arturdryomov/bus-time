@@ -10,8 +10,8 @@ import android.support.v4.content.Loader;
 import android.support.v4.util.ArrayMap;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -37,9 +37,10 @@ import ru.ming13.bustime.util.MapsUtil;
 
 public class StopsMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>,
 	GoogleMap.OnInfoWindowClickListener,
-	GooglePlayServicesClient.ConnectionCallbacks,
-	GooglePlayServicesClient.OnConnectionFailedListener
+	GoogleApiClient.ConnectionCallbacks,
+	GoogleApiClient.OnConnectionFailedListener
 {
+
 	private static final class Ui
 	{
 		private Ui() {
@@ -62,7 +63,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 		public static final int ZOOM = 15;
 	}
 
-	private LocationClient locationClient;
+	private GoogleApiClient locationClient;
 	private Map<String, Long> stopIds;
 
 	public static StopsMapFragment newInstance() {
@@ -241,8 +242,17 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private void setUpLocationClient() {
-		locationClient = new LocationClient(getActivity(), this, this);
+		locationClient = new GoogleApiClient.Builder(getActivity())
+			.addApi(LocationServices.API)
+			.addConnectionCallbacks(this)
+			.addOnConnectionFailedListener(this)
+			.build();
+
 		locationClient.connect();
+	}
+
+	@Override
+	public void onConnectionSuspended(int suspensionCause) {
 	}
 
 	@Override
@@ -256,7 +266,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private LatLng getCurrentLocation() {
-		Location location = locationClient.getLastLocation();
+		Location location = LocationServices.FusedLocationApi.getLastLocation(locationClient);
 
 		if (!isLocationAvailable(location)) {
 			return getDefaultLocation();
@@ -294,10 +304,6 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 
 	private void tearDownLocationClient() {
 		locationClient.disconnect();
-	}
-
-	@Override
-	public void onDisconnected() {
 	}
 
 	@Override
