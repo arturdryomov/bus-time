@@ -5,10 +5,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -43,9 +41,9 @@ import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.MapsUtil;
-import ru.ming13.bustime.util.Preferences;
+import ru.ming13.bustime.view.TabLayout;
 
-public class HomeActivity extends ActionBarActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
+public class HomeActivity extends ActionBarActivity
 {
 	private static final class SavedState
 	{
@@ -92,8 +90,6 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 			setUpFrames();
 		} else {
 			setUpTabs();
-			setUpTabsPager();
-			setUpSelectedTab();
 		}
 
 		setUpProgress();
@@ -108,62 +104,15 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void setUpTabs() {
-		ActionBar actionBar = getSupportActionBar();
+		ViewPager tabsPager = getTabsPager();
+		tabsPager.setAdapter(new TabPagerAdapter(this, getSupportFragmentManager()));
 
-		actionBar.addTab(buildTab(R.string.title_routes), TabPagerAdapter.TabPosition.ROUTES);
-		actionBar.addTab(buildTab(R.string.title_stops), TabPagerAdapter.TabPosition.STOPS);
-	}
-
-	private ActionBar.Tab buildTab(int tabTitleResourceId) {
-		ActionBar.Tab tab = getSupportActionBar().newTab();
-
-		tab.setTabListener(this);
-		tab.setText(tabTitleResourceId);
-
-		return tab;
-	}
-
-	@Override
-	public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-		getTabsPager().setCurrentItem(tab.getPosition());
+		TabLayout tabsLayout = (TabLayout) findViewById(R.id.layout_tabs);
+		tabsLayout.setUpTabPager(tabsPager);
 	}
 
 	private ViewPager getTabsPager() {
 		return (ViewPager) findViewById(R.id.pager_tabs);
-	}
-
-	@Override
-	public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-	}
-
-	@Override
-	public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-	}
-
-	private void setUpTabsPager() {
-		ViewPager tabsPager = getTabsPager();
-
-		tabsPager.setAdapter(new TabPagerAdapter(getSupportFragmentManager()));
-		tabsPager.setOnPageChangeListener(this);
-	}
-
-	@Override
-	public void onPageSelected(int position) {
-		getSupportActionBar().setSelectedNavigationItem(position);
-	}
-
-	@Override
-	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-	}
-
-	@Override
-	public void onPageScrollStateChanged(int position) {
-	}
-
-	private void setUpSelectedTab() {
-		int selectedTabPosition = Preferences.with(this).getHomeTabPosition();
-
-		getSupportActionBar().setSelectedNavigationItem(selectedTabPosition);
 	}
 
 	private void setUpProgress() {
@@ -421,24 +370,5 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 		int progressView = animator.indexOfChild(findViewById(R.id.progress));
 
 		state.putBoolean(SavedState.PROGRESS_VISIBLE, visibleView == progressView);
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-
-		if (isTabSelected()) {
-			saveSelectedTab();
-		}
-	}
-
-	private boolean isTabSelected() {
-		return getSupportActionBar().getSelectedNavigationIndex() >= 0;
-	}
-
-	private void saveSelectedTab() {
-		int selectedTabPosition = getSupportActionBar().getSelectedNavigationIndex();
-
-		Preferences.with(this).setHomeTabPosition(selectedTabPosition);
 	}
 }

@@ -3,6 +3,8 @@
 
 	<style name="Theme.BusTime" parent="@style/Theme.AppCompat.Light.DarkActionBar">
 		<item name="android:actionBarStyle">@style/Theme.BusTime.ActionBar</item>
+
+		<item name="colorPrimary">@color/background_bar</item>
 	</style>
 
 	<style name="Theme.BusTime.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
