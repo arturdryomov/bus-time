@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
 
+import ru.ming13.bustime.BuildConfig;
 import ru.ming13.bustime.R;
 
 public final class Android
@@ -11,6 +12,10 @@ public final class Android
 	public static final int TARGET_VERSION = Build.VERSION_CODES.LOLLIPOP;
 
 	private Android() {
+	}
+
+	public static String getApplicationId() {
+		return BuildConfig.APPLICATION_ID;
 	}
 
 	public static boolean isHoneycombOrLater() {

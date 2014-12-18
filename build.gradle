@@ -17,6 +17,8 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
+        applicationId "ru.ming13.bustime"
+
         def versionMajor = 1
         def versionMinor = 2
         def versionPatch = 0
@@ -29,6 +31,8 @@ android {
 
         resConfigs "nodpi", "mdpi", "hdpi", "xhdpi", "xxhdpi"
         resConfigs "en", "ru"
+
+        resValue "string", "application_id", applicationId
     }
 
     signingConfigs {
@@ -50,6 +54,16 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
+        }
+    }
+
+    productFlavors {
+        play {
+            applicationId "ru.ming13.bustime"
+        }
+
+        beta {
+            applicationId "ru.ming13.bustime.beta"
         }
     }
 

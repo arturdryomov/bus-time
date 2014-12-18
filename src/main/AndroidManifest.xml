@@ -100,7 +100,7 @@
 		</receiver>
 
 		<provider
-			android:authorities="ru.ming13.bustime"
+			android:authorities="${applicationId}"
 			android:exported="false"
 			android:name=".provider.BusTimeProvider">
 		</provider>
