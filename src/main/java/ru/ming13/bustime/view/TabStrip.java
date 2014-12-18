@@ -29,8 +29,8 @@ class TabStrip extends LinearLayout
 		public static final int TAB_INDICATOR = android.R.color.white;
 	}
 
-	private final Paint tabIndicatorPaint;
-	private final float tabIndicatorHeight;
+	private final Paint tabStripPaint;
+	private final float tabStripHeight;
 
 	private int tabPosition;
 	private float tabOffset;
@@ -42,13 +42,13 @@ class TabStrip extends LinearLayout
 	public TabStrip(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
 
-		this.tabIndicatorPaint = getTabIndicatorPaint();
-		this.tabIndicatorHeight = getTabIndicatorHeight();
+		this.tabStripPaint = getTabStripPaint();
+		this.tabStripHeight = getTabStripHeight();
 
 		setUpView();
 	}
 
-	private Paint getTabIndicatorPaint() {
+	private Paint getTabStripPaint() {
 		Paint paint = new Paint();
 
 		paint.setColor(getResources().getColor(Colors.TAB_INDICATOR));
@@ -56,7 +56,7 @@ class TabStrip extends LinearLayout
 		return paint;
 	}
 
-	private float getTabIndicatorHeight() {
+	private float getTabStripHeight() {
 		return Views.getPixels(getResources().getDisplayMetrics(), Dimensions.TAB_INDICATOR_HEIGHT_IN_DP);
 	}
 
@@ -80,10 +80,10 @@ class TabStrip extends LinearLayout
 			tabRight = (int) (tabOffset * nextTab.getRight() + (1 - tabOffset) * tabRight);
 		}
 
-		canvas.drawRect(tabLeft, tabHeight - tabIndicatorHeight, tabRight, tabHeight, tabIndicatorPaint);
+		canvas.drawRect(tabLeft, tabHeight - tabStripHeight, tabRight, tabHeight, tabStripPaint);
 	}
 
-	void changeTab(int tabPosition, float tabPositionOffset) {
+	public void changeTab(int tabPosition, float tabPositionOffset) {
 		this.tabPosition = tabPosition;
 		this.tabOffset = tabPositionOffset;
 

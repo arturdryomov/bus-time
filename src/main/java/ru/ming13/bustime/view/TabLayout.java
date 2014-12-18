@@ -43,26 +43,26 @@ public class TabLayout extends HorizontalScrollView implements ViewPager.OnPageC
 	private ViewPager tabPager;
 	private final TabStrip tabStrip;
 
-    private final float tabOffset;
+	private final float tabOffset;
 	private int tabScrollState;
 
-    public TabLayout(Context context) {
-        this(context, null);
-    }
- 
-    public TabLayout(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, 0);
-    }
- 
-    public TabLayout(Context context, AttributeSet attributeSet, int style) {
-        super(context, attributeSet, style);
+	public TabLayout(Context context) {
+		this(context, null);
+	}
 
-	    this.tabStrip = new TabStrip(context);
+	public TabLayout(Context context, AttributeSet attributeSet) {
+		this(context, attributeSet, 0);
+	}
 
-	    this.tabOffset = Views.getPixels(getResources().getDisplayMetrics(), Dimensions.TAB_OFFSET_IN_DP);
+	public TabLayout(Context context, AttributeSet attributeSet, int style) {
+		super(context, attributeSet, style);
 
-	    setUpView();
-    }
+		this.tabStrip = new TabStrip(context);
+
+		this.tabOffset = Views.getPixels(getResources().getDisplayMetrics(), Dimensions.TAB_OFFSET_IN_DP);
+
+		setUpView();
+	}
 
 	private void setUpView() {
 		setFillViewport(true);
@@ -71,28 +71,28 @@ public class TabLayout extends HorizontalScrollView implements ViewPager.OnPageC
 		addView(tabStrip, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 	}
 
-    public void setUpTabPager(@NonNull ViewPager tabPager) {
-	    this.tabPager = tabPager;
-	    this.tabStrip.removeAllViews();
+	public void setUpTabPager(@NonNull ViewPager tabPager) {
+		this.tabPager = tabPager;
 
-        tabPager.setOnPageChangeListener(this);
+		tabStrip.removeAllViews();
+		tabPager.setOnPageChangeListener(this);
 
-        setUpTabs();
-    }
- 
-    private void setUpTabs() {
-        PagerAdapter tabPagerAdapter = tabPager.getAdapter();
+		setUpTabs();
+	}
 
-        for (int tabPosition = 0; tabPosition < tabPagerAdapter.getCount(); tabPosition++) {
-            TextView tab = buildTab(getContext());
+	private void setUpTabs() {
+		PagerAdapter tabPagerAdapter = tabPager.getAdapter();
 
-	        tab.setText(tabPagerAdapter.getPageTitle(tabPosition));
-	        tab.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
-	        tab.setOnClickListener(this);
+		for (int tabPosition = 0; tabPosition < tabPagerAdapter.getCount(); tabPosition++) {
+			TextView tab = buildTab(getContext());
 
-            tabStrip.addView(tab);
-        }
-    }
+			tab.setText(tabPagerAdapter.getPageTitle(tabPosition));
+			tab.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
+			tab.setOnClickListener(this);
+
+			tabStrip.addView(tab);
+		}
+	}
 
 	@TargetApi(Android.TARGET_VERSION)
 	private TextView buildTab(Context context) {
@@ -119,65 +119,65 @@ public class TabLayout extends HorizontalScrollView implements ViewPager.OnPageC
 		for (int tabPosition = 0; tabPosition < tabStrip.getChildCount(); tabPosition++) {
 			if (tabStrip.getChildAt(tabPosition) == tab) {
 				tabPager.setCurrentItem(tabPosition);
+
 				return;
 			}
 		}
 	}
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
- 
-        if (tabPager != null) {
-            changeTab(tabPager.getCurrentItem(), 0);
-        }
-    }
- 
-    private void changeTab(int tabPosition, int tabPositionOffset) {
-        if ((tabStrip.getChildCount() == 0) || (tabPosition < 0) || (tabPosition >= tabStrip.getChildCount())) {
-            return;
-        }
- 
-        View tabStrip = this.tabStrip.getChildAt(tabPosition);
+	@Override
+	protected void onAttachedToWindow() {
+		super.onAttachedToWindow();
 
-        if (tabStrip == null) {
-	        return;
-        }
+		if (tabPager != null) {
+			changeTab(tabPager.getCurrentItem(), 0);
+		}
+	}
 
-        int tabScrollPosition = tabStrip.getLeft() + tabPositionOffset;
+	private void changeTab(int tabPosition, int tabPositionOffset) {
+		if ((tabStrip.getChildCount() == 0) || (tabPosition < 0) || (tabPosition >= tabStrip.getChildCount())) {
+			return;
+		}
+
+		View tabStrip = this.tabStrip.getChildAt(tabPosition);
+
+		if (tabStrip == null) {
+			return;
+		}
+
+		int tabScrollPosition = tabStrip.getLeft() + tabPositionOffset;
 
 		if ((tabPosition > 0) || (tabPositionOffset > 0)) {
-		    tabScrollPosition -= tabOffset;
+			tabScrollPosition -= tabOffset;
 		}
 
 		scrollTo(tabScrollPosition, 0);
-    }
- 
-    @Override
-    public void onPageScrolled(int tabPosition, float tabPositionOffset, int tabPositionOffsetPixels) {
-        if ((tabStrip.getChildCount() == 0) || (tabPosition < 0) || (tabPosition >= tabStrip.getChildCount())) {
-            return;
-        }
+	}
 
-        tabStrip.changeTab(tabPosition, tabPositionOffset);
+	@Override
+	public void onPageScrolled(int tabPosition, float tabPositionOffset, int tabPositionOffsetPixels) {
+		if ((tabStrip.getChildCount() == 0) || (tabPosition < 0) || (tabPosition >= tabStrip.getChildCount())) {
+			return;
+		}
 
-        int tabOffset = (int) (tabPositionOffset * tabStrip.getChildAt(tabPosition).getWidth());
+		tabStrip.changeTab(tabPosition, tabPositionOffset);
 
-        changeTab(tabPosition, tabOffset);
+		int tabOffset = (int) (tabPositionOffset * tabStrip.getChildAt(tabPosition).getWidth());
 
-    }
+		changeTab(tabPosition, tabOffset);
+	}
 
-    @Override
-    public void onPageScrollStateChanged(int tabScrollState) {
-        this.tabScrollState = tabScrollState;
-    }
+	@Override
+	public void onPageScrollStateChanged(int tabScrollState) {
+		this.tabScrollState = tabScrollState;
+	}
 
-    @Override
-    public void onPageSelected(int tabPosition) {
-        if (tabScrollState == ViewPager.SCROLL_STATE_IDLE) {
-            tabStrip.changeTab(tabPosition, 0);
+	@Override
+	public void onPageSelected(int tabPosition) {
+		if (tabScrollState == ViewPager.SCROLL_STATE_IDLE) {
+			tabStrip.changeTab(tabPosition, 0);
 
-            changeTab(tabPosition, 0);
-        }
-    }
+			changeTab(tabPosition, 0);
+		}
+	}
 }
