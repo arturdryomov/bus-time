@@ -3,8 +3,11 @@ package ru.ming13.bustime.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.fragment.TimetableFragment;
 import ru.ming13.bustime.model.Route;
@@ -16,23 +19,41 @@ import ru.ming13.bustime.util.TitleBuilder;
 
 public class TimetableActivity extends ActionBarActivity
 {
+	@InjectView(R.id.toolbar)
+	Toolbar toolbar;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_container);
 
 		if (Frames.at(this).areAvailable()) {
 			finish();
-		} else {
-			setUpUi();
+			return;
 		}
+
+		setUpInjections();
+
+		setUpUi();
+	}
+
+	private void setUpInjections() {
+		ButterKnife.inject(this);
 	}
 
 	private void setUpUi() {
+		setUpToolbar();
+
 		setUpTitle();
 		setUpSubtitle();
 
-		setUpContainer();
 		setUpTimetableFragment();
+	}
+
+	private void setUpToolbar() {
+		setSupportActionBar(toolbar);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	private void setUpTitle() {
@@ -57,10 +78,6 @@ public class TimetableActivity extends ActionBarActivity
 
 	private Stop getStop() {
 		return getIntent().getParcelableExtra(Intents.Extras.STOP);
-	}
-
-	private void setUpContainer() {
-		setContentView(R.layout.activity_container);
 	}
 
 	private void setUpTimetableFragment() {

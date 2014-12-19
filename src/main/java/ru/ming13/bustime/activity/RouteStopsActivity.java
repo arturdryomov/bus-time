@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.squareup.otto.Subscribe;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
@@ -24,24 +27,41 @@ import ru.ming13.bustime.util.TitleBuilder;
 
 public class RouteStopsActivity extends ActionBarActivity
 {
+	@InjectView(R.id.toolbar)
+	Toolbar toolbar;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_container);
+
+		setUpInjections();
 
 		setUpUi();
 	}
 
+	private void setUpInjections() {
+		ButterKnife.inject(this);
+	}
+
 	private void setUpUi() {
+		setUpToolbar();
+
 		if (Frames.at(this).areAvailable()) {
 			setUpTitle();
-			setUpFrames();
-			setUpEmptyFrame();
+			setUpFrameTitles();
+			setUpMessageFragment();
 		} else {
 			setUpSubtitle();
-			setUpContainer();
 		}
 
 		setUpStopsFragment();
+	}
+
+	private void setUpToolbar() {
+		setSupportActionBar(toolbar);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	private void setUpTitle() {
@@ -56,14 +76,12 @@ public class RouteStopsActivity extends ActionBarActivity
 		return getIntent().getParcelableExtra(Intents.Extras.ROUTE);
 	}
 
-	private void setUpFrames() {
-		setContentView(R.layout.activity_frames);
-
+	private void setUpFrameTitles() {
 		Frames.at(this).setLeftFrameTitle(getString(R.string.title_stops));
 		Frames.at(this).setRightFrameTitle(getString(R.string.title_timetable));
 	}
 
-	private void setUpEmptyFrame() {
+	private void setUpMessageFragment() {
 		Fragments.Operator.at(this).set(buildMessageFragment(), R.id.container_right_frame);
 	}
 
@@ -73,10 +91,6 @@ public class RouteStopsActivity extends ActionBarActivity
 
 	private void setUpSubtitle() {
 		getSupportActionBar().setSubtitle(buildRouteTitle());
-	}
-
-	private void setUpContainer() {
-		setContentView(R.layout.activity_container);
 	}
 
 	private void setUpStopsFragment() {

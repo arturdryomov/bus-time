@@ -8,7 +8,7 @@
 
 	<include
 		android:id="@+id/layout_frames"
-		layout="@layout/activity_frames"/>
+		layout="@layout/activity_container"/>
 
 	<ProgressBar
 		android:id="@+id/progress"
