@@ -99,7 +99,7 @@
 		</receiver>
 
 		<provider
-			android:authorities="${applicationId}"
+			android:authorities="@string/application_id"
 			android:exported="false"
 			android:name=".provider.BusTimeProvider">
 		</provider>
