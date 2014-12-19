@@ -10,17 +10,28 @@ import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Time;
 
 public class StopRoutesAdapter extends CursorAdapter
 {
-	private static final class RouteViewHolder
+	static final class RouteViewHolder
 	{
-		public TextView numberTextView;
-		public TextView descriptionTextView;
-		public TextView timeTextView;
+		@InjectView(R.id.text_number)
+		public TextView routeNumber;
+
+		@InjectView(R.id.text_description)
+		public TextView routeDescription;
+
+		@InjectView(R.id.text_time)
+		public TextView routeTime;
+
+		public RouteViewHolder(View routeView) {
+			ButterKnife.inject(this, routeView);
+		}
 	}
 
 	private final LayoutInflater layoutInflater;
@@ -32,52 +43,25 @@ public class StopRoutesAdapter extends CursorAdapter
 	}
 
 	@Override
-	public View newView(Context context, Cursor routesCursor, ViewGroup viewGroup) {
-		View routeView = buildRouteView(viewGroup);
-		RouteViewHolder routeViewHolder = buildRouteViewHolder(routeView);
+	public View newView(Context context, Cursor routesCursor, ViewGroup stopViewContainer) {
+		View routeView = layoutInflater.inflate(R.layout.view_list_item_stop_route, stopViewContainer, false);
 
-		setUpRouteViewHolder(routeView, routeViewHolder);
+		routeView.setTag(new RouteViewHolder(routeView));
 
 		return routeView;
 	}
 
-	private View buildRouteView(ViewGroup viewGroup) {
-		return layoutInflater.inflate(R.layout.view_list_item_stop_route, viewGroup, false);
-	}
-
-	private RouteViewHolder buildRouteViewHolder(View routeView) {
-		RouteViewHolder routeViewHolder = new RouteViewHolder();
-
-		routeViewHolder.numberTextView = (TextView) routeView.findViewById(R.id.text_number);
-		routeViewHolder.descriptionTextView = (TextView) routeView.findViewById(R.id.text_description);
-		routeViewHolder.timeTextView = (TextView) routeView.findViewById(R.id.text_time);
-
-		return routeViewHolder;
-	}
-
-	private void setUpRouteViewHolder(View routeView, RouteViewHolder routeViewHolder) {
-		routeView.setTag(routeViewHolder);
-	}
-
 	@Override
 	public void bindView(View routeView, Context context, Cursor routesCursor) {
-		RouteViewHolder routeViewHolder = getRouteViewHolder(routeView);
+		RouteViewHolder routeViewHolder = (RouteViewHolder) routeView.getTag();
 
-		setUpRouteInformation(context, routesCursor, routeViewHolder);
-	}
-
-	private RouteViewHolder getRouteViewHolder(View routeView) {
-		return (RouteViewHolder) routeView.getTag();
-	}
-
-	private void setUpRouteInformation(Context context, Cursor routesCursor, RouteViewHolder routeViewHolder) {
 		String routeNumber = getRouteNumber(routesCursor);
 		String routeDescription = getRouteDescription(routesCursor);
 		String routeTime = getRouteTime(context, routesCursor);
 
-		routeViewHolder.numberTextView.setText(routeNumber);
-		routeViewHolder.descriptionTextView.setText(routeDescription);
-		routeViewHolder.timeTextView.setText(routeTime);
+		routeViewHolder.routeNumber.setText(routeNumber);
+		routeViewHolder.routeDescription.setText(routeDescription);
+		routeViewHolder.routeTime.setText(routeTime);
 	}
 
 	private String getRouteNumber(Cursor routesCursor) {

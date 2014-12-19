@@ -8,16 +8,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Time;
 
 public class TimetableAdapter extends CursorAdapter
 {
-	private static final class TimeViewHolder
+	static final class TimeViewHolder
 	{
-		public TextView exactTimeTextView;
-		public TextView relativeTimeTextView;
+		@InjectView(R.id.text_time_exact)
+		public TextView exactTime;
+
+		@InjectView(R.id.text_time_relative)
+		public TextView relativeTime;
+
+		public TimeViewHolder(View timeView) {
+			ButterKnife.inject(this, timeView);
+		}
 	}
 
 	private final LayoutInflater layoutInflater;
@@ -29,48 +38,22 @@ public class TimetableAdapter extends CursorAdapter
 	}
 
 	@Override
-	public View newView(Context context, Cursor timetableCursor, ViewGroup viewGroup) {
-		View timeView = buildTimeView(viewGroup);
-		TimeViewHolder timeViewHolder = buildTimeViewHolder(timeView);
+	public View newView(Context context, Cursor timetableCursor, ViewGroup timeViewContainer) {
+		View timeView = layoutInflater.inflate(R.layout.view_list_item_time, timeViewContainer, false);
 
-		setUpTimeViewHolder(timeView, timeViewHolder);
+		timeView.setTag(new TimeViewHolder(timeView));
 
 		return timeView;
 	}
 
-	private View buildTimeView(ViewGroup viewGroup) {
-		return layoutInflater.inflate(R.layout.view_list_item_time, viewGroup, false);
-	}
-
-	private TimeViewHolder buildTimeViewHolder(View timeView) {
-		TimeViewHolder timeViewHolder = new TimeViewHolder();
-
-		timeViewHolder.exactTimeTextView = (TextView) timeView.findViewById(R.id.text_time_exact);
-		timeViewHolder.relativeTimeTextView = (TextView) timeView.findViewById(R.id.text_time_relative);
-
-		return timeViewHolder;
-	}
-
-	private void setUpTimeViewHolder(View timeView, TimeViewHolder timeViewHolder) {
-		timeView.setTag(timeViewHolder);
-	}
-
 	@Override
 	public void bindView(View timeView, Context context, Cursor timetableCursor) {
-		TimeViewHolder timeViewHolder = getTimeViewHolder(timeView);
+		TimeViewHolder timeViewHolder = (TimeViewHolder) timeView.getTag();
 
-		setUpTimeInformation(context, timetableCursor, timeViewHolder);
-	}
-
-	private TimeViewHolder getTimeViewHolder(View timeView) {
-		return (TimeViewHolder) timeView.getTag();
-	}
-
-	private void setUpTimeInformation(Context context, Cursor timetableCursor, TimeViewHolder timeViewHolder) {
 		Time time = Time.from(getArrivalTime(timetableCursor));
 
-		timeViewHolder.exactTimeTextView.setText(time.toSystemString(context));
-		timeViewHolder.relativeTimeTextView.setText(time.toRelativeString(context));
+		timeViewHolder.exactTime.setText(time.toSystemString(context));
+		timeViewHolder.relativeTime.setText(time.toRelativeString(context));
 	}
 
 	private String getArrivalTime(Cursor timetableCursor) {
