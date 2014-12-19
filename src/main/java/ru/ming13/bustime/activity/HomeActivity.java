@@ -14,22 +14,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ViewAnimator;
 
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.ActionClickListener;
 import com.squareup.otto.Subscribe;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import icepick.Icepick;
+import icepick.Icicle;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.TabPagerAdapter;
 import ru.ming13.bustime.bus.BusEventsCollector;
 import ru.ming13.bustime.bus.BusProvider;
-import ru.ming13.bustime.bus.DatabaseUpdateAcceptedEvent;
 import ru.ming13.bustime.bus.DatabaseUpdateAvailableEvent;
-import ru.ming13.bustime.bus.DatabaseUpdateDiscardedEvent;
 import ru.ming13.bustime.bus.DatabaseUpdateFinishedEvent;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.bus.StopLoadedEvent;
 import ru.ming13.bustime.bus.StopSelectedEvent;
-import ru.ming13.bustime.fragment.DatabaseUpdateBanner;
 import ru.ming13.bustime.fragment.RoutesFragment;
 import ru.ming13.bustime.fragment.StopsFragment;
 import ru.ming13.bustime.model.Route;
@@ -42,48 +44,46 @@ import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.MapsUtil;
+import ru.ming13.bustime.util.ViewDirector;
 import ru.ming13.bustime.view.TabLayout;
 
-public class HomeActivity extends ActionBarActivity
+public class HomeActivity extends ActionBarActivity implements ActionClickListener
 {
-	private static final class SavedState
-	{
-		private SavedState() {
-		}
+	@InjectView(R.id.toolbar)
+	Toolbar toolbar;
 
-		public static final String PROGRESS_VISIBLE = "PROGRESS_VISIBLE";
-		public static final String DATABASE_UPDATE_DONE = "DATABASE_UPDATE_DONE";
-	}
+	@InjectView(R.id.layout_tabs)
+	TabLayout tabLayout;
 
-	private boolean isDatabaseUpdateDone;
-	private boolean isProgressVisible;
+	@InjectView(R.id.pager_tabs)
+	ViewPager tabPager;
+
+	@Icicle
+	boolean isDatabaseUpdateDone;
+
+	@Icicle
+	boolean isProgressVisible;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 
+		setUpInjections();
+
 		setUpSavedState(savedInstanceState);
+
 		setUpUi();
 
 		setUpDatabaseUpdate();
 	}
 
+	private void setUpInjections() {
+		ButterKnife.inject(this);
+	}
+
 	private void setUpSavedState(Bundle state) {
-		if (state == null) {
-			return;
-		}
-
-		isDatabaseUpdateDone = loadDatabaseUpdateDone(state);
-		isProgressVisible = loadProgressVisible(state);
-	}
-
-	private boolean loadDatabaseUpdateDone(Bundle state) {
-		return state.getBoolean(SavedState.DATABASE_UPDATE_DONE);
-	}
-
-	private boolean loadProgressVisible(Bundle state) {
-		return state.getBoolean(SavedState.PROGRESS_VISIBLE);
+		Icepick.restoreInstanceState(this, state);
 	}
 
 	private void setUpUi() {
@@ -99,8 +99,6 @@ public class HomeActivity extends ActionBarActivity
 	}
 
 	private void setUpToolbar() {
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
 		setSupportActionBar(toolbar);
 	}
 
@@ -113,15 +111,8 @@ public class HomeActivity extends ActionBarActivity
 	}
 
 	private void setUpTabs() {
-		ViewPager tabsPager = getTabsPager();
-		tabsPager.setAdapter(new TabPagerAdapter(this, getSupportFragmentManager()));
-
-		TabLayout tabsLayout = (TabLayout) findViewById(R.id.layout_tabs);
-		tabsLayout.setUpTabPager(getSupportActionBar().getThemedContext(), tabsPager);
-	}
-
-	private ViewPager getTabsPager() {
-		return (ViewPager) findViewById(R.id.pager_tabs);
+		tabPager.setAdapter(new TabPagerAdapter(this, getSupportFragmentManager()));
+		tabLayout.setUpTabPager(getSupportActionBar().getThemedContext(), tabPager);
 	}
 
 	private void setUpProgress() {
@@ -131,20 +122,17 @@ public class HomeActivity extends ActionBarActivity
 	}
 
 	private void showProgress() {
-		ViewAnimator animator = (ViewAnimator) findViewById(R.id.animator);
-		animator.setDisplayedChild(animator.indexOfChild(findViewById(R.id.progress)));
+		ViewDirector.of(this, R.id.animator).show(R.id.progress);
+
+		isProgressVisible = true;
 	}
 
 	private void setUpDatabaseUpdate() {
 		if (!isDatabaseUpdateDone) {
 			DatabaseUpdateCheckingTask.execute(this);
 
-			saveDatabaseUpdateDone();
+			isDatabaseUpdateDone = true;
 		}
-	}
-
-	private void saveDatabaseUpdateDone() {
-		isDatabaseUpdateDone = true;
 	}
 
 	@Subscribe
@@ -153,28 +141,18 @@ public class HomeActivity extends ActionBarActivity
 	}
 
 	private void showDatabaseUpdateBanner() {
-		if (!isDatabaseUpdateBannerVisible()) {
-			DatabaseUpdateBanner.newInstance().show(getSupportFragmentManager());
-		}
+		Snackbar.with(this)
+			.duration(Snackbar.SnackbarDuration.LENGTH_LONG)
+			.text(R.string.message_updates)
+			.actionLabel(R.string.button_download)
+			.actionColorResource(R.color.background_bar)
+			.actionListener(this)
+			.show(this);
 	}
 
-	private boolean isDatabaseUpdateBannerVisible() {
-		return getDatabaseUpdateBanner() != null;
-	}
-
-	private DatabaseUpdateBanner getDatabaseUpdateBanner() {
-		return (DatabaseUpdateBanner) Fragments.Operator.at(this).get(DatabaseUpdateBanner.TAG);
-	}
-
-	@Subscribe
-	public void onDatabaseUpdateAccepted(DatabaseUpdateAcceptedEvent event) {
-		hideDatabaseUpdateBanner();
-
+	@Override
+	public void onActionClicked(Snackbar snackbar) {
 		startDatabaseUpdate();
-	}
-
-	private void hideDatabaseUpdateBanner() {
-		getDatabaseUpdateBanner().hide(getSupportFragmentManager());
 	}
 
 	private void startDatabaseUpdate() {
@@ -193,18 +171,13 @@ public class HomeActivity extends ActionBarActivity
 	}
 
 	private void hideProgress() {
-		ViewAnimator animator = (ViewAnimator) findViewById(R.id.animator);
-
 		if (Frames.at(this).areAvailable()) {
-			animator.setDisplayedChild(animator.indexOfChild(findViewById(R.id.layout_frames)));
+			ViewDirector.of(this, R.id.animator).show(R.id.layout_frames);
 		} else {
-			animator.setDisplayedChild(animator.indexOfChild(findViewById(R.id.pager_tabs)));
+			ViewDirector.of(this, R.id.animator).show(R.id.content);
 		}
-	}
 
-	@Subscribe
-	public void onDatabaseUpdatesDiscarded(DatabaseUpdateDiscardedEvent event) {
-		hideDatabaseUpdateBanner();
+		isProgressVisible = false;
 	}
 
 	@Override
@@ -241,11 +214,13 @@ public class HomeActivity extends ActionBarActivity
 
 	private SearchView getStopsSearchView(Menu menu) {
 		MenuItem stopsSearchMenuItem = menu.findItem(R.id.menu_stops_search);
+
 		return (SearchView) MenuItemCompat.getActionView(stopsSearchMenuItem);
 	}
 
 	private void setUpStopsSearchInformation(SearchView stopsSearchView) {
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
 		stopsSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 	}
 
@@ -258,13 +233,12 @@ public class HomeActivity extends ActionBarActivity
 	}
 
 	private void setUpStopsMap(Menu menu) {
-		if (!MapsUtil.with(this).areMapsHardwareAvailable()) {
-			disableStopsMap(menu);
+		if (MapsUtil.with(this).areMapsHardwareAvailable()) {
+			return;
 		}
-	}
 
-	private void disableStopsMap(Menu menu) {
 		MenuItem stopsMapMenuItem = menu.findItem(R.id.menu_stops_map);
+
 		stopsMapMenuItem.setVisible(false);
 	}
 
@@ -364,20 +338,10 @@ public class HomeActivity extends ActionBarActivity
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		saveDatabaseUpdateDone(outState);
-		saveProgressVisible(outState);
+		tearDownState(outState);
 	}
 
-	private void saveDatabaseUpdateDone(Bundle state) {
-		state.putBoolean(SavedState.DATABASE_UPDATE_DONE, isDatabaseUpdateDone);
-	}
-
-	private void saveProgressVisible(Bundle state) {
-		ViewAnimator animator = (ViewAnimator) findViewById(R.id.animator);
-
-		int visibleView = animator.getDisplayedChild();
-		int progressView = animator.indexOfChild(findViewById(R.id.progress));
-
-		state.putBoolean(SavedState.PROGRESS_VISIBLE, visibleView == progressView);
+	private void tearDownState(Bundle state) {
+		Icepick.saveInstanceState(this, state);
 	}
 }
