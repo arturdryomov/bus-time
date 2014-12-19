@@ -101,17 +101,13 @@ public final class Intents
 		}
 
 		public Intent buildGooglePlayAppIntent() {
-			String packageName = context.getPackageName();
-
-			String googlePlayUri = String.format(UriMasks.GOOGLE_PLAY_APP, packageName);
+			String googlePlayUri = String.format(UriMasks.GOOGLE_PLAY_APP, Android.getApplicationId());
 
 			return new Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayUri));
 		}
 
 		public Intent buildGooglePlayWebIntent() {
-			String packageName = context.getPackageName();
-
-			String googlePlayUri = String.format(UriMasks.GOOGLE_PLAY_WEB, packageName);
+			String googlePlayUri = String.format(UriMasks.GOOGLE_PLAY_WEB, Android.getApplicationId());
 
 			return new Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayUri));
 		}
