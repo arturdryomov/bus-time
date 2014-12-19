@@ -10,6 +10,8 @@
 	<color name="background_frame_window">#ddd</color>
 	<color name="background_route_path">#0099cc</color>
 
+	<color name="background_window">#f9f9f9</color>
+
 	<integer name="hue_marker_stop">195</integer>
 
 	<color name="text_application_name">#dfffffff</color>

@@ -71,20 +71,20 @@ public class TabLayout extends HorizontalScrollView implements ViewPager.OnPageC
 		addView(tabStrip, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 	}
 
-	public void setUpTabPager(@NonNull ViewPager tabPager) {
+	public void setUpTabPager(@NonNull Context context, @NonNull ViewPager tabPager) {
 		this.tabPager = tabPager;
 
 		tabStrip.removeAllViews();
 		tabPager.setOnPageChangeListener(this);
 
-		setUpTabs();
+		setUpTabs(context);
 	}
 
-	private void setUpTabs() {
+	private void setUpTabs(Context context) {
 		PagerAdapter tabPagerAdapter = tabPager.getAdapter();
 
 		for (int tabPosition = 0; tabPosition < tabPagerAdapter.getCount(); tabPosition++) {
-			TextView tab = buildTab(getContext());
+			TextView tab = buildTab(context);
 
 			tab.setText(tabPagerAdapter.getPageTitle(tabPosition));
 			tab.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
@@ -104,7 +104,7 @@ public class TabLayout extends HorizontalScrollView implements ViewPager.OnPageC
 		tab.setGravity(Gravity.CENTER);
 
 		if (Android.isHoneycombOrLater()) {
-			tab.setBackgroundResource(Views.getDrawableAttribute(getContext(), R.attr.selectableItemBackground));
+			tab.setBackgroundResource(Views.getDrawableAttribute(context, R.attr.selectableItemBackground));
 		}
 
 		if (Android.isIceCreamSandwichOrLater()) {

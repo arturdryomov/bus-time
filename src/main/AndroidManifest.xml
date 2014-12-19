@@ -39,8 +39,7 @@
 
 		<activity
 			android:launchMode="singleTop"
-			android:name=".activity.HomeActivity"
-			android:theme="@style/Theme.BusTime.Home">
+			android:name=".activity.HomeActivity">
 
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>

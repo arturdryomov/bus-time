@@ -9,6 +9,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -86,6 +87,8 @@ public class HomeActivity extends ActionBarActivity
 	}
 
 	private void setUpUi() {
+		setUpToolbar();
+
 		if (Frames.at(this).areAvailable()) {
 			setUpFrames();
 		} else {
@@ -93,6 +96,12 @@ public class HomeActivity extends ActionBarActivity
 		}
 
 		setUpProgress();
+	}
+
+	private void setUpToolbar() {
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+		setSupportActionBar(toolbar);
 	}
 
 	private void setUpFrames() {
@@ -108,7 +117,7 @@ public class HomeActivity extends ActionBarActivity
 		tabsPager.setAdapter(new TabPagerAdapter(this, getSupportFragmentManager()));
 
 		TabLayout tabsLayout = (TabLayout) findViewById(R.id.layout_tabs);
-		tabsLayout.setUpTabPager(tabsPager);
+		tabsLayout.setUpTabPager(getSupportActionBar().getThemedContext(), tabsPager);
 	}
 
 	private ViewPager getTabsPager() {

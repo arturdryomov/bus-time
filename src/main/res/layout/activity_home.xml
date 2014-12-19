@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ViewAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:auto="http://schemas.android.com/apk/res-auto"
 	android:id="@+id/animator"
 	android:inAnimation="@android:anim/fade_in"
 	android:outAnimation="@android:anim/fade_out"
@@ -11,9 +12,20 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
+		<android.support.v7.widget.Toolbar
+			android:elevation="8dp"
+			android:id="@+id/toolbar"
+			android:background="?colorPrimary"
+			auto:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+			auto:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+			android:minHeight="?actionBarSize"
+			android:layout_height="?actionBarSize"
+			android:layout_width="match_parent"/>
+
 		<ru.ming13.bustime.view.TabLayout
+			android:elevation="8dp"
 			android:id="@+id/layout_tabs"
-			android:background="?attr/colorPrimary"
+			android:background="?colorPrimary"
 			android:layout_width="match_parent"
 			android:layout_height="?actionBarSize"/>
 
