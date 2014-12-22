@@ -142,7 +142,7 @@ public class HomeActivity extends ActionBarActivity implements ActionClickListen
 
 	private void showDatabaseUpdateBanner() {
 		Snackbar.with(this)
-			.duration(Snackbar.SnackbarDuration.LENGTH_LONG)
+			.duration(Snackbar.SnackbarDuration.LENGTH_INDEFINITE)
 			.text(R.string.message_updates)
 			.actionLabel(R.string.button_download)
 			.actionColorResource(R.color.background_bar)

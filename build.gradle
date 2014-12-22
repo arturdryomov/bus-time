@@ -94,7 +94,7 @@ dependencies {
     compile "com.google.android.gms:play-services-maps:6.5.+"
     compile "com.google.maps.android:android-maps-utils:0.3.+"
     compile "com.jakewharton:butterknife:6.0.+"
-    compile "com.nispok:snackbar:2.6.+"
+    compile "com.nispok:snackbar:2.7.+"
     compile "com.squareup:otto:1.3.+"
     compile "com.squareup.retrofit:retrofit:1.8.+"
     compile "com.venmo.cursor:library:0.3"
