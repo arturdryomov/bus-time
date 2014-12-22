@@ -1,20 +1,19 @@
 package ru.ming13.bustime.adapter;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.venmo.cursor.support.IterableCursorAdapter;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ru.ming13.bustime.R;
-import ru.ming13.bustime.provider.BusTimeContract;
-import ru.ming13.bustime.util.Time;
+import ru.ming13.bustime.model.TimetableTime;
 
-public class TimetableAdapter extends CursorAdapter
+public class TimetableAdapter extends IterableCursorAdapter<TimetableTime>
 {
 	static final class TimeViewHolder
 	{
@@ -38,7 +37,7 @@ public class TimetableAdapter extends CursorAdapter
 	}
 
 	@Override
-	public View newView(Context context, Cursor timetableCursor, ViewGroup timeViewContainer) {
+	public View newView(Context context, TimetableTime timetableTime, ViewGroup timeViewContainer) {
 		View timeView = layoutInflater.inflate(R.layout.view_list_item_time, timeViewContainer, false);
 
 		timeView.setTag(new TimeViewHolder(timeView));
@@ -47,17 +46,10 @@ public class TimetableAdapter extends CursorAdapter
 	}
 
 	@Override
-	public void bindView(View timeView, Context context, Cursor timetableCursor) {
+	public void bindView(View timeView, Context context, TimetableTime timetableTime) {
 		TimeViewHolder timeViewHolder = (TimeViewHolder) timeView.getTag();
 
-		Time time = Time.from(getArrivalTime(timetableCursor));
-
-		timeViewHolder.exactTime.setText(time.toSystemString(context));
-		timeViewHolder.relativeTime.setText(time.toRelativeString(context));
-	}
-
-	private String getArrivalTime(Cursor timetableCursor) {
-		return timetableCursor.getString(
-			timetableCursor.getColumnIndex(BusTimeContract.Timetable.ARRIVAL_TIME));
+		timeViewHolder.exactTime.setText(timetableTime.getTime().toSystemString(context));
+		timeViewHolder.relativeTime.setText(timetableTime.getTime().toRelativeString(context));
 	}
 }

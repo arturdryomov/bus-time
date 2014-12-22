@@ -20,14 +20,17 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.venmo.cursor.CursorList;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
+import ru.ming13.bustime.cursor.StopsCursor;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Bartender;
@@ -111,19 +114,21 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 			return;
 		}
 
+		BusProvider.getBus().post(new StopSelectedEvent(getStop(stopMarker)));
+	}
+
+	private boolean isStopIdAvailable(Marker stopMarker) {
+		return (stopIds != null) && (stopIds.containsKey(stopMarker.getId()));
+	}
+
+	private Stop getStop(Marker stopMarker) {
 		long stopId = stopIds.get(stopMarker.getId());
 		String stopName = stopMarker.getTitle();
 		String stopDirection = stopMarker.getSnippet();
 		double stopLatitude = stopMarker.getPosition().latitude;
 		double stopLongitude = stopMarker.getPosition().longitude;
 
-		Stop stop = new Stop(stopId, stopName, stopDirection, stopLatitude, stopLongitude);
-
-		BusProvider.getBus().post(new StopSelectedEvent(stop));
-	}
-
-	private boolean isStopIdAvailable(Marker stopMarker) {
-		return (stopIds != null) && (stopIds.containsKey(stopMarker.getId()));
+		return new Stop(stopId, stopName, stopDirection, stopLatitude, stopLongitude);
 	}
 
 	private void setUpStops() {
@@ -132,7 +137,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private void setUpStopsIds() {
-		stopIds = new ArrayMap<String, Long>();
+		stopIds = new ArrayMap<>();
 	}
 
 	private void setUpStopsContent() {
@@ -150,70 +155,33 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> stopsLoader, Cursor stopsCursor) {
-		setUpStopsCursor(stopsCursor);
-		setUpStopsMarkers(stopsCursor);
+		List<Stop> stops = new CursorList<>(new StopsCursor(stopsCursor));
+
+		setUpStopsMarkers(stops);
 	}
 
-	private void setUpStopsCursor(Cursor stopsCursor) {
-		if (stopsCursor.isBeforeFirst()) {
-			return;
-		}
-
-		stopsCursor.moveToFirst();
-		stopsCursor.moveToPrevious();
-	}
-
-	private void setUpStopsMarkers(Cursor stopsCursor) {
+	private void setUpStopsMarkers(List<Stop> stops) {
 		GoogleMap map = getMap();
 
 		stopIds.clear();
 
-		while (stopsCursor.moveToNext()) {
-			Marker stopMarker = map.addMarker(buildStopMarkerOptions(stopsCursor));
-			stopIds.put(stopMarker.getId(), getStopId(stopsCursor));
+		for (Stop stop : stops) {
+			Marker stopMarker = map.addMarker(buildStopMarkerOptions(stop));
+
+			stopIds.put(stopMarker.getId(), stop.getId());
 		}
 	}
 
-	private MarkerOptions buildStopMarkerOptions(Cursor stopsCursor) {
-		String stopName = getStopName(stopsCursor);
-		String stopDirection = getStopDirection(stopsCursor);
-		double stopLatitude = getStopLatitude(stopsCursor);
-		double stopLongitude = getStopLongitude(stopsCursor);
-
+	private MarkerOptions buildStopMarkerOptions(Stop stop) {
 		return new MarkerOptions()
-			.title(stopName)
-			.snippet(stopDirection)
-			.position(new LatLng(stopLatitude, stopLongitude))
+			.title(stop.getName())
+			.snippet(stop.getDirection())
+			.position(new LatLng(stop.getLatitude(), stop.getLongitude()))
 			.icon(BitmapDescriptorFactory.defaultMarker(getStopMarkerHue()));
-	}
-
-	private String getStopName(Cursor stopsCursor) {
-		return stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.NAME));
-	}
-
-	private String getStopDirection(Cursor stopsCursor) {
-		return stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
-	}
-
-	private double getStopLatitude(Cursor stopsCursor) {
-		return stopsCursor.getDouble(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.LATITUDE));
-	}
-
-	private double getStopLongitude(Cursor stopsCursor) {
-		return stopsCursor.getDouble(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.LONGITUDE));
 	}
 
 	private float getStopMarkerHue() {
 		return getResources().getInteger(R.integer.hue_marker_stop);
-	}
-
-	private long getStopId(Cursor stopsCursor) {
-		return stopsCursor.getLong(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops._ID));
 	}
 
 	@Override
@@ -238,6 +206,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 
 	private void setUpSavedCameraPosition(Bundle state) {
 		CameraPosition cameraPosition = loadCameraPosition(state);
+
 		getMap().moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 	}
 

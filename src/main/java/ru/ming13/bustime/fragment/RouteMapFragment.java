@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.squareup.otto.Subscribe;
+import com.venmo.cursor.CursorList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,9 @@ import java.util.List;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RoutePathLoadedEvent;
+import ru.ming13.bustime.cursor.StopsCursor;
 import ru.ming13.bustime.model.Route;
+import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.task.RoutePathLoadingTask;
 import ru.ming13.bustime.util.Bartender;
@@ -121,82 +124,42 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> stopsLoader, Cursor stopsCursor) {
-		setUpStopsCursor(stopsCursor);
-		setUpStopsMarkers(stopsCursor);
+		List<Stop> stops = new CursorList<>(new StopsCursor(stopsCursor));
 
-		setUpStopsCursor(stopsCursor);
-		setUpRoutePath(stopsCursor);
-
-		setUpStopsCursor(stopsCursor);
-		setUpRouteArea(stopsCursor);
+		setUpStopsMarkers(stops);
+		setUpRoutePath(stops);
+		setUpRouteArea(stops);
 	}
 
-	private void setUpStopsCursor(Cursor stopsCursor) {
-		if (stopsCursor.isBeforeFirst()) {
-			return;
-		}
-
-		stopsCursor.moveToFirst();
-		stopsCursor.moveToPrevious();
-	}
-
-	private void setUpStopsMarkers(Cursor stopsCursor) {
+	private void setUpStopsMarkers(List<Stop> stops) {
 		GoogleMap map = getMap();
 
-		while (stopsCursor.moveToNext()) {
-			map.addMarker(buildStopMarkerOptions(stopsCursor));
+		for (Stop stop : stops) {
+			map.addMarker(buildStopMarkerOptions(stop));
 		}
 	}
 
-	private MarkerOptions buildStopMarkerOptions(Cursor stopsCursor) {
-		String stopName = getStopName(stopsCursor);
-		String stopDirection = getStopDirection(stopsCursor);
-		double stopLatitude = getStopLatitude(stopsCursor);
-		double stopLongitude = getStopLongitude(stopsCursor);
-
+	private MarkerOptions buildStopMarkerOptions(Stop stop) {
 		return new MarkerOptions()
-			.title(stopName)
-			.snippet(stopDirection)
-			.position(new LatLng(stopLatitude, stopLongitude))
+			.title(stop.getName())
+			.snippet(stop.getDirection())
+			.position(new LatLng(stop.getLatitude(), stop.getLongitude()))
 			.icon(BitmapDescriptorFactory.defaultMarker(getStopMarkerHue()));
-	}
-
-	private String getStopName(Cursor stopsCursor) {
-		return stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.NAME));
-	}
-
-	private String getStopDirection(Cursor stopsCursor) {
-		return stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
-	}
-
-	private double getStopLatitude(Cursor stopsCursor) {
-		return stopsCursor.getDouble(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.LATITUDE));
-	}
-
-	private double getStopLongitude(Cursor stopsCursor) {
-		return stopsCursor.getDouble(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.LONGITUDE));
 	}
 
 	private float getStopMarkerHue() {
 		return getResources().getInteger(R.integer.hue_marker_stop);
 	}
 
-	private void setUpRoutePath(Cursor stopsCursor) {
-		RoutePathLoadingTask.execute(getStopPositions(stopsCursor));
+	private void setUpRoutePath(List<Stop> stops) {
+		RoutePathLoadingTask.execute(getStopPositions(stops));
 	}
 
-	private List<LatLng> getStopPositions(Cursor stopsCursor) {
-		List<LatLng> stopPositions = new ArrayList<LatLng>();
+	private List<LatLng> getStopPositions(List<Stop> stops) {
+		List<LatLng> stopPositions = new ArrayList<>();
 
-		while (stopsCursor.moveToNext()) {
-			double stopLatitude = getStopLatitude(stopsCursor);
-			double stopLongitude = getStopLongitude(stopsCursor);
-
-			stopPositions.add(new LatLng(stopLatitude, stopLongitude));
+		for (Stop stop : stops) {
+			stopPositions.add(new LatLng(stop.getLatitude(), stop.getLongitude()));
 		}
 
 		return stopPositions;
@@ -204,10 +167,10 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 
 	@Subscribe
 	public void onRoutePathLoaded(RoutePathLoadedEvent event) {
-		setUpRoutePath(event.getPathPositions());
+		setUpRoutePathLine(event.getPathPositions());
 	}
 
-	private void setUpRoutePath(List<LatLng> routePathPositions) {
+	private void setUpRoutePathLine(List<LatLng> routePathPositions) {
 		GoogleMap map = getMap();
 
 		map.addPolyline(buildRoutePathOptions(routePathPositions));
@@ -228,20 +191,20 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 		return getResources().getColor(R.color.background_route_path);
 	}
 
-	private void setUpRouteArea(Cursor stopsCursor) {
+	private void setUpRouteArea(List<Stop> stops) {
 		GoogleMap map = getMap();
 
 		map.animateCamera(CameraUpdateFactory.newLatLngBounds(
-			buildRouteAreaBounds(stopsCursor),
+			buildRouteAreaBounds(stops),
 			getMapWidth(),
 			getMapHeight(),
 			getRouteAreaPadding()));
 	}
 
-	private LatLngBounds buildRouteAreaBounds(Cursor stopsCursor) {
+	private LatLngBounds buildRouteAreaBounds(List<Stop> stops) {
 		LatLngBounds.Builder routeAreaBounds = new LatLngBounds.Builder();
 
-		for (LatLng stopPosition : getStopPositions(stopsCursor)) {
+		for (LatLng stopPosition : getStopPositions(stops)) {
 			routeAreaBounds.include(stopPosition);
 		}
 

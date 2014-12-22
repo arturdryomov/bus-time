@@ -1,19 +1,19 @@
 package ru.ming13.bustime.adapter;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.venmo.cursor.support.IterableCursorAdapter;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ru.ming13.bustime.R;
-import ru.ming13.bustime.provider.BusTimeContract;
+import ru.ming13.bustime.model.Route;
 
-public class RoutesAdapter extends CursorAdapter
+public class RoutesAdapter extends IterableCursorAdapter<Route>
 {
 	static final class RouteViewHolder
 	{
@@ -37,7 +37,7 @@ public class RoutesAdapter extends CursorAdapter
 	}
 
 	@Override
-	public View newView(Context context, Cursor routesCursor, ViewGroup routeViewContainer) {
+	public View newView(Context context, Route route, ViewGroup routeViewContainer) {
 		View routeView = layoutInflater.inflate(R.layout.view_list_item_route, routeViewContainer, false);
 
 		routeView.setTag(new RouteViewHolder(routeView));
@@ -46,23 +46,10 @@ public class RoutesAdapter extends CursorAdapter
 	}
 
 	@Override
-	public void bindView(View routeView, Context context, Cursor routesCursor) {
+	public void bindView(View routeView, Context context, Route route) {
 		RouteViewHolder routeViewHolder = (RouteViewHolder) routeView.getTag();
 
-		String routeNumber = getRouteNumber(routesCursor);
-		String routeDescription = getRouteDescription(routesCursor);
-
-		routeViewHolder.routeNumber.setText(routeNumber);
-		routeViewHolder.routeDescription.setText(routeDescription);
-	}
-
-	private String getRouteNumber(Cursor routesCursor) {
-		return routesCursor.getString(
-			routesCursor.getColumnIndex(BusTimeContract.Routes.NUMBER));
-	}
-
-	private String getRouteDescription(Cursor routesCursor) {
-		return routesCursor.getString(
-			routesCursor.getColumnIndex(BusTimeContract.Routes.DESCRIPTION));
+		routeViewHolder.routeNumber.setText(route.getNumber());
+		routeViewHolder.routeDescription.setText(route.getDescription());
 	}
 }

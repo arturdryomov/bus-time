@@ -6,9 +6,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.venmo.cursor.CursorList;
+
+import java.util.List;
+
 import ru.ming13.bustime.bus.BusEvent;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopLoadedEvent;
+import ru.ming13.bustime.cursor.StopsCursor;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 
@@ -28,55 +33,31 @@ public class StopLoadingTask extends AsyncTask<Void, Void, BusEvent>
 
 	@Override
 	protected BusEvent doInBackground(Void... parameters) {
-		return new StopLoadedEvent(loadStop());
+		return new StopLoadedEvent(getStop());
 	}
 
-	private Stop loadStop() {
-		Cursor stopsCursor = loadStops();
-
-		try {
-			return getStop(stopsCursor);
-		} finally {
-			stopsCursor.close();
-		}
-	}
-
-	private Cursor loadStops() {
-		return contentResolver.query(getStopsUri(), null, null, null, null);
-	}
-
-	private Uri getStopsUri() {
-		return BusTimeContract.Stops.getStopsUri();
-	}
-
-	private Stop getStop(Cursor stopsCursor) {
-		stopsCursor.moveToPosition(getStopPosition(stopsCursor));
-
-		String stopName = stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.NAME));
-		String stopDirection = stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
-		double stopLatitude = stopsCursor.getDouble(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.LATITUDE));
-		double stopLongitude = stopsCursor.getDouble(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.LONGITUDE));
-
-		return new Stop(stopId, stopName, stopDirection, stopLatitude, stopLongitude);
-	}
-
-	private int getStopPosition(Cursor stopsCursor) {
-		while (stopsCursor.moveToNext()) {
-			if (getStopId(stopsCursor) == stopId) {
-				return stopsCursor.getPosition();
+	private Stop getStop() {
+		for (Stop stop : getStops()) {
+			if (stop.getId() == stopId) {
+				return stop;
 			}
 		}
 
 		throw new RuntimeException();
 	}
 
-	private long getStopId(Cursor stopsCursor) {
-		return stopsCursor.getLong(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops._ID));
+	private List<Stop> getStops() {
+		Cursor stopsCursor = contentResolver.query(getStopsUri(), null, null, null, null);
+
+		try {
+			return new CursorList<>(new StopsCursor(stopsCursor));
+		} finally {
+			stopsCursor.close();
+		}
+	}
+
+	private Uri getStopsUri() {
+		return BusTimeContract.Stops.getStopsUri();
 	}
 
 	@Override

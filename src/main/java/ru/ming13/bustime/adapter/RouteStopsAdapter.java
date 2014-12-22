@@ -1,22 +1,22 @@
 package ru.ming13.bustime.adapter;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.venmo.cursor.support.IterableCursorAdapter;
+
 import org.apache.commons.lang3.StringUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ru.ming13.bustime.R;
-import ru.ming13.bustime.provider.BusTimeContract;
+import ru.ming13.bustime.model.RouteStop;
 
-public class RouteStopsAdapter extends CursorAdapter
+public class RouteStopsAdapter extends IterableCursorAdapter<RouteStop>
 {
 	static final class StopViewHolder
 	{
@@ -49,7 +49,7 @@ public class RouteStopsAdapter extends CursorAdapter
 	}
 
 	@Override
-	public View newView(Context context, Cursor stopsCursor, ViewGroup stopViewContainer) {
+	public View newView(Context context, RouteStop routeStop, ViewGroup stopViewContainer) {
 		View stopView = layoutInflater.inflate(R.layout.view_list_item_route_stop, stopViewContainer, false);
 
 		stopView.setTag(new StopViewHolder(stopView));
@@ -58,22 +58,19 @@ public class RouteStopsAdapter extends CursorAdapter
 	}
 
 	@Override
-	public void bindView(View stopView, Context context, Cursor stopsCursor) {
+	public void bindView(View stopView, Context context, RouteStop routeStop) {
 		StopViewHolder stopViewHolder = (StopViewHolder) stopView.getTag();
 
-		String stopName = getStopName(stopsCursor);
-		String stopDirection = getStopDirection(stopsCursor);
+		stopViewHolder.stopName.setText(routeStop.getStop().getName());
+		stopViewHolder.stopDirection.setText(routeStop.getStop().getDirection());
 
-		stopViewHolder.stopName.setText(stopName);
-		stopViewHolder.stopDirection.setText(stopDirection);
-
-		if (StringUtils.isBlank(stopDirection)) {
+		if (StringUtils.isBlank(routeStop.getStop().getDirection())) {
 			stopViewHolder.stopDirection.setVisibility(View.GONE);
 		} else {
 			stopViewHolder.stopDirection.setVisibility(View.VISIBLE);
 		}
 
-		if (stopsCursor.isFirst()) {
+		if (getCursor().isFirst()) {
 			stopViewHolder.stopMarkerFirst.setVisibility(View.VISIBLE);
 			stopViewHolder.stopMarkerMiddle.setVisibility(View.GONE);
 			stopViewHolder.stopMarkerLast.setVisibility(View.GONE);
@@ -81,7 +78,7 @@ public class RouteStopsAdapter extends CursorAdapter
 			return;
 		}
 
-		if (stopsCursor.isLast()) {
+		if (getCursor().isLast()) {
 			stopViewHolder.stopMarkerFirst.setVisibility(View.GONE);
 			stopViewHolder.stopMarkerMiddle.setVisibility(View.GONE);
 			stopViewHolder.stopMarkerLast.setVisibility(View.VISIBLE);
@@ -92,15 +89,5 @@ public class RouteStopsAdapter extends CursorAdapter
 		stopViewHolder.stopMarkerFirst.setVisibility(View.GONE);
 		stopViewHolder.stopMarkerMiddle.setVisibility(View.VISIBLE);
 		stopViewHolder.stopMarkerLast.setVisibility(View.GONE);
-	}
-
-	private String getStopName(Cursor stopsCursor) {
-		return stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.NAME));
-	}
-
-	private String getStopDirection(Cursor stopsCursor) {
-		return stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
 	}
 }

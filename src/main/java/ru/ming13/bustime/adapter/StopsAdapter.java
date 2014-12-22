@@ -1,21 +1,21 @@
 package ru.ming13.bustime.adapter;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.venmo.cursor.support.IterableCursorAdapter;
 
 import org.apache.commons.lang3.StringUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ru.ming13.bustime.R;
-import ru.ming13.bustime.provider.BusTimeContract;
+import ru.ming13.bustime.model.Stop;
 
-public class StopsAdapter extends CursorAdapter
+public class StopsAdapter extends IterableCursorAdapter<Stop>
 {
 	static final class StopViewHolder
 	{
@@ -39,7 +39,7 @@ public class StopsAdapter extends CursorAdapter
 	}
 
 	@Override
-	public View newView(Context context, Cursor stopsCursor, ViewGroup stopViewContainer) {
+	public View newView(Context context, Stop stop, ViewGroup stopViewContainer) {
 		View stopView = layoutInflater.inflate(R.layout.view_list_item_stop, stopViewContainer, false);
 
 		stopView.setTag(new StopViewHolder(stopView));
@@ -48,29 +48,16 @@ public class StopsAdapter extends CursorAdapter
 	}
 
 	@Override
-	public void bindView(View stopView, Context context, Cursor stopsCursor) {
+	public void bindView(View stopView, Context context, Stop stop) {
 		StopViewHolder stopViewHolder = (StopViewHolder) stopView.getTag();
 
-		String stopName = getStopName(stopsCursor);
-		String stopDirection = getStopDirection(stopsCursor);
+		stopViewHolder.stopName.setText(stop.getName());
+		stopViewHolder.stopDirection.setText(stop.getDirection());
 
-		stopViewHolder.stopName.setText(stopName);
-		stopViewHolder.stopDirection.setText(stopDirection);
-
-		if (StringUtils.isBlank(stopDirection)) {
+		if (StringUtils.isBlank(stop.getDirection())) {
 			stopViewHolder.stopDirection.setVisibility(View.GONE);
 		} else {
 			stopViewHolder.stopDirection.setVisibility(View.VISIBLE);
 		}
-	}
-
-	private String getStopName(Cursor stopsCursor) {
-		return stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.NAME));
-	}
-
-	private String getStopDirection(Cursor stopsCursor) {
-		return stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
 	}
 }

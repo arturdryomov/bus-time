@@ -6,9 +6,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.venmo.cursor.CursorList;
+
+import java.util.List;
+
 import ru.ming13.bustime.bus.BusEvent;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.TimetableInformationLoadedEvent;
+import ru.ming13.bustime.cursor.TimetableCursor;
+import ru.ming13.bustime.model.TimetableTime;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Time;
 
@@ -49,7 +55,7 @@ public class TimetableInformationLoadingTask extends AsyncTask<Void, Void, BusEv
 	}
 
 	private int getFullWeekTripsCount() {
-		Cursor timetableCursor = loadFullWeekTimetable();
+		Cursor timetableCursor = getFullWeekTimetableCursor();
 
 		try {
 			return timetableCursor.getCount();
@@ -58,7 +64,7 @@ public class TimetableInformationLoadingTask extends AsyncTask<Void, Void, BusEv
 		}
 	}
 
-	private Cursor loadFullWeekTimetable() {
+	private Cursor getFullWeekTimetableCursor() {
 		return contentResolver.query(getFullWeekTimetableUri(), null, null, null, null);
 	}
 
@@ -71,38 +77,37 @@ public class TimetableInformationLoadingTask extends AsyncTask<Void, Void, BusEv
 	}
 
 	private int getClosestTimePosition(int timetableType) {
-		Cursor timetableCursor = loadTimetable(timetableType);
-
-		try {
-			return getClosestTimePosition(timetableCursor);
-		} finally {
-			timetableCursor.close();
-		}
+		return getClosestTimePosition(getTimetable(timetableType));
 	}
 
-	private Cursor loadTimetable(int timetableType) {
-		return contentResolver.query(getTimetableUri(timetableType), null, null, null, null);
-	}
-
-	private int getClosestTimePosition(Cursor timetableCursor) {
+	private int getClosestTimePosition(List<TimetableTime> timetable) {
 		String currentTime = Time.current().toDatabaseString();
 
-		while (timetableCursor.moveToNext()) {
-			if (isAfter(getTimeString(timetableCursor), currentTime)) {
-				return timetableCursor.getPosition();
+		for (int timePosition = 0; timePosition < timetable.size(); timePosition++) {
+			if (isAfter(timetable.get(timePosition).getTime().toDatabaseString(), currentTime)) {
+				return timePosition;
 			}
 		}
 
 		return DEFAULT_TIME_POSITION;
 	}
 
-	private boolean isAfter(String time, String currentTime) {
-		return time.compareTo(currentTime) >= 0;
+	private List<TimetableTime> getTimetable(int timetableType) {
+		Cursor timetableCursor = getTimetableCursor(timetableType);
+
+		try {
+			return new CursorList<>(new TimetableCursor(timetableCursor));
+		} finally {
+			timetableCursor.close();
+		}
 	}
 
-	private String getTimeString(Cursor timetableCursor) {
-		return timetableCursor.getString(
-			timetableCursor.getColumnIndex(BusTimeContract.Timetable.ARRIVAL_TIME));
+	private Cursor getTimetableCursor(int timetableType) {
+		return contentResolver.query(getTimetableUri(timetableType), null, null, null, null);
+	}
+
+	private boolean isAfter(String time, String currentTime) {
+		return time.compareTo(currentTime) >= 0;
 	}
 
 	@Override

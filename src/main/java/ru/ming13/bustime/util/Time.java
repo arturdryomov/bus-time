@@ -3,6 +3,8 @@ package ru.ming13.bustime.util;
 import android.content.Context;
 import android.text.format.DateFormat;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,10 +34,14 @@ public final class Time
 	}
 
 	private static Date buildDate(String databaseTimeString) {
+		if (StringUtils.isBlank(databaseTimeString)) {
+			return new Date(0);
+		}
+
 		try {
 			return Formatters.getDatabaseTimeFormatter().parse(databaseTimeString);
 		} catch (ParseException e) {
-			return new Date();
+			return new Date(0);
 		}
 	}
 
@@ -46,6 +52,10 @@ public final class Time
 		calendar.set(Calendar.MILLISECOND, 0);
 
 		return new Time(calendar);
+	}
+
+	public boolean isEmpty() {
+		return date.getTime() == 0;
 	}
 
 	public boolean isWeekend() {

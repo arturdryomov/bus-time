@@ -20,7 +20,7 @@ import ru.ming13.bustime.animation.ListOrderAnimator;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.bus.TimeChangedEvent;
-import ru.ming13.bustime.model.Route;
+import ru.ming13.bustime.cursor.StopRoutesCursor;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Fragments;
@@ -98,7 +98,7 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 		ListOrderAnimator animator = new ListOrderAnimator(getListView());
 		animator.saveListState();
 
-		getRoutesAdapter().swapCursor(routesCursor);
+		getRoutesAdapter().swapCursor(new StopRoutesCursor(routesCursor));
 
 		animator.animateReorderedListState();
 	}
@@ -109,29 +109,13 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> routesLoader) {
-		getRoutesAdapter().swapCursor(null);
 	}
 
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 
-		BusProvider.getBus().post(new RouteSelectedEvent(getRoute(id, position)));
-	}
-
-	private Route getRoute(long routeId, int routePosition) {
-		Cursor routesCursor = getRoutesCursor(routePosition);
-
-		String routeNumber = routesCursor.getString(
-			routesCursor.getColumnIndex(BusTimeContract.Routes.NUMBER));
-		String routeDescription = routesCursor.getString(
-			routesCursor.getColumnIndex(BusTimeContract.Routes.DESCRIPTION));
-
-		return new Route(routeId, routeNumber, routeDescription);
-	}
-
-	private Cursor getRoutesCursor(int routePosition) {
-		return (Cursor) getRoutesAdapter().getItem(routePosition);
+		BusProvider.getBus().post(new RouteSelectedEvent(getRoutesAdapter().getItem(position).getRoute()));
 	}
 
 	@Override

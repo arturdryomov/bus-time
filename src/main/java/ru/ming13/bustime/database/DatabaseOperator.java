@@ -52,9 +52,7 @@ public final class DatabaseOperator
 			File tempFile = File.createTempFile("bustime", null, context.getCacheDir());
 			FileUtils.copyInputStreamToFile(fileContents, tempFile);
 			return tempFile;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (NullPointerException e) {
+		} catch (IOException | NullPointerException e) {
 			throw new RuntimeException(e);
 		}
 	}

@@ -21,6 +21,7 @@ import ru.ming13.bustime.adapter.TimetableAdapter;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.TimeChangedEvent;
 import ru.ming13.bustime.bus.TimetableInformationLoadedEvent;
+import ru.ming13.bustime.cursor.TimetableCursor;
 import ru.ming13.bustime.model.Route;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
@@ -157,7 +158,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> timetableLoader, Cursor timetableCursor) {
-		getTimetableAdapter().swapCursor(timetableCursor);
+		getTimetableAdapter().swapCursor(new TimetableCursor(timetableCursor));
 
 		if (isTimetableEmpty(timetableCursor)) {
 			showMessage();
@@ -197,7 +198,6 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> timetableCursor) {
-		getTimetableAdapter().swapCursor(null);
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class TabLayout extends HorizontalScrollView implements ViewPager.OnPageC
 	private final float tabOffset;
 	private int tabScrollState;
 
-	public TabLayout(Context context) {
+	public TabLayout(Context context, int colorRes) {
 		this(context, null);
 	}
 

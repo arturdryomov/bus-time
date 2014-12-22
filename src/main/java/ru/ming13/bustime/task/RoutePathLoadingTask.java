@@ -34,7 +34,7 @@ public class RoutePathLoadingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private List<LatLng> getPathPositions() {
-		List<LatLng> positions = new ArrayList<LatLng>();
+		List<LatLng> positions = new ArrayList<>();
 
 		for (List<LatLng> positionsPartition : partitionPositions(stopPositions, getPositionsPartitionSize())) {
 			LatLng originPosition = positionsPartition.get(0);
@@ -48,7 +48,7 @@ public class RoutePathLoadingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private List<List<LatLng>> partitionPositions(List<LatLng> positions, int partitionSize) {
-		List<List<LatLng>> partitions = new ArrayList<List<LatLng>>();
+		List<List<LatLng>> partitions = new ArrayList<>();
 
 		int partitionStart = 0;
 
