@@ -1,5 +1,7 @@
 package ru.ming13.bustime.direction;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
 
@@ -38,7 +40,7 @@ public class Navigator
 		return directionsAdapter.create(DirectionsApi.class);
 	}
 
-	public List<LatLng> getDirectionPolylinePositions(LatLng originPosition, LatLng destinationPosition, List<LatLng> waypointPositions) {
+	public List<LatLng> getDirectionPolylinePositions(@NonNull LatLng originPosition, @NonNull LatLng destinationPosition, @NonNull List<LatLng> waypointPositions) {
 		try {
 			DirectionsInformation directionsInformation = directionsApi.getDirectionsInformation(
 				formatPosition(originPosition),

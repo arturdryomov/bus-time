@@ -2,6 +2,7 @@ package ru.ming13.bustime.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import org.apache.commons.io.FileUtils;
 
@@ -15,7 +16,7 @@ public final class DatabaseOperator
 {
 	private final Context context;
 
-	public static DatabaseOperator with(Context context) {
+	public static DatabaseOperator with(@NonNull Context context) {
 		return new DatabaseOperator(context);
 	}
 
@@ -35,7 +36,7 @@ public final class DatabaseOperator
 		return buildDatabaseFile().getPath();
 	}
 
-	public void replaceDatabaseFile(InputStream databaseContents) {
+	public void replaceDatabaseFile(@NonNull InputStream databaseContents) {
 		try {
 			File tempDatabaseFile = buildTempFile(databaseContents);
 			File databaseFile = buildDatabaseFile();
@@ -57,7 +58,7 @@ public final class DatabaseOperator
 		}
 	}
 
-	public void replaceDatabaseContents(InputStream databaseContents) {
+	public void replaceDatabaseContents(@NonNull InputStream databaseContents) {
 		SQLiteDatabase database = new DatabaseOpenHelper(context).getWritableDatabase();
 		File tempDatabaseFile = buildTempFile(databaseContents);
 

@@ -1,6 +1,7 @@
 package ru.ming13.bustime.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ public class StopsAdapter extends IterableCursorAdapter<Stop>
 
 	private final LayoutInflater layoutInflater;
 
-	public StopsAdapter(Context context) {
+	public StopsAdapter(@NonNull Context context) {
 		super(context, null, 0);
 
 		layoutInflater = LayoutInflater.from(context);

@@ -103,8 +103,8 @@ public class HomeActivity extends ActionBarActivity implements ActionClickListen
 	}
 
 	private void setUpFrames() {
-		Frames.at(this).setLeftFrameTitle(getString(R.string.title_routes));
-		Frames.at(this).setRightFrameTitle(getString(R.string.title_stops));
+		Frames.at(this).setLeftFrameTitle(R.string.title_routes);
+		Frames.at(this).setRightFrameTitle(R.string.title_stops);
 
 		Fragments.Operator.at(this).set(RoutesFragment.newInstance(), R.id.container_left_frame);
 		Fragments.Operator.at(this).set(StopsFragment.newInstance(), R.id.container_right_frame);

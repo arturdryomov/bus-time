@@ -77,8 +77,8 @@ public class RouteStopsActivity extends ActionBarActivity
 	}
 
 	private void setUpFrameTitles() {
-		Frames.at(this).setLeftFrameTitle(getString(R.string.title_stops));
-		Frames.at(this).setRightFrameTitle(getString(R.string.title_timetable));
+		Frames.at(this).setLeftFrameTitle(R.string.title_stops);
+		Frames.at(this).setRightFrameTitle(R.string.title_timetable);
 	}
 
 	private void setUpMessageFragment() {

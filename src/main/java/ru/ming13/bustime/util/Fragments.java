@@ -1,5 +1,6 @@
 package ru.ming13.bustime.util;
 
+import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -44,7 +45,7 @@ public final class Fragments
 			this.fragmentManager = activity.getSupportFragmentManager();
 		}
 
-		public Fragment get(int fragmentContainerId) {
+		public Fragment get(@IdRes int fragmentContainerId) {
 			return fragmentManager.findFragmentById(fragmentContainerId);
 		}
 
@@ -52,7 +53,7 @@ public final class Fragments
 			return fragmentManager.findFragmentByTag(fragmentTag);
 		}
 
-		public void set(Fragment fragment, int fragmentContainerId) {
+		public void set(Fragment fragment, @IdRes int fragmentContainerId) {
 			if (!isSet(fragmentContainerId)) {
 				fragmentManager
 					.beginTransaction()
@@ -61,11 +62,11 @@ public final class Fragments
 			}
 		}
 
-		private boolean isSet(int fragmentContainerId) {
+		private boolean isSet(@IdRes int fragmentContainerId) {
 			return get(fragmentContainerId) != null;
 		}
 
-		public void resetFading(Fragment fragment, int fragmentContainerId) {
+		public void resetFading(Fragment fragment, @IdRes int fragmentContainerId) {
 			fragmentManager
 				.beginTransaction()
 				.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -73,7 +74,7 @@ public final class Fragments
 				.commit();
 		}
 
-		public void resetSliding(Fragment fragment, int fragmentContainerId) {
+		public void resetSliding(Fragment fragment, @IdRes int fragmentContainerId) {
 			fragmentManager
 				.beginTransaction()
 				.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)

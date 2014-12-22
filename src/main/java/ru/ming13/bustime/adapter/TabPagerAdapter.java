@@ -1,6 +1,7 @@
 package ru.ming13.bustime.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -24,7 +25,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter
 
 	private final Context context;
 
-	public TabPagerAdapter(Context context, FragmentManager fragmentManager) {
+	public TabPagerAdapter(@NonNull Context context, @NonNull FragmentManager fragmentManager) {
 		super(fragmentManager);
 
 		this.context = context.getApplicationContext();
