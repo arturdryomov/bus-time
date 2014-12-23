@@ -14,9 +14,9 @@ public class TabPagerAdapter extends FragmentPagerAdapter
 {
 	private static final int TAB_COUNT = 2;
 
-	public static final class TabPosition
+	public static final class TabPositions
 	{
-		private TabPosition() {
+		private TabPositions() {
 		}
 
 		public static final int ROUTES = 0;
@@ -34,10 +34,10 @@ public class TabPagerAdapter extends FragmentPagerAdapter
 	@Override
 	public Fragment getItem(int position) {
 		switch (position) {
-			case TabPosition.ROUTES:
+			case TabPositions.ROUTES:
 				return RoutesFragment.newInstance();
 
-			case TabPosition.STOPS:
+			case TabPositions.STOPS:
 				return StopsFragment.newInstance();
 
 			default:
@@ -48,14 +48,14 @@ public class TabPagerAdapter extends FragmentPagerAdapter
 	@Override
 	public CharSequence getPageTitle(int position) {
 		switch (position) {
-			case TabPosition.ROUTES:
+			case TabPositions.ROUTES:
 				return context.getString(R.string.title_routes);
 
-			case TabPosition.STOPS:
+			case TabPositions.STOPS:
 				return context.getString(R.string.title_stops);
 
 			default:
-				return super.getPageTitle(position);
+				return null;
 		}
 	}
 

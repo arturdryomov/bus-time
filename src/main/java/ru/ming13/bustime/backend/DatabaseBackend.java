@@ -17,11 +17,11 @@ public class DatabaseBackend
 {
 	private final DatabaseBackendApi backendApi;
 
-	public static DatabaseBackend with(Context context) {
+	public static DatabaseBackend with(@NonNull Context context) {
 		return new DatabaseBackend(context);
 	}
 
-	private DatabaseBackend(@NonNull Context context) {
+	private DatabaseBackend(Context context) {
 		this.backendApi = buildBackendApi(context);
 	}
 

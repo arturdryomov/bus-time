@@ -56,35 +56,35 @@ public final class Intents
 			return new Intent(context, StopsMapActivity.class);
 		}
 
-		public Intent buildRouteMapIntent(Route route) {
+		public Intent buildRouteMapIntent(@NonNull Route route) {
 			Intent intent = new Intent(context, RouteMapActivity.class);
 			intent.putExtra(Extras.ROUTE, route);
 
 			return intent;
 		}
 
-		public Intent buildStopMapIntent(Stop stop) {
+		public Intent buildStopMapIntent(@NonNull Stop stop) {
 			Intent intent = new Intent(context, StopMapActivity.class);
 			intent.putExtra(Extras.STOP, stop);
 
 			return intent;
 		}
 
-		public Intent buildRouteStopsIntent(Route route) {
+		public Intent buildRouteStopsIntent(@NonNull Route route) {
 			Intent intent = new Intent(context, RouteStopsActivity.class);
 			intent.putExtra(Extras.ROUTE, route);
 
 			return intent;
 		}
 
-		public Intent buildStopRoutesIntent(Stop stop) {
+		public Intent buildStopRoutesIntent(@NonNull Stop stop) {
 			Intent intent = new Intent(context, StopRoutesActivity.class);
 			intent.putExtra(Extras.STOP, stop);
 
 			return intent;
 		}
 
-		public Intent buildTimetableIntent(Route route, Stop stop) {
+		public Intent buildTimetableIntent(@NonNull Route route, @NonNull Stop stop) {
 			Intent intent = new Intent(context, TimetableActivity.class);
 			intent.putExtra(Extras.ROUTE, route);
 			intent.putExtra(Extras.STOP, stop);

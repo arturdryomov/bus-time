@@ -46,7 +46,7 @@ public class RouteStopsAdapter extends IterableCursorAdapter<RouteStop>
 	public RouteStopsAdapter(@NonNull Context context) {
 		super(context, null, 0);
 
-		layoutInflater = LayoutInflater.from(context);
+		this.layoutInflater = LayoutInflater.from(context);
 	}
 
 	@Override

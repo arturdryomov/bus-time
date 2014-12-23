@@ -1,6 +1,7 @@
 package ru.ming13.bustime.task;
 
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -18,7 +19,7 @@ public class RoutePathLoadingTask extends AsyncTask<Void, Void, BusEvent>
 
 	private final List<LatLng> stopPositions;
 
-	public static void execute(List<LatLng> stopPositions) {
+	public static void execute(@NonNull List<LatLng> stopPositions) {
 		new RoutePathLoadingTask(stopPositions).execute();
 	}
 

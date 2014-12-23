@@ -3,6 +3,7 @@ package ru.ming13.bustime.fragment;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -55,7 +56,7 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 		public static final int ZOOM = 11;
 	}
 
-	public static RouteMapFragment newInstance(Route route) {
+	public static RouteMapFragment newInstance(@NonNull Route route) {
 		RouteMapFragment fragment = new RouteMapFragment();
 
 		fragment.setArguments(buildArguments(route));

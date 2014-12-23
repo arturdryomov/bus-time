@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import com.venmo.cursor.CursorList;
 
@@ -22,7 +23,7 @@ public class StopLoadingTask extends AsyncTask<Void, Void, BusEvent>
 	private final ContentResolver contentResolver;
 	private final long stopId;
 
-	public static void execute(Context context, long stopId) {
+	public static void execute(@NonNull Context context, long stopId) {
 		new StopLoadingTask(context, stopId).execute();
 	}
 

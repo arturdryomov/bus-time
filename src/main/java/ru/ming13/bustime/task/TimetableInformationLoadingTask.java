@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import com.venmo.cursor.CursorList;
 
@@ -25,7 +26,7 @@ public class TimetableInformationLoadingTask extends AsyncTask<Void, Void, BusEv
 	private final ContentResolver contentResolver;
 	private final Uri timetableUri;
 
-	public static void execute(Context context, Uri timetableUri) {
+	public static void execute(@NonNull Context context, @NonNull Uri timetableUri) {
 		new TimetableInformationLoadingTask(context, timetableUri).execute();
 	}
 

@@ -25,21 +25,21 @@ public final class DatabaseOperator
 	}
 
 	public boolean databaseExists() {
-		return buildDatabaseFile().exists();
+		return getDatabaseFile().exists();
 	}
 
-	private File buildDatabaseFile() {
+	private File getDatabaseFile() {
 		return context.getDatabasePath(DatabaseSchema.DATABASE_NAME).getAbsoluteFile();
 	}
 
 	public String getDatabasePath() {
-		return buildDatabaseFile().getPath();
+		return getDatabaseFile().getPath();
 	}
 
 	public void replaceDatabaseFile(@NonNull InputStream databaseContents) {
 		try {
-			File tempDatabaseFile = buildTempFile(databaseContents);
-			File databaseFile = buildDatabaseFile();
+			File tempDatabaseFile = getTempFile(databaseContents);
+			File databaseFile = getDatabaseFile();
 
 			FileUtils.copyFile(tempDatabaseFile, databaseFile);
 			tempDatabaseFile.delete();
@@ -48,7 +48,7 @@ public final class DatabaseOperator
 		}
 	}
 
-	private File buildTempFile(InputStream fileContents) {
+	private File getTempFile(InputStream fileContents) {
 		try {
 			File tempFile = File.createTempFile("bustime", null, context.getCacheDir());
 			FileUtils.copyInputStreamToFile(fileContents, tempFile);
@@ -60,7 +60,7 @@ public final class DatabaseOperator
 
 	public void replaceDatabaseContents(@NonNull InputStream databaseContents) {
 		SQLiteDatabase database = new DatabaseOpenHelper(context).getWritableDatabase();
-		File tempDatabaseFile = buildTempFile(databaseContents);
+		File tempDatabaseFile = getTempFile(databaseContents);
 
 		deleteDatabaseContents(database);
 		insertDatabaseContents(database, tempDatabaseFile);
@@ -86,22 +86,22 @@ public final class DatabaseOperator
 	}
 
 	private void insertDatabaseContents(SQLiteDatabase database, File databaseContentsFile) {
-		database.execSQL(SqlBuilder.buildAttachClause(databaseContentsFile.getAbsolutePath(), "db"));
+		database.execSQL(SqlBuilder.buildAttachClause(databaseContentsFile.getAbsolutePath(), DatabaseSchema.Aliases.DATABASE));
 
 		try {
 			database.beginTransaction();
 
-			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.ROUTES, "db"));
-			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.TRIP_TYPES, "db"));
-			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.TRIPS, "db"));
-			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.STOPS, "db"));
-			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.ROUTES_AND_STOPS, "db"));
+			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.ROUTES, DatabaseSchema.Aliases.DATABASE));
+			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.TRIP_TYPES, DatabaseSchema.Aliases.DATABASE));
+			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.TRIPS, DatabaseSchema.Aliases.DATABASE));
+			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.STOPS, DatabaseSchema.Aliases.DATABASE));
+			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.ROUTES_AND_STOPS, DatabaseSchema.Aliases.DATABASE));
 
 			database.setTransactionSuccessful();
 		} finally {
 			database.endTransaction();
 		}
 
-		database.execSQL(SqlBuilder.buildDetachClause("db"));
+		database.execSQL(SqlBuilder.buildDetachClause(DatabaseSchema.Aliases.DATABASE));
 	}
 }

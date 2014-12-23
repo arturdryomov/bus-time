@@ -34,7 +34,7 @@ public class TimetableAdapter extends IterableCursorAdapter<TimetableTime>
 	public TimetableAdapter(@NonNull Context context) {
 		super(context, null, 0);
 
-		layoutInflater = LayoutInflater.from(context);
+		this.layoutInflater = LayoutInflater.from(context);
 	}
 
 	@Override

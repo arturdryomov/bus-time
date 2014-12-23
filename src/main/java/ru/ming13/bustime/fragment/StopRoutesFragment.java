@@ -3,6 +3,7 @@ package ru.ming13.bustime.fragment;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -30,7 +31,7 @@ import ru.ming13.bustime.util.Timer;
 
 public class StopRoutesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
-	public static StopRoutesFragment newInstance(Stop stop) {
+	public static StopRoutesFragment newInstance(@NonNull Stop stop) {
 		StopRoutesFragment fragment = new StopRoutesFragment();
 
 		fragment.setArguments(buildArguments(stop));

@@ -1,6 +1,7 @@
 package ru.ming13.bustime.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,7 +35,7 @@ public class StopMapFragment extends SupportMapFragment
 		public static final int ZOOM = 15;
 	}
 
-	public static StopMapFragment newInstance(Stop stop) {
+	public static StopMapFragment newInstance(@NonNull Stop stop) {
 		StopMapFragment fragment = new StopMapFragment();
 
 		fragment.setArguments(buildArguments(stop));

@@ -23,14 +23,14 @@ public final class ViewDirector
 		return new ViewDirector(fragment, animatorId);
 	}
 
-	private ViewDirector(@NonNull Activity activity, @IdRes int animatorId) {
+	private ViewDirector(Activity activity, int animatorId) {
 		this.activity = activity;
 		this.fragment = null;
 
 		this.animatorId = animatorId;
 	}
 
-	private ViewDirector(@NonNull Fragment fragment, @IdRes int animatorId) {
+	private ViewDirector(Fragment fragment, int animatorId) {
 		this.activity = null;
 		this.fragment = fragment;
 
@@ -46,7 +46,7 @@ public final class ViewDirector
 		}
 	}
 
-	private View findView(@IdRes int viewId) {
+	private View findView(int viewId) {
 		if (activity != null) {
 			return activity.findViewById(viewId);
 		} else {

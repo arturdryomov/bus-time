@@ -11,7 +11,13 @@ import android.widget.ListView;
 
 public final class ListOrderAnimator
 {
-	private static final int ANIMATION_DURATION_IN_MILLIS = 300;
+	private static final class Durations
+	{
+		private Durations() {
+		}
+
+		public static final int ANIMATION_IN_MILLIS = 300;
+	}
 
 	private final Interpolator animationInterpolator;
 
@@ -86,7 +92,7 @@ public final class ListOrderAnimator
 
 		Animation animation = new TranslateAnimation(0, 0, -listItemPositionFromTopDelta, 0);
 		animation.setInterpolator(animationInterpolator);
-		animation.setDuration(ANIMATION_DURATION_IN_MILLIS);
+		animation.setDuration(Durations.ANIMATION_IN_MILLIS);
 
 		listItemView.startAnimation(animation);
 	}

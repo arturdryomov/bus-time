@@ -1,6 +1,7 @@
 package ru.ming13.bustime.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,7 @@ import ru.ming13.bustime.util.Fragments;
 
 public class MessageFragment extends Fragment
 {
-	public static MessageFragment newInstance(String message) {
+	public static MessageFragment newInstance(@Nullable String message) {
 		MessageFragment fragment = new MessageFragment();
 
 		fragment.setArguments(buildArguments(message));

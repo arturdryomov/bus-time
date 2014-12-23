@@ -37,7 +37,7 @@ public class StopRoutesAdapter extends IterableCursorAdapter<StopRoute>
 	public StopRoutesAdapter(@NonNull Context context) {
 		super(context, null, 0);
 
-		layoutInflater = LayoutInflater.from(context);
+		this.layoutInflater = LayoutInflater.from(context);
 	}
 
 	@Override

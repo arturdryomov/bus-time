@@ -3,6 +3,7 @@ package ru.ming13.bustime.task;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import java.io.InputStream;
 
@@ -18,7 +19,7 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 {
 	private final Context context;
 
-	public static void execute(Context context) {
+	public static void execute(@NonNull Context context) {
 		new DatabaseUpdatingTask(context).execute();
 	}
 

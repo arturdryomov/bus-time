@@ -3,6 +3,7 @@ package ru.ming13.bustime.fragment;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -32,9 +33,15 @@ import ru.ming13.bustime.util.Timer;
 
 public class TimetableFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
-	private static final int PAST_VISIBLE_TRIPS_COUNT = 1;
+	private static final class Defaults
+	{
+		private Defaults() {
+		}
 
-	public static TimetableFragment newInstance(Route route, Stop stop) {
+		private static final int PAST_VISIBLE_TRIPS_COUNT = 1;
+	}
+
+	public static TimetableFragment newInstance(@NonNull Route route, @NonNull Stop stop) {
 		TimetableFragment fragment = new TimetableFragment();
 
 		fragment.setArguments(buildArguments(route, stop));
@@ -184,7 +191,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 	private void showTimetableClosestTrip() {
 		if (isTimetableClosestTripAvailable()) {
-			setSelection(timetableClosestTripPosition - PAST_VISIBLE_TRIPS_COUNT);
+			setSelection(timetableClosestTripPosition - Defaults.PAST_VISIBLE_TRIPS_COUNT);
 		}
 	}
 

@@ -18,6 +18,14 @@ public class DatabaseSchema
 		public static final int INITIAL = 1;
 	}
 
+	public static final class Aliases
+	{
+		private Aliases() {
+		}
+
+		public static final String DATABASE = "db";
+	}
+
 	public static final class Tables
 	{
 		private Tables() {

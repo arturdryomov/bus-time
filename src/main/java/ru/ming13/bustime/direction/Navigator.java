@@ -24,7 +24,13 @@ public class Navigator
 		public static final int WAYPOINTS_COUNT = 8;
 	}
 
-	private static final String MAPS_URL = "https://maps.googleapis.com/maps/api";
+	private static final class Urls
+	{
+		private Urls() {
+		}
+
+		public static final String ENDPOINT = "https://maps.googleapis.com/maps/api";
+	}
 
 	private final DirectionsApi directionsApi;
 
@@ -34,7 +40,7 @@ public class Navigator
 
 	private DirectionsApi buildDirectionsApi() {
 		RestAdapter directionsAdapter = new RestAdapter.Builder()
-			.setEndpoint(MAPS_URL)
+			.setEndpoint(Urls.ENDPOINT)
 			.build();
 
 		return directionsAdapter.create(DirectionsApi.class);
