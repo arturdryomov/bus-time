@@ -1,6 +1,7 @@
 package ru.ming13.bustime.util;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,7 +13,7 @@ public final class TitleBuilder
 {
 	private final Context context;
 
-	public static TitleBuilder with(Context context) {
+	public static TitleBuilder with(@NonNull Context context) {
 		return new TitleBuilder(context);
 	}
 
@@ -20,11 +21,11 @@ public final class TitleBuilder
 		this.context = context;
 	}
 
-	public String buildRouteTitle(Route route) {
+	public String buildRouteTitle(@NonNull Route route) {
 		return context.getString(R.string.mask_route_title, route.getNumber(), route.getDescription());
 	}
 
-	public String buildStopTitle(Stop stop) {
+	public String buildStopTitle(@NonNull Stop stop) {
 		if (StringUtils.isBlank(stop.getDirection())) {
 			return stop.getName();
 		}

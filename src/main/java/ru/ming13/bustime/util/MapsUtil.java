@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.ConfigurationInfo;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 
@@ -16,7 +17,7 @@ public final class MapsUtil
 {
 	private final FragmentActivity activity;
 
-	public static MapsUtil with(FragmentActivity activity) {
+	public static MapsUtil with(@NonNull FragmentActivity activity) {
 		return new MapsUtil(activity);
 	}
 

@@ -1,6 +1,8 @@
 package ru.ming13.bustime.util;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.format.DateFormat;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +17,7 @@ public final class Time
 {
 	private final Date date;
 
-	public static Time from(String databaseTimeString) {
+	public static Time from(@Nullable String databaseTimeString) {
 		return new Time(buildCalendar(buildDate(databaseTimeString)));
 	}
 
@@ -68,7 +70,7 @@ public final class Time
 		return Formatters.getDatabaseTimeFormatter().format(date);
 	}
 
-	public String toRelativeString(Context context) {
+	public String toRelativeString(@NonNull Context context) {
 		Time currentTime = Time.current();
 
 		if (this.date.equals(currentTime.date)) {
@@ -78,7 +80,7 @@ public final class Time
 		return Formatters.getRelativeTimeFormatter().setReference(currentTime.date).format(date);
 	}
 
-	public String toSystemString(Context context) {
+	public String toSystemString(@NonNull Context context) {
 		return DateFormat.getTimeFormat(context).format(date);
 	}
 }

@@ -233,13 +233,9 @@ public class HomeActivity extends ActionBarActivity implements ActionClickListen
 	}
 
 	private void setUpStopsMap(Menu menu) {
-		if (MapsUtil.with(this).areMapsHardwareAvailable()) {
-			return;
+		if (!MapsUtil.with(this).areMapsHardwareAvailable()) {
+			menu.findItem(R.id.menu_stops_map).setVisible(false);
 		}
-
-		MenuItem stopsMapMenuItem = menu.findItem(R.id.menu_stops_map);
-
-		stopsMapMenuItem.setVisible(false);
 	}
 
 	@Override

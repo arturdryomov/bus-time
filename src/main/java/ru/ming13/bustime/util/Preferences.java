@@ -2,6 +2,7 @@ package ru.ming13.bustime.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,7 +30,7 @@ public final class Preferences
 
 	private final SharedPreferences preferences;
 
-	public static Preferences with(Context context) {
+	public static Preferences with(@NonNull Context context) {
 		return new Preferences(context);
 	}
 

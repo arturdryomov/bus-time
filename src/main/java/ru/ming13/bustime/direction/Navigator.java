@@ -49,7 +49,7 @@ public class Navigator
 
 			return parseDirectionPolylinePositions(directionsInformation);
 		} catch (RetrofitError e) {
-			return new ArrayList<LatLng>();
+			return new ArrayList<>();
 		}
 	}
 
@@ -58,7 +58,7 @@ public class Navigator
 	}
 
 	private String formatPositions(List<LatLng> positions) {
-		List<String> formattedPositions = new ArrayList<String>();
+		List<String> formattedPositions = new ArrayList<>();
 
 		for (LatLng position : positions) {
 			formattedPositions.add(formatPosition(position));

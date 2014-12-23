@@ -57,7 +57,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper
 	}
 
 	private void createDatabase() {
-		DatabaseOperator.with(context).replaceDatabaseFile(Assets.getDatabaseContents(context));
+		DatabaseOperator.with(context).replaceDatabaseFile(Assets.of(context).getDatabaseContents());
 	}
 
 	private void changeDatabaseVersion() {

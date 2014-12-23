@@ -2,6 +2,7 @@ package ru.ming13.bustime.util;
 
 import android.app.Activity;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ViewAnimator;
@@ -14,22 +15,22 @@ public final class ViewDirector
 	@IdRes
 	private final int animatorId;
 
-	public static ViewDirector of(Activity activity, @IdRes int animatorId) {
+	public static ViewDirector of(@NonNull Activity activity, @IdRes int animatorId) {
 		return new ViewDirector(activity, animatorId);
 	}
 
-	public static ViewDirector of(Fragment fragment, @IdRes int animatorId) {
+	public static ViewDirector of(@NonNull Fragment fragment, @IdRes int animatorId) {
 		return new ViewDirector(fragment, animatorId);
 	}
 
-	private ViewDirector(Activity activity, @IdRes int animatorId) {
+	private ViewDirector(@NonNull Activity activity, @IdRes int animatorId) {
 		this.activity = activity;
 		this.fragment = null;
 
 		this.animatorId = animatorId;
 	}
 
-	private ViewDirector(Fragment fragment, @IdRes int animatorId) {
+	private ViewDirector(@NonNull Fragment fragment, @IdRes int animatorId) {
 		this.activity = null;
 		this.fragment = fragment;
 

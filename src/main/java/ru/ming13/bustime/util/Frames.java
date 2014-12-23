@@ -1,6 +1,7 @@
 package ru.ming13.bustime.util;
 
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentActivity;
 import android.widget.TextView;
@@ -11,7 +12,7 @@ public final class Frames
 {
 	private final FragmentActivity activity;
 
-	public static Frames at(FragmentActivity activity) {
+	public static Frames at(@NonNull FragmentActivity activity) {
 		return new Frames(activity);
 	}
 

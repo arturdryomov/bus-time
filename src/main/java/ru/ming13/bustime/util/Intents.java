@@ -3,6 +3,7 @@ package ru.ming13.bustime.util;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.activity.RouteMapActivity;
@@ -43,7 +44,7 @@ public final class Intents
 	{
 		private final Context context;
 
-		public static Builder with(Context context) {
+		public static Builder with(@NonNull Context context) {
 			return new Builder(context);
 		}
 

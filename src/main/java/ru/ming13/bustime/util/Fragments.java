@@ -49,10 +49,6 @@ public final class Fragments
 			return fragmentManager.findFragmentById(fragmentContainerId);
 		}
 
-		public Fragment get(String fragmentTag) {
-			return fragmentManager.findFragmentByTag(fragmentTag);
-		}
-
 		public void set(Fragment fragment, @IdRes int fragmentContainerId) {
 			if (!isSet(fragmentContainerId)) {
 				fragmentManager
