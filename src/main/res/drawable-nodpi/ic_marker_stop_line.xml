@@ -3,10 +3,10 @@
 	   android:shape="rectangle">
 
 	<solid
-		android:color="@color/background_marker_stop"/>
+		android:color="@color/background_primary"/>
 
 	<size
-		android:height="@dimen/height_marker_stop_line"
-		android:width="@dimen/width_marker_stop_line"/>
+		android:height="64dp"
+		android:width="2dp"/>
 
 </shape>

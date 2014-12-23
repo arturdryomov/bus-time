@@ -181,7 +181,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private float getStopMarkerHue() {
-		return getResources().getInteger(R.integer.hue_marker_stop);
+		return getResources().getInteger(R.integer.hue_primary);
 	}
 
 	@Override

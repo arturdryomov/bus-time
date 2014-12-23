@@ -149,7 +149,7 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private float getStopMarkerHue() {
-		return getResources().getInteger(R.integer.hue_marker_stop);
+		return getResources().getInteger(R.integer.hue_primary);
 	}
 
 	private void setUpRoutePath(List<Stop> stops) {
@@ -189,7 +189,7 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private int getRoutePathColor() {
-		return getResources().getColor(R.color.background_route_path);
+		return getResources().getColor(R.color.background_primary);
 	}
 
 	private void setUpRouteArea(List<Stop> stops) {

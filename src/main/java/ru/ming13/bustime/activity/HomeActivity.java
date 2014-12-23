@@ -145,7 +145,7 @@ public class HomeActivity extends ActionBarActivity implements ActionClickListen
 			.duration(Snackbar.SnackbarDuration.LENGTH_INDEFINITE)
 			.text(R.string.message_updates)
 			.actionLabel(R.string.button_download)
-			.actionColorResource(R.color.background_bar)
+			.actionColorResource(R.color.background_primary)
 			.actionListener(this)
 			.show(this);
 	}
@@ -229,7 +229,7 @@ public class HomeActivity extends ActionBarActivity implements ActionClickListen
 		EditText stopsSearchQueryEdit = ButterKnife.findById(stopsSearchView, R.id.search_src_text);
 
 		stopsSearchPlate.setBackgroundResource(R.drawable.abc_textfield_search_material);
-		stopsSearchQueryEdit.setHintTextColor(getResources().getColor(R.color.text_hint_search));
+		stopsSearchQueryEdit.setHintTextColor(getResources().getColor(R.color.text_hint_light));
 	}
 
 	private void setUpStopsMap(Menu menu) {

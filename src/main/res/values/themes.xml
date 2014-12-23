@@ -2,9 +2,9 @@
 <resources>
 
 	<style name="Theme.BusTime" parent="@style/Theme.AppCompat.Light">
-		<item name="colorPrimary">#0099cc</item>
-		<item name="colorPrimaryDark">#0086b3</item>
-		<item name="colorAccent">?colorPrimary</item>
+		<item name="colorPrimary">@color/background_primary</item>
+		<item name="colorPrimaryDark">@color/background_primary_dark</item>
+		<item name="colorAccent">@color/background_accent</item>
 
 		<item name="windowActionBar">false</item>
 

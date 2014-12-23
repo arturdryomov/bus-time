@@ -107,7 +107,7 @@ public class StopMapFragment extends SupportMapFragment
 	}
 
 	private float getStopMarkerHue() {
-		return getResources().getInteger(R.integer.hue_marker_stop);
+		return getResources().getInteger(R.integer.hue_primary);
 	}
 
 	private void setUpCameraPosition() {

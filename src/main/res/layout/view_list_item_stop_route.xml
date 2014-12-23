@@ -2,17 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="horizontal"
 	android:gravity="center_vertical"
+	android:paddingLeft="16dp"
+	android:paddingRight="16dp"
 	android:layout_width="match_parent"
-	android:layout_height="?android:attr/listPreferredItemHeight">
+	android:layout_height="?android:listPreferredItemHeight">
 
 	<TextView
 		android:id="@+id/text_number"
-		android:textSize="@dimen/text_route_number"
+		android:textColor="@color/text_primary"
+		android:textSize="20sp"
 		android:textStyle="bold"
-		android:minEms="@integer/width_route_number"
 		android:singleLine="true"
 		android:gravity="center_horizontal"
-		android:layout_width="wrap_content"
+		android:layout_width="56dp"
 		android:layout_height="wrap_content"/>
 
 	<LinearLayout
@@ -22,15 +24,16 @@
 
 		<TextView
 			android:id="@+id/text_description"
-			android:textSize="@dimen/text_route_description"
+			android:textColor="@color/text_primary"
+			android:textSize="16sp"
 			android:singleLine="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 
 		<TextView
 			android:id="@+id/text_time"
-			android:textColor="@color/text_route_time"
-			android:textSize="@dimen/text_route_time"
+			android:textColor="@color/text_secondary"
+			android:textSize="14sp"
 			android:singleLine="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>

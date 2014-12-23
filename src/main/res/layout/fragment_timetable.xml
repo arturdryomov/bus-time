@@ -3,19 +3,11 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<ListView
-		android:id="@android:id/list"
-		android:fastScrollEnabled="true"
-		android:listSelector="@android:color/transparent"
-		android:scrollbarStyle="outsideOverlay"
-		android:paddingLeft="@dimen/padding_list"
-		android:paddingRight="@dimen/padding_list"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"/>
+	<include
+		layout="@layout/fragment_list"/>
 
 	<LinearLayout
 		android:id="@android:id/empty"
-		android:visibility="gone"
 		android:orientation="vertical"
 		android:paddingLeft="@dimen/padding_timetable_message"
 		android:paddingRight="@dimen/padding_timetable_message"
