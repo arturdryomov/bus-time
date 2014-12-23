@@ -225,8 +225,8 @@ public class HomeActivity extends ActionBarActivity implements ActionClickListen
 	}
 
 	private void setUpStopsSearchView(SearchView stopsSearchView) {
-		LinearLayout stopsSearchPlate = (LinearLayout) stopsSearchView.findViewById(R.id.search_plate);
-		EditText stopsSearchQueryEdit = (EditText) stopsSearchView.findViewById(R.id.search_src_text);
+		LinearLayout stopsSearchPlate = ButterKnife.findById(stopsSearchView, R.id.search_plate);
+		EditText stopsSearchQueryEdit = ButterKnife.findById(stopsSearchView, R.id.search_src_text);
 
 		stopsSearchPlate.setBackgroundResource(R.drawable.abc_textfield_search_material);
 		stopsSearchQueryEdit.setHintTextColor(getResources().getColor(R.color.text_hint_search));

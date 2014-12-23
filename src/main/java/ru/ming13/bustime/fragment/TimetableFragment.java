@@ -167,26 +167,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	public void onLoadFinished(Loader<Cursor> timetableLoader, Cursor timetableCursor) {
 		getTimetableAdapter().swapCursor(new TimetableCursor(timetableCursor));
 
-		if (isTimetableEmpty(timetableCursor)) {
-			showMessage();
-		} else {
-			showTimetable();
-			showTimetableClosestTrip();
-		}
-	}
-
-	private boolean isTimetableEmpty(Cursor timetableCursor) {
-		return timetableCursor.getCount() == 0;
-	}
-
-	private void showMessage() {
-		getView().findViewById(android.R.id.list).setVisibility(View.GONE);
-		getView().findViewById(R.id.layout_message).setVisibility(View.VISIBLE);
-	}
-
-	private void showTimetable() {
-		getView().findViewById(android.R.id.list).setVisibility(View.VISIBLE);
-		getView().findViewById(R.id.layout_message).setVisibility(View.GONE);
+		showTimetableClosestTrip();
 	}
 
 	private void showTimetableClosestTrip() {

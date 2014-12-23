@@ -14,7 +14,7 @@
 		android:layout_height="match_parent"/>
 
 	<LinearLayout
-		android:id="@+id/layout_message"
+		android:id="@android:id/empty"
 		android:visibility="gone"
 		android:orientation="vertical"
 		android:paddingLeft="@dimen/padding_timetable_message"

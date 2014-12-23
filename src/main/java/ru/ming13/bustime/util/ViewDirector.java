@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ViewAnimator;
 
+import butterknife.ButterKnife;
+
 public final class ViewDirector
 {
 	private final Activity activity;
@@ -48,9 +50,9 @@ public final class ViewDirector
 
 	private View findView(int viewId) {
 		if (activity != null) {
-			return activity.findViewById(viewId);
+			return ButterKnife.findById(activity, viewId);
 		} else {
-			return fragment.getView().findViewById(viewId);
+			return ButterKnife.findById(fragment.getView(), viewId);
 		}
 	}
 }

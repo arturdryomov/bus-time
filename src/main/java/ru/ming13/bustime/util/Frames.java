@@ -6,6 +6,7 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentActivity;
 import android.widget.TextView;
 
+import butterknife.ButterKnife;
 import ru.ming13.bustime.R;
 
 public final class Frames
@@ -33,7 +34,7 @@ public final class Frames
 	}
 
 	private void setFrameTitle(@StringRes int title, @IdRes int titleViewId) {
-		TextView titleView = (TextView) activity.findViewById(titleViewId);
+		TextView titleView = ButterKnife.findById(activity, titleViewId);
 
 		titleView.setText(title);
 	}
