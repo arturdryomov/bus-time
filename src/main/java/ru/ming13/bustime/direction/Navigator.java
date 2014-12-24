@@ -74,8 +74,12 @@ public class Navigator
 	}
 
 	private List<LatLng> parseDirectionPolylinePositions(DirectionsInformation directionsInformation) {
-		final int routePosition = 0;
+		if (!directionsInformation.isEmpty()) {
+			final int routePosition = 0;
 
-		return PolyUtil.decode(directionsInformation.getPolylinePositions(routePosition));
+			return PolyUtil.decode(directionsInformation.getPolylinePositions(routePosition));
+		} else {
+			return new ArrayList<>();
+		}
 	}
 }

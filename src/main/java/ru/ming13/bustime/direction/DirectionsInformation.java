@@ -29,6 +29,10 @@ public class DirectionsInformation
 	@SerializedName("routes")
 	private List<Route> routes;
 
+	public boolean isEmpty() {
+		return routes.isEmpty();
+	}
+
 	public String getPolylinePositions(int routePosition) {
 		return routes.get(routePosition).getPolyline().getPositions();
 	}
