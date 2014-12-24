@@ -25,14 +25,6 @@ public final class Fragments
 		public static final String ERROR_CODE = "error_code";
 	}
 
-	public static final class States
-	{
-		private States() {
-		}
-
-		public static final String TIMETABLE_TYPE = "timetable_type";
-	}
-
 	public static final class Operator
 	{
 		private final FragmentManager fragmentManager;

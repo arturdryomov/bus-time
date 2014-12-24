@@ -61,12 +61,12 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper
 	}
 
 	private void changeDatabaseVersion() {
-		SQLiteDatabase database = openWriteableDatabase();
+		SQLiteDatabase database = openWritableDatabase();
 		database.setVersion(DatabaseSchema.Versions.CURRENT);
 		database.close();
 	}
 
-	private SQLiteDatabase openWriteableDatabase() {
+	private SQLiteDatabase openWritableDatabase() {
 		return SQLiteDatabase.openDatabase(getDatabasePath(), null, SQLiteDatabase.OPEN_READWRITE);
 	}
 

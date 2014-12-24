@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.AttrRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
 public class Views
@@ -21,7 +20,9 @@ public class Views
 		return attributeValue.resourceId;
 	}
 
-	public static float getPixels(@NonNull DisplayMetrics displayMetrics, float densityIndependentPixels) {
-		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, densityIndependentPixels, displayMetrics);
+	public static float getPixels(@NonNull Context context, float densityIndependentPixels) {
+		return TypedValue.applyDimension(
+			TypedValue.COMPLEX_UNIT_DIP, densityIndependentPixels,
+			context.getResources().getDisplayMetrics());
 	}
 }

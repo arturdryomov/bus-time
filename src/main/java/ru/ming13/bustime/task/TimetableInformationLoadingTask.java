@@ -21,7 +21,13 @@ import ru.ming13.bustime.util.Time;
 
 public class TimetableInformationLoadingTask extends AsyncTask<Void, Void, BusEvent>
 {
-	private static final int DEFAULT_TIME_POSITION = 0;
+	private static final class Defaults
+	{
+		private Defaults() {
+		}
+
+		public static final int TIME_POSITION = 0;
+	}
 
 	private final ContentResolver contentResolver;
 	private final Uri timetableUri;
@@ -90,7 +96,7 @@ public class TimetableInformationLoadingTask extends AsyncTask<Void, Void, BusEv
 			}
 		}
 
-		return DEFAULT_TIME_POSITION;
+		return Defaults.TIME_POSITION;
 	}
 
 	private List<TimetableTime> getTimetable(int timetableType) {

@@ -5,17 +5,12 @@
 
 	<dimen name="space_ui_element">8dp</dimen>
 
-	<dimen name="text_medium">18sp</dimen>
-	<dimen name="text_large">22sp</dimen>
-
 	<!-- Actual dimensions. -->
 
 	<dimen name="padding_frame">@dimen/space_ui_element</dimen>
 	<dimen name="padding_route_area">32dp</dimen>
 
 	<dimen name="size_frame_border">1dp</dimen>
-
-	<dimen name="text_frame_title">@dimen/text_medium</dimen>
 
 	<dimen name="width_route_path">3dp</dimen>
 

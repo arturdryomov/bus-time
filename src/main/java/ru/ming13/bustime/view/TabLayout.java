@@ -28,6 +28,7 @@ public class TabLayout extends HorizontalScrollView implements ViewPager.OnPageC
 		}
 
 		public static final int TAB_OFFSET_IN_DP = 24;
+
 		public static final int TAB_TEXT_IN_SP = 14;
 	}
 
@@ -59,7 +60,7 @@ public class TabLayout extends HorizontalScrollView implements ViewPager.OnPageC
 
 		this.tabStrip = new TabStrip(context);
 
-		this.tabOffset = Views.getPixels(getResources().getDisplayMetrics(), Dimensions.TAB_OFFSET_IN_DP);
+		this.tabOffset = Views.getPixels(context, Dimensions.TAB_OFFSET_IN_DP);
 
 		setUpView();
 	}
