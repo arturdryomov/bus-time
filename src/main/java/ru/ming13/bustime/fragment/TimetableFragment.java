@@ -61,7 +61,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	@Icicle
-	private int timetableType;
+	int timetableType;
 
 	private int timetableClosestTripPosition;
 
