@@ -49,7 +49,7 @@ public final class Intents
 		}
 
 		private Builder(Context context) {
-			this.context = context;
+			this.context = context.getApplicationContext();
 		}
 
 		public Intent buildStopsMapIntent() {

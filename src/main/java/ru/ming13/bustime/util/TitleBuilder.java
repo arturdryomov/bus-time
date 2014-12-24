@@ -18,7 +18,7 @@ public final class TitleBuilder
 	}
 
 	private TitleBuilder(Context context) {
-		this.context = context;
+		this.context = context.getApplicationContext();
 	}
 
 	public String buildRouteTitle(@NonNull Route route) {

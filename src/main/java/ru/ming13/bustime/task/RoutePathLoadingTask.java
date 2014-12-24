@@ -30,7 +30,7 @@ public class RoutePathLoadingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	@Override
-	protected BusEvent doInBackground(Void... voids) {
+	protected BusEvent doInBackground(Void... parameters) {
 		return new RoutePathLoadedEvent(getPathPositions());
 	}
 

@@ -35,7 +35,7 @@ public final class Preferences
 	}
 
 	private Preferences(Context context) {
-		preferences = context.getSharedPreferences(LOCATION, Context.MODE_PRIVATE);
+		this.preferences = context.getSharedPreferences(LOCATION, Context.MODE_PRIVATE);
 	}
 
 	public String getDatabaseVersion() {
