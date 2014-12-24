@@ -64,10 +64,10 @@ public class RouteMapActivity extends ActionBarActivity
 	}
 
 	private void setUpSubtitle() {
-		getSupportActionBar().setSubtitle(buildRouteTitle());
+		getSupportActionBar().setSubtitle(getRouteTitle());
 	}
 
-	private String buildRouteTitle() {
+	private String getRouteTitle() {
 		return TitleBuilder.with(this).buildRouteTitle(getRoute());
 	}
 
@@ -76,10 +76,10 @@ public class RouteMapActivity extends ActionBarActivity
 	}
 
 	private void setUpMapFragment() {
-		Fragments.Operator.at(this).set(buildMapFragment(), R.id.container_fragment);
+		Fragments.Operator.at(this).set(getMapFragment(), R.id.container_fragment);
 	}
 
-	private Fragment buildMapFragment() {
+	private Fragment getMapFragment() {
 		return RouteMapFragment.newInstance(getRoute());
 	}
 

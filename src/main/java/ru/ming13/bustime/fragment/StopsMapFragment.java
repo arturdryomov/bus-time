@@ -72,6 +72,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 	private GoogleMap map;
 
 	private GoogleApiClient locationClient;
+
 	private Map<String, Long> stopIds;
 
 	@Icicle

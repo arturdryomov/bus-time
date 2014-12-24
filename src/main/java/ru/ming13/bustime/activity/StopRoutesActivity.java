@@ -65,10 +65,10 @@ public class StopRoutesActivity extends ActionBarActivity
 	}
 
 	private void setUpTitle() {
-		getSupportActionBar().setTitle(buildStopTitle());
+		getSupportActionBar().setTitle(getStopTitle());
 	}
 
-	private String buildStopTitle() {
+	private String getStopTitle() {
 		return TitleBuilder.with(this).buildStopTitle(getStop());
 	}
 
@@ -82,26 +82,26 @@ public class StopRoutesActivity extends ActionBarActivity
 	}
 
 	private void setUpMessageFragment() {
-		Fragments.Operator.at(this).set(buildMessageFragment(), R.id.container_right_frame);
+		Fragments.Operator.at(this).set(getMessageFragment(), R.id.container_right_frame);
 	}
 
-	private Fragment buildMessageFragment() {
+	private Fragment getMessageFragment() {
 		return MessageFragment.newInstance(getString(R.string.message_no_route));
 	}
 
 	private void setUpSubtitle() {
-		getSupportActionBar().setSubtitle(buildStopTitle());
+		getSupportActionBar().setSubtitle(getStopTitle());
 	}
 
 	private void setUpRoutesFragment() {
 		if (Frames.at(this).areAvailable()) {
-			Fragments.Operator.at(this).set(buildRoutesFragment(), R.id.container_left_frame);
+			Fragments.Operator.at(this).set(getRoutesFragment(), R.id.container_left_frame);
 		} else {
-			Fragments.Operator.at(this).set(buildRoutesFragment(), R.id.container_fragment);
+			Fragments.Operator.at(this).set(getRoutesFragment(), R.id.container_fragment);
 		}
 	}
 
-	private Fragment buildRoutesFragment() {
+	private Fragment getRoutesFragment() {
 		return StopRoutesFragment.newInstance(getStop());
 	}
 
@@ -120,13 +120,13 @@ public class StopRoutesActivity extends ActionBarActivity
 
 	private void setUpTimetableFragment(Route route) {
 		if (Fragments.Operator.at(this).get(R.id.container_right_frame) instanceof MessageFragment) {
-			Fragments.Operator.at(this).resetSliding(buildTimetableFragment(route), R.id.container_right_frame);
+			Fragments.Operator.at(this).resetSliding(getTimetableFragment(route), R.id.container_right_frame);
 		} else {
-			Fragments.Operator.at(this).resetFading(buildTimetableFragment(route), R.id.container_right_frame);
+			Fragments.Operator.at(this).resetFading(getTimetableFragment(route), R.id.container_right_frame);
 		}
 	}
 
-	private Fragment buildTimetableFragment(Route route) {
+	private Fragment getTimetableFragment(Route route) {
 		return TimetableFragment.newInstance(route, getStop());
 	}
 

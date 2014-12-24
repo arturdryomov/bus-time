@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 
 import com.squareup.otto.Subscribe;
 
+import icepick.Icepick;
+import icepick.Icicle;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.TimetableAdapter;
 import ru.ming13.bustime.bus.BusProvider;
@@ -58,7 +60,9 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 		return arguments;
 	}
 
+	@Icicle
 	private int timetableType;
+
 	private int timetableClosestTripPosition;
 
 	private Timer timer;
@@ -72,29 +76,27 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		setUpActionBar();
+		setUpState(savedInstanceState);
+
+		setUpToolbar();
 
 		setUpTimetableType(savedInstanceState);
 	}
 
-	private void setUpActionBar() {
+	private void setUpState(Bundle state) {
+		Icepick.restoreInstanceState(this, state);
+	}
+
+	private void setUpToolbar() {
 		setHasOptionsMenu(true);
 	}
 
 	private void setUpTimetableType(Bundle state) {
-		if (!isTimetableTypeAvailable(state)) {
+		if (timetableType == 0) {
 			TimetableInformationLoadingTask.execute(getActivity(), getTimetableUri());
 		} else {
-			setUpTimetable(loadTimetableType(state));
+			setUpTimetable(timetableType);
 		}
-	}
-
-	private boolean isTimetableTypeAvailable(Bundle state) {
-		return (state != null) && (loadTimetableType(state) >= 0);
-	}
-
-	private int loadTimetableType(Bundle state) {
-		return state.getInt(Fragments.States.TIMETABLE_TYPE, -1);
 	}
 
 	private Uri getTimetableUri() {
@@ -170,18 +172,14 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 		showTimetableClosestTrip();
 	}
 
-	private void showTimetableClosestTrip() {
-		if (isTimetableClosestTripAvailable()) {
-			setSelection(timetableClosestTripPosition - Defaults.PAST_VISIBLE_TRIPS_COUNT);
-		}
-	}
-
-	private boolean isTimetableClosestTripAvailable() {
-		return timetableClosestTripPosition != 0;
-	}
-
 	private TimetableAdapter getTimetableAdapter() {
 		return (TimetableAdapter) getListAdapter();
+	}
+
+	private void showTimetableClosestTrip() {
+		if (timetableClosestTripPosition != 0) {
+			setSelection(timetableClosestTripPosition - Defaults.PAST_VISIBLE_TRIPS_COUNT);
+		}
 	}
 
 	@Override
@@ -259,13 +257,9 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private void refreshRemainingTime() {
-		if (isTimetableAdapterSet()) {
+		if (getTimetableAdapter() != null) {
 			getTimetableAdapter().notifyDataSetChanged();
 		}
-	}
-
-	private boolean isTimetableAdapterSet() {
-		return getTimetableAdapter() != null;
 	}
 
 	@Override
@@ -285,10 +279,10 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		saveTimetableType(outState);
+		tearDownState(outState);
 	}
 
-	private void saveTimetableType(Bundle state) {
-		state.putInt(Fragments.States.TIMETABLE_TYPE, timetableType);
+	private void tearDownState(Bundle state) {
+		Icepick.saveInstanceState(this, state);
 	}
 }

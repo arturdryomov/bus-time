@@ -57,10 +57,10 @@ public class TimetableActivity extends ActionBarActivity
 	}
 
 	private void setUpTitle() {
-		getSupportActionBar().setTitle(buildRouteTitle());
+		getSupportActionBar().setTitle(getRouteTitle());
 	}
 
-	private String buildRouteTitle() {
+	private String getRouteTitle() {
 		return getRoute().getNumber();
 	}
 
@@ -69,10 +69,10 @@ public class TimetableActivity extends ActionBarActivity
 	}
 
 	private void setUpSubtitle() {
-		getSupportActionBar().setSubtitle(buildStopSubtitle());
+		getSupportActionBar().setSubtitle(getStopSubtitle());
 	}
 
-	private String buildStopSubtitle() {
+	private String getStopSubtitle() {
 		return TitleBuilder.with(this).buildStopTitle(getStop());
 	}
 
@@ -81,10 +81,10 @@ public class TimetableActivity extends ActionBarActivity
 	}
 
 	private void setUpTimetableFragment() {
-		Fragments.Operator.at(this).set(buildTimetableFragment(), R.id.container_fragment);
+		Fragments.Operator.at(this).set(getTimetableFragment(), R.id.container_fragment);
 	}
 
-	private Fragment buildTimetableFragment() {
+	private Fragment getTimetableFragment() {
 		return TimetableFragment.newInstance(getRoute(), getStop());
 	}
 

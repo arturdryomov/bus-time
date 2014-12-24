@@ -46,7 +46,7 @@ public final class Preferences
 		return preferences.getString(key, Defaults.STRING);
 	}
 
-	public void setDatabaseVersion(String databaseVersion) {
+	public void setDatabaseVersion(@NonNull String databaseVersion) {
 		set(Keys.DATABASE_VERSION, databaseVersion);
 	}
 

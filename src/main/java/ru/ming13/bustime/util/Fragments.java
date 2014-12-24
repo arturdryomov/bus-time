@@ -30,7 +30,6 @@ public final class Fragments
 		private States() {
 		}
 
-		public static final String CAMERA_POSITION = "camera_position";
 		public static final String TIMETABLE_TYPE = "timetable_type";
 	}
 

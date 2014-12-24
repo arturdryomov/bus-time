@@ -67,10 +67,10 @@ public class StopsMapActivity extends ActionBarActivity
 	}
 
 	private void setUpMapFragment() {
-		Fragments.Operator.at(this).set(buildMapFragment(), R.id.container_fragment);
+		Fragments.Operator.at(this).set(getMapFragment(), R.id.container_fragment);
 	}
 
-	private Fragment buildMapFragment() {
+	private Fragment getMapFragment() {
 		return StopsMapFragment.newInstance();
 	}
 

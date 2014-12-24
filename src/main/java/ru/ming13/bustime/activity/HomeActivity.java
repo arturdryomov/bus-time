@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -107,8 +108,16 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 		Frames.at(this).setLeftFrameTitle(R.string.title_routes);
 		Frames.at(this).setRightFrameTitle(R.string.title_stops);
 
-		Fragments.Operator.at(this).set(RoutesFragment.newInstance(), R.id.container_left_frame);
-		Fragments.Operator.at(this).set(StopsFragment.newInstance(), R.id.container_right_frame);
+		Fragments.Operator.at(this).set(getRoutesFragment(), R.id.container_left_frame);
+		Fragments.Operator.at(this).set(getStopsFragment(), R.id.container_right_frame);
+	}
+
+	private Fragment getRoutesFragment() {
+		return RoutesFragment.newInstance();
+	}
+
+	private Fragment getStopsFragment() {
+		return StopsFragment.newInstance();
 	}
 
 	private void setUpTabs() {

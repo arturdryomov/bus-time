@@ -64,10 +64,10 @@ public class StopMapActivity extends ActionBarActivity
 	}
 
 	private void setUpSubtitle() {
-		getSupportActionBar().setSubtitle(buildStopTitle());
+		getSupportActionBar().setSubtitle(getStopTitle());
 	}
 
-	private String buildStopTitle() {
+	private String getStopTitle() {
 		return TitleBuilder.with(this).buildStopTitle(getStop());
 	}
 
@@ -76,10 +76,10 @@ public class StopMapActivity extends ActionBarActivity
 	}
 
 	private void setUpMapFragment() {
-		Fragments.Operator.at(this).set(buildMapFragment(), R.id.container_fragment);
+		Fragments.Operator.at(this).set(getMapFragment(), R.id.container_fragment);
 	}
 
-	private Fragment buildMapFragment() {
+	private Fragment getMapFragment() {
 		return StopMapFragment.newInstance(getStop());
 	}
 
