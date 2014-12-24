@@ -143,8 +143,13 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private void setUpTimetable() {
+		setUpTimetableList();
 		setUpTimetableAdapter();
 		setUpTimetableContent();
+	}
+
+	private void setUpTimetableList() {
+		getListView().setSelector(android.R.color.transparent);
 	}
 
 	private void setUpTimetableAdapter() {
