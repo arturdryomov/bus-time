@@ -57,7 +57,7 @@ class TabStrip extends LinearLayout
 	}
 
 	private float getTabStripHeight() {
-		return Views.getPixels(getResources().getDisplayMetrics(), Dimensions.TAB_INDICATOR_HEIGHT_IN_DP);
+		return Views.getPixels(getContext(), Dimensions.TAB_INDICATOR_HEIGHT_IN_DP);
 	}
 
 	private void setUpView() {

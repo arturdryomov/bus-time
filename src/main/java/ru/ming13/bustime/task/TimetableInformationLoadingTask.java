@@ -88,10 +88,10 @@ public class TimetableInformationLoadingTask extends AsyncTask<Void, Void, BusEv
 	}
 
 	private int getClosestTimePosition(List<TimetableTime> timetable) {
-		String currentTime = Time.current().toDatabaseString();
+		Time currentTime = Time.current();
 
 		for (int timePosition = 0; timePosition < timetable.size(); timePosition++) {
-			if (isAfter(timetable.get(timePosition).getTime().toDatabaseString(), currentTime)) {
+			if (timetable.get(timePosition).getTime().isAfter(currentTime)) {
 				return timePosition;
 			}
 		}
@@ -111,10 +111,6 @@ public class TimetableInformationLoadingTask extends AsyncTask<Void, Void, BusEv
 
 	private Cursor getTimetableCursor(int timetableType) {
 		return contentResolver.query(getTimetableUri(timetableType), null, null, null, null);
-	}
-
-	private boolean isAfter(String time, String currentTime) {
-		return time.compareTo(currentTime) >= 0;
 	}
 
 	@Override

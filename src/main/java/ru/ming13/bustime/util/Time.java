@@ -56,6 +56,10 @@ public final class Time
 		return new Time(calendar);
 	}
 
+	public boolean isAfter(Time time) {
+		return this.date.after(time.date);
+	}
+
 	public boolean isEmpty() {
 		return date.getTime() == 0;
 	}
