@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
+import com.nispok.snackbar.listeners.EventListener;
 import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
@@ -47,7 +48,7 @@ import ru.ming13.bustime.util.MapsUtil;
 import ru.ming13.bustime.util.ViewDirector;
 import ru.ming13.bustime.view.TabLayout;
 
-public class HomeActivity extends ActionBarActivity implements ActionClickListener
+public class HomeActivity extends ActionBarActivity implements EventListener, ActionClickListener
 {
 	@InjectView(R.id.toolbar)
 	Toolbar toolbar;
@@ -124,14 +125,12 @@ public class HomeActivity extends ActionBarActivity implements ActionClickListen
 	private void showProgress() {
 		ViewDirector.of(this, R.id.animator).show(R.id.progress);
 
-		isProgressVisible = true;
+		this.isProgressVisible = true;
 	}
 
 	private void setUpDatabaseUpdate() {
 		if (!isDatabaseUpdateDone) {
 			DatabaseUpdateCheckingTask.execute(this);
-
-			isDatabaseUpdateDone = true;
 		}
 	}
 
@@ -147,11 +146,31 @@ public class HomeActivity extends ActionBarActivity implements ActionClickListen
 			.actionLabel(R.string.button_download)
 			.actionColorResource(R.color.background_primary)
 			.actionListener(this)
+			.eventListener(this)
 			.show(this);
 	}
 
 	@Override
+	public void onShow(Snackbar snackbar) {
+	}
+
+	@Override
+	public void onShown(Snackbar snackbar) {
+	}
+
+	@Override
+	public void onDismiss(Snackbar snackbar) {
+	}
+
+	@Override
+	public void onDismissed(Snackbar snackbar) {
+		this.isDatabaseUpdateDone = true;
+	}
+
+	@Override
 	public void onActionClicked(Snackbar snackbar) {
+		this.isDatabaseUpdateDone = true;
+
 		startDatabaseUpdate();
 	}
 
@@ -177,7 +196,7 @@ public class HomeActivity extends ActionBarActivity implements ActionClickListen
 			ViewDirector.of(this, R.id.animator).show(R.id.content);
 		}
 
-		isProgressVisible = false;
+		this.isProgressVisible = false;
 	}
 
 	@Override
