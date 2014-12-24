@@ -7,26 +7,32 @@
 		layout="@layout/fragment_list"/>
 
 	<LinearLayout
-		android:id="@android:id/empty"
+		android:id="@+id/empty"
+		android:visibility="gone"
 		android:orientation="vertical"
-		android:paddingLeft="@dimen/padding_timetable_message"
-		android:paddingRight="@dimen/padding_timetable_message"
+		android:paddingLeft="40dp"
+		android:paddingRight="40dp"
 		android:gravity="center"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
 		<TextView
 			android:text="@string/message_timetable_title"
-			android:textSize="@dimen/text_timetable_message_title"
+			android:textColor="@color/text_primary"
+			android:textSize="20sp"
 			android:textStyle="bold"
 			android:gravity="center_horizontal"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="8dp"/>
+
 		<TextView
 			android:text="@string/message_timetable_summary"
-			android:textSize="@dimen/text_timetable_message_summary"
-			android:paddingTop="@dimen/padding_timetable_message_summary"
+			android:textColor="@color/text_secondary"
+			android:textSize="16sp"
 			android:gravity="center_horizontal"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>

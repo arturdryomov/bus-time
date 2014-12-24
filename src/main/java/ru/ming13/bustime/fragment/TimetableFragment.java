@@ -14,9 +14,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.squareup.otto.Subscribe;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import icepick.Icepick;
 import icepick.Icicle;
 import ru.ming13.bustime.R;
@@ -60,6 +63,12 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 		return arguments;
 	}
 
+	@InjectView(android.R.id.list)
+	View contentLayout;
+
+	@InjectView(R.id.empty)
+	ViewGroup emptyLayout;
+
 	@Icicle
 	int timetableType;
 
@@ -69,7 +78,11 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 	@Override
 	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
-		return layoutInflater.inflate(R.layout.fragment_timetable, container, false);
+		View view = layoutInflater.inflate(R.layout.fragment_timetable, container, false);
+
+		ButterKnife.inject(this, view);
+
+		return view;
 	}
 
 	@Override
@@ -169,7 +182,20 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	public void onLoadFinished(Loader<Cursor> timetableLoader, Cursor timetableCursor) {
 		getTimetableAdapter().swapCursor(new TimetableCursor(timetableCursor));
 
+		setUpTimetableLayout(timetableCursor);
+
 		showTimetableClosestTrip();
+	}
+
+	private void setUpTimetableLayout(Cursor timetableCursor) {
+		if (timetableCursor.getCount() == 0) {
+			contentLayout.setVisibility(View.GONE);
+			emptyLayout.setVisibility(View.VISIBLE);
+		} else {
+			contentLayout.setVisibility(View.VISIBLE);
+			emptyLayout.setVisibility(View.GONE);
+		}
+
 	}
 
 	private TimetableAdapter getTimetableAdapter() {
@@ -284,5 +310,12 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 	private void tearDownState(Bundle state) {
 		Icepick.saveInstanceState(this, state);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+
+		ButterKnife.reset(this);
 	}
 }
