@@ -46,6 +46,7 @@ import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.MapsUtil;
+import ru.ming13.bustime.util.Preferences;
 import ru.ming13.bustime.util.ViewDirector;
 import ru.ming13.bustime.view.TabLayout;
 
@@ -95,6 +96,7 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 			setUpFrames();
 		} else {
 			setUpTabs();
+			setUpTabsSelection();
 		}
 
 		setUpProgress();
@@ -123,6 +125,12 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 	private void setUpTabs() {
 		tabPager.setAdapter(new TabPagerAdapter(this, getSupportFragmentManager()));
 		tabLayout.setUpTabPager(getSupportActionBar().getThemedContext(), tabPager);
+	}
+
+	private void setUpTabsSelection() {
+		int selectedTabPosition = Preferences.with(this).getHomeTabPosition();
+
+		tabPager.setCurrentItem(selectedTabPosition);
 	}
 
 	private void setUpProgress() {
@@ -367,5 +375,18 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 
 	private void tearDownState(Bundle state) {
 		Icepick.saveInstanceState(this, state);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		tearDownPreferences();
+	}
+
+	private void tearDownPreferences() {
+		int selectedTabPosition = tabPager.getCurrentItem();
+
+		Preferences.with(this).setHomeTabPosition(selectedTabPosition);
 	}
 }
