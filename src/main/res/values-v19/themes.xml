@@ -2,7 +2,6 @@
 <resources>
 
 	<style name="Theme.BusTime.Map" parent="Theme.BusTime">
-		<item name="android:windowActionBarOverlay">true</item>
 		<item name="android:windowTranslucentNavigation">true</item>
 		<item name="android:windowTranslucentStatus">true</item>
 	</style>

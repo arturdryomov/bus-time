@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -16,7 +17,7 @@ import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
 
-public class StopMapFragment extends SupportMapFragment
+public class StopMapFragment extends SupportMapFragment implements OnMapReadyCallback
 {
 	private static final class Ui
 	{
@@ -24,6 +25,7 @@ public class StopMapFragment extends SupportMapFragment
 		}
 
 		public static final boolean CURRENT_LOCATION_ENABLED = true;
+		public static final boolean NAVIGATION_ENABLED = false;
 		public static final boolean ZOOM_ENABLED = true;
 	}
 
@@ -51,25 +53,38 @@ public class StopMapFragment extends SupportMapFragment
 		return arguments;
 	}
 
+	private GoogleMap map;
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
 		setUpMap();
-		setUpStop();
-
-		setUpCameraPosition();
 	}
 
 	private void setUpMap() {
+		getMapAsync(this);
+	}
+
+	@Override
+	public void onMapReady(GoogleMap map) {
+		setUpMap(map);
+
+		setUpStop();
+	}
+
+	private void setUpMap(GoogleMap map) {
+		this.map = map;
+
 		setUpUi();
+		setUpCamera();
 	}
 
 	private void setUpUi() {
-		GoogleMap map = getMap();
-
 		map.setMyLocationEnabled(Ui.CURRENT_LOCATION_ENABLED);
 		map.getUiSettings().setMyLocationButtonEnabled(Ui.CURRENT_LOCATION_ENABLED);
+
+		map.getUiSettings().setMapToolbarEnabled(Ui.NAVIGATION_ENABLED);
 
 		map.getUiSettings().setZoomControlsEnabled(Ui.ZOOM_ENABLED);
 
@@ -81,13 +96,25 @@ public class StopMapFragment extends SupportMapFragment
 			bartender.getBottomUiPadding());
 	}
 
+	private void setUpCamera() {
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(getDefaultLocation(), Defaults.ZOOM));
+	}
+
+	private LatLng getDefaultLocation() {
+		Stop stop = getStop();
+
+		return new LatLng(stop.getLatitude(), stop.getLongitude());
+	}
+
+	private Stop getStop() {
+		return getArguments().getParcelable(Fragments.Arguments.STOP);
+	}
+
 	private void setUpStop() {
 		setUpStopMarker();
 	}
 
 	private void setUpStopMarker() {
-		GoogleMap map = getMap();
-
 		Marker stopMarker = map.addMarker(buildStopMarkerOptions());
 		stopMarker.showInfoWindow();
 	}
@@ -102,21 +129,7 @@ public class StopMapFragment extends SupportMapFragment
 			.icon(BitmapDescriptorFactory.defaultMarker(getStopMarkerHue()));
 	}
 
-	private Stop getStop() {
-		return getArguments().getParcelable(Fragments.Arguments.STOP);
-	}
-
 	private float getStopMarkerHue() {
 		return getResources().getInteger(R.integer.hue_primary);
-	}
-
-	private void setUpCameraPosition() {
-		getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(getDefaultLocation(), Defaults.ZOOM));
-	}
-
-	private LatLng getDefaultLocation() {
-		Stop stop = getStop();
-
-		return new LatLng(stop.getLatitude(), stop.getLongitude());
 	}
 }

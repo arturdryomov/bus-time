@@ -76,7 +76,7 @@ public final class Bartender
 		return statusBarViewParams;
 	}
 
-	private int getStatusBarHeight() {
+	public int getStatusBarHeight() {
 		return getSystemDimension(SystemDimensions.STATUS_BAR_HEIGHT);
 	}
 
@@ -178,7 +178,7 @@ public final class Bartender
 		return getStatusBarHeight() + getActionBarHeight();
 	}
 
-	private int getActionBarHeight() {
+	public int getActionBarHeight() {
 		return activity.getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height_material);
 	}
 }

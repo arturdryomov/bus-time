@@ -10,6 +10,7 @@ import android.support.v4.content.Loader;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -34,7 +35,7 @@ import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
 
-public class RouteMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>
+public class RouteMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>, OnMapReadyCallback
 {
 	private static final class Ui
 	{
@@ -42,6 +43,7 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 		}
 
 		public static final boolean CURRENT_LOCATION_ENABLED = true;
+		public static final boolean NAVIGATION_ENABLED = false;
 		public static final boolean ZOOM_ENABLED = true;
 	}
 
@@ -72,25 +74,38 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 		return arguments;
 	}
 
+	private GoogleMap map;
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
 		setUpMap();
-		setUpStops();
-
-		setUpCameraPosition();
 	}
 
 	private void setUpMap() {
+		getMapAsync(this);
+	}
+
+	@Override
+	public void onMapReady(GoogleMap map) {
+		setUpMap(map);
+
+		setUpStops();
+	}
+
+	private void setUpMap(GoogleMap map) {
+		this.map = map;
+
 		setUpUi();
+		setUpCamera();
 	}
 
 	private void setUpUi() {
-		GoogleMap map = getMap();
-
 		map.setMyLocationEnabled(Ui.CURRENT_LOCATION_ENABLED);
 		map.getUiSettings().setMyLocationButtonEnabled(Ui.CURRENT_LOCATION_ENABLED);
+
+		map.getUiSettings().setMapToolbarEnabled(Ui.NAVIGATION_ENABLED);
 
 		map.getUiSettings().setZoomControlsEnabled(Ui.ZOOM_ENABLED);
 
@@ -100,6 +115,14 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 			bartender.getTopUiPadding(),
 			bartender.getRightUiPadding(),
 			bartender.getBottomUiPadding());
+	}
+
+	private void setUpCamera() {
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(getDefaultLocation(), Defaults.ZOOM));
+	}
+
+	private LatLng getDefaultLocation() {
+		return new LatLng(Defaults.LOCATION_LATITUDE, Defaults.LOCATION_LONGITUDE);
 	}
 
 	private void setUpStops() {
@@ -133,8 +156,6 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private void setUpStopsMarkers(List<Stop> stops) {
-		GoogleMap map = getMap();
-
 		for (Stop stop : stops) {
 			map.addMarker(buildStopMarkerOptions(stop));
 		}
@@ -172,8 +193,6 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private void setUpRoutePathLine(List<LatLng> routePathPositions) {
-		GoogleMap map = getMap();
-
 		map.addPolyline(buildRoutePathOptions(routePathPositions));
 	}
 
@@ -193,8 +212,6 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private void setUpRouteArea(List<Stop> stops) {
-		GoogleMap map = getMap();
-
 		map.animateCamera(CameraUpdateFactory.newLatLngBounds(
 			buildRouteAreaBounds(stops),
 			getMapWidth(),
@@ -226,14 +243,6 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> stopsLoader) {
-	}
-
-	private void setUpCameraPosition() {
-		getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(getDefaultLocation(), Defaults.ZOOM));
-	}
-
-	private LatLng getDefaultLocation() {
-		return new LatLng(Defaults.LOCATION_LATITUDE, Defaults.LOCATION_LONGITUDE);
 	}
 
 	@Override

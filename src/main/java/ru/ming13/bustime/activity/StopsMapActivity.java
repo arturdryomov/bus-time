@@ -2,30 +2,76 @@ package ru.ming13.bustime.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 
 import com.squareup.otto.Subscribe;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
+import ru.ming13.bustime.fragment.StopsMapFragment;
 import ru.ming13.bustime.model.Stop;
+import ru.ming13.bustime.util.Android;
 import ru.ming13.bustime.util.Bartender;
+import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
 
 public class StopsMapActivity extends ActionBarActivity
 {
+	@InjectView(R.id.toolbar)
+	Toolbar toolbar;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_stops_map);
+		setContentView(R.layout.activity_container_map);
+
+		setUpInjections();
 
 		setUpBars();
+		setUpToolbar();
+
+		setUpMapFragment();
+	}
+
+	private void setUpInjections() {
+		ButterKnife.inject(this);
 	}
 
 	private void setUpBars() {
 		Bartender.at(this).showSystemBarsBackground();
+	}
+
+	private void setUpToolbar() {
+		setUpToolbarPosition();
+
+		setSupportActionBar(toolbar);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+
+	private void setUpToolbarPosition() {
+		if (Android.isKitKatOrLater()) {
+			RelativeLayout.LayoutParams toolbarParams = (RelativeLayout.LayoutParams) toolbar.getLayoutParams();
+
+			toolbarParams.topMargin = Bartender.at(this).getStatusBarHeight();
+
+			toolbar.setLayoutParams(toolbarParams);
+		}
+	}
+
+	private void setUpMapFragment() {
+		Fragments.Operator.at(this).set(buildMapFragment(), R.id.container_fragment);
+	}
+
+	private Fragment buildMapFragment() {
+		return StopsMapFragment.newInstance();
 	}
 
 	@Subscribe

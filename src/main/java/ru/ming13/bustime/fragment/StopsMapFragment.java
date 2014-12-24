@@ -14,6 +14,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -27,6 +28,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Map;
 
+import icepick.Icepick;
+import icepick.Icicle;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
@@ -34,22 +37,22 @@ import ru.ming13.bustime.cursor.StopsCursor;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Bartender;
-import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
 import ru.ming13.bustime.util.MapsUtil;
 
 public class StopsMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>,
+	OnMapReadyCallback,
 	GoogleMap.OnInfoWindowClickListener,
 	GoogleApiClient.ConnectionCallbacks,
 	GoogleApiClient.OnConnectionFailedListener
 {
-
 	private static final class Ui
 	{
 		private Ui() {
 		}
 
 		public static final boolean CURRENT_LOCATION_ENABLED = true;
+		public static final boolean NAVIGATION_ENABLED = false;
 		public static final boolean ZOOM_ENABLED = true;
 	}
 
@@ -66,8 +69,13 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 		public static final int ZOOM = 15;
 	}
 
+	private GoogleMap map;
+
 	private GoogleApiClient locationClient;
 	private Map<String, Long> stopIds;
+
+	@Icicle
+	CameraPosition cameraPosition;
 
 	public static StopsMapFragment newInstance() {
 		return new StopsMapFragment();
@@ -77,22 +85,39 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		setUpMap();
-		setUpStops();
+		setUpState(savedInstanceState);
 
-		setUpCameraPosition(savedInstanceState);
+		setUpMap();
+	}
+
+	private void setUpState(Bundle state) {
+		Icepick.restoreInstanceState(this, state);
 	}
 
 	private void setUpMap() {
+		getMapAsync(this);
+	}
+
+	@Override
+	public void onMapReady(GoogleMap map) {
+		setUpMap(map);
+
+		setUpStops();
+	}
+
+	private void setUpMap(GoogleMap map) {
+		this.map = map;
+
 		setUpUi();
-		setUpStopMarkersListener();
+		setUpListeners();
+		setUpCamera();
 	}
 
 	private void setUpUi() {
-		GoogleMap map = getMap();
-
 		map.setMyLocationEnabled(Ui.CURRENT_LOCATION_ENABLED);
 		map.getUiSettings().setMyLocationButtonEnabled(Ui.CURRENT_LOCATION_ENABLED);
+
+		map.getUiSettings().setMapToolbarEnabled(Ui.NAVIGATION_ENABLED);
 
 		map.getUiSettings().setZoomControlsEnabled(Ui.ZOOM_ENABLED);
 
@@ -104,17 +129,15 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 			bartender.getBottomUiPadding());
 	}
 
-	private void setUpStopMarkersListener() {
-		getMap().setOnInfoWindowClickListener(this);
+	private void setUpListeners() {
+		map.setOnInfoWindowClickListener(this);
 	}
 
 	@Override
 	public void onInfoWindowClick(Marker stopMarker) {
-		if (!isStopIdAvailable(stopMarker)) {
-			return;
+		if (isStopIdAvailable(stopMarker)) {
+			BusProvider.getBus().post(new StopSelectedEvent(getStop(stopMarker)));
 		}
-
-		BusProvider.getBus().post(new StopSelectedEvent(getStop(stopMarker)));
 	}
 
 	private boolean isStopIdAvailable(Marker stopMarker) {
@@ -131,83 +154,16 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 		return new Stop(stopId, stopName, stopDirection, stopLatitude, stopLongitude);
 	}
 
-	private void setUpStops() {
-		setUpStopsIds();
-		setUpStopsContent();
-	}
-
-	private void setUpStopsIds() {
-		stopIds = new ArrayMap<>();
-	}
-
-	private void setUpStopsContent() {
-		getLoaderManager().initLoader(Loaders.STOPS, null, this);
-	}
-
-	@Override
-	public Loader<Cursor> onCreateLoader(int loaderId, Bundle loaderArguments) {
-		return new CursorLoader(getActivity(), getStopsUri(), null, null, null, null);
-	}
-
-	private Uri getStopsUri() {
-		return BusTimeContract.Stops.getStopsUri();
-	}
-
-	@Override
-	public void onLoadFinished(Loader<Cursor> stopsLoader, Cursor stopsCursor) {
-		List<Stop> stops = new CursorList<>(new StopsCursor(stopsCursor));
-
-		setUpStopsMarkers(stops);
-	}
-
-	private void setUpStopsMarkers(List<Stop> stops) {
-		GoogleMap map = getMap();
-
-		stopIds.clear();
-
-		for (Stop stop : stops) {
-			Marker stopMarker = map.addMarker(buildStopMarkerOptions(stop));
-
-			stopIds.put(stopMarker.getId(), stop.getId());
-		}
-	}
-
-	private MarkerOptions buildStopMarkerOptions(Stop stop) {
-		return new MarkerOptions()
-			.title(stop.getName())
-			.snippet(stop.getDirection())
-			.position(new LatLng(stop.getLatitude(), stop.getLongitude()))
-			.icon(BitmapDescriptorFactory.defaultMarker(getStopMarkerHue()));
-	}
-
-	private float getStopMarkerHue() {
-		return getResources().getInteger(R.integer.hue_primary);
-	}
-
-	@Override
-	public void onLoaderReset(Loader<Cursor> stopsLoader) {
-	}
-
-	private void setUpCameraPosition(Bundle state) {
-		if (isCameraPositionSaved(state)) {
-			setUpSavedCameraPosition(state);
+	private void setUpCamera() {
+		if (cameraPosition != null) {
+			setUpSavedLocation();
 		} else {
 			setUpLocationClient();
 		}
 	}
 
-	private boolean isCameraPositionSaved(Bundle state) {
-		return (state != null) && (loadCameraPosition(state) != null);
-	}
-
-	private CameraPosition loadCameraPosition(Bundle state) {
-		return state.getParcelable(Fragments.States.CAMERA_POSITION);
-	}
-
-	private void setUpSavedCameraPosition(Bundle state) {
-		CameraPosition cameraPosition = loadCameraPosition(state);
-
-		getMap().moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+	private void setUpSavedLocation() {
+		map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 	}
 
 	private void setUpLocationClient() {
@@ -227,11 +183,12 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		setUpCurrentLocation();
+
 		tearDownLocationClient();
 	}
 
 	private void setUpCurrentLocation() {
-		getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLocation(), Defaults.ZOOM));
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLocation(), Defaults.ZOOM));
 	}
 
 	private LatLng getCurrentLocation() {
@@ -286,14 +243,73 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 		}
 	}
 
+	private void setUpStops() {
+		setUpStopsContent();
+	}
+
+	private void setUpStopsContent() {
+		this.stopIds = new ArrayMap<>();
+
+		getLoaderManager().initLoader(Loaders.STOPS, null, this);
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int loaderId, Bundle loaderArguments) {
+		return new CursorLoader(getActivity(), getStopsUri(), null, null, null, null);
+	}
+
+	private Uri getStopsUri() {
+		return BusTimeContract.Stops.getStopsUri();
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> stopsLoader, Cursor stopsCursor) {
+		List<Stop> stops = new CursorList<>(new StopsCursor(stopsCursor));
+
+		setUpStopsMarkers(stops);
+	}
+
+	private void setUpStopsMarkers(List<Stop> stops) {
+		stopIds.clear();
+
+		for (Stop stop : stops) {
+			Marker stopMarker = map.addMarker(buildStopMarkerOptions(stop));
+
+			stopIds.put(stopMarker.getId(), stop.getId());
+		}
+	}
+
+	private MarkerOptions buildStopMarkerOptions(Stop stop) {
+		return new MarkerOptions()
+			.title(stop.getName())
+			.snippet(stop.getDirection())
+			.position(new LatLng(stop.getLatitude(), stop.getLongitude()))
+			.icon(BitmapDescriptorFactory.defaultMarker(getStopMarkerHue()));
+	}
+
+	private float getStopMarkerHue() {
+		return getResources().getInteger(R.integer.hue_primary);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> stopsLoader) {
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+
+		this.cameraPosition = map.getCameraPosition();
+	}
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		saveCameraPosition(outState);
+		tearDownState(outState);
 	}
 
-	private void saveCameraPosition(Bundle state) {
-		state.putParcelable(Fragments.States.CAMERA_POSITION, getMap().getCameraPosition());
+	private void tearDownState(Bundle state) {
+		Icepick.saveInstanceState(this, state);
 	}
 }
