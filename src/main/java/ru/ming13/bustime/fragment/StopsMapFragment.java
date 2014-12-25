@@ -38,7 +38,7 @@ import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Loaders;
-import ru.ming13.bustime.util.MapsUtil;
+import ru.ming13.bustime.util.Maps;
 
 public class StopsMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>,
 	OnMapReadyCallback,
@@ -235,12 +235,12 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 
 	@Override
 	public void onConnectionFailed(ConnectionResult connectionResult) {
-		MapsUtil mapsUtil = MapsUtil.with(getActivity());
+		Maps maps = Maps.at(getActivity());
 
-		if (mapsUtil.isResolvable(connectionResult)) {
-			mapsUtil.resolve(connectionResult);
+		if (maps.isResolvable(connectionResult)) {
+			maps.resolve(connectionResult);
 		} else {
-			mapsUtil.showErrorDialog(connectionResult);
+			maps.showErrorDialog(connectionResult);
 		}
 	}
 

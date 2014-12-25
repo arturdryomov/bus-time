@@ -22,7 +22,6 @@ public class Views
 
 	public static float getPixels(@NonNull Context context, float densityIndependentPixels) {
 		return TypedValue.applyDimension(
-			TypedValue.COMPLEX_UNIT_DIP, densityIndependentPixels,
-			context.getResources().getDisplayMetrics());
+			TypedValue.COMPLEX_UNIT_DIP, densityIndependentPixels, context.getResources().getDisplayMetrics());
 	}
 }

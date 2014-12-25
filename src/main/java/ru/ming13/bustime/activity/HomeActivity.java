@@ -45,7 +45,7 @@ import ru.ming13.bustime.task.StopLoadingTask;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Intents;
-import ru.ming13.bustime.util.MapsUtil;
+import ru.ming13.bustime.util.Maps;
 import ru.ming13.bustime.util.Preferences;
 import ru.ming13.bustime.util.ViewDirector;
 import ru.ming13.bustime.view.TabLayout;
@@ -269,7 +269,7 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 	}
 
 	private void setUpStopsMap(Menu menu) {
-		if (!MapsUtil.with(this).areMapsHardwareAvailable()) {
+		if (!Maps.at(this).areHardwareAvailable()) {
 			menu.findItem(R.id.menu_stops_map).setVisible(false);
 		}
 	}
@@ -295,11 +295,11 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 	}
 
 	private void startStopsMapActivity() {
-		if (MapsUtil.with(this).areMapsSoftwareAvailable()) {
+		if (Maps.at(this).areSoftwareAvailable()) {
 			Intent intent = Intents.Builder.with(this).buildStopsMapIntent();
 			startActivity(intent);
 		} else {
-			MapsUtil.with(this).showErrorDialog();
+			Maps.at(this).showErrorDialog();
 		}
 	}
 

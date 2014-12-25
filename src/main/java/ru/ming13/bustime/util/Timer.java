@@ -15,7 +15,7 @@ public final class Timer implements Runnable
 	private final Handler timerSchedule;
 
 	public Timer() {
-		timerSchedule = new Handler();
+		this.timerSchedule = new Handler();
 	}
 
 	public void start() {

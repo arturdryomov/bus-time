@@ -13,19 +13,19 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import ru.ming13.bustime.fragment.GooglePlayServicesErrorDialog;
 
-public final class MapsUtil
+public final class Maps
 {
 	private final FragmentActivity activity;
 
-	public static MapsUtil with(@NonNull FragmentActivity activity) {
-		return new MapsUtil(activity);
+	public static Maps at(@NonNull FragmentActivity activity) {
+		return new Maps(activity);
 	}
 
-	private MapsUtil(FragmentActivity activity) {
+	private Maps(FragmentActivity activity) {
 		this.activity = activity;
 	}
 
-	public boolean areMapsHardwareAvailable() {
+	public boolean areHardwareAvailable() {
 		ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
 		ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
 
@@ -35,7 +35,7 @@ public final class MapsUtil
 		return currentGlEsVersion >= requiredGlEsVersion;
 	}
 
-	public boolean areMapsSoftwareAvailable() {
+	public boolean areSoftwareAvailable() {
 		return getErrorCode() == ConnectionResult.SUCCESS;
 	}
 
@@ -56,11 +56,11 @@ public final class MapsUtil
 		errorDialog.show(activity.getSupportFragmentManager(), GooglePlayServicesErrorDialog.TAG);
 	}
 
-	public boolean isResolvable(ConnectionResult connectionResult) {
+	public boolean isResolvable(@NonNull ConnectionResult connectionResult) {
 		return connectionResult.hasResolution();
 	}
 
-	public void resolve(ConnectionResult connectionResult) {
+	public void resolve(@NonNull ConnectionResult connectionResult) {
 		try {
 			connectionResult.startResolutionForResult(activity, 0);
 		} catch (IntentSender.SendIntentException e) {

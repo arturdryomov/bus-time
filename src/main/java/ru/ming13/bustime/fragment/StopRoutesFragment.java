@@ -131,7 +131,8 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 	}
 
 	private void setUpTimer() {
-		timer = new Timer();
+		this.timer = new Timer();
+
 		timer.start();
 	}
 

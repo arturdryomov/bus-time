@@ -58,11 +58,19 @@ public class TabLayout extends HorizontalScrollView implements ViewPager.OnPageC
 	public TabLayout(Context context, AttributeSet attributeSet, int style) {
 		super(context, attributeSet, style);
 
-		this.tabStrip = new TabStrip(context);
+		this.tabStrip = getTabStrip(context);
 
-		this.tabOffset = Views.getPixels(context, Dimensions.TAB_OFFSET_IN_DP);
+		this.tabOffset = getTabOffset(context);
 
 		setUpView();
+	}
+
+	private TabStrip getTabStrip(Context context) {
+		return new TabStrip(context);
+	}
+
+	private float getTabOffset(Context context) {
+		return Views.getPixels(context, Dimensions.TAB_OFFSET_IN_DP);
 	}
 
 	private void setUpView() {

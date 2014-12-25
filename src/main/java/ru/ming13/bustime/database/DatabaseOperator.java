@@ -42,6 +42,7 @@ public final class DatabaseOperator
 			File databaseFile = getDatabaseFile();
 
 			FileUtils.copyFile(tempDatabaseFile, databaseFile);
+
 			tempDatabaseFile.delete();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -51,7 +52,9 @@ public final class DatabaseOperator
 	private File getTempFile(InputStream fileContents) {
 		try {
 			File tempFile = File.createTempFile("bustime", null, context.getCacheDir());
+
 			FileUtils.copyInputStreamToFile(fileContents, tempFile);
+
 			return tempFile;
 		} catch (IOException | NullPointerException e) {
 			throw new RuntimeException(e);
@@ -65,8 +68,8 @@ public final class DatabaseOperator
 		deleteDatabaseContents(database);
 		insertDatabaseContents(database, tempDatabaseFile);
 
-		tempDatabaseFile.delete();
 		database.close();
+		tempDatabaseFile.delete();
 	}
 
 	private void deleteDatabaseContents(SQLiteDatabase database) {

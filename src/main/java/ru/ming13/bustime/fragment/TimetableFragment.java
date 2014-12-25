@@ -92,7 +92,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 		setUpToolbar();
 
-		setUpTimetableType(savedInstanceState);
+		setUpTimetableType();
 	}
 
 	private void setUpState(Bundle state) {
@@ -103,7 +103,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 		setHasOptionsMenu(true);
 	}
 
-	private void setUpTimetableType(Bundle state) {
+	private void setUpTimetableType() {
 		if (timetableType == 0) {
 			TimetableInformationLoadingTask.execute(getActivity(), getTimetableUri());
 		} else {
@@ -277,7 +277,8 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private void setUpTimer() {
-		timer = new Timer();
+		this.timer = new Timer();
+
 		timer.start();
 	}
 

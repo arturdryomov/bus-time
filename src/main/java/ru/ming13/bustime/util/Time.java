@@ -3,7 +3,6 @@ package ru.ming13.bustime.util;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.format.DateFormat;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -70,10 +69,6 @@ public final class Time
 		return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
 	}
 
-	public String toDatabaseString() {
-		return Formatters.getDatabaseTimeFormatter().format(date);
-	}
-
 	public String toRelativeString(@NonNull Context context) {
 		Time currentTime = Time.current();
 
@@ -85,6 +80,6 @@ public final class Time
 	}
 
 	public String toSystemString(@NonNull Context context) {
-		return DateFormat.getTimeFormat(context).format(date);
+		return Formatters.getSystemTimeFormatter(context).format(date);
 	}
 }

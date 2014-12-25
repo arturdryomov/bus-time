@@ -1,10 +1,14 @@
 package ru.ming13.bustime.util;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+
 import org.ocpsoft.prettytime.PrettyTime;
 import org.ocpsoft.prettytime.units.JustNow;
 import org.ocpsoft.prettytime.units.Millisecond;
 import org.ocpsoft.prettytime.units.Second;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public final class Formatters
@@ -12,10 +16,11 @@ public final class Formatters
 	private Formatters() {
 	}
 
-	private static SimpleDateFormat databaseTimeFormatter;
+	private static DateFormat databaseTimeFormatter;
 	private static PrettyTime relativeTimeFormatter;
+	private static DateFormat systemTimeFormatter;
 
-	public static SimpleDateFormat getDatabaseTimeFormatter() {
+	public static DateFormat getDatabaseTimeFormatter() {
 		if (databaseTimeFormatter == null) {
 			databaseTimeFormatter = buildDatabaseTimeFormatter();
 		}
@@ -23,7 +28,7 @@ public final class Formatters
 		return databaseTimeFormatter;
 	}
 
-	private static SimpleDateFormat buildDatabaseTimeFormatter() {
+	private static DateFormat buildDatabaseTimeFormatter() {
 		return new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	}
 
@@ -32,7 +37,7 @@ public final class Formatters
 			relativeTimeFormatter = buildRelativeTimeFormatter();
 		}
 
-		return buildRelativeTimeFormatter();
+		return relativeTimeFormatter;
 	}
 
 	private static PrettyTime buildRelativeTimeFormatter() {
@@ -45,8 +50,21 @@ public final class Formatters
 		return formatter;
 	}
 
+	public static DateFormat getSystemTimeFormatter(@NonNull Context context) {
+		if (systemTimeFormatter == null) {
+			systemTimeFormatter = buildSystemTimeFormatter(context);
+		}
+
+		return systemTimeFormatter;
+	}
+
+	private static DateFormat buildSystemTimeFormatter(Context context) {
+		return android.text.format.DateFormat.getTimeFormat(context);
+	}
+
 	public static void tearDownFormatters() {
 		databaseTimeFormatter = null;
 		relativeTimeFormatter = null;
+		systemTimeFormatter = null;
 	}
 }
