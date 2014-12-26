@@ -80,7 +80,7 @@ public class TabLayout extends HorizontalScrollView implements ViewPager.OnPageC
 		addView(tabStrip, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 	}
 
-	public void setUpTabPager(@NonNull Context context, @NonNull ViewPager tabPager) {
+	public void setTabPager(@NonNull Context context, @NonNull ViewPager tabPager) {
 		this.tabPager = tabPager;
 
 		tabStrip.removeAllViews();

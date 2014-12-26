@@ -30,7 +30,7 @@ public final class Preferences
 
 	private final SharedPreferences preferences;
 
-	public static Preferences with(@NonNull Context context) {
+	public static Preferences of(@NonNull Context context) {
 		return new Preferences(context);
 	}
 

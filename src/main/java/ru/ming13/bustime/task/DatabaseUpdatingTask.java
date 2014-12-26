@@ -50,7 +50,7 @@ public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private void changeLocalDatabaseVersion() {
-		Preferences.with(context).setDatabaseVersion(getServerDatabaseVersion());
+		Preferences.of(context).setDatabaseVersion(getServerDatabaseVersion());
 	}
 
 	private String getServerDatabaseVersion() {

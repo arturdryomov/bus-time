@@ -46,7 +46,7 @@ public class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private String getLocalDatabaseVersion() {
-		return Preferences.with(context).getDatabaseVersion();
+		return Preferences.of(context).getDatabaseVersion();
 	}
 
 	private String getServerDatabaseVersion() {

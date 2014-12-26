@@ -47,7 +47,7 @@ public final class Maps
 		showErrorDialog(getErrorCode());
 	}
 
-	public void showErrorDialog(ConnectionResult connectionResult) {
+	public void showErrorDialog(@NonNull ConnectionResult connectionResult) {
 		showErrorDialog(connectionResult.getErrorCode());
 	}
 
