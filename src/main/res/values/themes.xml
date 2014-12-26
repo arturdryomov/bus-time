@@ -11,4 +11,6 @@
 		<item name="android:windowBackground">@color/background_window</item>
 	</style>
 
+	<style name="Theme.BusTime.Map" parent="Theme.BusTime"/>
+
 </resources>

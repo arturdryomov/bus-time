@@ -24,7 +24,7 @@
 
 	<string name="button_download">Скачать</string>
 
-	<string name="search_hint">Поиск остановок</string>
+	<string name="hint_search">Поиск остановок</string>
 
 	<string name="token_no_trips">сегодня рейсов больше не ожидается</string>
 	<string name="token_time_now">прямо сейчас</string>

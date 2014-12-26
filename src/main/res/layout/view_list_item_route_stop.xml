@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="horizontal"
-	android:paddingLeft="16dp"
-	android:paddingRight="16dp"
+	android:paddingLeft="@dimen/padding_list"
+	android:paddingRight="@dimen/padding_list"
 	android:layout_width="match_parent"
 	android:layout_height="?android:listPreferredItemHeight">
 
 	<FrameLayout
-		android:layout_width="56dp"
+		android:layout_width="@dimen/width_avatar"
 		android:layout_height="match_parent">
 
 		<ImageView
@@ -50,7 +50,7 @@
 		<TextView
 			android:id="@+id/text_name"
 			android:textColor="@color/text_primary"
-			android:textSize="16sp"
+			android:textSize="@dimen/text_primary"
 			android:singleLine="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
@@ -58,7 +58,7 @@
 		<TextView
 			android:id="@+id/text_direction"
 			android:textColor="@color/text_secondary"
-			android:textSize="14sp"
+			android:textSize="@dimen/text_secondary"
 			android:singleLine="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>

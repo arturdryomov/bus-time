@@ -238,7 +238,7 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private int getRouteAreaPadding() {
-		return getResources().getDimensionPixelSize(R.dimen.padding_route_area);
+		return getResources().getDimensionPixelSize(R.dimen.padding_route_path);
 	}
 
 	@Override

@@ -17,8 +17,8 @@
 
 		<ru.ming13.bustime.view.TabLayout
 			android:id="@+id/layout_tabs"
-			android:background="?colorPrimary"
-			android:elevation="8dp"
+			android:background="@color/background_primary"
+			android:elevation="@dimen/elevation_bar"
 			android:layout_width="match_parent"
 			android:layout_height="?actionBarSize"/>
 

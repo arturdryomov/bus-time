@@ -3,7 +3,7 @@
 	android:id="@android:id/list"
 	android:fastScrollEnabled="true"
 	android:divider="@color/background_divider"
-	android:dividerHeight="1dp"
+	android:dividerHeight="@dimen/height_divider"
 	android:listSelector="?selectableItemBackground"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"/>

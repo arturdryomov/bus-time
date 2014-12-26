@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<!-- Default metrics and typography style. -->
+	<dimen name="text_head">20sp</dimen>
+	<dimen name="text_subhead">18sp</dimen>
 
-	<dimen name="space_ui_element">8dp</dimen>
+	<dimen name="text_primary">16sp</dimen>
+	<dimen name="text_secondary">14sp</dimen>
 
-	<!-- Actual dimensions. -->
+	<dimen name="padding_frame">8dp</dimen>
+	<dimen name="padding_list">16dp</dimen>
+	<dimen name="padding_list_double">32dp</dimen>
+	<dimen name="padding_route_path">32dp</dimen>
 
-	<dimen name="padding_frame">@dimen/space_ui_element</dimen>
-	<dimen name="padding_route_area">32dp</dimen>
-
-	<dimen name="size_frame_border">1dp</dimen>
-
+	<dimen name="width_avatar">56dp</dimen>
 	<dimen name="width_route_path">3dp</dimen>
+	
+	<dimen name="elevation_bar">8dp</dimen>
+	
+	<dimen name="height_divider">1dp</dimen>
 
 </resources>

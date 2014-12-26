@@ -26,7 +26,7 @@
 
 	<string name="button_download">Download</string>
 
-	<string name="search_hint">Search stops</string>
+	<string name="hint_search">Search stops</string>
 
 	<string name="token_no_trips">no trips today left</string>
 	<string name="token_time_now">right now</string>

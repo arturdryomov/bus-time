@@ -2,7 +2,7 @@
 <resources>
 
 	<style name="Theme.BusTime" parent="@style/Theme.AppCompat.Light">
-		<item name="android:windowBackground">@color/background_frame_window</item>
+		<item name="android:windowBackground">@android:color/darker_gray</item>
 	</style>
 
 </resources>
