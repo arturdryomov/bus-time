@@ -8,6 +8,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -74,13 +76,22 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 		return arguments;
 	}
 
+	@InjectExtra(Fragments.Arguments.ROUTE)
+	Route route;
+
 	private GoogleMap map;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		setUpInjections();
+
 		setUpMap();
+	}
+
+	private void setUpInjections() {
+		Dart.inject(this, getArguments());
 	}
 
 	private void setUpMap() {
@@ -139,11 +150,7 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private Uri getStopsUri() {
-		return BusTimeContract.Stops.getStopsUri(getRoute().getId());
-	}
-
-	private Route getRoute() {
-		return getArguments().getParcelable(Fragments.Arguments.ROUTE);
+		return BusTimeContract.Stops.getStopsUri(route.getId());
 	}
 
 	@Override

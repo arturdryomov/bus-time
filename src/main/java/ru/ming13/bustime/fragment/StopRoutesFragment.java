@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.squareup.otto.Subscribe;
 
 import ru.ming13.bustime.R;
@@ -47,6 +49,9 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 		return arguments;
 	}
 
+	@InjectExtra(Fragments.Arguments.STOP)
+	Stop stop;
+
 	private Timer timer;
 
 	@Override
@@ -58,7 +63,13 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		setUpInjections();
+
 		setUpRoutes();
+	}
+
+	private void setUpInjections() {
+		Dart.inject(this, getArguments());
 	}
 
 	private void setUpRoutes() {
@@ -87,11 +98,7 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 	}
 
 	private Uri getRoutesUri() {
-		return BusTimeContract.Routes.getRoutesUri(getStop().getId());
-	}
-
-	private Stop getStop() {
-		return getArguments().getParcelable(Fragments.Arguments.STOP);
+		return BusTimeContract.Routes.getRoutesUri(stop.getId());
 	}
 
 	@Override

@@ -3,6 +3,8 @@ package ru.ming13.bustime.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -53,13 +55,22 @@ public class StopMapFragment extends SupportMapFragment implements OnMapReadyCal
 		return arguments;
 	}
 
+	@InjectExtra(Fragments.Arguments.STOP)
+	Stop stop;
+
 	private GoogleMap map;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		setUpInjections();
+
 		setUpMap();
+	}
+
+	private void setUpInjections() {
+		Dart.inject(this, getArguments());
 	}
 
 	private void setUpMap() {
@@ -101,13 +112,7 @@ public class StopMapFragment extends SupportMapFragment implements OnMapReadyCal
 	}
 
 	private LatLng getDefaultLocation() {
-		Stop stop = getStop();
-
 		return new LatLng(stop.getLatitude(), stop.getLongitude());
-	}
-
-	private Stop getStop() {
-		return getArguments().getParcelable(Fragments.Arguments.STOP);
 	}
 
 	private void setUpStop() {
@@ -120,8 +125,6 @@ public class StopMapFragment extends SupportMapFragment implements OnMapReadyCal
 	}
 
 	private MarkerOptions buildStopMarkerOptions() {
-		Stop stop = getStop();
-
 		return new MarkerOptions()
 			.title(stop.getName())
 			.snippet(stop.getDirection())

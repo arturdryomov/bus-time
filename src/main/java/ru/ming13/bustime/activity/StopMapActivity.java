@@ -7,6 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ru.ming13.bustime.R;
@@ -22,6 +25,9 @@ public class StopMapActivity extends ActionBarActivity
 {
 	@InjectView(R.id.toolbar)
 	Toolbar toolbar;
+
+	@InjectExtra(Intents.Extras.STOP)
+	Stop stop;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,8 @@ public class StopMapActivity extends ActionBarActivity
 
 	private void setUpInjections() {
 		ButterKnife.inject(this);
+
+		Dart.inject(this);
 	}
 
 	private void setUpBars() {
@@ -68,11 +76,7 @@ public class StopMapActivity extends ActionBarActivity
 	}
 
 	private String getStopTitle() {
-		return TitleBuilder.with(this).buildStopTitle(getStop());
-	}
-
-	private Stop getStop() {
-		return getIntent().getParcelableExtra(Intents.Extras.STOP);
+		return TitleBuilder.with(this).buildStopTitle(stop);
 	}
 
 	private void setUpMapFragment() {
@@ -80,7 +84,7 @@ public class StopMapActivity extends ActionBarActivity
 	}
 
 	private Fragment getMapFragment() {
-		return StopMapFragment.newInstance(getStop());
+		return StopMapFragment.newInstance(stop);
 	}
 
 	@Override

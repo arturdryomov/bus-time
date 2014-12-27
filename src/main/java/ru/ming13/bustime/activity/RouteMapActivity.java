@@ -7,6 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ru.ming13.bustime.R;
@@ -22,6 +25,9 @@ public class RouteMapActivity extends ActionBarActivity
 {
 	@InjectView(R.id.toolbar)
 	Toolbar toolbar;
+
+	@InjectExtra(Intents.Extras.ROUTE)
+	Route route;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,8 @@ public class RouteMapActivity extends ActionBarActivity
 
 	private void setUpInjections() {
 		ButterKnife.inject(this);
+
+		Dart.inject(this);
 	}
 
 	private void setUpBars() {
@@ -68,11 +76,7 @@ public class RouteMapActivity extends ActionBarActivity
 	}
 
 	private String getRouteTitle() {
-		return TitleBuilder.with(this).buildRouteTitle(getRoute());
-	}
-
-	private Route getRoute() {
-		return getIntent().getParcelableExtra(Intents.Extras.ROUTE);
+		return TitleBuilder.with(this).buildRouteTitle(route);
 	}
 
 	private void setUpMapFragment() {
@@ -80,7 +84,7 @@ public class RouteMapActivity extends ActionBarActivity
 	}
 
 	private Fragment getMapFragment() {
-		return RouteMapFragment.newInstance(getRoute());
+		return RouteMapFragment.newInstance(route);
 	}
 
 	@Override

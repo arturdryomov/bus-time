@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
@@ -68,6 +70,12 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	@InjectView(R.id.empty)
 	ViewGroup emptyLayout;
 
+	@InjectExtra(Fragments.Arguments.ROUTE)
+	Route route;
+
+	@InjectExtra(Fragments.Arguments.STOP)
+	Stop stop;
+
 	@Icicle
 	int timetableType;
 
@@ -80,6 +88,8 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 		View view = layoutInflater.inflate(R.layout.fragment_timetable, container, false);
 
 		ButterKnife.inject(this, view);
+
+		Dart.inject(this, getArguments());
 
 		return view;
 	}
@@ -112,15 +122,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private Uri getTimetableUri() {
-		return BusTimeContract.Timetable.getTimetableUri(getRoute().getId(), getStop().getId());
-	}
-
-	private Route getRoute() {
-		return getArguments().getParcelable(Fragments.Arguments.ROUTE);
-	}
-
-	private Stop getStop() {
-		return getArguments().getParcelable(Fragments.Arguments.STOP);
+		return BusTimeContract.Timetable.getTimetableUri(route.getId(), stop.getId());
 	}
 
 	@Subscribe

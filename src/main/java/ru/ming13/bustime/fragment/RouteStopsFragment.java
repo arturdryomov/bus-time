@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
+
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.RouteStopsAdapter;
 import ru.ming13.bustime.bus.BusProvider;
@@ -42,6 +45,9 @@ public class RouteStopsFragment extends ListFragment implements LoaderManager.Lo
 		return arguments;
 	}
 
+	@InjectExtra(Fragments.Arguments.ROUTE)
+	Route route;
+
 	@Override
 	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
 		return layoutInflater.inflate(R.layout.fragment_list, container, false);
@@ -51,7 +57,13 @@ public class RouteStopsFragment extends ListFragment implements LoaderManager.Lo
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		setUpInjections();
+
 		setUpStops();
+	}
+
+	private void setUpInjections() {
+		Dart.inject(this, getArguments());
 	}
 
 	private void setUpStops() {
@@ -80,11 +92,7 @@ public class RouteStopsFragment extends ListFragment implements LoaderManager.Lo
 	}
 
 	private Uri getStopsUri() {
-		return BusTimeContract.Stops.getStopsUri(getRoute().getId());
-	}
-
-	private Route getRoute() {
-		return getArguments().getParcelable(Fragments.Arguments.ROUTE);
+		return BusTimeContract.Stops.getStopsUri(route.getId());
 	}
 
 	@Override

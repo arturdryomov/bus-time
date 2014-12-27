@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
@@ -30,6 +32,9 @@ public class RouteStopsActivity extends ActionBarActivity
 	@InjectView(R.id.toolbar)
 	Toolbar toolbar;
 
+	@InjectExtra(Intents.Extras.ROUTE)
+	Route route;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,6 +47,8 @@ public class RouteStopsActivity extends ActionBarActivity
 
 	private void setUpInjections() {
 		ButterKnife.inject(this);
+
+		Dart.inject(this);
 	}
 
 	private void setUpUi() {
@@ -69,11 +76,7 @@ public class RouteStopsActivity extends ActionBarActivity
 	}
 
 	private String getRouteTitle() {
-		return TitleBuilder.with(this).buildRouteTitle(getRoute());
-	}
-
-	private Route getRoute() {
-		return getIntent().getParcelableExtra(Intents.Extras.ROUTE);
+		return TitleBuilder.with(this).buildRouteTitle(route);
 	}
 
 	private void setUpFrameTitles() {
@@ -102,7 +105,7 @@ public class RouteStopsActivity extends ActionBarActivity
 	}
 
 	private Fragment getStopsFragment() {
-		return RouteStopsFragment.newInstance(getRoute());
+		return RouteStopsFragment.newInstance(route);
 	}
 
 	@Subscribe
@@ -127,11 +130,11 @@ public class RouteStopsActivity extends ActionBarActivity
 	}
 
 	private Fragment getTimetableFragment(Stop stop) {
-		return TimetableFragment.newInstance(getRoute(), stop);
+		return TimetableFragment.newInstance(route, stop);
 	}
 
 	private void startTimetableActivity(Stop stop) {
-		Intent intent = Intents.Builder.with(this).buildTimetableIntent(getRoute(), stop);
+		Intent intent = Intents.Builder.with(this).buildTimetableIntent(route, stop);
 		startActivity(intent);
 	}
 
@@ -159,7 +162,7 @@ public class RouteStopsActivity extends ActionBarActivity
 	}
 
 	private void startRouteStopsMapActivity() {
-		Intent intent = Intents.Builder.with(this).buildRouteMapIntent(getRoute());
+		Intent intent = Intents.Builder.with(this).buildRouteMapIntent(route);
 		startActivity(intent);
 	}
 
