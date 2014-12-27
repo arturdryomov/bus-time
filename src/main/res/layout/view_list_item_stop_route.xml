@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="horizontal"
+	android:background="?attr/backgroundActivated"
 	android:gravity="center_vertical"
 	android:paddingLeft="@dimen/padding_list"
 	android:paddingRight="@dimen/padding_list"

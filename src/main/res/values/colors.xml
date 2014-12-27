@@ -6,6 +6,7 @@
 	<color name="background_accent">@color/background_primary</color>
 
 	<color name="background_divider">#1e000000</color>
+	<color name="background_frame">#ffffff</color>
 	<color name="background_transparent">#99000000</color>
 	<color name="background_window">#f9f9f9</color>
 

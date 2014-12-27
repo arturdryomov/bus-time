@@ -7,7 +7,7 @@
 	android:layout_height="match_parent">
 
 	<include
-		android:id="@+id/layout_frames"
+		android:id="@+id/content"
 		layout="@layout/activity_container"/>
 
 	<ProgressBar
@@ -17,4 +17,3 @@
 		android:layout_height="wrap_content"/>
 
 </ViewAnimator>
-

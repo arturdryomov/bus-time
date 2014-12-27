@@ -23,6 +23,7 @@ import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.Optional;
 import icepick.Icepick;
 import icepick.Icicle;
 import ru.ming13.bustime.R;
@@ -53,12 +54,15 @@ import ru.ming13.bustime.view.TabLayout;
 public class HomeActivity extends ActionBarActivity implements EventListener, ActionClickListener
 {
 	@InjectView(R.id.toolbar)
+	@Optional
 	Toolbar toolbar;
 
 	@InjectView(R.id.layout_tabs)
+	@Optional
 	TabLayout tabLayout;
 
 	@InjectView(R.id.pager_tabs)
+	@Optional
 	ViewPager tabPager;
 
 	@Icicle
@@ -207,11 +211,7 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 	}
 
 	private void hideProgress() {
-		if (Frames.at(this).areAvailable()) {
-			ViewDirector.of(this, R.id.animator).show(R.id.layout_frames);
-		} else {
-			ViewDirector.of(this, R.id.animator).show(R.id.content);
-		}
+		ViewDirector.of(this, R.id.animator).show(R.id.content);
 
 		this.isProgressVisible = false;
 	}
@@ -385,8 +385,10 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 	}
 
 	private void tearDownPreferences() {
-		int selectedTabPosition = tabPager.getCurrentItem();
+		if (!Frames.at(this).areAvailable()) {
+			int selectedTabPosition = tabPager.getCurrentItem();
 
-		Preferences.of(this).setHomeTabPosition(selectedTabPosition);
+			Preferences.of(this).setHomeTabPosition(selectedTabPosition);
+		}
 	}
 }
