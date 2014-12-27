@@ -125,19 +125,27 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 
 		BusProvider.getBus().register(this);
 
-		setUpTimer();
+		// Ignore first run to avoid double content loading
 
-		setUpRoutesContentForced();
+		if (isTimerAvailable()) {
+			setUpRoutesContentForced();
+		}
+
+		setUpTimer();
+	}
+
+	private boolean isTimerAvailable() {
+		return timer != null;
+	}
+
+	private void setUpRoutesContentForced() {
+		getLoaderManager().initLoader(Loaders.STOP_ROUTES, null, this).forceLoad();
 	}
 
 	private void setUpTimer() {
 		this.timer = new Timer();
 
 		timer.start();
-	}
-
-	private void setUpRoutesContentForced() {
-		getLoaderManager().initLoader(Loaders.STOP_ROUTES, null, this).forceLoad();
 	}
 
 	@Subscribe
