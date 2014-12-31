@@ -78,7 +78,7 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 
 		setUpInjections();
 
-		setUpSavedState(savedInstanceState);
+		setUpState(savedInstanceState);
 
 		setUpUi();
 
@@ -89,7 +89,7 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 		ButterKnife.inject(this);
 	}
 
-	private void setUpSavedState(Bundle state) {
+	private void setUpState(Bundle state) {
 		Icepick.restoreInstanceState(this, state);
 	}
 

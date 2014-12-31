@@ -29,6 +29,7 @@ public class StopLoadingTask extends AsyncTask<Void, Void, BusEvent>
 
 	private StopLoadingTask(Context context, long stopId) {
 		this.contentResolver = context.getContentResolver();
+
 		this.stopId = stopId;
 	}
 

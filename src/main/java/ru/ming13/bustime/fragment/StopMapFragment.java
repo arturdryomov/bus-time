@@ -11,7 +11,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import ru.ming13.bustime.R;
@@ -120,8 +119,7 @@ public class StopMapFragment extends SupportMapFragment implements OnMapReadyCal
 	}
 
 	private void setUpStopMarker() {
-		Marker stopMarker = map.addMarker(buildStopMarkerOptions());
-		stopMarker.showInfoWindow();
+		map.addMarker(buildStopMarkerOptions()).showInfoWindow();
 	}
 
 	private MarkerOptions buildStopMarkerOptions() {

@@ -38,6 +38,7 @@ public class TimetableInformationLoadingTask extends AsyncTask<Void, Void, BusEv
 
 	private TimetableInformationLoadingTask(Context context, Uri timetableUri) {
 		this.contentResolver = context.getContentResolver();
+
 		this.timetableUri = timetableUri;
 	}
 

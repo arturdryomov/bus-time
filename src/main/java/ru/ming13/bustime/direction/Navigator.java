@@ -21,7 +21,7 @@ public class Navigator
 		private Constraints() {
 		}
 
-		public static final int WAYPOINTS_COUNT = 8;
+		public static final int WAYPOINT_COUNT = 8;
 	}
 
 	private static final class Urls

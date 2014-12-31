@@ -85,24 +85,26 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 	@Override
 	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = layoutInflater.inflate(R.layout.fragment_timetable, container, false);
-
-		ButterKnife.inject(this, view);
-
-		Dart.inject(this, getArguments());
-
-		return view;
+		return layoutInflater.inflate(R.layout.fragment_timetable, container, false);
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		setUpInjections();
+
 		setUpState(savedInstanceState);
 
 		setUpToolbar();
 
 		setUpTimetableType();
+	}
+
+	private void setUpInjections() {
+		ButterKnife.inject(this, getView());
+
+		Dart.inject(this, getArguments());
 	}
 
 	private void setUpState(Bundle state) {

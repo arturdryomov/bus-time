@@ -74,7 +74,7 @@ public class RoutePathLoadingTask extends AsyncTask<Void, Void, BusEvent>
 	private int getPositionsPartitionSize() {
 		// Origin + destination + waypoints
 
-		return 1 + 1 + Navigator.Constraints.WAYPOINTS_COUNT;
+		return 1 + 1 + Navigator.Constraints.WAYPOINT_COUNT;
 	}
 
 	@Override
