@@ -103,7 +103,7 @@ dependencies {
     compile "com.venmo.cursor:library:0.3"
     compile "commons-io:commons-io:2.4"
     compile "org.apache.commons:commons-lang3:3.3.+"
-    compile "org.ocpsoft.prettytime:prettytime:3.2.5.Final"
+    compile "org.ocpsoft.prettytime:prettytime:3.2.7.Final"
 
     provided "com.github.frankiesardo:icepick-processor:2.3.+"
 }
