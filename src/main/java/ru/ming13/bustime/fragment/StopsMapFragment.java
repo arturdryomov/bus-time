@@ -159,12 +159,24 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 		if (cameraPosition != null) {
 			setUpSavedLocation();
 		} else {
+			// Avoid default location flickering at a center of the planet
+
+			setUpDefaultLocation();
+
 			setUpLocationClient();
 		}
 	}
 
 	private void setUpSavedLocation() {
 		map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+	}
+
+	private void setUpDefaultLocation() {
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(getDefaultLocation(), Defaults.ZOOM));
+	}
+
+	private LatLng getDefaultLocation() {
+		return new LatLng(Defaults.LOCATION_LATITUDE, Defaults.LOCATION_LONGITUDE);
 	}
 
 	private void setUpLocationClient() {
@@ -208,10 +220,6 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 
 	private boolean isLocationAvailable(Location location) {
 		return location != null;
-	}
-
-	private LatLng getDefaultLocation() {
-		return new LatLng(Defaults.LOCATION_LATITUDE, Defaults.LOCATION_LONGITUDE);
 	}
 
 	private boolean isLocationFarAway(Location location) {

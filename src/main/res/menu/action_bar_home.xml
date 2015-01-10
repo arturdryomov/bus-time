@@ -3,14 +3,14 @@
 	xmlns:auto="http://schemas.android.com/apk/res-auto">
 
 	<item
-		android:id="@+id/menu_stops_search"
+		android:id="@+id/menu_search"
 		android:icon="@drawable/ic_menu_search"
 		android:title="@string/menu_stops_search"
 		auto:showAsAction="always|collapseActionView"
 		auto:actionViewClass="android.support.v7.widget.SearchView"/>
 
 	<item
-		android:id="@+id/menu_stops_map"
+		android:id="@+id/menu_map"
 		android:icon="@drawable/ic_menu_map"
 		android:title="@string/menu_stops_map"
 		auto:showAsAction="ifRoom"/>
