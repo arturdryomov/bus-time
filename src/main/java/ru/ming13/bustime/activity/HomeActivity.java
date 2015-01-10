@@ -249,7 +249,7 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 	}
 
 	private SearchView getStopsSearchView(Menu menu) {
-		MenuItem stopsSearchMenuItem = menu.findItem(R.id.menu_stops_search);
+		MenuItem stopsSearchMenuItem = menu.findItem(R.id.menu_search);
 
 		return (SearchView) MenuItemCompat.getActionView(stopsSearchMenuItem);
 	}
@@ -270,14 +270,14 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 
 	private void setUpStopsMap(Menu menu) {
 		if (!Maps.at(this).areHardwareAvailable()) {
-			menu.findItem(R.id.menu_stops_map).setVisible(false);
+			menu.findItem(R.id.menu_map).setVisible(false);
 		}
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
-			case R.id.menu_stops_map:
+			case R.id.menu_map:
 				startStopsMapActivity();
 				return true;
 
@@ -385,10 +385,16 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 	}
 
 	private void tearDownPreferences() {
-		if (!Frames.at(this).areAvailable()) {
+		if (areTabsAvailable()) {
 			int selectedTabPosition = tabPager.getCurrentItem();
 
 			Preferences.of(this).setHomeTabPosition(selectedTabPosition);
 		}
+	}
+
+	private boolean areTabsAvailable() {
+		// Frames check will not work because orientation is already changed at this point
+
+		return tabPager != null;
 	}
 }
