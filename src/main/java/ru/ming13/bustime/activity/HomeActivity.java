@@ -5,32 +5,36 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ViewAnimator;
 
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.ActionClickListener;
+import com.nispok.snackbar.listeners.EventListener;
 import com.squareup.otto.Subscribe;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.Optional;
+import icepick.Icepick;
+import icepick.Icicle;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.TabPagerAdapter;
 import ru.ming13.bustime.bus.BusEventsCollector;
 import ru.ming13.bustime.bus.BusProvider;
-import ru.ming13.bustime.bus.DatabaseUpdateAcceptedEvent;
 import ru.ming13.bustime.bus.DatabaseUpdateAvailableEvent;
-import ru.ming13.bustime.bus.DatabaseUpdateDiscardedEvent;
 import ru.ming13.bustime.bus.DatabaseUpdateFinishedEvent;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.bus.StopLoadedEvent;
 import ru.ming13.bustime.bus.StopSelectedEvent;
-import ru.ming13.bustime.fragment.DatabaseUpdateBanner;
 import ru.ming13.bustime.fragment.RoutesFragment;
 import ru.ming13.bustime.fragment.StopsFragment;
 import ru.ming13.bustime.model.Route;
@@ -42,128 +46,95 @@ import ru.ming13.bustime.task.StopLoadingTask;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Intents;
-import ru.ming13.bustime.util.MapsUtil;
+import ru.ming13.bustime.util.Maps;
 import ru.ming13.bustime.util.Preferences;
+import ru.ming13.bustime.util.ViewDirector;
+import ru.ming13.bustime.view.TabLayout;
 
-public class HomeActivity extends ActionBarActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
+public class HomeActivity extends ActionBarActivity implements EventListener, ActionClickListener
 {
-	private static final class SavedState
-	{
-		private SavedState() {
-		}
+	@InjectView(R.id.toolbar)
+	@Optional
+	Toolbar toolbar;
 
-		public static final String PROGRESS_VISIBLE = "PROGRESS_VISIBLE";
-		public static final String DATABASE_UPDATE_DONE = "DATABASE_UPDATE_DONE";
-	}
+	@InjectView(R.id.layout_tabs)
+	@Optional
+	TabLayout tabLayout;
 
-	private boolean isDatabaseUpdateDone;
-	private boolean isProgressVisible;
+	@InjectView(R.id.pager_tabs)
+	@Optional
+	ViewPager tabPager;
+
+	@Icicle
+	boolean isDatabaseUpdateDone;
+
+	@Icicle
+	boolean isProgressVisible;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 
-		setUpSavedState(savedInstanceState);
+		setUpInjections();
+
+		setUpState(savedInstanceState);
+
 		setUpUi();
 
 		setUpDatabaseUpdate();
 	}
 
-	private void setUpSavedState(Bundle state) {
-		if (state == null) {
-			return;
-		}
-
-		isDatabaseUpdateDone = loadDatabaseUpdateDone(state);
-		isProgressVisible = loadProgressVisible(state);
+	private void setUpInjections() {
+		ButterKnife.inject(this);
 	}
 
-	private boolean loadDatabaseUpdateDone(Bundle state) {
-		return state.getBoolean(SavedState.DATABASE_UPDATE_DONE);
-	}
-
-	private boolean loadProgressVisible(Bundle state) {
-		return state.getBoolean(SavedState.PROGRESS_VISIBLE);
+	private void setUpState(Bundle state) {
+		Icepick.restoreInstanceState(this, state);
 	}
 
 	private void setUpUi() {
+		setUpToolbar();
+
 		if (Frames.at(this).areAvailable()) {
 			setUpFrames();
 		} else {
 			setUpTabs();
-			setUpTabsPager();
-			setUpSelectedTab();
+			setUpTabsSelection();
 		}
 
 		setUpProgress();
 	}
 
-	private void setUpFrames() {
-		Frames.at(this).setLeftFrameTitle(getString(R.string.title_routes));
-		Frames.at(this).setRightFrameTitle(getString(R.string.title_stops));
+	private void setUpToolbar() {
+		setSupportActionBar(toolbar);
+	}
 
-		Fragments.Operator.at(this).set(RoutesFragment.newInstance(), R.id.container_left_frame);
-		Fragments.Operator.at(this).set(StopsFragment.newInstance(), R.id.container_right_frame);
+	private void setUpFrames() {
+		Frames.at(this).setLeftFrameTitle(R.string.title_routes);
+		Frames.at(this).setRightFrameTitle(R.string.title_stops);
+
+		Fragments.Operator.at(this).set(getRoutesFragment(), R.id.container_left_frame);
+		Fragments.Operator.at(this).set(getStopsFragment(), R.id.container_right_frame);
+	}
+
+	private Fragment getRoutesFragment() {
+		return RoutesFragment.newInstance();
+	}
+
+	private Fragment getStopsFragment() {
+		return StopsFragment.newInstance();
 	}
 
 	private void setUpTabs() {
-		ActionBar actionBar = getSupportActionBar();
-
-		actionBar.addTab(buildTab(R.string.title_routes), TabPagerAdapter.TabPosition.ROUTES);
-		actionBar.addTab(buildTab(R.string.title_stops), TabPagerAdapter.TabPosition.STOPS);
+		tabPager.setAdapter(new TabPagerAdapter(this, getSupportFragmentManager()));
+		tabLayout.setTabPager(getSupportActionBar().getThemedContext(), tabPager);
 	}
 
-	private ActionBar.Tab buildTab(int tabTitleResourceId) {
-		ActionBar.Tab tab = getSupportActionBar().newTab();
+	private void setUpTabsSelection() {
+		int selectedTabPosition = Preferences.of(this).getHomeTabPosition();
 
-		tab.setTabListener(this);
-		tab.setText(tabTitleResourceId);
-
-		return tab;
-	}
-
-	@Override
-	public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-		getTabsPager().setCurrentItem(tab.getPosition());
-	}
-
-	private ViewPager getTabsPager() {
-		return (ViewPager) findViewById(R.id.pager_tabs);
-	}
-
-	@Override
-	public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-	}
-
-	@Override
-	public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-	}
-
-	private void setUpTabsPager() {
-		ViewPager tabsPager = getTabsPager();
-
-		tabsPager.setAdapter(new TabPagerAdapter(getSupportFragmentManager()));
-		tabsPager.setOnPageChangeListener(this);
-	}
-
-	@Override
-	public void onPageSelected(int position) {
-		getSupportActionBar().setSelectedNavigationItem(position);
-	}
-
-	@Override
-	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-	}
-
-	@Override
-	public void onPageScrollStateChanged(int position) {
-	}
-
-	private void setUpSelectedTab() {
-		int selectedTabPosition = Preferences.with(this).getHomeTabPosition();
-
-		getSupportActionBar().setSelectedNavigationItem(selectedTabPosition);
+		tabPager.setCurrentItem(selectedTabPosition);
 	}
 
 	private void setUpProgress() {
@@ -173,20 +144,15 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void showProgress() {
-		ViewAnimator animator = (ViewAnimator) findViewById(R.id.animator);
-		animator.setDisplayedChild(animator.indexOfChild(findViewById(R.id.progress)));
+		ViewDirector.of(this, R.id.animator).show(R.id.progress);
+
+		this.isProgressVisible = true;
 	}
 
 	private void setUpDatabaseUpdate() {
 		if (!isDatabaseUpdateDone) {
 			DatabaseUpdateCheckingTask.execute(this);
-
-			saveDatabaseUpdateDone();
 		}
-	}
-
-	private void saveDatabaseUpdateDone() {
-		isDatabaseUpdateDone = true;
 	}
 
 	@Subscribe
@@ -195,28 +161,38 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void showDatabaseUpdateBanner() {
-		if (!isDatabaseUpdateBannerVisible()) {
-			DatabaseUpdateBanner.newInstance().show(getSupportFragmentManager());
-		}
+		Snackbar.with(this)
+			.duration(Snackbar.SnackbarDuration.LENGTH_INDEFINITE)
+			.text(R.string.message_updates)
+			.actionLabel(R.string.button_download)
+			.actionColorResource(R.color.background_primary)
+			.actionListener(this)
+			.eventListener(this)
+			.show(this);
 	}
 
-	private boolean isDatabaseUpdateBannerVisible() {
-		return getDatabaseUpdateBanner() != null;
+	@Override
+	public void onShow(Snackbar snackbar) {
 	}
 
-	private DatabaseUpdateBanner getDatabaseUpdateBanner() {
-		return (DatabaseUpdateBanner) Fragments.Operator.at(this).get(DatabaseUpdateBanner.TAG);
+	@Override
+	public void onShown(Snackbar snackbar) {
 	}
 
-	@Subscribe
-	public void onDatabaseUpdateAccepted(DatabaseUpdateAcceptedEvent event) {
-		hideDatabaseUpdateBanner();
+	@Override
+	public void onDismiss(Snackbar snackbar) {
+	}
+
+	@Override
+	public void onDismissed(Snackbar snackbar) {
+		this.isDatabaseUpdateDone = true;
+	}
+
+	@Override
+	public void onActionClicked(Snackbar snackbar) {
+		this.isDatabaseUpdateDone = true;
 
 		startDatabaseUpdate();
-	}
-
-	private void hideDatabaseUpdateBanner() {
-		getDatabaseUpdateBanner().hide(getSupportFragmentManager());
 	}
 
 	private void startDatabaseUpdate() {
@@ -235,18 +211,9 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void hideProgress() {
-		ViewAnimator animator = (ViewAnimator) findViewById(R.id.animator);
+		ViewDirector.of(this, R.id.animator).show(R.id.content);
 
-		if (Frames.at(this).areAvailable()) {
-			animator.setDisplayedChild(animator.indexOfChild(findViewById(R.id.layout_frames)));
-		} else {
-			animator.setDisplayedChild(animator.indexOfChild(findViewById(R.id.pager_tabs)));
-		}
-	}
-
-	@Subscribe
-	public void onDatabaseUpdatesDiscarded(DatabaseUpdateDiscardedEvent event) {
-		hideDatabaseUpdateBanner();
+		this.isProgressVisible = false;
 	}
 
 	@Override
@@ -282,38 +249,35 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private SearchView getStopsSearchView(Menu menu) {
-		MenuItem stopsSearchMenuItem = menu.findItem(R.id.menu_stops_search);
+		MenuItem stopsSearchMenuItem = menu.findItem(R.id.menu_search);
+
 		return (SearchView) MenuItemCompat.getActionView(stopsSearchMenuItem);
 	}
 
 	private void setUpStopsSearchInformation(SearchView stopsSearchView) {
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
 		stopsSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 	}
 
 	private void setUpStopsSearchView(SearchView stopsSearchView) {
-		LinearLayout stopsSearchPlate = (LinearLayout) stopsSearchView.findViewById(R.id.search_plate);
-		EditText stopsSearchQueryEdit = (EditText) stopsSearchView.findViewById(R.id.search_src_text);
+		LinearLayout stopsSearchPlate = ButterKnife.findById(stopsSearchView, R.id.search_plate);
+		EditText stopsSearchQueryEdit = ButterKnife.findById(stopsSearchView, R.id.search_src_text);
 
-		stopsSearchPlate.setBackgroundResource(R.drawable.abc_textfield_search_default_holo_dark);
-		stopsSearchQueryEdit.setHintTextColor(getResources().getColor(R.color.text_hint_search));
+		stopsSearchPlate.setBackgroundResource(R.drawable.abc_textfield_search_material);
+		stopsSearchQueryEdit.setHintTextColor(getResources().getColor(R.color.text_hint_light));
 	}
 
 	private void setUpStopsMap(Menu menu) {
-		if (!MapsUtil.with(this).areMapsHardwareAvailable()) {
-			disableStopsMap(menu);
+		if (!Maps.at(this).areHardwareAvailable()) {
+			menu.findItem(R.id.menu_map).setVisible(false);
 		}
-	}
-
-	private void disableStopsMap(Menu menu) {
-		MenuItem stopsMapMenuItem = menu.findItem(R.id.menu_stops_map);
-		stopsMapMenuItem.setVisible(false);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
-			case R.id.menu_stops_map:
+			case R.id.menu_map:
 				startStopsMapActivity();
 				return true;
 
@@ -331,11 +295,11 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	}
 
 	private void startStopsMapActivity() {
-		if (MapsUtil.with(this).areMapsSoftwareAvailable()) {
+		if (Maps.at(this).areSoftwareAvailable()) {
 			Intent intent = Intents.Builder.with(this).buildStopsMapIntent();
 			startActivity(intent);
 		} else {
-			MapsUtil.with(this).showErrorDialog();
+			Maps.at(this).showErrorDialog();
 		}
 	}
 
@@ -406,39 +370,31 @@ public class HomeActivity extends ActionBarActivity implements ActionBar.TabList
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		saveDatabaseUpdateDone(outState);
-		saveProgressVisible(outState);
+		tearDownState(outState);
 	}
 
-	private void saveDatabaseUpdateDone(Bundle state) {
-		state.putBoolean(SavedState.DATABASE_UPDATE_DONE, isDatabaseUpdateDone);
-	}
-
-	private void saveProgressVisible(Bundle state) {
-		ViewAnimator animator = (ViewAnimator) findViewById(R.id.animator);
-
-		int visibleView = animator.getDisplayedChild();
-		int progressView = animator.indexOfChild(findViewById(R.id.progress));
-
-		state.putBoolean(SavedState.PROGRESS_VISIBLE, visibleView == progressView);
+	private void tearDownState(Bundle state) {
+		Icepick.saveInstanceState(this, state);
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 
-		if (isTabSelected()) {
-			saveSelectedTab();
+		tearDownPreferences();
+	}
+
+	private void tearDownPreferences() {
+		if (areTabsAvailable()) {
+			int selectedTabPosition = tabPager.getCurrentItem();
+
+			Preferences.of(this).setHomeTabPosition(selectedTabPosition);
 		}
 	}
 
-	private boolean isTabSelected() {
-		return getSupportActionBar().getSelectedNavigationIndex() >= 0;
-	}
+	private boolean areTabsAvailable() {
+		// Frames check will not work because orientation is already changed at this point
 
-	private void saveSelectedTab() {
-		int selectedTabPosition = getSupportActionBar().getSelectedNavigationIndex();
-
-		Preferences.with(this).setHomeTabPosition(selectedTabPosition);
+		return tabPager != null;
 	}
 }

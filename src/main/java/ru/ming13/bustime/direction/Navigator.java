@@ -1,5 +1,7 @@
 package ru.ming13.bustime.direction;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
 
@@ -19,10 +21,16 @@ public class Navigator
 		private Constraints() {
 		}
 
-		public static final int WAYPOINTS_COUNT = 8;
+		public static final int WAYPOINT_COUNT = 8;
 	}
 
-	private static final String MAPS_URL = "https://maps.googleapis.com/maps/api";
+	private static final class Urls
+	{
+		private Urls() {
+		}
+
+		public static final String ENDPOINT = "https://maps.googleapis.com/maps/api";
+	}
 
 	private final DirectionsApi directionsApi;
 
@@ -32,13 +40,13 @@ public class Navigator
 
 	private DirectionsApi buildDirectionsApi() {
 		RestAdapter directionsAdapter = new RestAdapter.Builder()
-			.setEndpoint(MAPS_URL)
+			.setEndpoint(Urls.ENDPOINT)
 			.build();
 
 		return directionsAdapter.create(DirectionsApi.class);
 	}
 
-	public List<LatLng> getDirectionPolylinePositions(LatLng originPosition, LatLng destinationPosition, List<LatLng> waypointPositions) {
+	public List<LatLng> getDirectionPolylinePositions(@NonNull LatLng originPosition, @NonNull LatLng destinationPosition, @NonNull List<LatLng> waypointPositions) {
 		try {
 			DirectionsInformation directionsInformation = directionsApi.getDirectionsInformation(
 				formatPosition(originPosition),
@@ -47,7 +55,7 @@ public class Navigator
 
 			return parseDirectionPolylinePositions(directionsInformation);
 		} catch (RetrofitError e) {
-			return new ArrayList<LatLng>();
+			return new ArrayList<>();
 		}
 	}
 
@@ -56,7 +64,7 @@ public class Navigator
 	}
 
 	private String formatPositions(List<LatLng> positions) {
-		List<String> formattedPositions = new ArrayList<String>();
+		List<String> formattedPositions = new ArrayList<>();
 
 		for (LatLng position : positions) {
 			formattedPositions.add(formatPosition(position));
@@ -66,8 +74,12 @@ public class Navigator
 	}
 
 	private List<LatLng> parseDirectionPolylinePositions(DirectionsInformation directionsInformation) {
-		final int routePosition = 0;
+		if (!directionsInformation.isEmpty()) {
+			final int routePosition = 0;
 
-		return PolyUtil.decode(directionsInformation.getPolylinePositions(routePosition));
+			return PolyUtil.decode(directionsInformation.getPolylinePositions(routePosition));
+		} else {
+			return new ArrayList<>();
+		}
 	}
 }

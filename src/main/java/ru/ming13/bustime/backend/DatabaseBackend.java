@@ -1,6 +1,7 @@
 package ru.ming13.bustime.backend;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,7 +17,7 @@ public class DatabaseBackend
 {
 	private final DatabaseBackendApi backendApi;
 
-	public static DatabaseBackend with(Context context) {
+	public static DatabaseBackend with(@NonNull Context context) {
 		return new DatabaseBackend(context);
 	}
 

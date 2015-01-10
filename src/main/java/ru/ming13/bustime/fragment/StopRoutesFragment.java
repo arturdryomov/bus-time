@@ -3,6 +3,7 @@ package ru.ming13.bustime.fragment;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.squareup.otto.Subscribe;
 
 import ru.ming13.bustime.R;
@@ -20,7 +23,7 @@ import ru.ming13.bustime.animation.ListOrderAnimator;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
 import ru.ming13.bustime.bus.TimeChangedEvent;
-import ru.ming13.bustime.model.Route;
+import ru.ming13.bustime.cursor.StopRoutesCursor;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Fragments;
@@ -30,7 +33,7 @@ import ru.ming13.bustime.util.Timer;
 
 public class StopRoutesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
-	public static StopRoutesFragment newInstance(Stop stop) {
+	public static StopRoutesFragment newInstance(@NonNull Stop stop) {
 		StopRoutesFragment fragment = new StopRoutesFragment();
 
 		fragment.setArguments(buildArguments(stop));
@@ -46,6 +49,9 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 		return arguments;
 	}
 
+	@InjectExtra(Fragments.Arguments.STOP)
+	Stop stop;
+
 	private Timer timer;
 
 	@Override
@@ -57,7 +63,13 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		setUpInjections();
+
 		setUpRoutes();
+	}
+
+	private void setUpInjections() {
+		Dart.inject(this, getArguments());
 	}
 
 	private void setUpRoutes() {
@@ -86,11 +98,7 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 	}
 
 	private Uri getRoutesUri() {
-		return BusTimeContract.Routes.getRoutesUri(getStop().getId());
-	}
-
-	private Stop getStop() {
-		return getArguments().getParcelable(Fragments.Arguments.STOP);
+		return BusTimeContract.Routes.getRoutesUri(stop.getId());
 	}
 
 	@Override
@@ -98,7 +106,7 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 		ListOrderAnimator animator = new ListOrderAnimator(getListView());
 		animator.saveListState();
 
-		getRoutesAdapter().swapCursor(routesCursor);
+		getRoutesAdapter().swapCursor(new StopRoutesCursor(routesCursor));
 
 		animator.animateReorderedListState();
 	}
@@ -109,29 +117,13 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> routesLoader) {
-		getRoutesAdapter().swapCursor(null);
 	}
 
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 
-		BusProvider.getBus().post(new RouteSelectedEvent(getRoute(id, position)));
-	}
-
-	private Route getRoute(long routeId, int routePosition) {
-		Cursor routesCursor = getRoutesCursor(routePosition);
-
-		String routeNumber = routesCursor.getString(
-			routesCursor.getColumnIndex(BusTimeContract.Routes.NUMBER));
-		String routeDescription = routesCursor.getString(
-			routesCursor.getColumnIndex(BusTimeContract.Routes.DESCRIPTION));
-
-		return new Route(routeId, routeNumber, routeDescription);
-	}
-
-	private Cursor getRoutesCursor(int routePosition) {
-		return (Cursor) getRoutesAdapter().getItem(routePosition);
+		BusProvider.getBus().post(new RouteSelectedEvent(getRoutesAdapter().getItem(position).getRoute()));
 	}
 
 	@Override
@@ -140,18 +132,27 @@ public class StopRoutesFragment extends ListFragment implements LoaderManager.Lo
 
 		BusProvider.getBus().register(this);
 
-		setUpTimer();
+		// Ignore first run to avoid double content loading
 
-		setUpRoutesContentForced();
+		if (isTimerAvailable()) {
+			setUpRoutesContentForced();
+		}
+
+		setUpTimer();
 	}
 
-	private void setUpTimer() {
-		timer = new Timer();
-		timer.start();
+	private boolean isTimerAvailable() {
+		return timer != null;
 	}
 
 	private void setUpRoutesContentForced() {
 		getLoaderManager().initLoader(Loaders.STOP_ROUTES, null, this).forceLoad();
+	}
+
+	private void setUpTimer() {
+		this.timer = new Timer();
+
+		timer.start();
 	}
 
 	@Subscribe

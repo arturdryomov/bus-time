@@ -11,10 +11,6 @@ public class Stop implements Parcelable
 	private final double latitude;
 	private final double longitude;
 
-	public Stop(long id, String name, String direction) {
-		this(id, name, direction, 0, 0);
-	}
-
 	public Stop(long id, String name, String direction, double latitude, double longitude) {
 		this.id = id;
 		this.name = name;

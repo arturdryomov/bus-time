@@ -4,11 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.squareup.otto.Subscribe;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
@@ -20,75 +25,88 @@ import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Intents;
+import ru.ming13.bustime.util.Maps;
 import ru.ming13.bustime.util.TitleBuilder;
 
 public class RouteStopsActivity extends ActionBarActivity
 {
+	@InjectView(R.id.toolbar)
+	Toolbar toolbar;
+
+	@InjectExtra(Intents.Extras.ROUTE)
+	Route route;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_container);
+
+		setUpInjections();
 
 		setUpUi();
 	}
 
+	private void setUpInjections() {
+		ButterKnife.inject(this);
+
+		Dart.inject(this);
+	}
+
 	private void setUpUi() {
+		setUpToolbar();
+
 		if (Frames.at(this).areAvailable()) {
 			setUpTitle();
-			setUpFrames();
-			setUpEmptyFrame();
+			setUpFrameTitles();
+			setUpMessageFragment();
 		} else {
 			setUpSubtitle();
-			setUpContainer();
 		}
 
 		setUpStopsFragment();
 	}
 
+	private void setUpToolbar() {
+		setSupportActionBar(toolbar);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+
 	private void setUpTitle() {
-		getSupportActionBar().setTitle(buildRouteTitle());
+		getSupportActionBar().setTitle(getRouteTitle());
 	}
 
-	private String buildRouteTitle() {
-		return TitleBuilder.with(this).buildRouteTitle(getRoute());
+	private String getRouteTitle() {
+		return TitleBuilder.with(this).buildRouteTitle(route);
 	}
 
-	private Route getRoute() {
-		return getIntent().getParcelableExtra(Intents.Extras.ROUTE);
+	private void setUpFrameTitles() {
+		Frames.at(this).setLeftFrameTitle(R.string.title_stops);
+		Frames.at(this).setRightFrameTitle(R.string.title_timetable);
 	}
 
-	private void setUpFrames() {
-		setContentView(R.layout.activity_frames);
-
-		Frames.at(this).setLeftFrameTitle(getString(R.string.title_stops));
-		Frames.at(this).setRightFrameTitle(getString(R.string.title_timetable));
+	private void setUpMessageFragment() {
+		Fragments.Operator.at(this).set(getMessageFragment(), R.id.container_right_frame);
 	}
 
-	private void setUpEmptyFrame() {
-		Fragments.Operator.at(this).set(buildMessageFragment(), R.id.container_right_frame);
-	}
-
-	private Fragment buildMessageFragment() {
+	private Fragment getMessageFragment() {
 		return MessageFragment.newInstance(getString(R.string.message_no_stop));
 	}
 
 	private void setUpSubtitle() {
-		getSupportActionBar().setSubtitle(buildRouteTitle());
-	}
-
-	private void setUpContainer() {
-		setContentView(R.layout.activity_container);
+		getSupportActionBar().setSubtitle(getRouteTitle());
 	}
 
 	private void setUpStopsFragment() {
 		if (Frames.at(this).areAvailable()) {
-			Fragments.Operator.at(this).set(buildStopsFragment(), R.id.container_left_frame);
+			Fragments.Operator.at(this).set(getStopsFragment(), R.id.container_left_frame);
 		} else {
-			Fragments.Operator.at(this).set(buildStopsFragment(), R.id.container_fragment);
+			Fragments.Operator.at(this).set(getStopsFragment(), R.id.container_fragment);
 		}
 	}
 
-	private Fragment buildStopsFragment() {
-		return RouteStopsFragment.newInstance(getRoute());
+	private Fragment getStopsFragment() {
+		return RouteStopsFragment.newInstance(route);
 	}
 
 	@Subscribe
@@ -106,18 +124,18 @@ public class RouteStopsActivity extends ActionBarActivity
 
 	private void setUpTimetableFragment(Stop stop) {
 		if (Fragments.Operator.at(this).get(R.id.container_right_frame) instanceof MessageFragment) {
-			Fragments.Operator.at(this).resetSliding(buildTimetableFragment(stop), R.id.container_right_frame);
+			Fragments.Operator.at(this).resetSliding(getTimetableFragment(stop), R.id.container_right_frame);
 		} else {
-			Fragments.Operator.at(this).resetFading(buildTimetableFragment(stop), R.id.container_right_frame);
+			Fragments.Operator.at(this).resetFading(getTimetableFragment(stop), R.id.container_right_frame);
 		}
 	}
 
-	private Fragment buildTimetableFragment(Stop stop) {
-		return TimetableFragment.newInstance(getRoute(), stop);
+	private Fragment getTimetableFragment(Stop stop) {
+		return TimetableFragment.newInstance(route, stop);
 	}
 
 	private void startTimetableActivity(Stop stop) {
-		Intent intent = Intents.Builder.with(this).buildTimetableIntent(getRoute(), stop);
+		Intent intent = Intents.Builder.with(this).buildTimetableIntent(route, stop);
 		startActivity(intent);
 	}
 
@@ -125,7 +143,15 @@ public class RouteStopsActivity extends ActionBarActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.action_bar_route_stops, menu);
 
+		setUpRouteMap(menu);
+
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	private void setUpRouteMap(Menu menu) {
+		if (!Maps.at(this).areHardwareAvailable()) {
+			menu.findItem(R.id.menu_map).setVisible(false);
+		}
 	}
 
 	@Override
@@ -136,7 +162,7 @@ public class RouteStopsActivity extends ActionBarActivity
 				return true;
 
 			case R.id.menu_map:
-				startRouteStopsMapActivity();
+				startRouteMapActivity();
 				return true;
 
 			default:
@@ -144,9 +170,13 @@ public class RouteStopsActivity extends ActionBarActivity
 		}
 	}
 
-	private void startRouteStopsMapActivity() {
-		Intent intent = Intents.Builder.with(this).buildRouteMapIntent(getRoute());
-		startActivity(intent);
+	private void startRouteMapActivity() {
+		if (Maps.at(this).areSoftwareAvailable()) {
+			Intent intent = Intents.Builder.with(this).buildRouteMapIntent(route);
+			startActivity(intent);
+		} else {
+			Maps.at(this).showErrorDialog();
+		}
 	}
 
 	@Override

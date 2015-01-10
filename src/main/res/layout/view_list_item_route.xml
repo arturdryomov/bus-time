@@ -2,22 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="horizontal"
 	android:gravity="center_vertical"
+	android:paddingLeft="@dimen/padding_list"
+	android:paddingRight="@dimen/padding_list"
 	android:layout_width="match_parent"
-	android:layout_height="?android:attr/listPreferredItemHeight">
+	android:layout_height="?android:listPreferredItemHeight">
 
 	<TextView
 		android:id="@+id/text_number"
-		android:textSize="@dimen/text_route_number"
+		android:textColor="@color/text_primary"
+		android:textSize="@dimen/text_head"
 		android:textStyle="bold"
-		android:minEms="@integer/width_route_number"
 		android:singleLine="true"
 		android:gravity="center_horizontal"
-		android:layout_width="wrap_content"
+		android:layout_width="@dimen/width_avatar"
 		android:layout_height="wrap_content"/>
 
 	<TextView
 		android:id="@+id/text_description"
-		android:textSize="@dimen/text_route_description"
+		android:textColor="@color/text_primary"
+		android:textSize="@dimen/text_primary"
 		android:singleLine="true"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"/>

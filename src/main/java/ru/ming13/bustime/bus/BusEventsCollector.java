@@ -16,7 +16,7 @@ public final class BusEventsCollector
 	private final Set<BusEvent> events;
 
 	private BusEventsCollector() {
-		this.events = new HashSet<BusEvent>();
+		this.events = new HashSet<>();
 	}
 
 	public static BusEventsCollector getInstance() {

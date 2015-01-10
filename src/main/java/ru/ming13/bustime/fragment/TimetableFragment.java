@@ -3,6 +3,7 @@ package ru.ming13.bustime.fragment;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -14,13 +15,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.squareup.otto.Subscribe;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import icepick.Icepick;
+import icepick.Icicle;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.TimetableAdapter;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.TimeChangedEvent;
 import ru.ming13.bustime.bus.TimetableInformationLoadedEvent;
+import ru.ming13.bustime.cursor.TimetableCursor;
 import ru.ming13.bustime.model.Route;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
@@ -31,9 +39,15 @@ import ru.ming13.bustime.util.Timer;
 
 public class TimetableFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
-	private static final int PAST_VISIBLE_TRIPS_COUNT = 1;
+	private static final class Defaults
+	{
+		private Defaults() {
+		}
 
-	public static TimetableFragment newInstance(Route route, Stop stop) {
+		private static final int PAST_VISIBLE_TRIPS_COUNT = 1;
+	}
+
+	public static TimetableFragment newInstance(@NonNull Route route, @NonNull Stop stop) {
 		TimetableFragment fragment = new TimetableFragment();
 
 		fragment.setArguments(buildArguments(route, stop));
@@ -50,7 +64,21 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 		return arguments;
 	}
 
-	private int timetableType;
+	@InjectView(android.R.id.list)
+	View contentLayout;
+
+	@InjectView(R.id.empty)
+	ViewGroup emptyLayout;
+
+	@InjectExtra(Fragments.Arguments.ROUTE)
+	Route route;
+
+	@InjectExtra(Fragments.Arguments.STOP)
+	Stop stop;
+
+	@Icicle
+	int timetableType;
+
 	private int timetableClosestTripPosition;
 
 	private Timer timer;
@@ -64,41 +92,39 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		setUpActionBar();
+		setUpInjections();
 
-		setUpTimetableType(savedInstanceState);
+		setUpState(savedInstanceState);
+
+		setUpToolbar();
+
+		setUpTimetableType();
 	}
 
-	private void setUpActionBar() {
+	private void setUpInjections() {
+		ButterKnife.inject(this, getView());
+
+		Dart.inject(this, getArguments());
+	}
+
+	private void setUpState(Bundle state) {
+		Icepick.restoreInstanceState(this, state);
+	}
+
+	private void setUpToolbar() {
 		setHasOptionsMenu(true);
 	}
 
-	private void setUpTimetableType(Bundle state) {
-		if (!isTimetableTypeAvailable(state)) {
+	private void setUpTimetableType() {
+		if (timetableType == 0) {
 			TimetableInformationLoadingTask.execute(getActivity(), getTimetableUri());
 		} else {
-			setUpTimetable(loadTimetableType(state));
+			setUpTimetable(timetableType);
 		}
 	}
 
-	private boolean isTimetableTypeAvailable(Bundle state) {
-		return (state != null) && (loadTimetableType(state) >= 0);
-	}
-
-	private int loadTimetableType(Bundle state) {
-		return state.getInt(Fragments.States.TIMETABLE_TYPE, -1);
-	}
-
 	private Uri getTimetableUri() {
-		return BusTimeContract.Timetable.getTimetableUri(getRoute().getId(), getStop().getId());
-	}
-
-	private Route getRoute() {
-		return getArguments().getParcelable(Fragments.Arguments.ROUTE);
-	}
-
-	private Stop getStop() {
-		return getArguments().getParcelable(Fragments.Arguments.STOP);
+		return BusTimeContract.Timetable.getTimetableUri(route.getId(), stop.getId());
 	}
 
 	@Subscribe
@@ -121,8 +147,13 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private void setUpTimetable() {
+		setUpTimetableList();
 		setUpTimetableAdapter();
 		setUpTimetableContent();
+	}
+
+	private void setUpTimetableList() {
+		getListView().setSelector(android.R.color.transparent);
 	}
 
 	private void setUpTimetableAdapter() {
@@ -157,47 +188,36 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> timetableLoader, Cursor timetableCursor) {
-		getTimetableAdapter().swapCursor(timetableCursor);
+		getTimetableAdapter().swapCursor(new TimetableCursor(timetableCursor));
 
-		if (isTimetableEmpty(timetableCursor)) {
-			showMessage();
+		setUpTimetableLayout(timetableCursor);
+
+		showTimetableClosestTrip();
+	}
+
+	private void setUpTimetableLayout(Cursor timetableCursor) {
+		if (timetableCursor.getCount() == 0) {
+			contentLayout.setVisibility(View.GONE);
+			emptyLayout.setVisibility(View.VISIBLE);
 		} else {
-			showTimetable();
-			showTimetableClosestTrip();
+			contentLayout.setVisibility(View.VISIBLE);
+			emptyLayout.setVisibility(View.GONE);
 		}
-	}
 
-	private boolean isTimetableEmpty(Cursor timetableCursor) {
-		return timetableCursor.getCount() == 0;
-	}
-
-	private void showMessage() {
-		getView().findViewById(android.R.id.list).setVisibility(View.GONE);
-		getView().findViewById(R.id.layout_message).setVisibility(View.VISIBLE);
-	}
-
-	private void showTimetable() {
-		getView().findViewById(android.R.id.list).setVisibility(View.VISIBLE);
-		getView().findViewById(R.id.layout_message).setVisibility(View.GONE);
-	}
-
-	private void showTimetableClosestTrip() {
-		if (isTimetableClosestTripAvailable()) {
-			setSelection(timetableClosestTripPosition - PAST_VISIBLE_TRIPS_COUNT);
-		}
-	}
-
-	private boolean isTimetableClosestTripAvailable() {
-		return timetableClosestTripPosition != 0;
 	}
 
 	private TimetableAdapter getTimetableAdapter() {
 		return (TimetableAdapter) getListAdapter();
 	}
 
+	private void showTimetableClosestTrip() {
+		if (timetableClosestTripPosition != 0) {
+			setSelection(timetableClosestTripPosition - Defaults.PAST_VISIBLE_TRIPS_COUNT);
+		}
+	}
+
 	@Override
 	public void onLoaderReset(Loader<Cursor> timetableCursor) {
-		getTimetableAdapter().swapCursor(null);
 	}
 
 	@Override
@@ -261,7 +281,8 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private void setUpTimer() {
-		timer = new Timer();
+		this.timer = new Timer();
+
 		timer.start();
 	}
 
@@ -271,13 +292,9 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	}
 
 	private void refreshRemainingTime() {
-		if (isTimetableAdapterSet()) {
+		if (getTimetableAdapter() != null) {
 			getTimetableAdapter().notifyDataSetChanged();
 		}
-	}
-
-	private boolean isTimetableAdapterSet() {
-		return getTimetableAdapter() != null;
 	}
 
 	@Override
@@ -297,10 +314,17 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		saveTimetableType(outState);
+		tearDownState(outState);
 	}
 
-	private void saveTimetableType(Bundle state) {
-		state.putInt(Fragments.States.TIMETABLE_TYPE, timetableType);
+	private void tearDownState(Bundle state) {
+		Icepick.saveInstanceState(this, state);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+
+		ButterKnife.reset(this);
 	}
 }

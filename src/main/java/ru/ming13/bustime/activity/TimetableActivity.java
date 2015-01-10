@@ -3,8 +3,11 @@ package ru.ming13.bustime.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.fragment.TimetableFragment;
 import ru.ming13.bustime.model.Route;
@@ -16,30 +19,48 @@ import ru.ming13.bustime.util.TitleBuilder;
 
 public class TimetableActivity extends ActionBarActivity
 {
+	@InjectView(R.id.toolbar)
+	Toolbar toolbar;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_container);
 
 		if (Frames.at(this).areAvailable()) {
 			finish();
-		} else {
-			setUpUi();
+			return;
 		}
+
+		setUpInjections();
+
+		setUpUi();
+	}
+
+	private void setUpInjections() {
+		ButterKnife.inject(this);
 	}
 
 	private void setUpUi() {
+		setUpToolbar();
+
 		setUpTitle();
 		setUpSubtitle();
 
-		setUpContainer();
 		setUpTimetableFragment();
 	}
 
-	private void setUpTitle() {
-		getSupportActionBar().setTitle(buildRouteTitle());
+	private void setUpToolbar() {
+		setSupportActionBar(toolbar);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
-	private String buildRouteTitle() {
+	private void setUpTitle() {
+		getSupportActionBar().setTitle(getRouteTitle());
+	}
+
+	private String getRouteTitle() {
 		return getRoute().getNumber();
 	}
 
@@ -48,10 +69,10 @@ public class TimetableActivity extends ActionBarActivity
 	}
 
 	private void setUpSubtitle() {
-		getSupportActionBar().setSubtitle(buildStopSubtitle());
+		getSupportActionBar().setSubtitle(getStopSubtitle());
 	}
 
-	private String buildStopSubtitle() {
+	private String getStopSubtitle() {
 		return TitleBuilder.with(this).buildStopTitle(getStop());
 	}
 
@@ -59,15 +80,11 @@ public class TimetableActivity extends ActionBarActivity
 		return getIntent().getParcelableExtra(Intents.Extras.STOP);
 	}
 
-	private void setUpContainer() {
-		setContentView(R.layout.activity_container);
-	}
-
 	private void setUpTimetableFragment() {
-		Fragments.Operator.at(this).set(buildTimetableFragment(), R.id.container_fragment);
+		Fragments.Operator.at(this).set(getTimetableFragment(), R.id.container_fragment);
 	}
 
-	private Fragment buildTimetableFragment() {
+	private Fragment getTimetableFragment() {
 		return TimetableFragment.newInstance(getRoute(), getStop());
 	}
 

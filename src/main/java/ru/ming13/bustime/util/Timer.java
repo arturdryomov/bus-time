@@ -3,18 +3,19 @@ package ru.ming13.bustime.util;
 import android.os.Handler;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.TimeChangedEvent;
 
 public final class Timer implements Runnable
 {
-	private static final int UPDATE_PERIOD_IN_MILLIS = 1 * 60 * 1000;
+	private static final int UPDATE_PERIOD_IN_MINUTES = 1;
 
 	private final Handler timerSchedule;
 
 	public Timer() {
-		timerSchedule = new Handler();
+		this.timerSchedule = new Handler();
 	}
 
 	public void start() {
@@ -46,7 +47,7 @@ public final class Timer implements Runnable
 	public void run() {
 		sendNotification();
 
-		schedule(UPDATE_PERIOD_IN_MILLIS);
+		schedule(TimeUnit.MINUTES.toMillis(UPDATE_PERIOD_IN_MINUTES));
 	}
 
 	private void sendNotification() {

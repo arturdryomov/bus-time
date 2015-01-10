@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import ru.ming13.bustime.R;
-import ru.ming13.bustime.adapter.RoutesAdapter;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
-import ru.ming13.bustime.model.Route;
+import ru.ming13.bustime.adapter.RoutesAdapter;
+import ru.ming13.bustime.cursor.RoutesCursor;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Loaders;
 
@@ -62,7 +62,7 @@ public class RoutesFragment extends ListFragment implements LoaderManager.Loader
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> routesLoader, Cursor routesCursor) {
-		getRoutesAdapter().swapCursor(routesCursor);
+		getRoutesAdapter().swapCursor(new RoutesCursor(routesCursor));
 	}
 
 	private RoutesAdapter getRoutesAdapter() {
@@ -71,28 +71,12 @@ public class RoutesFragment extends ListFragment implements LoaderManager.Loader
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> routesLoader) {
-		getRoutesAdapter().swapCursor(null);
 	}
 
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 
-		BusProvider.getBus().post(new RouteSelectedEvent(getRoute(id, position)));
-	}
-
-	private Route getRoute(long routeId, int routePosition) {
-		Cursor routesCursor = getRoutesCursor(routePosition);
-
-		String routeNumber = routesCursor.getString(
-			routesCursor.getColumnIndex(BusTimeContract.Routes.NUMBER));
-		String routeDescription = routesCursor.getString(
-			routesCursor.getColumnIndex(BusTimeContract.Routes.DESCRIPTION));
-
-		return new Route(routeId, routeNumber, routeDescription);
-	}
-
-	private Cursor getRoutesCursor(int routePosition) {
-		return (Cursor) getRoutesAdapter().getItem(routePosition);
+		BusProvider.getBus().post(new RouteSelectedEvent(getRoutesAdapter().getItem(position)));
 	}
 }

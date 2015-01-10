@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="ru.ming13.bustime"
-	android:versionCode="120"
-	android:versionName="1.2.0"
 	android:installLocation="auto">
 
 	<uses-permission
@@ -30,13 +28,10 @@
 		android:glEsVersion="0x00020000"
 		android:required="false"/>
 
-	<uses-sdk
-		android:minSdkVersion="8"
-		android:targetSdkVersion="19"/>
-
 	<application
 		android:icon="@drawable/ic_launcher"
 		android:label="@string/application_name"
+		android:name=".BusTimeApplication"
 		android:theme="@style/Theme.BusTime">
 
 		<meta-data
@@ -45,8 +40,7 @@
 
 		<activity
 			android:launchMode="singleTop"
-			android:name=".activity.HomeActivity"
-			android:theme="@style/Theme.BusTime.Home">
+			android:name=".activity.HomeActivity">
 
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -96,8 +90,17 @@
 			android:name=".activity.TimetableActivity">
 		</activity>
 
+		<receiver
+			android:name=".receiver.LocaleReceiver">
+
+			<intent-filter>
+				<action android:name="android.intent.action.LOCALE_CHANGED"/>
+			</intent-filter>
+
+		</receiver>
+
 		<provider
-			android:authorities="ru.ming13.bustime"
+			android:authorities="@string/application_id"
 			android:exported="false"
 			android:name=".provider.BusTimeProvider">
 		</provider>

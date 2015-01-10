@@ -2,8 +2,11 @@ package ru.ming13.bustime.fragment;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import ru.ming13.bustime.util.Fragments;
@@ -11,6 +14,12 @@ import ru.ming13.bustime.util.Fragments;
 public class GooglePlayServicesErrorDialog extends DialogFragment
 {
 	public static final String TAG = "gps_error_dialog";
+
+	@InjectExtra(Fragments.Arguments.ERROR_CODE)
+	int errorCode;
+
+	@InjectExtra(Fragments.Arguments.REQUEST_CODE)
+	int requestCode;
 
 	public static GooglePlayServicesErrorDialog newInstance(int errorCode, int requestCode) {
 		GooglePlayServicesErrorDialog dialog = new GooglePlayServicesErrorDialog();
@@ -29,16 +38,15 @@ public class GooglePlayServicesErrorDialog extends DialogFragment
 		return arguments;
 	}
 
+	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		return GooglePlayServicesUtil.getErrorDialog(getErrorCode(), getActivity(), getRequestCode());
+		setUpInjections();
+
+		return GooglePlayServicesUtil.getErrorDialog(errorCode, getActivity(), requestCode);
 	}
 
-	private int getErrorCode() {
-		return getArguments().getInt(Fragments.Arguments.ERROR_CODE);
-	}
-
-	private int getRequestCode() {
-		return getArguments().getInt(Fragments.Arguments.REQUEST_CODE);
+	private void setUpInjections() {
+		Dart.inject(this, getArguments());
 	}
 }

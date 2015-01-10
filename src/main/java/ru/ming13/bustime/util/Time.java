@@ -1,15 +1,12 @@
 package ru.ming13.bustime.util;
 
 import android.content.Context;
-import android.text.format.DateFormat;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import org.ocpsoft.prettytime.PrettyTime;
-import org.ocpsoft.prettytime.units.JustNow;
-import org.ocpsoft.prettytime.units.Millisecond;
-import org.ocpsoft.prettytime.units.Second;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -17,31 +14,9 @@ import ru.ming13.bustime.R;
 
 public final class Time
 {
-	private static final SimpleDateFormat databaseTimeFormatter;
-	private static final PrettyTime relativeTimeFormatter;
-
-	static {
-		databaseTimeFormatter = buildDatabaseTimeFormatter();
-		relativeTimeFormatter = buildRelativeTimeFormatter();
-	}
-
-	private static SimpleDateFormat buildDatabaseTimeFormatter() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	}
-
-	private static PrettyTime buildRelativeTimeFormatter() {
-		PrettyTime formatter = new PrettyTime();
-
-		formatter.removeUnit(Second.class);
-		formatter.removeUnit(Millisecond.class);
-		formatter.removeUnit(JustNow.class);
-
-		return formatter;
-	}
-
 	private final Date date;
 
-	public static Time from(String databaseTimeString) {
+	public static Time from(@Nullable String databaseTimeString) {
 		return new Time(buildCalendar(buildDate(databaseTimeString)));
 	}
 
@@ -60,10 +35,14 @@ public final class Time
 	}
 
 	private static Date buildDate(String databaseTimeString) {
+		if (StringUtils.isBlank(databaseTimeString)) {
+			return new Date(0);
+		}
+
 		try {
-			return databaseTimeFormatter.parse(databaseTimeString);
+			return Formatters.getDatabaseTimeFormatter().parse(databaseTimeString);
 		} catch (ParseException e) {
-			return new Date();
+			return new Date(0);
 		}
 	}
 
@@ -76,27 +55,31 @@ public final class Time
 		return new Time(calendar);
 	}
 
+	public boolean isAfter(Time time) {
+		return this.date.after(time.date);
+	}
+
+	public boolean isEmpty() {
+		return date.getTime() == 0;
+	}
+
 	public boolean isWeekend() {
 		int dayOfWeek = buildCalendar(date).get(Calendar.DAY_OF_WEEK);
 
 		return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
 	}
 
-	public String toDatabaseString() {
-		return databaseTimeFormatter.format(date);
-	}
-
-	public String toRelativeString(Context context) {
+	public String toRelativeString(@NonNull Context context) {
 		Time currentTime = Time.current();
 
 		if (this.date.equals(currentTime.date)) {
 			return context.getString(R.string.token_time_now);
 		}
 
-		return relativeTimeFormatter.setReference(currentTime.date).format(date);
+		return Formatters.getRelativeTimeFormatter().setReference(currentTime.date).format(date);
 	}
 
-	public String toSystemString(Context context) {
-		return DateFormat.getTimeFormat(context).format(date);
+	public String toSystemString(@NonNull Context context) {
+		return Formatters.getSystemTimeFormatter(context).format(date);
 	}
 }

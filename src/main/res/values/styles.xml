@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="Widget"/>
+
+	<style name="Widget.BusTime" parent="Widget"/>
+
+	<style name="Widget.BusTime.ListSelector">
+		<item name="android:background">@null</item>
+	</style>
+
+</resources>

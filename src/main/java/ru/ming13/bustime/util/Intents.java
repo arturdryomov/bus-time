@@ -3,6 +3,7 @@ package ru.ming13.bustime.util;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.activity.RouteMapActivity;
@@ -43,47 +44,47 @@ public final class Intents
 	{
 		private final Context context;
 
-		public static Builder with(Context context) {
+		public static Builder with(@NonNull Context context) {
 			return new Builder(context);
 		}
 
 		private Builder(Context context) {
-			this.context = context;
+			this.context = context.getApplicationContext();
 		}
 
 		public Intent buildStopsMapIntent() {
 			return new Intent(context, StopsMapActivity.class);
 		}
 
-		public Intent buildRouteMapIntent(Route route) {
+		public Intent buildRouteMapIntent(@NonNull Route route) {
 			Intent intent = new Intent(context, RouteMapActivity.class);
 			intent.putExtra(Extras.ROUTE, route);
 
 			return intent;
 		}
 
-		public Intent buildStopMapIntent(Stop stop) {
+		public Intent buildStopMapIntent(@NonNull Stop stop) {
 			Intent intent = new Intent(context, StopMapActivity.class);
 			intent.putExtra(Extras.STOP, stop);
 
 			return intent;
 		}
 
-		public Intent buildRouteStopsIntent(Route route) {
+		public Intent buildRouteStopsIntent(@NonNull Route route) {
 			Intent intent = new Intent(context, RouteStopsActivity.class);
 			intent.putExtra(Extras.ROUTE, route);
 
 			return intent;
 		}
 
-		public Intent buildStopRoutesIntent(Stop stop) {
+		public Intent buildStopRoutesIntent(@NonNull Stop stop) {
 			Intent intent = new Intent(context, StopRoutesActivity.class);
 			intent.putExtra(Extras.STOP, stop);
 
 			return intent;
 		}
 
-		public Intent buildTimetableIntent(Route route, Stop stop) {
+		public Intent buildTimetableIntent(@NonNull Route route, @NonNull Stop stop) {
 			Intent intent = new Intent(context, TimetableActivity.class);
 			intent.putExtra(Extras.ROUTE, route);
 			intent.putExtra(Extras.STOP, stop);
@@ -101,17 +102,13 @@ public final class Intents
 		}
 
 		public Intent buildGooglePlayAppIntent() {
-			String packageName = context.getPackageName();
-
-			String googlePlayUri = String.format(UriMasks.GOOGLE_PLAY_APP, packageName);
+			String googlePlayUri = String.format(UriMasks.GOOGLE_PLAY_APP, Android.getApplicationId());
 
 			return new Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayUri));
 		}
 
 		public Intent buildGooglePlayWebIntent() {
-			String packageName = context.getPackageName();
-
-			String googlePlayUri = String.format(UriMasks.GOOGLE_PLAY_WEB, packageName);
+			String googlePlayUri = String.format(UriMasks.GOOGLE_PLAY_WEB, Android.getApplicationId());
 
 			return new Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayUri));
 		}

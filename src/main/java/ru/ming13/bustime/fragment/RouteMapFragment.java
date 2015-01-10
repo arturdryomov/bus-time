@@ -3,12 +3,16 @@ package ru.ming13.bustime.fragment;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -16,6 +20,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.squareup.otto.Subscribe;
+import com.venmo.cursor.CursorList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +28,16 @@ import java.util.List;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RoutePathLoadedEvent;
+import ru.ming13.bustime.cursor.StopsCursor;
 import ru.ming13.bustime.model.Route;
+import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.task.RoutePathLoadingTask;
 import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
 
-public class RouteMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>
+public class RouteMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>, OnMapReadyCallback
 {
 	private static final class Ui
 	{
@@ -38,6 +45,7 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 		}
 
 		public static final boolean CURRENT_LOCATION_ENABLED = true;
+		public static final boolean NAVIGATION_ENABLED = false;
 		public static final boolean ZOOM_ENABLED = true;
 	}
 
@@ -52,7 +60,7 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 		public static final int ZOOM = 11;
 	}
 
-	public static RouteMapFragment newInstance(Route route) {
+	public static RouteMapFragment newInstance(@NonNull Route route) {
 		RouteMapFragment fragment = new RouteMapFragment();
 
 		fragment.setArguments(buildArguments(route));
@@ -68,25 +76,47 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 		return arguments;
 	}
 
+	@InjectExtra(Fragments.Arguments.ROUTE)
+	Route route;
+
+	private GoogleMap map;
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		setUpMap();
-		setUpStops();
+		setUpInjections();
 
-		setUpCameraPosition();
+		setUpMap();
+	}
+
+	private void setUpInjections() {
+		Dart.inject(this, getArguments());
 	}
 
 	private void setUpMap() {
+		getMapAsync(this);
+	}
+
+	@Override
+	public void onMapReady(GoogleMap map) {
+		setUpMap(map);
+
+		setUpStops();
+	}
+
+	private void setUpMap(GoogleMap map) {
+		this.map = map;
+
 		setUpUi();
+		setUpCamera();
 	}
 
 	private void setUpUi() {
-		GoogleMap map = getMap();
-
 		map.setMyLocationEnabled(Ui.CURRENT_LOCATION_ENABLED);
 		map.getUiSettings().setMyLocationButtonEnabled(Ui.CURRENT_LOCATION_ENABLED);
+
+		map.getUiSettings().setMapToolbarEnabled(Ui.NAVIGATION_ENABLED);
 
 		map.getUiSettings().setZoomControlsEnabled(Ui.ZOOM_ENABLED);
 
@@ -96,6 +126,14 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 			bartender.getTopUiPadding(),
 			bartender.getRightUiPadding(),
 			bartender.getBottomUiPadding());
+	}
+
+	private void setUpCamera() {
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(getDefaultLocation(), Defaults.ZOOM));
+	}
+
+	private LatLng getDefaultLocation() {
+		return new LatLng(Defaults.LOCATION_LATITUDE, Defaults.LOCATION_LONGITUDE);
 	}
 
 	private void setUpStops() {
@@ -112,91 +150,45 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private Uri getStopsUri() {
-		return BusTimeContract.Stops.getStopsUri(getRoute().getId());
-	}
-
-	private Route getRoute() {
-		return getArguments().getParcelable(Fragments.Arguments.ROUTE);
+		return BusTimeContract.Stops.getStopsUri(route.getId());
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> stopsLoader, Cursor stopsCursor) {
-		setUpStopsCursor(stopsCursor);
-		setUpStopsMarkers(stopsCursor);
+		List<Stop> stops = new CursorList<>(new StopsCursor(stopsCursor));
 
-		setUpStopsCursor(stopsCursor);
-		setUpRoutePath(stopsCursor);
-
-		setUpStopsCursor(stopsCursor);
-		setUpRouteArea(stopsCursor);
+		setUpStopsMarkers(stops);
+		setUpRoutePath(stops);
+		setUpRouteArea(stops);
 	}
 
-	private void setUpStopsCursor(Cursor stopsCursor) {
-		if (stopsCursor.isBeforeFirst()) {
-			return;
-		}
-
-		stopsCursor.moveToFirst();
-		stopsCursor.moveToPrevious();
-	}
-
-	private void setUpStopsMarkers(Cursor stopsCursor) {
-		GoogleMap map = getMap();
-
-		while (stopsCursor.moveToNext()) {
-			map.addMarker(buildStopMarkerOptions(stopsCursor));
+	private void setUpStopsMarkers(List<Stop> stops) {
+		for (Stop stop : stops) {
+			map.addMarker(buildStopMarkerOptions(stop));
 		}
 	}
 
-	private MarkerOptions buildStopMarkerOptions(Cursor stopsCursor) {
-		String stopName = getStopName(stopsCursor);
-		String stopDirection = getStopDirection(stopsCursor);
-		double stopLatitude = getStopLatitude(stopsCursor);
-		double stopLongitude = getStopLongitude(stopsCursor);
-
+	private MarkerOptions buildStopMarkerOptions(Stop stop) {
 		return new MarkerOptions()
-			.title(stopName)
-			.snippet(stopDirection)
-			.position(new LatLng(stopLatitude, stopLongitude))
+			.title(stop.getName())
+			.snippet(stop.getDirection())
+			.position(new LatLng(stop.getLatitude(), stop.getLongitude()))
 			.icon(BitmapDescriptorFactory.defaultMarker(getStopMarkerHue()));
 	}
 
-	private String getStopName(Cursor stopsCursor) {
-		return stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.NAME));
-	}
-
-	private String getStopDirection(Cursor stopsCursor) {
-		return stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
-	}
-
-	private double getStopLatitude(Cursor stopsCursor) {
-		return stopsCursor.getDouble(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.LATITUDE));
-	}
-
-	private double getStopLongitude(Cursor stopsCursor) {
-		return stopsCursor.getDouble(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.LONGITUDE));
-	}
-
 	private float getStopMarkerHue() {
-		return getResources().getInteger(R.integer.hue_marker_stop);
+		return getResources().getInteger(R.integer.hue_primary);
 	}
 
-	private void setUpRoutePath(Cursor stopsCursor) {
-		RoutePathLoadingTask.execute(getStopPositions(stopsCursor));
+	private void setUpRoutePath(List<Stop> stops) {
+		RoutePathLoadingTask.execute(getStopPositions(stops));
 	}
 
-	private List<LatLng> getStopPositions(Cursor stopsCursor) {
-		List<LatLng> stopPositions = new ArrayList<LatLng>();
+	private List<LatLng> getStopPositions(List<Stop> stops) {
+		List<LatLng> stopPositions = new ArrayList<>();
 
-		while (stopsCursor.moveToNext()) {
-			double stopLatitude = getStopLatitude(stopsCursor);
-			double stopLongitude = getStopLongitude(stopsCursor);
-
-			stopPositions.add(new LatLng(stopLatitude, stopLongitude));
+		for (Stop stop : stops) {
+			stopPositions.add(new LatLng(stop.getLatitude(), stop.getLongitude()));
 		}
 
 		return stopPositions;
@@ -204,12 +196,10 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 
 	@Subscribe
 	public void onRoutePathLoaded(RoutePathLoadedEvent event) {
-		setUpRoutePath(event.getPathPositions());
+		setUpRoutePathLine(event.getPathPositions());
 	}
 
-	private void setUpRoutePath(List<LatLng> routePathPositions) {
-		GoogleMap map = getMap();
-
+	private void setUpRoutePathLine(List<LatLng> routePathPositions) {
 		map.addPolyline(buildRoutePathOptions(routePathPositions));
 	}
 
@@ -225,23 +215,21 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private int getRoutePathColor() {
-		return getResources().getColor(R.color.background_route_path);
+		return getResources().getColor(R.color.background_primary);
 	}
 
-	private void setUpRouteArea(Cursor stopsCursor) {
-		GoogleMap map = getMap();
-
+	private void setUpRouteArea(List<Stop> stops) {
 		map.animateCamera(CameraUpdateFactory.newLatLngBounds(
-			buildRouteAreaBounds(stopsCursor),
+			buildRouteAreaBounds(stops),
 			getMapWidth(),
 			getMapHeight(),
 			getRouteAreaPadding()));
 	}
 
-	private LatLngBounds buildRouteAreaBounds(Cursor stopsCursor) {
+	private LatLngBounds buildRouteAreaBounds(List<Stop> stops) {
 		LatLngBounds.Builder routeAreaBounds = new LatLngBounds.Builder();
 
-		for (LatLng stopPosition : getStopPositions(stopsCursor)) {
+		for (LatLng stopPosition : getStopPositions(stops)) {
 			routeAreaBounds.include(stopPosition);
 		}
 
@@ -257,19 +245,11 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private int getRouteAreaPadding() {
-		return getResources().getDimensionPixelSize(R.dimen.padding_route_area);
+		return getResources().getDimensionPixelSize(R.dimen.padding_route_path);
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> stopsLoader) {
-	}
-
-	private void setUpCameraPosition() {
-		getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(getDefaultLocation(), Defaults.ZOOM));
-	}
-
-	private LatLng getDefaultLocation() {
-		return new LatLng(Defaults.LOCATION_LATITUDE, Defaults.LOCATION_LONGITUDE);
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package ru.ming13.bustime.util;
 
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -23,20 +25,11 @@ public final class Fragments
 		public static final String ERROR_CODE = "error_code";
 	}
 
-	public static final class States
-	{
-		private States() {
-		}
-
-		public static final String CAMERA_POSITION = "camera_position";
-		public static final String TIMETABLE_TYPE = "timetable_type";
-	}
-
 	public static final class Operator
 	{
 		private final FragmentManager fragmentManager;
 
-		public static Operator at(FragmentActivity activity) {
+		public static Operator at(@NonNull FragmentActivity activity) {
 			return new Operator(activity);
 		}
 
@@ -44,15 +37,11 @@ public final class Fragments
 			this.fragmentManager = activity.getSupportFragmentManager();
 		}
 
-		public Fragment get(int fragmentContainerId) {
+		public Fragment get(@IdRes int fragmentContainerId) {
 			return fragmentManager.findFragmentById(fragmentContainerId);
 		}
 
-		public Fragment get(String fragmentTag) {
-			return fragmentManager.findFragmentByTag(fragmentTag);
-		}
-
-		public void set(Fragment fragment, int fragmentContainerId) {
+		public void set(@NonNull Fragment fragment, @IdRes int fragmentContainerId) {
 			if (!isSet(fragmentContainerId)) {
 				fragmentManager
 					.beginTransaction()
@@ -61,11 +50,11 @@ public final class Fragments
 			}
 		}
 
-		private boolean isSet(int fragmentContainerId) {
+		private boolean isSet(@IdRes int fragmentContainerId) {
 			return get(fragmentContainerId) != null;
 		}
 
-		public void resetFading(Fragment fragment, int fragmentContainerId) {
+		public void resetFading(@NonNull Fragment fragment, @IdRes int fragmentContainerId) {
 			fragmentManager
 				.beginTransaction()
 				.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -73,7 +62,7 @@ public final class Fragments
 				.commit();
 		}
 
-		public void resetSliding(Fragment fragment, int fragmentContainerId) {
+		public void resetSliding(@NonNull Fragment fragment, @IdRes int fragmentContainerId) {
 			fragmentManager
 				.beginTransaction()
 				.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)

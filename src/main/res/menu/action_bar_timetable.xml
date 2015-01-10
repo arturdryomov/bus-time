@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-	  xmlns:appcompat="http://schemas.android.com/apk/res-auto">
+	xmlns:auto="http://schemas.android.com/apk/res-auto">
 
 	<item
 		android:icon="@drawable/ic_menu_calendar"
 		android:title="@string/menu_timetable_type"
-		appcompat:showAsAction="always">
+		auto:showAsAction="always">
 
 		<menu>
 			<group android:checkableBehavior="single">
