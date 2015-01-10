@@ -25,6 +25,7 @@ import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Intents;
+import ru.ming13.bustime.util.Maps;
 import ru.ming13.bustime.util.TitleBuilder;
 
 public class StopRoutesActivity extends ActionBarActivity
@@ -142,7 +143,15 @@ public class StopRoutesActivity extends ActionBarActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.action_bar_stop_routes, menu);
 
+		setUpStopMap(menu);
+
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	private void setUpStopMap(Menu menu) {
+		if (!Maps.at(this).areHardwareAvailable()) {
+			menu.findItem(R.id.menu_map).setVisible(false);
+		}
 	}
 
 	@Override
@@ -162,8 +171,12 @@ public class StopRoutesActivity extends ActionBarActivity
 	}
 
 	private void startStopMapActivity() {
-		Intent intent = Intents.Builder.with(this).buildStopMapIntent(stop);
-		startActivity(intent);
+		if (Maps.at(this).areSoftwareAvailable()) {
+			Intent intent = Intents.Builder.with(this).buildStopMapIntent(stop);
+			startActivity(intent);
+		} else {
+			Maps.at(this).showErrorDialog();
+		}
 	}
 
 	@Override
