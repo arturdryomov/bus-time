@@ -2,6 +2,7 @@ package ru.ming13.bustime.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import org.apache.commons.io.FileUtils;
 
@@ -15,7 +16,7 @@ public final class DatabaseOperator
 {
 	private final Context context;
 
-	public static DatabaseOperator with(Context context) {
+	public static DatabaseOperator with(@NonNull Context context) {
 		return new DatabaseOperator(context);
 	}
 
@@ -24,50 +25,51 @@ public final class DatabaseOperator
 	}
 
 	public boolean databaseExists() {
-		return buildDatabaseFile().exists();
+		return getDatabaseFile().exists();
 	}
 
-	private File buildDatabaseFile() {
+	private File getDatabaseFile() {
 		return context.getDatabasePath(DatabaseSchema.DATABASE_NAME).getAbsoluteFile();
 	}
 
 	public String getDatabasePath() {
-		return buildDatabaseFile().getPath();
+		return getDatabaseFile().getPath();
 	}
 
-	public void replaceDatabaseFile(InputStream databaseContents) {
+	public void replaceDatabaseFile(@NonNull InputStream databaseContents) {
 		try {
-			File tempDatabaseFile = buildTempFile(databaseContents);
-			File databaseFile = buildDatabaseFile();
+			File tempDatabaseFile = getTempFile(databaseContents);
+			File databaseFile = getDatabaseFile();
 
 			FileUtils.copyFile(tempDatabaseFile, databaseFile);
+
 			tempDatabaseFile.delete();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private File buildTempFile(InputStream fileContents) {
+	private File getTempFile(InputStream fileContents) {
 		try {
 			File tempFile = File.createTempFile("bustime", null, context.getCacheDir());
+
 			FileUtils.copyInputStreamToFile(fileContents, tempFile);
+
 			return tempFile;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (NullPointerException e) {
+		} catch (IOException | NullPointerException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void replaceDatabaseContents(InputStream databaseContents) {
+	public void replaceDatabaseContents(@NonNull InputStream databaseContents) {
 		SQLiteDatabase database = new DatabaseOpenHelper(context).getWritableDatabase();
-		File tempDatabaseFile = buildTempFile(databaseContents);
+		File tempDatabaseFile = getTempFile(databaseContents);
 
 		deleteDatabaseContents(database);
 		insertDatabaseContents(database, tempDatabaseFile);
 
-		tempDatabaseFile.delete();
 		database.close();
+		tempDatabaseFile.delete();
 	}
 
 	private void deleteDatabaseContents(SQLiteDatabase database) {
@@ -87,22 +89,22 @@ public final class DatabaseOperator
 	}
 
 	private void insertDatabaseContents(SQLiteDatabase database, File databaseContentsFile) {
-		database.execSQL(SqlBuilder.buildAttachClause(databaseContentsFile.getAbsolutePath(), "db"));
+		database.execSQL(SqlBuilder.buildAttachClause(databaseContentsFile.getAbsolutePath(), DatabaseSchema.Aliases.DATABASE));
 
 		try {
 			database.beginTransaction();
 
-			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.ROUTES, "db"));
-			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.TRIP_TYPES, "db"));
-			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.TRIPS, "db"));
-			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.STOPS, "db"));
-			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.ROUTES_AND_STOPS, "db"));
+			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.ROUTES, DatabaseSchema.Aliases.DATABASE));
+			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.TRIP_TYPES, DatabaseSchema.Aliases.DATABASE));
+			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.TRIPS, DatabaseSchema.Aliases.DATABASE));
+			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.STOPS, DatabaseSchema.Aliases.DATABASE));
+			database.execSQL(SqlBuilder.buildInsertClause(DatabaseSchema.Tables.ROUTES_AND_STOPS, DatabaseSchema.Aliases.DATABASE));
 
 			database.setTransactionSuccessful();
 		} finally {
 			database.endTransaction();
 		}
 
-		database.execSQL(SqlBuilder.buildDetachClause("db"));
+		database.execSQL(SqlBuilder.buildDetachClause(DatabaseSchema.Aliases.DATABASE));
 	}
 }

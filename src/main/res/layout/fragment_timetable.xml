@@ -3,38 +3,36 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<ListView
-		android:id="@android:id/list"
-		android:fastScrollEnabled="true"
-		android:listSelector="@android:color/transparent"
-		android:scrollbarStyle="outsideOverlay"
-		android:paddingLeft="@dimen/padding_list"
-		android:paddingRight="@dimen/padding_list"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"/>
+	<include
+		layout="@layout/fragment_list"/>
 
 	<LinearLayout
-		android:id="@+id/layout_message"
+		android:id="@+id/empty"
 		android:visibility="gone"
 		android:orientation="vertical"
-		android:paddingLeft="@dimen/padding_timetable_message"
-		android:paddingRight="@dimen/padding_timetable_message"
+		android:paddingLeft="40dp"
+		android:paddingRight="40dp"
 		android:gravity="center"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
 		<TextView
 			android:text="@string/message_timetable_title"
-			android:textSize="@dimen/text_timetable_message_title"
+			android:textColor="@color/text_primary"
+			android:textSize="@dimen/text_head"
 			android:textStyle="bold"
 			android:gravity="center_horizontal"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="8dp"/>
+
 		<TextView
 			android:text="@string/message_timetable_summary"
-			android:textSize="@dimen/text_timetable_message_summary"
-			android:paddingTop="@dimen/padding_timetable_message_summary"
+			android:textColor="@color/text_secondary"
+			android:textSize="@dimen/text_primary"
 			android:gravity="center_horizontal"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>

@@ -1,5 +1,6 @@
 package ru.ming13.bustime.animation;
 
+import android.support.annotation.NonNull;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.animation.Animation;
@@ -10,14 +11,20 @@ import android.widget.ListView;
 
 public final class ListOrderAnimator
 {
-	private static final int ANIMATION_DURATION_IN_MILLIS = 300;
+	private static final class Durations
+	{
+		private Durations() {
+		}
+
+		public static final int ANIMATION_IN_MILLIS = 300;
+	}
 
 	private final Interpolator animationInterpolator;
 
 	private final ListView list;
 	private final SparseIntArray savedListItemPositionsFromTop;
 
-	public ListOrderAnimator(ListView list) {
+	public ListOrderAnimator(@NonNull ListView list) {
 		this.animationInterpolator = new DecelerateInterpolator();
 
 		this.list = list;
@@ -85,7 +92,7 @@ public final class ListOrderAnimator
 
 		Animation animation = new TranslateAnimation(0, 0, -listItemPositionFromTopDelta, 0);
 		animation.setInterpolator(animationInterpolator);
-		animation.setDuration(ANIMATION_DURATION_IN_MILLIS);
+		animation.setDuration(Durations.ANIMATION_IN_MILLIS);
 
 		listItemView.startAnimation(animation);
 	}

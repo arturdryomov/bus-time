@@ -1,6 +1,7 @@
 package ru.ming13.bustime.util;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public final class Bartender
 
 	private final Activity activity;
 
-	public static Bartender at(Activity activity) {
+	public static Bartender at(@NonNull Activity activity) {
 		return new Bartender(activity);
 	}
 
@@ -46,60 +47,20 @@ public final class Bartender
 		this.activity = activity;
 	}
 
-	public void showSystemBarsBackground() {
-		if (Android.isKitKatOrLater()) {
-			ViewGroup activityView = (ViewGroup) activity.getWindow().getDecorView();
-
-			activityView.addView(buildBarView(buildStatusBarViewParams()));
-			activityView.addView(buildBarView(buildNavigationBarViewParams()));
-		}
+	public int getActionBarHeight() {
+		return activity.getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height_material);
 	}
 
-	private View buildBarView(LayoutParams barViewParams) {
-		View barView = new View(activity);
-
-		barView.setLayoutParams(barViewParams);
-		barView.setBackgroundResource(R.color.background_bar_transparent);
-
-		return barView;
-	}
-
-	private LayoutParams buildStatusBarViewParams() {
-		LayoutParams statusBarViewParams = new LayoutParams(LayoutParams.MATCH_PARENT, getStatusBarHeight());
-
-		statusBarViewParams.gravity = Gravity.TOP;
-
-		if (!isNavigationBarBottom()) {
-			statusBarViewParams.rightMargin = getNavigationBarWidth();
-		}
-
-		return statusBarViewParams;
-	}
-
-	private int getStatusBarHeight() {
-		return getSystemDimension(SystemDimensions.STATUS_BAR_HEIGHT);
-	}
-
-	private int getSystemDimension(String systemDimension) {
-		int systemDimensionId = activity.getResources().getIdentifier(systemDimension, "dimen", "android");
-
-		if (systemDimensionId == SystemDimensions.INVALID_ID) {
-			return SystemDimensions.DEFAULT_VALUE;
-		}
-
-		return activity.getResources().getDimensionPixelSize(systemDimensionId);
-	}
-
-	private boolean isNavigationBarBottom() {
-		return Android.isTablet(activity) || Android.isPortrait(activity);
-	}
-
-	private int getNavigationBarWidth() {
+	public int getNavigationBarHeight() {
 		if (!isNavigationBarAvailable()) {
 			return SystemDimensions.DEFAULT_VALUE;
 		}
 
-		return getSystemDimension(SystemDimensions.NAVIGATION_BAR_WIDTH);
+		if (Android.isPortrait(activity)) {
+			return getSystemDimension(SystemDimensions.NAVIGATION_BAR_HEIGHT_PORTRAIT);
+		} else {
+			return getSystemDimension(SystemDimensions.NAVIGATION_BAR_HEIGHT_LANDSCAPE);
+		}
 	}
 
 	private boolean isNavigationBarAvailable() {
@@ -116,30 +77,26 @@ public final class Bartender
 		return activity.getResources().getBoolean(systemBooleanId);
 	}
 
-	private LayoutParams buildNavigationBarViewParams() {
-		LayoutParams navigationBarViewParams;
+	private int getSystemDimension(String systemDimension) {
+		int systemDimensionId = activity.getResources().getIdentifier(systemDimension, "dimen", "android");
 
-		if (isNavigationBarBottom()) {
-			navigationBarViewParams = new LayoutParams(LayoutParams.MATCH_PARENT, getNavigationBarHeight());
-			navigationBarViewParams.gravity = Gravity.BOTTOM;
-		} else {
-			navigationBarViewParams = new LayoutParams(getNavigationBarWidth(), LayoutParams.MATCH_PARENT);
-			navigationBarViewParams.gravity = Gravity.RIGHT;
+		if (systemDimensionId == SystemDimensions.INVALID_ID) {
+			return SystemDimensions.DEFAULT_VALUE;
 		}
 
-		return navigationBarViewParams;
+		return activity.getResources().getDimensionPixelSize(systemDimensionId);
 	}
 
-	private int getNavigationBarHeight() {
+	public int getNavigationBarWidth() {
 		if (!isNavigationBarAvailable()) {
 			return SystemDimensions.DEFAULT_VALUE;
 		}
 
-		if (Android.isPortrait(activity)) {
-			return getSystemDimension(SystemDimensions.NAVIGATION_BAR_HEIGHT_PORTRAIT);
-		} else {
-			return getSystemDimension(SystemDimensions.NAVIGATION_BAR_HEIGHT_LANDSCAPE);
-		}
+		return getSystemDimension(SystemDimensions.NAVIGATION_BAR_WIDTH);
+	}
+
+	public int getStatusBarHeight() {
+		return getSystemDimension(SystemDimensions.STATUS_BAR_HEIGHT);
 	}
 
 	public int getBottomUiPadding() {
@@ -152,6 +109,10 @@ public final class Bartender
 		} else {
 			return SystemDimensions.DEFAULT_VALUE;
 		}
+	}
+
+	private boolean isNavigationBarBottom() {
+		return Android.isTablet(activity) || Android.isPortrait(activity);
 	}
 
 	public int getLeftUiPadding() {
@@ -178,7 +139,47 @@ public final class Bartender
 		return getStatusBarHeight() + getActionBarHeight();
 	}
 
-	private int getActionBarHeight() {
-		return activity.getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height);
+	public void showSystemBarsBackground() {
+		if (Android.isKitKatOrLater()) {
+			ViewGroup activityView = (ViewGroup) activity.getWindow().getDecorView();
+
+			activityView.addView(buildBarView(buildStatusBarViewParams()));
+			activityView.addView(buildBarView(buildNavigationBarViewParams()));
+		}
+	}
+
+	private View buildBarView(LayoutParams barViewParams) {
+		View barView = new View(activity);
+
+		barView.setLayoutParams(barViewParams);
+		barView.setBackgroundResource(R.color.background_transparent);
+
+		return barView;
+	}
+
+	private LayoutParams buildStatusBarViewParams() {
+		LayoutParams statusBarViewParams = new LayoutParams(LayoutParams.MATCH_PARENT, getStatusBarHeight());
+
+		statusBarViewParams.gravity = Gravity.TOP;
+
+		if (!isNavigationBarBottom()) {
+			statusBarViewParams.rightMargin = getNavigationBarWidth();
+		}
+
+		return statusBarViewParams;
+	}
+
+	private LayoutParams buildNavigationBarViewParams() {
+		LayoutParams navigationBarViewParams;
+
+		if (isNavigationBarBottom()) {
+			navigationBarViewParams = new LayoutParams(LayoutParams.MATCH_PARENT, getNavigationBarHeight());
+			navigationBarViewParams.gravity = Gravity.BOTTOM;
+		} else {
+			navigationBarViewParams = new LayoutParams(getNavigationBarWidth(), LayoutParams.MATCH_PARENT);
+			navigationBarViewParams.gravity = Gravity.RIGHT;
+		}
+
+		return navigationBarViewParams;
 	}
 }

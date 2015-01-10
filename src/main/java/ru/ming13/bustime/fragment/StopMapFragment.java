@@ -1,13 +1,16 @@
 package ru.ming13.bustime.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import ru.ming13.bustime.R;
@@ -15,7 +18,7 @@ import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
 
-public class StopMapFragment extends SupportMapFragment
+public class StopMapFragment extends SupportMapFragment implements OnMapReadyCallback
 {
 	private static final class Ui
 	{
@@ -23,6 +26,7 @@ public class StopMapFragment extends SupportMapFragment
 		}
 
 		public static final boolean CURRENT_LOCATION_ENABLED = true;
+		public static final boolean NAVIGATION_ENABLED = false;
 		public static final boolean ZOOM_ENABLED = true;
 	}
 
@@ -34,7 +38,7 @@ public class StopMapFragment extends SupportMapFragment
 		public static final int ZOOM = 15;
 	}
 
-	public static StopMapFragment newInstance(Stop stop) {
+	public static StopMapFragment newInstance(@NonNull Stop stop) {
 		StopMapFragment fragment = new StopMapFragment();
 
 		fragment.setArguments(buildArguments(stop));
@@ -50,25 +54,47 @@ public class StopMapFragment extends SupportMapFragment
 		return arguments;
 	}
 
+	@InjectExtra(Fragments.Arguments.STOP)
+	Stop stop;
+
+	private GoogleMap map;
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		setUpMap();
-		setUpStop();
+		setUpInjections();
 
-		setUpCameraPosition();
+		setUpMap();
+	}
+
+	private void setUpInjections() {
+		Dart.inject(this, getArguments());
 	}
 
 	private void setUpMap() {
+		getMapAsync(this);
+	}
+
+	@Override
+	public void onMapReady(GoogleMap map) {
+		setUpMap(map);
+
+		setUpStop();
+	}
+
+	private void setUpMap(GoogleMap map) {
+		this.map = map;
+
 		setUpUi();
+		setUpCamera();
 	}
 
 	private void setUpUi() {
-		GoogleMap map = getMap();
-
 		map.setMyLocationEnabled(Ui.CURRENT_LOCATION_ENABLED);
 		map.getUiSettings().setMyLocationButtonEnabled(Ui.CURRENT_LOCATION_ENABLED);
+
+		map.getUiSettings().setMapToolbarEnabled(Ui.NAVIGATION_ENABLED);
 
 		map.getUiSettings().setZoomControlsEnabled(Ui.ZOOM_ENABLED);
 
@@ -80,20 +106,23 @@ public class StopMapFragment extends SupportMapFragment
 			bartender.getBottomUiPadding());
 	}
 
+	private void setUpCamera() {
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(getDefaultLocation(), Defaults.ZOOM));
+	}
+
+	private LatLng getDefaultLocation() {
+		return new LatLng(stop.getLatitude(), stop.getLongitude());
+	}
+
 	private void setUpStop() {
 		setUpStopMarker();
 	}
 
 	private void setUpStopMarker() {
-		GoogleMap map = getMap();
-
-		Marker stopMarker = map.addMarker(buildStopMarkerOptions());
-		stopMarker.showInfoWindow();
+		map.addMarker(buildStopMarkerOptions()).showInfoWindow();
 	}
 
 	private MarkerOptions buildStopMarkerOptions() {
-		Stop stop = getStop();
-
 		return new MarkerOptions()
 			.title(stop.getName())
 			.snippet(stop.getDirection())
@@ -101,21 +130,7 @@ public class StopMapFragment extends SupportMapFragment
 			.icon(BitmapDescriptorFactory.defaultMarker(getStopMarkerHue()));
 	}
 
-	private Stop getStop() {
-		return getArguments().getParcelable(Fragments.Arguments.STOP);
-	}
-
 	private float getStopMarkerHue() {
-		return getResources().getInteger(R.integer.hue_marker_stop);
-	}
-
-	private void setUpCameraPosition() {
-		getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(getDefaultLocation(), Defaults.ZOOM));
-	}
-
-	private LatLng getDefaultLocation() {
-		Stop stop = getStop();
-
-		return new LatLng(stop.getLatitude(), stop.getLongitude());
+		return getResources().getInteger(R.integer.hue_primary);
 	}
 }

@@ -1,85 +1,56 @@
 package ru.ming13.bustime.adapter;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import ru.ming13.bustime.R;
-import ru.ming13.bustime.provider.BusTimeContract;
+import com.venmo.cursor.support.IterableCursorAdapter;
 
-public class RoutesAdapter extends CursorAdapter
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import ru.ming13.bustime.R;
+import ru.ming13.bustime.model.Route;
+
+public class RoutesAdapter extends IterableCursorAdapter<Route>
 {
-	private static final class RouteViewHolder
+	static final class RouteViewHolder
 	{
-		public TextView numberTextView;
-		public TextView descriptionTextView;
+		@InjectView(R.id.text_number)
+		public TextView routeNumber;
+
+		@InjectView(R.id.text_description)
+		public TextView routeDescription;
+
+		public RouteViewHolder(View routeView) {
+			ButterKnife.inject(this, routeView);
+		}
 	}
 
 	private final LayoutInflater layoutInflater;
 
-	public RoutesAdapter(Context context) {
+	public RoutesAdapter(@NonNull Context context) {
 		super(context, null, 0);
 
-		layoutInflater = LayoutInflater.from(context);
+		this.layoutInflater = LayoutInflater.from(context);
 	}
 
 	@Override
-	public View newView(Context context, Cursor routesCursor, ViewGroup viewGroup) {
-		View routeView = buildRouteView(viewGroup);
-		RouteViewHolder routeViewHolder = buildRouteViewHolder(routeView);
+	public View newView(Context context, Route route, ViewGroup routeViewContainer) {
+		View routeView = layoutInflater.inflate(R.layout.view_list_item_route, routeViewContainer, false);
 
-		setUpRouteViewHolder(routeView, routeViewHolder);
+		routeView.setTag(new RouteViewHolder(routeView));
 
 		return routeView;
 	}
 
-	private View buildRouteView(ViewGroup viewGroup) {
-		return layoutInflater.inflate(R.layout.view_list_item_route, viewGroup, false);
-	}
-
-	private RouteViewHolder buildRouteViewHolder(View routeView) {
-		RouteViewHolder routeViewHolder = new RouteViewHolder();
-
-		routeViewHolder.numberTextView = (TextView) routeView.findViewById(R.id.text_number);
-		routeViewHolder.descriptionTextView = (TextView) routeView.findViewById(R.id.text_description);
-
-		return routeViewHolder;
-	}
-
-	private void setUpRouteViewHolder(View routeView, RouteViewHolder routeViewHolder) {
-		routeView.setTag(routeViewHolder);
-	}
-
 	@Override
-	public void bindView(View routeView, Context context, Cursor routesCursor) {
-		RouteViewHolder routeViewHolder = getRouteViewHolder(routeView);
+	public void bindView(View routeView, Context context, Route route) {
+		RouteViewHolder routeViewHolder = (RouteViewHolder) routeView.getTag();
 
-		setUpRouteInformation(routesCursor, routeViewHolder);
-	}
-
-	private RouteViewHolder getRouteViewHolder(View routeView) {
-		return (RouteViewHolder) routeView.getTag();
-	}
-
-	private void setUpRouteInformation(Cursor routesCursor, RouteViewHolder routeViewHolder) {
-		String routeNumber = getRouteNumber(routesCursor);
-		String routeDescription = getRouteDescription(routesCursor);
-
-		routeViewHolder.numberTextView.setText(routeNumber);
-		routeViewHolder.descriptionTextView.setText(routeDescription);
-	}
-
-	private String getRouteNumber(Cursor routesCursor) {
-		return routesCursor.getString(
-			routesCursor.getColumnIndex(BusTimeContract.Routes.NUMBER));
-	}
-
-	private String getRouteDescription(Cursor routesCursor) {
-		return routesCursor.getString(
-			routesCursor.getColumnIndex(BusTimeContract.Routes.DESCRIPTION));
+		routeViewHolder.routeNumber.setText(route.getNumber());
+		routeViewHolder.routeDescription.setText(route.getDescription());
 	}
 }

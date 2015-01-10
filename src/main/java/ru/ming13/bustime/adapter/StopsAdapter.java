@@ -1,100 +1,64 @@
 package ru.ming13.bustime.adapter;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.venmo.cursor.support.IterableCursorAdapter;
+
 import org.apache.commons.lang3.StringUtils;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import ru.ming13.bustime.R;
-import ru.ming13.bustime.provider.BusTimeContract;
+import ru.ming13.bustime.model.Stop;
 
-public class StopsAdapter extends CursorAdapter
+public class StopsAdapter extends IterableCursorAdapter<Stop>
 {
-	private static final class StopViewHolder
+	static final class StopViewHolder
 	{
-		public TextView nameTextView;
-		public TextView directionTextView;
+		@InjectView(R.id.text_name)
+		public TextView stopName;
+
+		@InjectView(R.id.text_direction)
+		public TextView stopDirection;
+
+		public StopViewHolder(View stopView) {
+			ButterKnife.inject(this, stopView);
+		}
 	}
 
 	private final LayoutInflater layoutInflater;
 
-	public StopsAdapter(Context context) {
+	public StopsAdapter(@NonNull Context context) {
 		super(context, null, 0);
 
-		layoutInflater = LayoutInflater.from(context);
+		this.layoutInflater = LayoutInflater.from(context);
 	}
 
 	@Override
-	public View newView(Context context, Cursor stopsCursor, ViewGroup viewGroup) {
-		View stopView = buildStopView(viewGroup);
-		StopViewHolder stopViewHolder = buildStopViewHolder(stopView);
+	public View newView(Context context, Stop stop, ViewGroup stopViewContainer) {
+		View stopView = layoutInflater.inflate(R.layout.view_list_item_stop, stopViewContainer, false);
 
-		setUpStopViewHolder(stopView, stopViewHolder);
+		stopView.setTag(new StopViewHolder(stopView));
 
 		return stopView;
 	}
 
-	private View buildStopView(ViewGroup viewGroup) {
-		return layoutInflater.inflate(R.layout.view_list_item_stop, viewGroup, false);
-	}
-
-	private StopViewHolder buildStopViewHolder(View stopView) {
-		StopViewHolder stopViewHolder = new StopViewHolder();
-
-		stopViewHolder.nameTextView = (TextView) stopView.findViewById(R.id.text_name);
-		stopViewHolder.directionTextView = (TextView) stopView.findViewById(R.id.text_direction);
-
-		return stopViewHolder;
-	}
-
-	private void setUpStopViewHolder(View stopView, StopViewHolder stopViewHolder) {
-		stopView.setTag(stopViewHolder);
-	}
-
 	@Override
-	public void bindView(View stopView, Context context, Cursor stopsCursor) {
-		StopViewHolder stopViewHolder = getStopViewHolder(stopView);
+	public void bindView(View stopView, Context context, Stop stop) {
+		StopViewHolder stopViewHolder = (StopViewHolder) stopView.getTag();
 
-		setUpStopInformation(stopsCursor, stopViewHolder);
-		setUpStopInformationVisibility(stopsCursor, stopViewHolder);
-	}
+		stopViewHolder.stopName.setText(stop.getName());
+		stopViewHolder.stopDirection.setText(stop.getDirection());
 
-	private StopViewHolder getStopViewHolder(View stopView) {
-		return (StopViewHolder) stopView.getTag();
-	}
-
-	private void setUpStopInformation(Cursor stopsCursor, StopViewHolder stopViewHolder) {
-		String stopName = getStopName(stopsCursor);
-		String stopDirection = getStopDirection(stopsCursor);
-
-		stopViewHolder.nameTextView.setText(stopName);
-		stopViewHolder.directionTextView.setText(stopDirection);
-	}
-
-	private String getStopName(Cursor stopsCursor) {
-		return stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.NAME));
-	}
-
-	private String getStopDirection(Cursor stopsCursor) {
-		return stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
-	}
-
-	private void setUpStopInformationVisibility(Cursor stopsCursor, StopViewHolder stopViewHolder) {
-		setUpStopDirectionVisibility(stopsCursor, stopViewHolder);
-	}
-
-	private void setUpStopDirectionVisibility(Cursor stopsCursor, StopViewHolder stopViewHolder) {
-		if (StringUtils.isBlank(getStopDirection(stopsCursor))) {
-			stopViewHolder.directionTextView.setVisibility(View.GONE);
+		if (StringUtils.isBlank(stop.getDirection())) {
+			stopViewHolder.stopDirection.setVisibility(View.GONE);
 		} else {
-			stopViewHolder.directionTextView.setVisibility(View.VISIBLE);
+			stopViewHolder.stopDirection.setVisibility(View.VISIBLE);
 		}
 	}
 }

@@ -4,17 +4,17 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:0.12.+"
+        classpath "com.android.tools.build:gradle:1.0.+"
         classpath "com.jakewharton.sdkmanager:gradle-plugin:0.12.+"
     }
 }
 
 apply plugin: "android-sdk-manager"
-apply plugin: "android"
+apply plugin: "com.android.application"
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "20"
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         def versionMajor = 1
@@ -24,8 +24,8 @@ android {
         versionName buildVersionName(versionMajor, versionMinor, versionPatch)
         versionCode buildVersionCode(versionMajor, versionMinor, versionPatch)
 
-        minSdkVersion 8
-        targetSdkVersion 19
+        minSdkVersion 9
+        targetSdkVersion 21
 
         resConfigs "nodpi", "mdpi", "hdpi", "xhdpi", "xxhdpi"
         resConfigs "en", "ru"
@@ -53,9 +53,25 @@ android {
         }
     }
 
+    productFlavors {
+        play {
+            applicationId "ru.ming13.bustime"
+
+            resValue "string", "application_id", applicationId
+        }
+
+        beta {
+            applicationId "ru.ming13.bustime.beta"
+
+            resValue "string", "application_id", applicationId
+        }
+    }
+
     packagingOptions {
         exclude "META-INF/LICENSE.txt"
         exclude "META-INF/NOTICE.txt"
+
+        exclude "META-INF/services/javax.annotation.processing.Processor"
     }
 }
 
@@ -72,19 +88,28 @@ dependencies {
         mavenCentral()
     }
 
-    compile "com.android.support:appcompat-v7:20.0.+"
-    compile "com.android.support:support-v4:20.0.+"
-    compile "com.google.android.gms:play-services:3.2.+"
-    compile "com.google.maps.android:android-maps-utils:0.3"
+    compile "com.android.support:appcompat-v7:21.0.+"
+    compile "com.android.support:support-annotations:21.0.+"
+    compile "com.android.support:support-v4:21.0.+"
+    compile "com.github.frankiesardo:icepick:2.3.+"
+    compile "com.google.android.gms:play-services-location:6.5.+"
+    compile "com.google.android.gms:play-services-maps:6.5.+"
+    compile "com.google.maps.android:android-maps-utils:0.3.+"
+    compile "com.jakewharton:butterknife:6.0.+"
+    compile "com.f2prateek.dart:dart:1.1.+"
+    compile "com.nispok:snackbar:2.7.+"
     compile "com.squareup:otto:1.3.+"
-    compile "com.squareup.retrofit:retrofit:1.6.+"
+    compile "com.squareup.retrofit:retrofit:1.8.+"
+    compile "com.venmo.cursor:library:0.3"
     compile "commons-io:commons-io:2.4"
     compile "org.apache.commons:commons-lang3:3.3.+"
-    compile "org.ocpsoft.prettytime:prettytime:3.2.5.Final"
+    compile "org.ocpsoft.prettytime:prettytime:3.2.7.Final"
+
+    provided "com.github.frankiesardo:icepick-processor:2.3.+"
 }
 
 task generateWrapper(type: Wrapper) {
     description "Generates Gradle wrapper."
 
-    gradleVersion = "1.12"
+    gradleVersion = "2.2.1"
 }

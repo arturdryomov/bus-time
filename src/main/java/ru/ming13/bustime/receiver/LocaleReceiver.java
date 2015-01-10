@@ -10,12 +10,12 @@ public class LocaleReceiver extends BroadcastReceiver
 {
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
-			handleLocaleChangeEvent();
+		if (intent == null) {
+			return;
 		}
-	}
 
-	private void handleLocaleChangeEvent() {
-		Formatters.tearDownFormatters();
+		if (Intent.ACTION_LOCALE_CHANGED.equals(intent.getAction())) {
+			Formatters.tearDownFormatters();
+		}
 	}
 }

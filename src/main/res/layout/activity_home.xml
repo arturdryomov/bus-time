@@ -6,10 +6,35 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<android.support.v4.view.ViewPager
-		android:id="@+id/pager_tabs"
+	<LinearLayout
+		android:id="@+id/content"
+		android:orientation="vertical"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"/>
+		android:layout_height="match_parent">
+
+		<include
+			layout="@layout/view_toolbar"/>
+
+		<ru.ming13.bustime.view.TabLayout
+			android:id="@+id/layout_tabs"
+			android:background="@color/background_primary"
+			android:elevation="@dimen/elevation_bar"
+			android:layout_width="match_parent"
+			android:layout_height="48dp"/>
+
+		<FrameLayout
+			android:foreground="?android:windowContentOverlay"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<android.support.v4.view.ViewPager
+				android:id="@+id/pager_tabs"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"/>
+
+		</FrameLayout>
+
+	</LinearLayout>
 
 	<ProgressBar
 		android:id="@+id/progress"

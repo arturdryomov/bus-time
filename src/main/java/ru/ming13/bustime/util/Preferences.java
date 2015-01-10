@@ -2,6 +2,7 @@ package ru.ming13.bustime.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,12 +30,12 @@ public final class Preferences
 
 	private final SharedPreferences preferences;
 
-	public static Preferences with(Context context) {
+	public static Preferences of(@NonNull Context context) {
 		return new Preferences(context);
 	}
 
 	private Preferences(Context context) {
-		preferences = context.getSharedPreferences(LOCATION, Context.MODE_PRIVATE);
+		this.preferences = context.getSharedPreferences(LOCATION, Context.MODE_PRIVATE);
 	}
 
 	public String getDatabaseVersion() {
@@ -45,12 +46,12 @@ public final class Preferences
 		return preferences.getString(key, Defaults.STRING);
 	}
 
-	public void setDatabaseVersion(String databaseVersion) {
+	public void setDatabaseVersion(@NonNull String databaseVersion) {
 		set(Keys.DATABASE_VERSION, databaseVersion);
 	}
 
 	private void set(String key, String value) {
-		preferences.edit().putString(key, value).commit();
+		preferences.edit().putString(key, value).apply();
 	}
 
 	public int getHomeTabPosition() {
@@ -66,6 +67,6 @@ public final class Preferences
 	}
 
 	private void set(String key, int value) {
-		preferences.edit().putInt(key, value).commit();
+		preferences.edit().putInt(key, value).apply();
 	}
 }

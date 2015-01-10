@@ -26,8 +26,9 @@ public class BusTimeProvider extends ContentProvider
 
 	@Override
 	public boolean onCreate() {
-		databaseHelper = new DatabaseOpenHelper(getContext());
-		uriMatcher = BusTimeUriMatcher.buildMatcher();
+		this.databaseHelper = new DatabaseOpenHelper(getContext());
+
+		this.uriMatcher = BusTimeUriMatcher.buildMatcher();
 
 		return true;
 	}

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import ru.ming13.bustime.database.DatabaseSchema;
+import ru.ming13.bustime.util.Android;
 import ru.ming13.bustime.util.Time;
 
 public final class BusTimeContract
@@ -13,7 +14,7 @@ public final class BusTimeContract
 	private BusTimeContract() {
 	}
 
-	public static final String AUTHORITY = "ru.ming13.bustime";
+	public static final String AUTHORITY = Android.getApplicationId();
 
 	private interface RoutesColumns
 	{

@@ -4,11 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.squareup.otto.Subscribe;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RouteSelectedEvent;
@@ -20,75 +25,88 @@ import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Intents;
+import ru.ming13.bustime.util.Maps;
 import ru.ming13.bustime.util.TitleBuilder;
 
 public class StopRoutesActivity extends ActionBarActivity
 {
+	@InjectView(R.id.toolbar)
+	Toolbar toolbar;
+
+	@InjectExtra(Intents.Extras.STOP)
+	Stop stop;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_container);
+
+		setUpInjections();
 
 		setUpUi();
 	}
 
+	private void setUpInjections() {
+		ButterKnife.inject(this);
+
+		Dart.inject(this);
+	}
+
 	private void setUpUi() {
+		setUpToolbar();
+
 		if (Frames.at(this).areAvailable()) {
 			setUpTitle();
-			setUpFrames();
-			setUpEmptyFrame();
+			setUpFrameTitles();
+			setUpMessageFragment();
 		} else {
 			setUpSubtitle();
-			setUpContainer();
 		}
 
 		setUpRoutesFragment();
 	}
 
+	private void setUpToolbar() {
+		setSupportActionBar(toolbar);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+
 	private void setUpTitle() {
-		getSupportActionBar().setTitle(buildStopTitle());
+		getSupportActionBar().setTitle(getStopTitle());
 	}
 
-	private String buildStopTitle() {
-		return TitleBuilder.with(this).buildStopTitle(getStop());
+	private String getStopTitle() {
+		return TitleBuilder.with(this).buildStopTitle(stop);
 	}
 
-	private Stop getStop() {
-		return getIntent().getParcelableExtra(Intents.Extras.STOP);
+	private void setUpFrameTitles() {
+		Frames.at(this).setLeftFrameTitle(R.string.title_routes);
+		Frames.at(this).setRightFrameTitle(R.string.title_timetable);
 	}
 
-	private void setUpFrames() {
-		setContentView(R.layout.activity_frames);
-
-		Frames.at(this).setLeftFrameTitle(getString(R.string.title_routes));
-		Frames.at(this).setRightFrameTitle(getString(R.string.title_timetable));
+	private void setUpMessageFragment() {
+		Fragments.Operator.at(this).set(getMessageFragment(), R.id.container_right_frame);
 	}
 
-	private void setUpEmptyFrame() {
-		Fragments.Operator.at(this).set(buildMessageFragment(), R.id.container_right_frame);
-	}
-
-	private Fragment buildMessageFragment() {
+	private Fragment getMessageFragment() {
 		return MessageFragment.newInstance(getString(R.string.message_no_route));
 	}
 
 	private void setUpSubtitle() {
-		getSupportActionBar().setSubtitle(buildStopTitle());
-	}
-
-	private void setUpContainer() {
-		setContentView(R.layout.activity_container);
+		getSupportActionBar().setSubtitle(getStopTitle());
 	}
 
 	private void setUpRoutesFragment() {
 		if (Frames.at(this).areAvailable()) {
-			Fragments.Operator.at(this).set(buildRoutesFragment(), R.id.container_left_frame);
+			Fragments.Operator.at(this).set(getRoutesFragment(), R.id.container_left_frame);
 		} else {
-			Fragments.Operator.at(this).set(buildRoutesFragment(), R.id.container_fragment);
+			Fragments.Operator.at(this).set(getRoutesFragment(), R.id.container_fragment);
 		}
 	}
 
-	private Fragment buildRoutesFragment() {
-		return StopRoutesFragment.newInstance(getStop());
+	private Fragment getRoutesFragment() {
+		return StopRoutesFragment.newInstance(stop);
 	}
 
 	@Subscribe
@@ -106,18 +124,18 @@ public class StopRoutesActivity extends ActionBarActivity
 
 	private void setUpTimetableFragment(Route route) {
 		if (Fragments.Operator.at(this).get(R.id.container_right_frame) instanceof MessageFragment) {
-			Fragments.Operator.at(this).resetSliding(buildTimetableFragment(route), R.id.container_right_frame);
+			Fragments.Operator.at(this).resetSliding(getTimetableFragment(route), R.id.container_right_frame);
 		} else {
-			Fragments.Operator.at(this).resetFading(buildTimetableFragment(route), R.id.container_right_frame);
+			Fragments.Operator.at(this).resetFading(getTimetableFragment(route), R.id.container_right_frame);
 		}
 	}
 
-	private Fragment buildTimetableFragment(Route route) {
-		return TimetableFragment.newInstance(route, getStop());
+	private Fragment getTimetableFragment(Route route) {
+		return TimetableFragment.newInstance(route, stop);
 	}
 
 	private void startTimetableActivity(Route route) {
-		Intent intent = Intents.Builder.with(this).buildTimetableIntent(route, getStop());
+		Intent intent = Intents.Builder.with(this).buildTimetableIntent(route, stop);
 		startActivity(intent);
 	}
 
@@ -125,7 +143,15 @@ public class StopRoutesActivity extends ActionBarActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.action_bar_stop_routes, menu);
 
+		setUpStopMap(menu);
+
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	private void setUpStopMap(Menu menu) {
+		if (!Maps.at(this).areHardwareAvailable()) {
+			menu.findItem(R.id.menu_map).setVisible(false);
+		}
 	}
 
 	@Override
@@ -145,8 +171,12 @@ public class StopRoutesActivity extends ActionBarActivity
 	}
 
 	private void startStopMapActivity() {
-		Intent intent = Intents.Builder.with(this).buildStopMapIntent(getStop());
-		startActivity(intent);
+		if (Maps.at(this).areSoftwareAvailable()) {
+			Intent intent = Intents.Builder.with(this).buildStopMapIntent(stop);
+			startActivity(intent);
+		} else {
+			Maps.at(this).showErrorDialog();
+		}
 	}
 
 	@Override

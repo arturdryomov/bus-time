@@ -31,6 +31,7 @@
 	<application
 		android:icon="@drawable/ic_launcher"
 		android:label="@string/application_name"
+		android:name=".BusTimeApplication"
 		android:theme="@style/Theme.BusTime">
 
 		<meta-data
@@ -39,8 +40,7 @@
 
 		<activity
 			android:launchMode="singleTop"
-			android:name=".activity.HomeActivity"
-			android:theme="@style/Theme.BusTime.Home">
+			android:name=".activity.HomeActivity">
 
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -100,7 +100,7 @@
 		</receiver>
 
 		<provider
-			android:authorities="ru.ming13.bustime"
+			android:authorities="@string/application_id"
 			android:exported="false"
 			android:name=".provider.BusTimeProvider">
 		</provider>

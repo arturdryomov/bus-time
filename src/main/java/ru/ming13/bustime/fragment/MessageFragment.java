@@ -1,18 +1,30 @@
 package ru.ming13.bustime.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.util.Fragments;
 
 public class MessageFragment extends Fragment
 {
-	public static MessageFragment newInstance(String message) {
+	@InjectView(R.id.text_message)
+	TextView message;
+
+	@InjectExtra(Fragments.Arguments.MESSAGE)
+	String messageText;
+
+	public static MessageFragment newInstance(@Nullable String message) {
 		MessageFragment fragment = new MessageFragment();
 
 		fragment.setArguments(buildArguments(message));
@@ -37,15 +49,25 @@ public class MessageFragment extends Fragment
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		setUpInjections();
+
 		setUpMessage();
 	}
 
-	private void setUpMessage() {
-		TextView messageView = (TextView) getView().findViewById(R.id.text_message);
-		messageView.setText(getMessage());
+	private void setUpInjections() {
+		ButterKnife.inject(this, getView());
+
+		Dart.inject(this, getArguments());
 	}
 
-	private String getMessage() {
-		return getArguments().getString(Fragments.Arguments.MESSAGE);
+	private void setUpMessage() {
+		message.setText(messageText);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+
+		ButterKnife.reset(this);
 	}
 }

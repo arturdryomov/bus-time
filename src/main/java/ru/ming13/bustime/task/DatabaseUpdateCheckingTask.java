@@ -2,6 +2,7 @@ package ru.ming13.bustime.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,7 +17,7 @@ public class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
 {
 	private final Context context;
 
-	public static void execute(Context context) {
+	public static void execute(@NonNull Context context) {
 		new DatabaseUpdateCheckingTask(context).execute();
 	}
 
@@ -45,7 +46,7 @@ public class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	private String getLocalDatabaseVersion() {
-		return Preferences.with(context).getDatabaseVersion();
+		return Preferences.of(context).getDatabaseVersion();
 	}
 
 	private String getServerDatabaseVersion() {

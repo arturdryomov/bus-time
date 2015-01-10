@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import ru.ming13.bustime.R;
-import ru.ming13.bustime.adapter.StopsAdapter;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
-import ru.ming13.bustime.model.Stop;
+import ru.ming13.bustime.adapter.StopsAdapter;
+import ru.ming13.bustime.cursor.StopsCursor;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Loaders;
 
@@ -62,7 +62,7 @@ public class StopsFragment extends ListFragment implements LoaderManager.LoaderC
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> stopsLoader, Cursor stopsCursor) {
-		getStopsAdapter().swapCursor(stopsCursor);
+		getStopsAdapter().swapCursor(new StopsCursor(stopsCursor));
 	}
 
 	private StopsAdapter getStopsAdapter() {
@@ -71,32 +71,12 @@ public class StopsFragment extends ListFragment implements LoaderManager.LoaderC
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> stopsLoader) {
-		getStopsAdapter().swapCursor(null);
 	}
 
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 
-		BusProvider.getBus().post(new StopSelectedEvent(getStop(id, position)));
-	}
-
-	private Stop getStop(long stopId, int stopPosition) {
-		Cursor stopsCursor = getStopsCursor(stopPosition);
-
-		String stopName = stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.NAME));
-		String stopDirection = stopsCursor.getString(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.DIRECTION));
-		double stopLatitude = stopsCursor.getDouble(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.LATITUDE));
-		double stopLongitude = stopsCursor.getDouble(
-			stopsCursor.getColumnIndex(BusTimeContract.Stops.LONGITUDE));
-
-		return new Stop(stopId, stopName, stopDirection, stopLatitude, stopLongitude);
-	}
-
-	private Cursor getStopsCursor(int stopPosition) {
-		return (Cursor) getStopsAdapter().getItem(stopPosition);
+		BusProvider.getBus().post(new StopSelectedEvent(getStopsAdapter().getItem(position)));
 	}
 }

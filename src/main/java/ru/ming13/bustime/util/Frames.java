@@ -1,19 +1,23 @@
 package ru.ming13.bustime.util;
 
-import android.support.v4.app.FragmentActivity;
+import android.app.Activity;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.widget.TextView;
 
+import butterknife.ButterKnife;
 import ru.ming13.bustime.R;
 
 public final class Frames
 {
-	private final FragmentActivity activity;
+	private final Activity activity;
 
-	public static Frames at(FragmentActivity activity) {
+	public static Frames at(@NonNull Activity activity) {
 		return new Frames(activity);
 	}
 
-	private Frames(FragmentActivity activity) {
+	private Frames(Activity activity) {
 		this.activity = activity;
 	}
 
@@ -21,16 +25,17 @@ public final class Frames
 		return Android.isTablet(activity) && !Android.isPortrait(activity);
 	}
 
-	public void setLeftFrameTitle(String title) {
+	public void setLeftFrameTitle(@StringRes int title) {
 		setFrameTitle(title, R.id.text_left_frame);
 	}
 
-	private void setFrameTitle(String title, int titleViewId) {
-		TextView titleView = (TextView) activity.findViewById(titleViewId);
-		titleView.setText(title);
+	public void setRightFrameTitle(@StringRes int title) {
+		setFrameTitle(title, R.id.text_right_frame);
 	}
 
-	public void setRightFrameTitle(String title) {
-		setFrameTitle(title, R.id.text_right_frame);
+	private void setFrameTitle(@StringRes int title, @IdRes int titleViewId) {
+		TextView titleView = ButterKnife.findById(activity, titleViewId);
+
+		titleView.setText(title);
 	}
 }
