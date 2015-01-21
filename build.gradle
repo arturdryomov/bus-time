@@ -56,15 +56,15 @@ android {
     productFlavors {
         play {
             applicationId "ru.ming13.bustime"
-
-            resValue "string", "application_id", applicationId
         }
 
         beta {
             applicationId "ru.ming13.bustime.beta"
-
-            resValue "string", "application_id", applicationId
         }
+    }
+
+    applicationVariants.all { variant ->
+        variant.resValue "string", "application_id", variant.applicationId
     }
 
     packagingOptions {
