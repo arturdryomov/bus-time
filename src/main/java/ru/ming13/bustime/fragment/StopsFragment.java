@@ -71,6 +71,7 @@ public class StopsFragment extends ListFragment implements LoaderManager.LoaderC
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> stopsLoader) {
+		getStopsAdapter().swapCursor(null);
 	}
 
 	@Override

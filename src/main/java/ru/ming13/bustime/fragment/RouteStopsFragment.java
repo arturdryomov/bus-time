@@ -106,6 +106,7 @@ public class RouteStopsFragment extends ListFragment implements LoaderManager.Lo
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> stopsLoader) {
+		getStopsAdapter().swapCursor(null);
 	}
 
 	@Override

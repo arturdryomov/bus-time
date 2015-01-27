@@ -218,6 +218,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> timetableCursor) {
+		getTimetableAdapter().swapCursor(null);
 	}
 
 	@Override

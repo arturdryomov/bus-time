@@ -71,6 +71,7 @@ public class RoutesFragment extends ListFragment implements LoaderManager.Loader
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> routesLoader) {
+		getRoutesAdapter().swapCursor(null);
 	}
 
 	@Override
