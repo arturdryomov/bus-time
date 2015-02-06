@@ -132,7 +132,7 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 	}
 
 	private void setUpTabsSelection() {
-		int selectedTabPosition = Preferences.of(this).getHomeTabPosition();
+		int selectedTabPosition = Preferences.of(this).getHomeTabPositionPreference().get();
 
 		tabPager.setCurrentItem(selectedTabPosition);
 	}
@@ -388,7 +388,7 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 		if (areTabsAvailable()) {
 			int selectedTabPosition = tabPager.getCurrentItem();
 
-			Preferences.of(this).setHomeTabPosition(selectedTabPosition);
+			Preferences.of(this).getHomeTabPositionPreference().set(selectedTabPosition);
 		}
 	}
 

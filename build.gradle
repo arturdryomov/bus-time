@@ -102,6 +102,7 @@ dependencies {
     compile "com.squareup.retrofit:retrofit:1.9.0"
     compile "com.venmo.cursor:library:0.4"
     compile "commons-io:commons-io:2.4"
+    compile "info.metadude.android:typed-preferences:2.0.0"
     compile "org.apache.commons:commons-lang3:3.3.2"
     compile "org.ocpsoft.prettytime:prettytime:3.2.7.Final"
 

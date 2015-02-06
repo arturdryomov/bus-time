@@ -6,6 +6,9 @@ import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
 
+import info.metadude.android.typedpreferences.IntPreference;
+import info.metadude.android.typedpreferences.StringPreference;
+
 public final class Preferences
 {
 	private static final String LOCATION = "state";
@@ -38,35 +41,11 @@ public final class Preferences
 		this.preferences = context.getSharedPreferences(LOCATION, Context.MODE_PRIVATE);
 	}
 
-	public String getDatabaseVersion() {
-		return getString(Keys.DATABASE_VERSION);
-	}
+    public StringPreference getDatabaseVersionPreference() {
+        return new StringPreference(preferences, Keys.DATABASE_VERSION, Defaults.STRING);
+    }
 
-	private String getString(String key) {
-		return preferences.getString(key, Defaults.STRING);
-	}
-
-	public void setDatabaseVersion(@NonNull String databaseVersion) {
-		set(Keys.DATABASE_VERSION, databaseVersion);
-	}
-
-	private void set(String key, String value) {
-		preferences.edit().putString(key, value).apply();
-	}
-
-	public int getHomeTabPosition() {
-		return getInt(Keys.HOME_TAB_POSITION);
-	}
-
-	private int getInt(String key) {
-		return preferences.getInt(key, Defaults.INT);
-	}
-
-	public void setHomeTabPosition(int homeTabPosition) {
-		set(Keys.HOME_TAB_POSITION, homeTabPosition);
-	}
-
-	private void set(String key, int value) {
-		preferences.edit().putInt(key, value).apply();
-	}
+    public IntPreference getHomeTabPositionPreference() {
+        return new IntPreference(preferences, Keys.HOME_TAB_POSITION, Defaults.INT);
+    }
 }
