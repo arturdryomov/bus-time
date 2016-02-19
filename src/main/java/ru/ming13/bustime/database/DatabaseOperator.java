@@ -4,12 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import ru.ming13.bustime.util.Files;
 import ru.ming13.bustime.util.SqlBuilder;
 
 public final class DatabaseOperator
@@ -41,10 +40,10 @@ public final class DatabaseOperator
 			File tempDatabaseFile = getTempFile(databaseContents);
 			File databaseFile = getDatabaseFile();
 
-			FileUtils.copyFile(tempDatabaseFile, databaseFile);
+			Files.copy(tempDatabaseFile, databaseFile);
 
 			tempDatabaseFile.delete();
-		} catch (IOException e) {
+		} catch (RuntimeException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -53,10 +52,10 @@ public final class DatabaseOperator
 		try {
 			File tempFile = File.createTempFile("bustime", null, context.getCacheDir());
 
-			FileUtils.copyInputStreamToFile(fileContents, tempFile);
+			Files.copy(fileContents, tempFile);
 
 			return tempFile;
-		} catch (IOException | NullPointerException e) {
+		} catch (RuntimeException | IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
