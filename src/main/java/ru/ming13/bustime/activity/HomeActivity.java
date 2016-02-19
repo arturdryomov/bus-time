@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -14,12 +16,10 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.listeners.ActionClickListener;
-import com.nispok.snackbar.listeners.EventListener;
 import com.squareup.otto.Subscribe;
 
 import butterknife.Bind;
@@ -51,7 +51,7 @@ import ru.ming13.bustime.util.Preferences;
 import ru.ming13.bustime.util.ViewDirector;
 import ru.ming13.bustime.view.TabLayout;
 
-public class HomeActivity extends AppCompatActivity implements EventListener, ActionClickListener
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener
 {
 	@Bind(R.id.toolbar)
 	@Nullable
@@ -161,35 +161,14 @@ public class HomeActivity extends AppCompatActivity implements EventListener, Ac
 	}
 
 	private void showDatabaseUpdateBanner() {
-		Snackbar.with(this)
-			.duration(Snackbar.SnackbarDuration.LENGTH_INDEFINITE)
-			.text(R.string.message_updates)
-			.actionLabel(R.string.button_download)
-			.actionColorResource(R.color.background_primary)
-			.actionListener(this)
-			.eventListener(this)
-			.show(this);
+		Snackbar.make(findViewById(android.R.id.content), R.string.message_updates, Snackbar.LENGTH_INDEFINITE)
+			.setActionTextColor(ContextCompat.getColor(this, R.color.background_primary))
+			.setAction(R.string.button_download, this)
+			.show();
 	}
 
 	@Override
-	public void onShow(Snackbar snackbar) {
-	}
-
-	@Override
-	public void onShown(Snackbar snackbar) {
-	}
-
-	@Override
-	public void onDismiss(Snackbar snackbar) {
-	}
-
-	@Override
-	public void onDismissed(Snackbar snackbar) {
-		this.isDatabaseUpdateDone = true;
-	}
-
-	@Override
-	public void onActionClicked(Snackbar snackbar) {
+	public void onClick(View view) {
 		this.isDatabaseUpdateDone = true;
 
 		startDatabaseUpdate();
