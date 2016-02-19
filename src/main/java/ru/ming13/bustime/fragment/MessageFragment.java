@@ -8,9 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.f2prateek.dart.Dart;
-import com.f2prateek.dart.InjectExtra;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ru.ming13.bustime.R;
@@ -20,9 +17,6 @@ public class MessageFragment extends Fragment
 {
 	@InjectView(R.id.text_message)
 	TextView message;
-
-	@InjectExtra(Fragments.Arguments.MESSAGE)
-	String messageText;
 
 	public static MessageFragment newInstance(@Nullable String message) {
 		MessageFragment fragment = new MessageFragment();
@@ -56,12 +50,14 @@ public class MessageFragment extends Fragment
 
 	private void setUpInjections() {
 		ButterKnife.inject(this, getView());
-
-		Dart.inject(this, getArguments());
 	}
 
 	private void setUpMessage() {
-		message.setText(messageText);
+		message.setText(getMessage());
+	}
+
+	private String getMessage() {
+		return getArguments().getString(Fragments.Arguments.MESSAGE);
 	}
 
 	@Override

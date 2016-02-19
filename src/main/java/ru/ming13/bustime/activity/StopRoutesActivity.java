@@ -8,8 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.f2prateek.dart.Dart;
-import com.f2prateek.dart.InjectExtra;
 import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
@@ -33,9 +31,6 @@ public class StopRoutesActivity extends ActionBarActivity
 	@InjectView(R.id.toolbar)
 	Toolbar toolbar;
 
-	@InjectExtra(Intents.Extras.STOP)
-	Stop stop;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,8 +43,6 @@ public class StopRoutesActivity extends ActionBarActivity
 
 	private void setUpInjections() {
 		ButterKnife.inject(this);
-
-		Dart.inject(this);
 	}
 
 	private void setUpUi() {
@@ -77,7 +70,11 @@ public class StopRoutesActivity extends ActionBarActivity
 	}
 
 	private String getStopTitle() {
-		return TitleBuilder.with(this).buildStopTitle(stop);
+		return TitleBuilder.with(this).buildStopTitle(getStop());
+	}
+
+	private Stop getStop() {
+		return getIntent().getParcelableExtra(Intents.Extras.STOP);
 	}
 
 	private void setUpFrameTitles() {
@@ -106,7 +103,7 @@ public class StopRoutesActivity extends ActionBarActivity
 	}
 
 	private Fragment getRoutesFragment() {
-		return StopRoutesFragment.newInstance(stop);
+		return StopRoutesFragment.newInstance(getStop());
 	}
 
 	@Subscribe
@@ -131,11 +128,11 @@ public class StopRoutesActivity extends ActionBarActivity
 	}
 
 	private Fragment getTimetableFragment(Route route) {
-		return TimetableFragment.newInstance(route, stop);
+		return TimetableFragment.newInstance(route, getStop());
 	}
 
 	private void startTimetableActivity(Route route) {
-		Intent intent = Intents.Builder.with(this).buildTimetableIntent(route, stop);
+		Intent intent = Intents.Builder.with(this).buildTimetableIntent(route, getStop());
 		startActivity(intent);
 	}
 
@@ -172,7 +169,7 @@ public class StopRoutesActivity extends ActionBarActivity
 
 	private void startStopMapActivity() {
 		if (Maps.at(this).areSoftwareAvailable()) {
-			Intent intent = Intents.Builder.with(this).buildStopMapIntent(stop);
+			Intent intent = Intents.Builder.with(this).buildStopMapIntent(getStop());
 			startActivity(intent);
 		} else {
 			Maps.at(this).showErrorDialog();
