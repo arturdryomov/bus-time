@@ -244,7 +244,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 		EditText stopsSearchQueryEdit = ButterKnife.findById(stopsSearchView, R.id.search_src_text);
 
 		stopsSearchPlate.setBackgroundResource(R.drawable.abc_textfield_search_material);
-		stopsSearchQueryEdit.setHintTextColor(getResources().getColor(R.color.text_hint_light));
+		stopsSearchQueryEdit.setHintTextColor(ContextCompat.getColor(this, R.color.text_hint_light));
 	}
 
 	private void setUpStopsMap(Menu menu) {

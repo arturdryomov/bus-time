@@ -10,7 +10,7 @@ public final class Strings
     }
 
     @NonNull
-    public static String EMPTY = "";
+    public static final String EMPTY = "";
 
     @Nullable
     public static String capitalize(@Nullable String string) {

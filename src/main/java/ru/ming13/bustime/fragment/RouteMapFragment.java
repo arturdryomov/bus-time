@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
@@ -208,7 +209,7 @@ public class RouteMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private int getRoutePathColor() {
-		return getResources().getColor(R.color.background_primary);
+		return ContextCompat.getColor(getContext(), R.color.background_primary);
 	}
 
 	private void setUpRouteArea(List<Stop> stops) {

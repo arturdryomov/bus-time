@@ -2,13 +2,13 @@ package ru.ming13.bustime.database.sql;
 
 public interface QueryComponents
 {
-	public String getTables();
+	String getTables();
 
-	public String[] getProjection();
+	String[] getProjection();
 
-	public String getSelection();
+	String getSelection();
 
-	public String[] getSelectionArguments();
+	String[] getSelectionArguments();
 
-	public String getSortOrder();
+	String getSortOrder();
 }

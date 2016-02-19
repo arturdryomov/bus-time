@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import ru.ming13.bustime.util.Fragments;
 
@@ -33,7 +33,7 @@ public class GooglePlayServicesErrorDialog extends DialogFragment
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		return GooglePlayServicesUtil.getErrorDialog(getErrorCode(), getActivity(), getRequestCode());
+		return GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), getErrorCode(), getRequestCode());
 	}
 
 	private int getErrorCode() {

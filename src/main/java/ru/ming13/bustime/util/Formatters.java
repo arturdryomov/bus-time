@@ -10,6 +10,7 @@ import org.ocpsoft.prettytime.units.Second;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public final class Formatters
 {
@@ -29,7 +30,7 @@ public final class Formatters
 	}
 
 	private static DateFormat buildDatabaseTimeFormatter() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
 	}
 
 	public static PrettyTime getRelativeTimeFormatter() {

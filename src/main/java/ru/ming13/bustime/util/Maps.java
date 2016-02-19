@@ -9,7 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import ru.ming13.bustime.fragment.GooglePlayServicesErrorDialog;
 
@@ -40,7 +40,7 @@ public final class Maps
 	}
 
 	private int getErrorCode() {
-		return GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+		return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
 	}
 
 	public void showErrorDialog() {

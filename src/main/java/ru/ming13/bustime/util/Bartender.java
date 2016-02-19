@@ -2,6 +2,7 @@ package ru.ming13.bustime.util;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v4.view.GravityCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,11 +48,11 @@ public final class Bartender
 		this.activity = activity;
 	}
 
-	public int getActionBarHeight() {
+	private int getActionBarHeight() {
 		return activity.getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height_material);
 	}
 
-	public int getNavigationBarHeight() {
+	private int getNavigationBarHeight() {
 		if (!isNavigationBarAvailable()) {
 			return SystemDimensions.DEFAULT_VALUE;
 		}
@@ -87,7 +88,7 @@ public final class Bartender
 		return activity.getResources().getDimensionPixelSize(systemDimensionId);
 	}
 
-	public int getNavigationBarWidth() {
+	private int getNavigationBarWidth() {
 		if (!isNavigationBarAvailable()) {
 			return SystemDimensions.DEFAULT_VALUE;
 		}
@@ -177,7 +178,7 @@ public final class Bartender
 			navigationBarViewParams.gravity = Gravity.BOTTOM;
 		} else {
 			navigationBarViewParams = new LayoutParams(getNavigationBarWidth(), LayoutParams.MATCH_PARENT);
-			navigationBarViewParams.gravity = Gravity.RIGHT;
+			navigationBarViewParams.gravity = GravityCompat.END;
 		}
 
 		return navigationBarViewParams;
