@@ -20,7 +20,7 @@ import com.squareup.otto.Subscribe;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import icepick.Icepick;
-import icepick.Icicle;
+import icepick.State;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.TimetableAdapter;
 import ru.ming13.bustime.bus.BusProvider;
@@ -68,7 +68,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	@Bind(R.id.empty)
 	ViewGroup emptyLayout;
 
-	@Icicle
+	@State
 	int timetableType;
 
 	private int timetableClosestTripPosition;

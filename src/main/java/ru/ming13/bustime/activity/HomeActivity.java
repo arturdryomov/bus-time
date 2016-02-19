@@ -25,7 +25,7 @@ import com.squareup.otto.Subscribe;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import icepick.Icepick;
-import icepick.Icicle;
+import icepick.State;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.adapter.TabPagerAdapter;
 import ru.ming13.bustime.bus.BusEventsCollector;
@@ -65,10 +65,10 @@ public class HomeActivity extends AppCompatActivity implements EventListener, Ac
 	@Nullable
 	ViewPager tabPager;
 
-	@Icicle
+	@State
 	boolean isDatabaseUpdateDone;
 
-	@Icicle
+	@State
 	boolean isProgressVisible;
 
 	@Override

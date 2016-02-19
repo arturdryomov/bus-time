@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import icepick.Icepick;
-import icepick.Icicle;
+import icepick.State;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
@@ -74,7 +74,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 
 	private Map<String, Long> stopIds;
 
-	@Icicle
+	@State
 	CameraPosition cameraPosition;
 
 	public static StopsMapFragment newInstance() {

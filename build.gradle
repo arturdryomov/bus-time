@@ -83,12 +83,15 @@ def buildVersionCode(versionMajor, versionMinor, versionPatch) {
 dependencies {
     repositories {
         jcenter()
+
+        maven {
+            url "https://clojars.org/repo/"
+        }
     }
 
     compile "com.android.support:appcompat-v7:23.1.1"
     compile "com.android.support:support-annotations:23.1.1"
     compile "com.android.support:support-v4:23.1.1"
-    compile "com.github.frankiesardo:icepick:2.3.6"
     compile "com.google.android.gms:play-services-location:8.4.0"
     compile "com.google.android.gms:play-services-maps:8.4.0"
     compile "com.google.maps.android:android-maps-utils:0.4.1"
@@ -99,7 +102,8 @@ dependencies {
     compile "com.squareup.retrofit:retrofit:1.9.0"
     compile "com.venmo.cursor:library:0.4"
     compile "info.metadude.android:typed-preferences:2.1.0"
+    compile "frankiesardo:icepick:3.1.0"
     compile "org.ocpsoft.prettytime:prettytime:4.0.1.Final"
 
-    provided "com.github.frankiesardo:icepick-processor:2.3.6"
+    provided "frankiesardo:icepick-processor:3.1.0"
 }
