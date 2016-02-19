@@ -21,6 +21,10 @@ public final class Files
             BufferedSink destination = Okio.buffer(Okio.sink(destinationFile));
 
             destination.writeAll(source);
+            destination.flush();
+
+            source.close();
+            destination.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -32,6 +36,10 @@ public final class Files
             BufferedSink destination = Okio.buffer(Okio.sink(destinationFile));
 
             destination.writeAll(source);
+            destination.flush();
+
+            source.close();
+            destination.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

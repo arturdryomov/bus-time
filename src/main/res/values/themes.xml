@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<style name="Theme.BusTime" parent="@style/Theme.AppCompat.Light">
+	<style name="Theme.BusTime" parent="@style/Theme.AppCompat.Light.NoActionBar">
 		<item name="colorPrimary">@color/background_primary</item>
 		<item name="colorPrimaryDark">@color/background_primary_dark</item>
 		<item name="colorAccent">@color/background_accent</item>
-
-		<item name="windowActionBar">false</item>
 
 		<item name="android:windowBackground">@color/background_window</item>
 	</style>

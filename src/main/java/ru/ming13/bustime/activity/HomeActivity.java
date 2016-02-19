@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -51,7 +51,7 @@ import ru.ming13.bustime.util.Preferences;
 import ru.ming13.bustime.util.ViewDirector;
 import ru.ming13.bustime.view.TabLayout;
 
-public class HomeActivity extends ActionBarActivity implements EventListener, ActionClickListener
+public class HomeActivity extends AppCompatActivity implements EventListener, ActionClickListener
 {
 	@Bind(R.id.toolbar)
 	@Nullable
