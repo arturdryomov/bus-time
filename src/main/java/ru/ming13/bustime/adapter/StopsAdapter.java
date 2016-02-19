@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.venmo.cursor.support.IterableCursorAdapter;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.util.Strings;
@@ -19,14 +19,14 @@ public class StopsAdapter extends IterableCursorAdapter<Stop>
 {
 	static final class StopViewHolder
 	{
-		@InjectView(R.id.text_name)
+		@Bind(R.id.text_name)
 		public TextView stopName;
 
-		@InjectView(R.id.text_direction)
+		@Bind(R.id.text_direction)
 		public TextView stopDirection;
 
 		public StopViewHolder(View stopView) {
-			ButterKnife.inject(this, stopView);
+			ButterKnife.bind(this, stopView);
 		}
 	}
 

@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.venmo.cursor.support.IterableCursorAdapter;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.model.TimetableTime;
 
@@ -18,14 +18,14 @@ public class TimetableAdapter extends IterableCursorAdapter<TimetableTime>
 {
 	static final class TimeViewHolder
 	{
-		@InjectView(R.id.text_time_exact)
+		@Bind(R.id.text_time_exact)
 		public TextView exactTime;
 
-		@InjectView(R.id.text_time_relative)
+		@Bind(R.id.text_time_relative)
 		public TextView relativeTime;
 
 		public TimeViewHolder(View timeView) {
-			ButterKnife.inject(this, timeView);
+			ButterKnife.bind(this, timeView);
 		}
 	}
 

@@ -10,8 +10,8 @@ import android.widget.RelativeLayout;
 
 import com.squareup.otto.Subscribe;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
@@ -24,7 +24,7 @@ import ru.ming13.bustime.util.Intents;
 
 public class StopsMapActivity extends ActionBarActivity
 {
-	@InjectView(R.id.toolbar)
+	@Bind(R.id.toolbar)
 	Toolbar toolbar;
 
 	@Override
@@ -32,7 +32,7 @@ public class StopsMapActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_container_map);
 
-		setUpInjections();
+		setUpBindings();
 
 		setUpBars();
 		setUpToolbar();
@@ -40,8 +40,8 @@ public class StopsMapActivity extends ActionBarActivity
 		setUpMapFragment();
 	}
 
-	private void setUpInjections() {
-		ButterKnife.inject(this);
+	private void setUpBindings() {
+		ButterKnife.bind(this);
 	}
 
 	private void setUpBars() {

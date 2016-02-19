@@ -6,8 +6,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.fragment.TimetableFragment;
 import ru.ming13.bustime.model.Route;
@@ -19,7 +19,7 @@ import ru.ming13.bustime.util.TitleBuilder;
 
 public class TimetableActivity extends ActionBarActivity
 {
-	@InjectView(R.id.toolbar)
+	@Bind(R.id.toolbar)
 	Toolbar toolbar;
 
 	@Override
@@ -32,13 +32,13 @@ public class TimetableActivity extends ActionBarActivity
 			return;
 		}
 
-		setUpInjections();
+		setUpBindings();
 
 		setUpUi();
 	}
 
-	private void setUpInjections() {
-		ButterKnife.inject(this);
+	private void setUpBindings() {
+		ButterKnife.bind(this);
 	}
 
 	private void setUpUi() {

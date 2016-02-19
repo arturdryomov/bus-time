@@ -10,8 +10,8 @@ import android.view.MenuItem;
 
 import com.squareup.otto.Subscribe;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.StopSelectedEvent;
@@ -28,7 +28,7 @@ import ru.ming13.bustime.util.TitleBuilder;
 
 public class RouteStopsActivity extends ActionBarActivity
 {
-	@InjectView(R.id.toolbar)
+	@Bind(R.id.toolbar)
 	Toolbar toolbar;
 
 	@Override
@@ -36,13 +36,13 @@ public class RouteStopsActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_container);
 
-		setUpInjections();
+		setUpBindings();
 
 		setUpUi();
 	}
 
-	private void setUpInjections() {
-		ButterKnife.inject(this);
+	private void setUpBindings() {
+		ButterKnife.bind(this);
 	}
 
 	private void setUpUi() {

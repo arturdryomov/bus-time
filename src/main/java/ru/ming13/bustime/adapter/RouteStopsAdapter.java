@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.venmo.cursor.support.IterableCursorAdapter;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.model.RouteStop;
 import ru.ming13.bustime.util.Strings;
@@ -20,23 +20,23 @@ public class RouteStopsAdapter extends IterableCursorAdapter<RouteStop>
 {
 	static final class StopViewHolder
 	{
-		@InjectView(R.id.text_name)
+		@Bind(R.id.text_name)
 		public TextView stopName;
 
-		@InjectView(R.id.text_direction)
+		@Bind(R.id.text_direction)
 		public TextView stopDirection;
 
-		@InjectView(R.id.image_marker_first)
+		@Bind(R.id.image_marker_first)
 		public ImageView stopMarkerFirst;
 
-		@InjectView(R.id.image_marker_middle)
+		@Bind(R.id.image_marker_middle)
 		public ImageView stopMarkerMiddle;
 
-		@InjectView(R.id.image_marker_last)
+		@Bind(R.id.image_marker_last)
 		public ImageView stopMarkerLast;
 
 		public StopViewHolder(View stopView) {
-			ButterKnife.inject(this, stopView);
+			ButterKnife.bind(this, stopView);
 		}
 	}
 

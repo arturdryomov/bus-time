@@ -7,8 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.fragment.RouteMapFragment;
 import ru.ming13.bustime.model.Route;
@@ -20,7 +20,7 @@ import ru.ming13.bustime.util.TitleBuilder;
 
 public class RouteMapActivity extends ActionBarActivity
 {
-	@InjectView(R.id.toolbar)
+	@Bind(R.id.toolbar)
 	Toolbar toolbar;
 
 	@Override
@@ -28,7 +28,7 @@ public class RouteMapActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_container_map);
 
-		setUpInjections();
+		setUpBindings();
 
 		setUpBars();
 		setUpToolbar();
@@ -37,8 +37,8 @@ public class RouteMapActivity extends ActionBarActivity
 		setUpMapFragment();
 	}
 
-	private void setUpInjections() {
-		ButterKnife.inject(this);
+	private void setUpBindings() {
+		ButterKnife.bind(this);
 	}
 
 	private void setUpBars() {

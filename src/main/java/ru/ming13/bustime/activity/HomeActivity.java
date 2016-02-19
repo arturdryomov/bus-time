@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -21,9 +22,8 @@ import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
 import com.squareup.otto.Subscribe;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.Optional;
 import icepick.Icepick;
 import icepick.Icicle;
 import ru.ming13.bustime.R;
@@ -53,16 +53,16 @@ import ru.ming13.bustime.view.TabLayout;
 
 public class HomeActivity extends ActionBarActivity implements EventListener, ActionClickListener
 {
-	@InjectView(R.id.toolbar)
-	@Optional
+	@Bind(R.id.toolbar)
+	@Nullable
 	Toolbar toolbar;
 
-	@InjectView(R.id.layout_tabs)
-	@Optional
+	@Bind(R.id.layout_tabs)
+	@Nullable
 	TabLayout tabLayout;
 
-	@InjectView(R.id.pager_tabs)
-	@Optional
+	@Bind(R.id.pager_tabs)
+	@Nullable
 	ViewPager tabPager;
 
 	@Icicle
@@ -76,7 +76,7 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 
-		setUpInjections();
+		setUpBindings();
 
 		setUpState(savedInstanceState);
 
@@ -85,8 +85,8 @@ public class HomeActivity extends ActionBarActivity implements EventListener, Ac
 		setUpDatabaseUpdate();
 	}
 
-	private void setUpInjections() {
-		ButterKnife.inject(this);
+	private void setUpBindings() {
+		ButterKnife.bind(this);
 	}
 
 	private void setUpState(Bundle state) {

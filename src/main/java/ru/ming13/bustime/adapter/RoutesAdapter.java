@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.venmo.cursor.support.IterableCursorAdapter;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.model.Route;
 
@@ -18,14 +18,14 @@ public class RoutesAdapter extends IterableCursorAdapter<Route>
 {
 	static final class RouteViewHolder
 	{
-		@InjectView(R.id.text_number)
+		@Bind(R.id.text_number)
 		public TextView routeNumber;
 
-		@InjectView(R.id.text_description)
+		@Bind(R.id.text_description)
 		public TextView routeDescription;
 
 		public RouteViewHolder(View routeView) {
-			ButterKnife.inject(this, routeView);
+			ButterKnife.bind(this, routeView);
 		}
 	}
 

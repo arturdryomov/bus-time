@@ -8,14 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.util.Fragments;
 
 public class MessageFragment extends Fragment
 {
-	@InjectView(R.id.text_message)
+	@Bind(R.id.text_message)
 	TextView message;
 
 	public static MessageFragment newInstance(@Nullable String message) {
@@ -43,13 +43,13 @@ public class MessageFragment extends Fragment
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		setUpInjections();
+		setUpBindings();
 
 		setUpMessage();
 	}
 
-	private void setUpInjections() {
-		ButterKnife.inject(this, getView());
+	private void setUpBindings() {
+		ButterKnife.bind(this, getView());
 	}
 
 	private void setUpMessage() {
@@ -64,6 +64,6 @@ public class MessageFragment extends Fragment
 	public void onDestroyView() {
 		super.onDestroyView();
 
-		ButterKnife.reset(this);
+		ButterKnife.unbind(this);
 	}
 }

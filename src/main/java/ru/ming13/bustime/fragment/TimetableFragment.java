@@ -17,8 +17,8 @@ import android.view.ViewGroup;
 
 import com.squareup.otto.Subscribe;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import icepick.Icepick;
 import icepick.Icicle;
 import ru.ming13.bustime.R;
@@ -62,10 +62,10 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 		return arguments;
 	}
 
-	@InjectView(android.R.id.list)
+	@Bind(android.R.id.list)
 	View contentLayout;
 
-	@InjectView(R.id.empty)
+	@Bind(R.id.empty)
 	ViewGroup emptyLayout;
 
 	@Icicle
@@ -84,7 +84,7 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		setUpInjections();
+		setUpBindings();
 
 		setUpState(savedInstanceState);
 
@@ -93,8 +93,8 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 		setUpTimetableType();
 	}
 
-	private void setUpInjections() {
-		ButterKnife.inject(this, getView());
+	private void setUpBindings() {
+		ButterKnife.bind(this, getView());
 	}
 
 	private void setUpState(Bundle state) {
@@ -324,6 +324,6 @@ public class TimetableFragment extends ListFragment implements LoaderManager.Loa
 	public void onDestroyView() {
 		super.onDestroyView();
 
-		ButterKnife.reset(this);
+		ButterKnife.unbind(this);
 	}
 }
