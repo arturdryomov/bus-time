@@ -12,7 +12,7 @@ import ru.ming13.bustime.R;
 import ru.ming13.bustime.database.DatabaseSchema;
 import ru.ming13.bustime.util.Strings;
 
-public class DatabaseBackend
+public final class DatabaseBackend
 {
 	private final DatabaseBackendApi backendApi;
 

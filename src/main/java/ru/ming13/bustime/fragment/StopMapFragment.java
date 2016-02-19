@@ -16,7 +16,7 @@ import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
 
-public class StopMapFragment extends SupportMapFragment implements OnMapReadyCallback
+public final class StopMapFragment extends SupportMapFragment implements OnMapReadyCallback
 {
 	private static final class Ui
 	{

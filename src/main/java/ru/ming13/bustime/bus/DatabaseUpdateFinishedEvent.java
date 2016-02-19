@@ -1,5 +1,5 @@
 package ru.ming13.bustime.bus;
 
-public class DatabaseUpdateFinishedEvent implements BusEvent
+public final class DatabaseUpdateFinishedEvent implements BusEvent
 {
 }

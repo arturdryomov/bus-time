@@ -12,7 +12,7 @@ import ru.ming13.bustime.bus.DatabaseUpdateNotAvailableEvent;
 import ru.ming13.bustime.util.Preferences;
 import ru.ming13.bustime.util.Strings;
 
-public class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
+public final class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
 {
 	private final Context context;
 

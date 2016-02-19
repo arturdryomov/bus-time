@@ -2,7 +2,7 @@ package ru.ming13.bustime.model;
 
 import ru.ming13.bustime.util.Time;
 
-public class TimetableTime
+public final class TimetableTime
 {
 	private final Time time;
 

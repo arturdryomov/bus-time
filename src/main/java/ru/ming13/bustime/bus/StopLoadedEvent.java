@@ -2,7 +2,7 @@ package ru.ming13.bustime.bus;
 
 import ru.ming13.bustime.model.Stop;
 
-public class StopLoadedEvent implements BusEvent
+public final class StopLoadedEvent implements BusEvent
 {
 	private final Stop stop;
 

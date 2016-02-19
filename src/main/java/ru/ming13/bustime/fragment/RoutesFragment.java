@@ -20,7 +20,7 @@ import ru.ming13.bustime.cursor.RoutesCursor;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Loaders;
 
-public class RoutesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
+public final class RoutesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
 	public static RoutesFragment newInstance() {
 		return new RoutesFragment();

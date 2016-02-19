@@ -2,7 +2,7 @@ package ru.ming13.bustime.model;
 
 import ru.ming13.bustime.util.Time;
 
-public class StopRoute
+public final class StopRoute
 {
 	private final Route route;
 	private final Time routeTime;

@@ -15,7 +15,7 @@ import ru.ming13.bustime.R;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.util.Strings;
 
-public class StopsAdapter extends IterableCursorAdapter<Stop>
+public final class StopsAdapter extends IterableCursorAdapter<Stop>
 {
 	static final class StopViewHolder
 	{

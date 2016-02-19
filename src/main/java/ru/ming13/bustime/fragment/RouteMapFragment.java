@@ -36,7 +36,7 @@ import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
 
-public class RouteMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>, OnMapReadyCallback
+public final class RouteMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>, OnMapReadyCallback
 {
 	private static final class Ui
 	{

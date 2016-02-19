@@ -13,7 +13,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import ru.ming13.bustime.util.Strings;
 
-public class Navigator
+public final class Navigator
 {
 	public static final class Constraints
 	{

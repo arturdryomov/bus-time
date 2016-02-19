@@ -40,7 +40,7 @@ import ru.ming13.bustime.util.Loaders;
 import ru.ming13.bustime.util.Maps;
 import ru.ming13.bustime.util.Strings;
 
-public class StopsMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>,
+public final class StopsMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>,
 	OnMapReadyCallback,
 	GoogleMap.OnInfoWindowClickListener,
 	GoogleApiClient.ConnectionCallbacks,

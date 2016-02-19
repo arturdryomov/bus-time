@@ -3,7 +3,7 @@ package ru.ming13.bustime.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Route implements Parcelable
+public final class Route implements Parcelable
 {
 	private final long id;
 	private final String number;

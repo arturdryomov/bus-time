@@ -7,7 +7,7 @@ import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.SqlBuilder;
 import ru.ming13.bustime.util.Strings;
 
-public class StopsSearchQueryComponents implements QueryComponents
+public final class StopsSearchQueryComponents implements QueryComponents
 {
 	private final String searchQuery;
 

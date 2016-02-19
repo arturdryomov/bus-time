@@ -13,7 +13,7 @@ import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.RoutePathLoadedEvent;
 import ru.ming13.bustime.direction.Navigator;
 
-public class RoutePathLoadingTask extends AsyncTask<Void, Void, BusEvent>
+public final class RoutePathLoadingTask extends AsyncTask<Void, Void, BusEvent>
 {
 	private final Navigator navigator;
 

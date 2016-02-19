@@ -3,7 +3,7 @@ package ru.ming13.bustime;
 import android.app.Application;
 import android.os.StrictMode;
 
-public class BusTimeApplication extends Application
+public final class BusTimeApplication extends Application
 {
 	@Override
 	public void onCreate() {

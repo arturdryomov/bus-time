@@ -2,7 +2,7 @@ package ru.ming13.bustime.backend;
 
 import com.google.gson.annotations.SerializedName;
 
-class DatabaseInformation
+final class DatabaseInformation
 {
 	@SerializedName("version")
 	private String version;

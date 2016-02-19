@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import ru.ming13.bustime.util.Formatters;
 
-public class LocaleReceiver extends BroadcastReceiver
+public final class LocaleReceiver extends BroadcastReceiver
 {
 	@Override
 	public void onReceive(Context context, Intent intent) {

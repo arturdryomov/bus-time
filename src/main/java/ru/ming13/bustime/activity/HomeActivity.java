@@ -51,7 +51,7 @@ import ru.ming13.bustime.util.Preferences;
 import ru.ming13.bustime.util.ViewDirector;
 import ru.ming13.bustime.view.TabLayout;
 
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener
+public final class HomeActivity extends AppCompatActivity implements View.OnClickListener
 {
 	@Bind(R.id.toolbar)
 	@Nullable

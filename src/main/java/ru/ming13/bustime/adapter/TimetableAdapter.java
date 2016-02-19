@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.model.TimetableTime;
 
-public class TimetableAdapter extends IterableCursorAdapter<TimetableTime>
+public final class TimetableAdapter extends IterableCursorAdapter<TimetableTime>
 {
 	static final class TimeViewHolder
 	{

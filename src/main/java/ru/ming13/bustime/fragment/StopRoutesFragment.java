@@ -29,7 +29,7 @@ import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Loaders;
 import ru.ming13.bustime.util.Timer;
 
-public class StopRoutesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
+public final class StopRoutesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
 	public static StopRoutesFragment newInstance(@NonNull Stop stop) {
 		StopRoutesFragment fragment = new StopRoutesFragment();

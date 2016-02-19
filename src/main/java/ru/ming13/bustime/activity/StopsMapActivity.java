@@ -22,7 +22,7 @@ import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
 
-public class StopsMapActivity extends AppCompatActivity
+public final class StopsMapActivity extends AppCompatActivity
 {
 	@Bind(R.id.toolbar)
 	Toolbar toolbar;

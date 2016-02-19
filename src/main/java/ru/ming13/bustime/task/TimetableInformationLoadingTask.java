@@ -19,7 +19,7 @@ import ru.ming13.bustime.model.TimetableTime;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Time;
 
-public class TimetableInformationLoadingTask extends AsyncTask<Void, Void, BusEvent>
+public final class TimetableInformationLoadingTask extends AsyncTask<Void, Void, BusEvent>
 {
 	private static final class Defaults
 	{

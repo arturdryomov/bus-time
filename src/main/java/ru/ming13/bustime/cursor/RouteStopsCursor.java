@@ -8,7 +8,7 @@ import ru.ming13.bustime.model.RouteStop;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 
-public class RouteStopsCursor extends IterableCursorWrapper<RouteStop>
+public final class RouteStopsCursor extends IterableCursorWrapper<RouteStop>
 {
 	public RouteStopsCursor(Cursor cursor) {
 		super(cursor);

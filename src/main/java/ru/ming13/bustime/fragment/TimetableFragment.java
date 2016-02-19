@@ -35,7 +35,7 @@ import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Loaders;
 import ru.ming13.bustime.util.Timer;
 
-public class TimetableFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
+public final class TimetableFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
 	private static final class Defaults
 	{

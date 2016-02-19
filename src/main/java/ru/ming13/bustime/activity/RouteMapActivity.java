@@ -18,7 +18,7 @@ import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.TitleBuilder;
 
-public class RouteMapActivity extends AppCompatActivity
+public final class RouteMapActivity extends AppCompatActivity
 {
 	@Bind(R.id.toolbar)
 	Toolbar toolbar;

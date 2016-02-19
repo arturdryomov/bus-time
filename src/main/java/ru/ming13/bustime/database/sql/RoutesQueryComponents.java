@@ -4,7 +4,7 @@ import ru.ming13.bustime.database.DatabaseSchema;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.SqlBuilder;
 
-public class RoutesQueryComponents implements QueryComponents
+public final class RoutesQueryComponents implements QueryComponents
 {
 	@Override
 	public String getTables() {

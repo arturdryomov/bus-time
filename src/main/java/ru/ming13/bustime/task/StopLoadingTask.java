@@ -18,7 +18,7 @@ import ru.ming13.bustime.cursor.StopsCursor;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 
-public class StopLoadingTask extends AsyncTask<Void, Void, BusEvent>
+public final class StopLoadingTask extends AsyncTask<Void, Void, BusEvent>
 {
 	private final ContentResolver contentResolver;
 	private final long stopId;

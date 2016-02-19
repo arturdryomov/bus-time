@@ -1,6 +1,6 @@
 package ru.ming13.bustime.model;
 
-public class RouteStop
+public final class RouteStop
 {
 	private final Stop stop;
 

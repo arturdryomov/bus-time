@@ -1,5 +1,5 @@
 package ru.ming13.bustime.bus;
 
-public class TimeChangedEvent implements BusEvent
+public final class TimeChangedEvent implements BusEvent
 {
 }

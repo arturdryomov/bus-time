@@ -17,7 +17,7 @@ import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.TitleBuilder;
 
-public class TimetableActivity extends AppCompatActivity
+public final class TimetableActivity extends AppCompatActivity
 {
 	@Bind(R.id.toolbar)
 	Toolbar toolbar;

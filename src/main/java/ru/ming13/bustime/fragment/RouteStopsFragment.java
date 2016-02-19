@@ -24,7 +24,7 @@ import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Frames;
 import ru.ming13.bustime.util.Loaders;
 
-public class RouteStopsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
+public final class RouteStopsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
 	public static RouteStopsFragment newInstance(@NonNull Route route) {
 		RouteStopsFragment fragment = new RouteStopsFragment();

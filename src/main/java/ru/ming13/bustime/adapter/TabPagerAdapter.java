@@ -10,7 +10,7 @@ import ru.ming13.bustime.R;
 import ru.ming13.bustime.fragment.RoutesFragment;
 import ru.ming13.bustime.fragment.StopsFragment;
 
-public class TabPagerAdapter extends FragmentPagerAdapter
+public final class TabPagerAdapter extends FragmentPagerAdapter
 {
 	private static final int TAB_COUNT = 2;
 

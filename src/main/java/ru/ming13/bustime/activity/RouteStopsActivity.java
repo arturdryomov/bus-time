@@ -26,7 +26,7 @@ import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.Maps;
 import ru.ming13.bustime.util.TitleBuilder;
 
-public class RouteStopsActivity extends AppCompatActivity
+public final class RouteStopsActivity extends AppCompatActivity
 {
 	@Bind(R.id.toolbar)
 	Toolbar toolbar;

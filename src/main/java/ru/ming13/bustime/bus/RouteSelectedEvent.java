@@ -2,7 +2,7 @@ package ru.ming13.bustime.bus;
 
 import ru.ming13.bustime.model.Route;
 
-public class RouteSelectedEvent implements BusEvent
+public final class RouteSelectedEvent implements BusEvent
 {
 	private final Route route;
 

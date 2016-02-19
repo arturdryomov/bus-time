@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.model.Route;
 
-public class RoutesAdapter extends IterableCursorAdapter<Route>
+public final class RoutesAdapter extends IterableCursorAdapter<Route>
 {
 	static final class RouteViewHolder
 	{

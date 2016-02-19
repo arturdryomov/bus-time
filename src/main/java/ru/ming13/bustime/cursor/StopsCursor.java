@@ -7,7 +7,7 @@ import com.venmo.cursor.IterableCursorWrapper;
 import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 
-public class StopsCursor extends IterableCursorWrapper<Stop>
+public final class StopsCursor extends IterableCursorWrapper<Stop>
 {
 	public StopsCursor(Cursor cursor) {
 		super(cursor);

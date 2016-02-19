@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 
 import ru.ming13.bustime.util.Assets;
 
-public class DatabaseOpenHelper extends SQLiteOpenHelper
+public final class DatabaseOpenHelper extends SQLiteOpenHelper
 {
 	private final Context context;
 

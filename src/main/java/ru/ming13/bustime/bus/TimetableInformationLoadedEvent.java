@@ -1,6 +1,6 @@
 package ru.ming13.bustime.bus;
 
-public class TimetableInformationLoadedEvent implements BusEvent
+public final class TimetableInformationLoadedEvent implements BusEvent
 {
 	private final int timetableType;
 	private final int timetableClosestTripPosition;

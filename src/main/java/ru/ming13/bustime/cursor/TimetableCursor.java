@@ -8,7 +8,7 @@ import ru.ming13.bustime.model.TimetableTime;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Time;
 
-public class TimetableCursor extends IterableCursorWrapper<TimetableTime>
+public final class TimetableCursor extends IterableCursorWrapper<TimetableTime>
 {
 	public TimetableCursor(Cursor cursor) {
 		super(cursor);

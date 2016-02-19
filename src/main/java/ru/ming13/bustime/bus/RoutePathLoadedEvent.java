@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-public class RoutePathLoadedEvent implements BusEvent
+public final class RoutePathLoadedEvent implements BusEvent
 {
 	private final List<LatLng> pathPositions;
 

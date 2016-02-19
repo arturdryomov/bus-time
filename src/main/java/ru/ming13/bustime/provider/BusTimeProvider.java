@@ -20,7 +20,7 @@ import ru.ming13.bustime.database.sql.StopsRoutesQueryComponents;
 import ru.ming13.bustime.database.sql.StopsSearchQueryComponents;
 import ru.ming13.bustime.database.sql.TimetableQueryComponents;
 
-public class BusTimeProvider extends ContentProvider
+public final class BusTimeProvider extends ContentProvider
 {
 	private SQLiteOpenHelper databaseHelper;
 	private UriMatcher uriMatcher;

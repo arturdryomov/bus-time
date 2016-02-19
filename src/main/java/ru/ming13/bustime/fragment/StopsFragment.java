@@ -20,7 +20,7 @@ import ru.ming13.bustime.cursor.StopsCursor;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Loaders;
 
-public class StopsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
+public final class StopsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
 	public static StopsFragment newInstance() {
 		return new StopsFragment();

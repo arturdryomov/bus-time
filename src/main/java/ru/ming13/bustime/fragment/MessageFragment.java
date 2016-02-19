@@ -13,7 +13,7 @@ import butterknife.ButterKnife;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.util.Fragments;
 
-public class MessageFragment extends Fragment
+public final class MessageFragment extends Fragment
 {
 	@Bind(R.id.text_message)
 	TextView message;

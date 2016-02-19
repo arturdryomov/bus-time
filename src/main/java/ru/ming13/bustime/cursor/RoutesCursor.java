@@ -7,7 +7,7 @@ import com.venmo.cursor.IterableCursorWrapper;
 import ru.ming13.bustime.model.Route;
 import ru.ming13.bustime.provider.BusTimeContract;
 
-public class RoutesCursor extends IterableCursorWrapper<Route>
+public final class RoutesCursor extends IterableCursorWrapper<Route>
 {
 	public RoutesCursor(Cursor cursor) {
 		super(cursor);

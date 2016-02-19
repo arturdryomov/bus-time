@@ -15,7 +15,7 @@ import ru.ming13.bustime.database.DatabaseOperator;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Preferences;
 
-public class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
+public final class DatabaseUpdatingTask extends AsyncTask<Void, Void, BusEvent>
 {
 	private final Context context;
 
