@@ -1,6 +1,6 @@
 package ru.ming13.bustime.cursor;
 
-import org.apache.commons.lang3.StringUtils;
+import ru.ming13.bustime.util.Strings;
 
 final class CursorDefaults
 {
@@ -11,5 +11,5 @@ final class CursorDefaults
 
 	public static final long LONG = 0;
 
-	public static final String STRING = StringUtils.EMPTY;
+	public static final String STRING = Strings.EMPTY;
 }

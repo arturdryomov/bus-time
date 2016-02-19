@@ -9,12 +9,11 @@ import android.widget.TextView;
 
 import com.venmo.cursor.support.IterableCursorAdapter;
 
-import org.apache.commons.lang3.StringUtils;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.model.Stop;
+import ru.ming13.bustime.util.Strings;
 
 public class StopsAdapter extends IterableCursorAdapter<Stop>
 {
@@ -55,7 +54,7 @@ public class StopsAdapter extends IterableCursorAdapter<Stop>
 		stopViewHolder.stopName.setText(stop.getName());
 		stopViewHolder.stopDirection.setText(stop.getDirection());
 
-		if (StringUtils.isBlank(stop.getDirection())) {
+		if (Strings.isBlank(stop.getDirection())) {
 			stopViewHolder.stopDirection.setVisibility(View.GONE);
 		} else {
 			stopViewHolder.stopDirection.setVisibility(View.VISIBLE);

@@ -5,14 +5,13 @@ import android.support.annotation.NonNull;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import ru.ming13.bustime.util.Strings;
 
 public class Navigator
 {
@@ -70,7 +69,7 @@ public class Navigator
 			formattedPositions.add(formatPosition(position));
 		}
 
-		return StringUtils.join(formattedPositions, "|");
+		return Strings.join(formattedPositions, "|");
 	}
 
 	private List<LatLng> parseDirectionPolylinePositions(DirectionsInformation directionsInformation) {

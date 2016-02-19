@@ -3,8 +3,6 @@ package ru.ming13.bustime.backend;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -12,6 +10,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.database.DatabaseSchema;
+import ru.ming13.bustime.util.Strings;
 
 public class DatabaseBackend
 {
@@ -37,7 +36,7 @@ public class DatabaseBackend
 		try {
 			return backendApi.getDatabaseInformation(DatabaseSchema.Versions.CURRENT).getVersion();
 		} catch (RetrofitError error) {
-			return StringUtils.EMPTY;
+			return Strings.EMPTY;
 		}
 	}
 

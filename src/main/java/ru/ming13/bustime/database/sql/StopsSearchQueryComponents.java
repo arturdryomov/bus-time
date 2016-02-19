@@ -2,11 +2,10 @@ package ru.ming13.bustime.database.sql;
 
 import android.app.SearchManager;
 
-import org.apache.commons.lang3.StringUtils;
-
 import ru.ming13.bustime.database.DatabaseSchema;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.SqlBuilder;
+import ru.ming13.bustime.util.Strings;
 
 public class StopsSearchQueryComponents implements QueryComponents
 {
@@ -33,8 +32,8 @@ public class StopsSearchQueryComponents implements QueryComponents
 	@Override
 	public String getSelection() {
 		return SqlBuilder.buildOptionalSelectionClause(
-			SqlBuilder.buildLikeClause(DatabaseSchema.StopsColumns.NAME, StringUtils.lowerCase(searchQuery)),
-			SqlBuilder.buildLikeClause(DatabaseSchema.StopsColumns.NAME, StringUtils.capitalize(StringUtils.lowerCase(searchQuery))));
+			SqlBuilder.buildLikeClause(DatabaseSchema.StopsColumns.NAME, searchQuery.toLowerCase()),
+			SqlBuilder.buildLikeClause(DatabaseSchema.StopsColumns.NAME, Strings.capitalize(searchQuery.toLowerCase())));
 	}
 
 	@Override

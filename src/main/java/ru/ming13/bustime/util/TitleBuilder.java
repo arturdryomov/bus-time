@@ -3,8 +3,6 @@ package ru.ming13.bustime.util;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.apache.commons.lang3.StringUtils;
-
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.model.Route;
 import ru.ming13.bustime.model.Stop;
@@ -26,7 +24,7 @@ public final class TitleBuilder
 	}
 
 	public String buildStopTitle(@NonNull Stop stop) {
-		if (StringUtils.isBlank(stop.getDirection())) {
+		if (Strings.isBlank(stop.getDirection())) {
 			return stop.getName();
 		}
 

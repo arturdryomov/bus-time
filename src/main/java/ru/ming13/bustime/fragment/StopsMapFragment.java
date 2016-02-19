@@ -23,8 +23,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.venmo.cursor.CursorList;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +37,7 @@ import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Loaders;
 import ru.ming13.bustime.util.Maps;
+import ru.ming13.bustime.util.Strings;
 
 public class StopsMapFragment extends SupportMapFragment implements LoaderManager.LoaderCallbacks<Cursor>,
 	OnMapReadyCallback,
@@ -229,7 +228,7 @@ public class StopsMapFragment extends SupportMapFragment implements LoaderManage
 	}
 
 	private Location convertLocation(LatLng latLng) {
-		Location location = new Location(StringUtils.EMPTY);
+		Location location = new Location(Strings.EMPTY);
 
 		location.setLatitude(latLng.latitude);
 		location.setLongitude(latLng.longitude);

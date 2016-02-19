@@ -4,14 +4,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import org.apache.commons.lang3.StringUtils;
-
 import ru.ming13.bustime.backend.DatabaseBackend;
 import ru.ming13.bustime.bus.BusEvent;
 import ru.ming13.bustime.bus.BusProvider;
 import ru.ming13.bustime.bus.DatabaseUpdateAvailableEvent;
 import ru.ming13.bustime.bus.DatabaseUpdateNotAvailableEvent;
 import ru.ming13.bustime.util.Preferences;
+import ru.ming13.bustime.util.Strings;
 
 public class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
 {
@@ -30,11 +29,11 @@ public class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusEvent>
 		String localDatabaseVersion = getLocalDatabaseVersion();
 		String serverDatabaseVersion = getServerDatabaseVersion();
 
-		if (StringUtils.isBlank(serverDatabaseVersion)) {
+		if (Strings.isBlank(serverDatabaseVersion)) {
 			return new DatabaseUpdateNotAvailableEvent();
 		}
 
-		if (StringUtils.isBlank(localDatabaseVersion)) {
+		if (Strings.isBlank(localDatabaseVersion)) {
 			return new DatabaseUpdateAvailableEvent();
 		}
 

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,7 +33,7 @@ public final class Time
 	}
 
 	private static Date buildDate(String databaseTimeString) {
-		if (StringUtils.isBlank(databaseTimeString)) {
+		if (Strings.isBlank(databaseTimeString)) {
 			return new Date(0);
 		}
 

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
-import org.apache.commons.lang3.StringUtils;
-
 import info.metadude.android.typedpreferences.IntPreference;
 import info.metadude.android.typedpreferences.StringPreference;
 
@@ -28,7 +26,7 @@ public final class Preferences
 		}
 
 		public static final int INT = 0;
-		public static final String STRING = StringUtils.EMPTY;
+		public static final String STRING = Strings.EMPTY;
 	}
 
 	private final SharedPreferences preferences;

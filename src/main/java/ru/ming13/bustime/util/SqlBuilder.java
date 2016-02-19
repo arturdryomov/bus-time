@@ -1,7 +1,5 @@
 package ru.ming13.bustime.util;
 
-import org.apache.commons.lang3.StringUtils;
-
 public final class SqlBuilder
 {
 	private SqlBuilder() {
@@ -66,15 +64,15 @@ public final class SqlBuilder
 	}
 
 	public static String buildSortOrderClause(String... orderClauses) {
-		return StringUtils.join(orderClauses, ",");
+		return Strings.join(orderClauses, ",");
 	}
 
 	public static String buildOptionalSelectionClause(String... selectionClauses) {
-		return StringUtils.join(selectionClauses, " or ");
+		return Strings.join(selectionClauses, " or ");
 	}
 
 	public static String buildRequiredSelectionClause(String... selectionClauses) {
-		return StringUtils.join(selectionClauses, " and ");
+		return Strings.join(selectionClauses, " and ");
 	}
 
 	public static String buildSelectionClause(String field) {
@@ -90,7 +88,7 @@ public final class SqlBuilder
 	}
 
 	public static String buildTableClause(String... tableClauses) {
-		return StringUtils.join(tableClauses, " ");
+		return Strings.join(tableClauses, " ");
 	}
 
 	public static String buildTableField(String table, String field) {
