@@ -42,10 +42,25 @@ public final class DatabaseOperator
 			File tempDatabaseFile = getTempFile(databaseContents);
 			File databaseFile = getDatabaseFile();
 
+			createDatabaseFile();
+
 			Files.copy(tempDatabaseFile, databaseFile);
 
 			tempDatabaseFile.delete();
 		} catch (RuntimeException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private void createDatabaseFile() {
+		try {
+			File databaseFile = getDatabaseFile();
+
+			if (!databaseFile.exists()) {
+				databaseFile.getParentFile().mkdirs();
+				databaseFile.createNewFile();
+			}
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
