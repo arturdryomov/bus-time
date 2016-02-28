@@ -17,6 +17,6 @@
 	
 	<dimen name="elevation_bar">8dp</dimen>
 	
-	<dimen name="height_divider">1dp</dimen>
+	<dimen name="height_divider">0.5dp</dimen>
 
 </resources>
