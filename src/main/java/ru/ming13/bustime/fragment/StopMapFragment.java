@@ -81,11 +81,8 @@ public final class StopMapFragment extends SupportMapFragment implements OnMapRe
 	}
 
 	private void setUpUi() {
-		map.setMyLocationEnabled(Ui.CURRENT_LOCATION_ENABLED);
 		map.getUiSettings().setMyLocationButtonEnabled(Ui.CURRENT_LOCATION_ENABLED);
-
 		map.getUiSettings().setMapToolbarEnabled(Ui.NAVIGATION_ENABLED);
-
 		map.getUiSettings().setZoomControlsEnabled(Ui.ZOOM_ENABLED);
 
 		Bartender bartender = Bartender.at(getActivity());
