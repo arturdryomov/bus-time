@@ -41,12 +41,12 @@ public final class Preferences
 	}
 
 	@NonNull
-    public StringPreference getDatabaseVersionPreference() {
-        return new StringPreference(preferences, Keys.DATABASE_VERSION, Defaults.STRING);
-    }
+	public StringPreference getDatabaseVersionPreference() {
+			return new StringPreference(preferences, Keys.DATABASE_VERSION, Defaults.STRING);
+	}
 
 	@NonNull
-    public IntPreference getHomeTabPositionPreference() {
-        return new IntPreference(preferences, Keys.HOME_TAB_POSITION, Defaults.INT);
-    }
+	public IntPreference getHomeTabPositionPreference() {
+			return new IntPreference(preferences, Keys.HOME_TAB_POSITION, Defaults.INT);
+	}
 }
