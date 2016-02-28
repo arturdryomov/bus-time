@@ -17,6 +17,7 @@ public final class Maps
 {
 	private final FragmentActivity activity;
 
+	@NonNull
 	public static Maps at(@NonNull FragmentActivity activity) {
 		return new Maps(activity);
 	}

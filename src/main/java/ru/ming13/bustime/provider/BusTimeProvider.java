@@ -134,21 +134,21 @@ public final class BusTimeProvider extends ContentProvider
 
 	@Override
 	public String getType(@NonNull Uri uri) {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Uri insert(@NonNull Uri uri, ContentValues values) {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public int delete(@NonNull Uri uri, String selection, String[] selectionArguments) {
-		return 0;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArguments) {
-		return 0;
+		throw new UnsupportedOperationException();
 	}
 }

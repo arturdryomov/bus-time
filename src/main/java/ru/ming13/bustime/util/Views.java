@@ -6,6 +6,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.util.TypedValue;
 
+@Deprecated
 public final class Views
 {
 	private Views() {

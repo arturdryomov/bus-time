@@ -10,6 +10,7 @@ import android.widget.FrameLayout.LayoutParams;
 
 import ru.ming13.bustime.R;
 
+@Deprecated
 public final class Bartender
 {
 	private static final class SystemDimensions

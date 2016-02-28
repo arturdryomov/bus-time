@@ -16,15 +16,16 @@ public final class DatabaseBackend
 {
 	private final DatabaseBackendApi backendApi;
 
+	@NonNull
 	public static DatabaseBackend with(@NonNull Context context) {
-		return new DatabaseBackend(context);
+		return new DatabaseBackend(context.getApplicationContext());
 	}
 
 	private DatabaseBackend(Context context) {
-		this.backendApi = buildBackendApi(context);
+		this.backendApi = createBackendApi(context);
 	}
 
-	private DatabaseBackendApi buildBackendApi(Context context) {
+	private DatabaseBackendApi createBackendApi(Context context) {
 		RestAdapter backendAdapter = new RestAdapter.Builder()
 			.setEndpoint(context.getString(R.string.url_backend))
 			.build();
@@ -32,6 +33,7 @@ public final class DatabaseBackend
 		return backendAdapter.create(DatabaseBackendApi.class);
 	}
 
+	@NonNull
 	public String getDatabaseVersion() {
 		try {
 			return backendApi.getDatabaseInformation(DatabaseSchema.Versions.CURRENT).getVersion();
@@ -40,6 +42,7 @@ public final class DatabaseBackend
 		}
 	}
 
+	@NonNull
 	public InputStream getDatabaseContents() {
 		try {
 			return backendApi.getDatabaseContents(DatabaseSchema.Versions.CURRENT).getBody().in();

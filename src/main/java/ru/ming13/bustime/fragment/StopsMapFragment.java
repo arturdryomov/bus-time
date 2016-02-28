@@ -78,6 +78,7 @@ public final class StopsMapFragment extends SupportMapFragment implements Loader
 	@State
 	CameraPosition cameraPosition;
 
+	@NonNull
 	public static StopsMapFragment newInstance() {
 		return new StopsMapFragment();
 	}

@@ -31,6 +31,7 @@ public final class Preferences
 
 	private final SharedPreferences preferences;
 
+	@NonNull
 	public static Preferences of(@NonNull Context context) {
 		return new Preferences(context);
 	}
@@ -39,10 +40,12 @@ public final class Preferences
 		this.preferences = context.getSharedPreferences(LOCATION, Context.MODE_PRIVATE);
 	}
 
+	@NonNull
     public StringPreference getDatabaseVersionPreference() {
         return new StringPreference(preferences, Keys.DATABASE_VERSION, Defaults.STRING);
     }
 
+	@NonNull
     public IntPreference getHomeTabPositionPreference() {
         return new IntPreference(preferences, Keys.HOME_TAB_POSITION, Defaults.INT);
     }

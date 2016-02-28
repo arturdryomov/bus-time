@@ -8,8 +8,6 @@ final class CursorDefaults
 	}
 
 	public static final double DOUBLE = 0;
-
 	public static final long LONG = 0;
-
 	public static final String STRING = Strings.EMPTY;
 }

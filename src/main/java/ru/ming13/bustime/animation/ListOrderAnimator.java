@@ -32,11 +32,11 @@ public final class ListOrderAnimator
 	}
 
 	public void saveListState() {
-		for (int listItemPosition = 0; listItemPosition < list.getCount(); listItemPosition++) {
+		for (int listItemPosition = 0, listItemsCount = list.getCount(); listItemPosition < listItemsCount; listItemPosition++) {
 			int listItemId = getListItemId(listItemPosition);
 			int listItemPositionFromTop = getListItemPositionFromTop(listItemPosition);
 
-			saveListItemPositionFromTop(listItemId, listItemPositionFromTop);
+			savedListItemPositionsFromTop.put(listItemId, listItemPositionFromTop);
 		}
 	}
 
@@ -59,12 +59,8 @@ public final class ListOrderAnimator
 		return list.getChildAt(listItemPosition - firstVisibleListItemPosition).getTop();
 	}
 
-	private void saveListItemPositionFromTop(int listItemId, int listItemPosition) {
-		savedListItemPositionsFromTop.put(listItemId, listItemPosition);
-	}
-
 	public void animateReorderedListState() {
-		for (int listItemVisiblePosition = 0; listItemVisiblePosition < list.getChildCount(); listItemVisiblePosition++) {
+		for (int listItemVisiblePosition = 0, listItemsVisibleCount = list.getChildCount(); listItemVisiblePosition < listItemsVisibleCount; listItemVisiblePosition++) {
 			int listItemId = getListItemId(getListItemPosition(listItemVisiblePosition));
 
 			if (!isListItemPositionSaved(listItemId)) {
@@ -86,7 +82,7 @@ public final class ListOrderAnimator
 	private void animateListItem(int listItemVisiblePosition, int listItemId) {
 		View listItemView = list.getChildAt(listItemVisiblePosition);
 
-		int savedListItemPositionFromTop = loadListItemPositionFromTop(listItemId);
+		int savedListItemPositionFromTop = savedListItemPositionsFromTop.get(listItemId);
 		int currentListItemPositionFromTop = listItemView.getTop();
 		int listItemPositionFromTopDelta = currentListItemPositionFromTop - savedListItemPositionFromTop;
 
@@ -95,9 +91,5 @@ public final class ListOrderAnimator
 		animation.setDuration(Durations.ANIMATION_IN_MILLIS);
 
 		listItemView.startAnimation(animation);
-	}
-
-	private int loadListItemPositionFromTop(int listItemId) {
-		return savedListItemPositionsFromTop.get(listItemId);
 	}
 }

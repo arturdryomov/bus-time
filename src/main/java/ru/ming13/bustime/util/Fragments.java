@@ -29,6 +29,7 @@ public final class Fragments
 	{
 		private final FragmentManager fragmentManager;
 
+		@NonNull
 		public static Operator at(@NonNull FragmentActivity activity) {
 			return new Operator(activity);
 		}

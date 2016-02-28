@@ -78,9 +78,9 @@ public final class RoutePathLoadingTask extends AsyncTask<Void, Void, BusEvent>
 	}
 
 	@Override
-	protected void onPostExecute(BusEvent busEvent) {
-		super.onPostExecute(busEvent);
+	protected void onPostExecute(BusEvent event) {
+		super.onPostExecute(event);
 
-		BusProvider.getBus().post(busEvent);
+		BusProvider.getBus().post(event);
 	}
 }

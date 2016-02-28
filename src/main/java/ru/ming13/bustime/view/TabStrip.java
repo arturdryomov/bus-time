@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 
 import ru.ming13.bustime.util.Views;
 
+@Deprecated
 class TabStrip extends LinearLayout
 {
 	private static final class Dimensions

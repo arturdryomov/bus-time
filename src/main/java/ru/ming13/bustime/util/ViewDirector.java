@@ -17,10 +17,12 @@ public final class ViewDirector
 	@IdRes
 	private final int animatorId;
 
+	@NonNull
 	public static ViewDirector of(@NonNull Activity activity, @IdRes int animatorId) {
 		return new ViewDirector(activity, animatorId);
 	}
 
+	@NonNull
 	public static ViewDirector of(@NonNull Fragment fragment, @IdRes int animatorId) {
 		return new ViewDirector(fragment, animatorId);
 	}

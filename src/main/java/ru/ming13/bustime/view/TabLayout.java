@@ -20,6 +20,7 @@ import ru.ming13.bustime.R;
 import ru.ming13.bustime.util.Android;
 import ru.ming13.bustime.util.Views;
 
+@Deprecated
 public class TabLayout extends HorizontalScrollView implements ViewPager.OnPageChangeListener, View.OnClickListener
 {
 	private static final class Dimensions

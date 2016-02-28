@@ -115,9 +115,9 @@ public final class TimetableInformationLoadingTask extends AsyncTask<Void, Void,
 	}
 
 	@Override
-	protected void onPostExecute(BusEvent busEvent) {
-		super.onPostExecute(busEvent);
+	protected void onPostExecute(BusEvent event) {
+		super.onPostExecute(event);
 
-		BusProvider.getBus().post(busEvent);
+		BusProvider.getBus().post(event);
 	}
 }

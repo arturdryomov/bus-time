@@ -14,15 +14,16 @@ public final class Time
 {
 	private final Date date;
 
+	@NonNull
 	public static Time from(@Nullable String databaseTimeString) {
-		return new Time(buildCalendar(buildDate(databaseTimeString)));
+		return new Time(createCalendar(createDate(databaseTimeString)));
 	}
 
 	private Time(Calendar calendar) {
 		this.date = calendar.getTime();
 	}
 
-	private static Calendar buildCalendar(Date date) {
+	private static Calendar createCalendar(Date date) {
 		Calendar calendar = Calendar.getInstance();
 
 		calendar.setTime(date);
@@ -32,7 +33,7 @@ public final class Time
 		return calendar;
 	}
 
-	private static Date buildDate(String databaseTimeString) {
+	private static Date createDate(String databaseTimeString) {
 		if (Strings.isBlank(databaseTimeString)) {
 			return new Date(0);
 		}
@@ -44,6 +45,7 @@ public final class Time
 		}
 	}
 
+	@NonNull
 	public static Time current() {
 		Calendar calendar = Calendar.getInstance();
 
@@ -53,7 +55,7 @@ public final class Time
 		return new Time(calendar);
 	}
 
-	public boolean isAfter(Time time) {
+	public boolean isAfter(@NonNull Time time) {
 		return this.date.after(time.date);
 	}
 
@@ -62,11 +64,12 @@ public final class Time
 	}
 
 	public boolean isWeekend() {
-		int dayOfWeek = buildCalendar(date).get(Calendar.DAY_OF_WEEK);
+		int dayOfWeek = createCalendar(date).get(Calendar.DAY_OF_WEEK);
 
 		return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
 	}
 
+	@NonNull
 	public String toRelativeString(@NonNull Context context) {
 		Time currentTime = Time.current();
 
@@ -77,6 +80,7 @@ public final class Time
 		return Formatters.getRelativeTimeFormatter().setReference(currentTime.date).format(date);
 	}
 
+	@NonNull
 	public String toSystemString(@NonNull Context context) {
 		return Formatters.getSystemTimeFormatter(context).format(date);
 	}

@@ -3,22 +3,20 @@ package ru.ming13.bustime;
 import android.app.Application;
 import android.os.StrictMode;
 
+import ru.ming13.bustime.util.Android;
+
 public final class BusTimeApplication extends Application
 {
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
-		if (isDebugging()) {
-			setUpDetecting();
-		}
-	}
-
-	private boolean isDebugging() {
-		return BuildConfig.DEBUG;
+		setUpDetecting();
 	}
 
 	private void setUpDetecting() {
-		StrictMode.enableDefaults();
+		if (Android.isDebugging()) {
+			StrictMode.enableDefaults();
+		}
 	}
 }

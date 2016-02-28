@@ -36,6 +36,7 @@ public final class StopMapFragment extends SupportMapFragment implements OnMapRe
 		public static final int ZOOM = 15;
 	}
 
+	@NonNull
 	public static StopMapFragment newInstance(@NonNull Stop stop) {
 		StopMapFragment fragment = new StopMapFragment();
 

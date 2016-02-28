@@ -15,6 +15,7 @@ public final class DatabaseOperator
 {
 	private final Context context;
 
+	@NonNull
 	public static DatabaseOperator with(@NonNull Context context) {
 		return new DatabaseOperator(context);
 	}
@@ -31,6 +32,7 @@ public final class DatabaseOperator
 		return context.getDatabasePath(DatabaseSchema.DATABASE_NAME).getAbsoluteFile();
 	}
 
+	@NonNull
 	public String getDatabasePath() {
 		return getDatabaseFile().getPath();
 	}

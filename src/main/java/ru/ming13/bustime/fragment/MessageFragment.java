@@ -1,6 +1,7 @@
 package ru.ming13.bustime.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ public final class MessageFragment extends Fragment
 	@Bind(R.id.text_message)
 	TextView message;
 
+	@NonNull
 	public static MessageFragment newInstance(@Nullable String message) {
 		MessageFragment fragment = new MessageFragment();
 

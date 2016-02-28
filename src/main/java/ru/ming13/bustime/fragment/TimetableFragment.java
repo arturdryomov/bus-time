@@ -45,6 +45,7 @@ public final class TimetableFragment extends ListFragment implements LoaderManag
 		private static final int PAST_VISIBLE_TRIPS_COUNT = 1;
 	}
 
+	@NonNull
 	public static TimetableFragment newInstance(@NonNull Route route, @NonNull Stop stop) {
 		TimetableFragment fragment = new TimetableFragment();
 

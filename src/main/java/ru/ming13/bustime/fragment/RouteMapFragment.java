@@ -59,6 +59,7 @@ public final class RouteMapFragment extends SupportMapFragment implements Loader
 		public static final int ZOOM = 11;
 	}
 
+	@NonNull
 	public static RouteMapFragment newInstance(@NonNull Route route) {
 		RouteMapFragment fragment = new RouteMapFragment();
 

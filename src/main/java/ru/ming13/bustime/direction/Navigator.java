@@ -34,10 +34,10 @@ public final class Navigator
 	private final DirectionsApi directionsApi;
 
 	public Navigator() {
-		this.directionsApi = buildDirectionsApi();
+		this.directionsApi = createDirectionsApi();
 	}
 
-	private DirectionsApi buildDirectionsApi() {
+	private DirectionsApi createDirectionsApi() {
 		RestAdapter directionsAdapter = new RestAdapter.Builder()
 			.setEndpoint(Urls.ENDPOINT)
 			.build();
@@ -45,6 +45,7 @@ public final class Navigator
 		return directionsAdapter.create(DirectionsApi.class);
 	}
 
+	@NonNull
 	public List<LatLng> getDirectionPolylinePositions(@NonNull LatLng originPosition, @NonNull LatLng destinationPosition, @NonNull List<LatLng> waypointPositions) {
 		try {
 			DirectionsInformation directionsInformation = directionsApi.getDirectionsInformation(

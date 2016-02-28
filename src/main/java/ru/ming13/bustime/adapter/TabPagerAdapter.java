@@ -6,14 +6,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.Arrays;
+
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.fragment.RoutesFragment;
 import ru.ming13.bustime.fragment.StopsFragment;
 
 public final class TabPagerAdapter extends FragmentPagerAdapter
 {
-	private static final int TAB_COUNT = 2;
-
 	public static final class TabPositions
 	{
 		private TabPositions() {
@@ -41,7 +41,7 @@ public final class TabPagerAdapter extends FragmentPagerAdapter
 				return StopsFragment.newInstance();
 
 			default:
-				return null;
+				throw new RuntimeException("Position is not supported.");
 		}
 	}
 
@@ -55,12 +55,12 @@ public final class TabPagerAdapter extends FragmentPagerAdapter
 				return context.getString(R.string.title_stops);
 
 			default:
-				return null;
+				throw new RuntimeException("Position is not supported.");
 		}
 	}
 
 	@Override
 	public int getCount() {
-		return TAB_COUNT;
+		return Arrays.asList(TabPositions.ROUTES, TabPositions.STOPS).size();
 	}
 }

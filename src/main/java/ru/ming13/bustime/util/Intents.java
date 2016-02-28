@@ -44,6 +44,7 @@ public final class Intents
 	{
 		private final Context context;
 
+		@NonNull
 		public static Builder with(@NonNull Context context) {
 			return new Builder(context);
 		}
@@ -52,10 +53,12 @@ public final class Intents
 			this.context = context.getApplicationContext();
 		}
 
+		@NonNull
 		public Intent buildStopsMapIntent() {
 			return new Intent(context, StopsMapActivity.class);
 		}
 
+		@NonNull
 		public Intent buildRouteMapIntent(@NonNull Route route) {
 			Intent intent = new Intent(context, RouteMapActivity.class);
 			intent.putExtra(Extras.ROUTE, route);
@@ -63,6 +66,7 @@ public final class Intents
 			return intent;
 		}
 
+		@NonNull
 		public Intent buildStopMapIntent(@NonNull Stop stop) {
 			Intent intent = new Intent(context, StopMapActivity.class);
 			intent.putExtra(Extras.STOP, stop);
@@ -70,6 +74,7 @@ public final class Intents
 			return intent;
 		}
 
+		@NonNull
 		public Intent buildRouteStopsIntent(@NonNull Route route) {
 			Intent intent = new Intent(context, RouteStopsActivity.class);
 			intent.putExtra(Extras.ROUTE, route);
@@ -77,6 +82,7 @@ public final class Intents
 			return intent;
 		}
 
+		@NonNull
 		public Intent buildStopRoutesIntent(@NonNull Stop stop) {
 			Intent intent = new Intent(context, StopRoutesActivity.class);
 			intent.putExtra(Extras.STOP, stop);
@@ -84,6 +90,7 @@ public final class Intents
 			return intent;
 		}
 
+		@NonNull
 		public Intent buildTimetableIntent(@NonNull Route route, @NonNull Stop stop) {
 			Intent intent = new Intent(context, TimetableActivity.class);
 			intent.putExtra(Extras.ROUTE, route);
@@ -92,6 +99,7 @@ public final class Intents
 			return intent;
 		}
 
+		@NonNull
 		public Intent buildFeedbackIntent() {
 			String feedbackAddress = context.getString(R.string.email_feedback_address);
 			String feedbackSubject = context.getString(R.string.email_feedback_subject);
@@ -101,12 +109,14 @@ public final class Intents
 			return new Intent(Intent.ACTION_SENDTO, Uri.parse(feedbackUri));
 		}
 
+		@NonNull
 		public Intent buildGooglePlayAppIntent() {
 			String googlePlayUri = String.format(UriMasks.GOOGLE_PLAY_APP, Android.getApplicationId());
 
 			return new Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayUri));
 		}
 
+		@NonNull
 		public Intent buildGooglePlayWebIntent() {
 			String googlePlayUri = String.format(UriMasks.GOOGLE_PLAY_WEB, Android.getApplicationId());
 

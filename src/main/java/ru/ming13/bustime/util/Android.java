@@ -15,8 +15,13 @@ public final class Android
 	private Android() {
 	}
 
+	@NonNull
 	public static String getApplicationId() {
 		return BuildConfig.APPLICATION_ID;
+	}
+
+	public static boolean isDebugging() {
+		return BuildConfig.DEBUG;
 	}
 
 	public static boolean isHoneycombOrLater() {

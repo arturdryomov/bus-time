@@ -13,6 +13,7 @@ public final class Frames
 {
 	private final Activity activity;
 
+	@NonNull
 	public static Frames at(@NonNull Activity activity) {
 		return new Frames(activity);
 	}

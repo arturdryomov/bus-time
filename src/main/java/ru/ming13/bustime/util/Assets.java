@@ -12,6 +12,7 @@ public final class Assets
 {
 	private final Context context;
 
+	@NonNull
 	public static Assets of(@NonNull Context context) {
 		return new Assets(context);
 	}
@@ -20,6 +21,7 @@ public final class Assets
 		this.context = context.getApplicationContext();
 	}
 
+	@NonNull
 	public InputStream getDatabaseContents() {
 		try {
 			return context.getAssets().open(DatabaseSchema.DATABASE_NAME);

@@ -21,27 +21,30 @@ public final class Formatters
 	private static PrettyTime relativeTimeFormatter;
 	private static DateFormat systemTimeFormatter;
 
+	@NonNull
 	public static DateFormat getDatabaseTimeFormatter() {
 		if (databaseTimeFormatter == null) {
-			databaseTimeFormatter = buildDatabaseTimeFormatter();
+			databaseTimeFormatter = createDatabaseTimeFormatter();
 		}
 
 		return databaseTimeFormatter;
 	}
 
-	private static DateFormat buildDatabaseTimeFormatter() {
+	private static DateFormat createDatabaseTimeFormatter() {
 		return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
 	}
 
+	@NonNull
 	public static PrettyTime getRelativeTimeFormatter() {
 		if (relativeTimeFormatter == null) {
-			relativeTimeFormatter = buildRelativeTimeFormatter();
+			relativeTimeFormatter = createRelativeTimeFormatter();
 		}
 
 		return relativeTimeFormatter;
 	}
 
-	private static PrettyTime buildRelativeTimeFormatter() {
+	@NonNull
+	private static PrettyTime createRelativeTimeFormatter() {
 		PrettyTime formatter = new PrettyTime();
 
 		formatter.removeUnit(Second.class);
@@ -51,15 +54,16 @@ public final class Formatters
 		return formatter;
 	}
 
+	@NonNull
 	public static DateFormat getSystemTimeFormatter(@NonNull Context context) {
 		if (systemTimeFormatter == null) {
-			systemTimeFormatter = buildSystemTimeFormatter(context);
+			systemTimeFormatter = createSystemTimeFormatter(context);
 		}
 
 		return systemTimeFormatter;
 	}
 
-	private static DateFormat buildSystemTimeFormatter(Context context) {
+	private static DateFormat createSystemTimeFormatter(Context context) {
 		return android.text.format.DateFormat.getTimeFormat(context);
 	}
 

@@ -53,9 +53,9 @@ public final class DatabaseUpdateCheckingTask extends AsyncTask<Void, Void, BusE
 	}
 
 	@Override
-	protected void onPostExecute(BusEvent busEvent) {
-		super.onPostExecute(busEvent);
+	protected void onPostExecute(BusEvent event) {
+		super.onPostExecute(event);
 
-		BusProvider.getBus().post(busEvent);
+		BusProvider.getBus().post(event);
 	}
 }

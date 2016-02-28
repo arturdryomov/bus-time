@@ -13,6 +13,7 @@ public final class GooglePlayServicesErrorDialog extends DialogFragment
 {
 	public static final String TAG = "gps_error_dialog";
 
+	@NonNull
 	public static GooglePlayServicesErrorDialog newInstance(int errorCode, int requestCode) {
 		GooglePlayServicesErrorDialog dialog = new GooglePlayServicesErrorDialog();
 
@@ -32,7 +33,7 @@ public final class GooglePlayServicesErrorDialog extends DialogFragment
 
 	@NonNull
 	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
+	public Dialog onCreateDialog(Bundle state) {
 		return GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), getErrorCode(), getRequestCode());
 	}
 

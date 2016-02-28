@@ -8,9 +8,11 @@ interface DatabaseBackendApi
 {
 	@GET("/databases/{schema}")
 	DatabaseInformation getDatabaseInformation(
-		@Path("schema") int schemaVersion);
+		@Path("schema") int schemaVersion
+	);
 
 	@GET("/databases/{schema}/contents")
 	Response getDatabaseContents(
-		@Path("schema") int schemaVersion);
+		@Path("schema") int schemaVersion
+	);
 }
