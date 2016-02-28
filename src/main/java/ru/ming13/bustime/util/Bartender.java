@@ -10,7 +10,6 @@ import android.widget.FrameLayout.LayoutParams;
 
 import ru.ming13.bustime.R;
 
-@Deprecated
 public final class Bartender
 {
 	private static final class SystemDimensions
@@ -41,6 +40,7 @@ public final class Bartender
 
 	private final Activity activity;
 
+	@NonNull
 	public static Bartender at(@NonNull Activity activity) {
 		return new Bartender(activity);
 	}

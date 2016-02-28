@@ -7,8 +7,14 @@
 		<item name="colorAccent">@color/background_accent</item>
 
 		<item name="android:windowBackground">@color/background_window</item>
+
+		<item name="autoCompleteTextViewStyle">@style/Widget.AppCompat.Light.AutoCompleteTextView</item>
 	</style>
 
 	<style name="Theme.BusTime.Map" parent="Theme.BusTime"/>
+
+	<style name="ThemeOverlay.BusTime.Search" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+		<item name="colorControlActivated">@android:color/white</item>
+	</style>
 
 </resources>

@@ -5,14 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import ru.ming13.bustime.R;
 import ru.ming13.bustime.fragment.StopMapFragment;
 import ru.ming13.bustime.model.Stop;
-import ru.ming13.bustime.util.Android;
 import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Fragments;
 import ru.ming13.bustime.util.Intents;
@@ -46,21 +44,9 @@ public final class StopMapActivity extends AppCompatActivity
 	}
 
 	private void setUpToolbar() {
-		setUpToolbarPosition();
-
 		setSupportActionBar(toolbar);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-	}
-
-	private void setUpToolbarPosition() {
-		if (Android.isKitKatOrLater()) {
-			RelativeLayout.LayoutParams toolbarParams = (RelativeLayout.LayoutParams) toolbar.getLayoutParams();
-
-			toolbarParams.topMargin = Bartender.at(this).getStatusBarHeight();
-
-			toolbar.setLayoutParams(toolbarParams);
-		}
 	}
 
 	private void setUpSubtitle() {
