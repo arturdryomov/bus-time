@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -49,7 +50,6 @@ import ru.ming13.bustime.util.Intents;
 import ru.ming13.bustime.util.Maps;
 import ru.ming13.bustime.util.Preferences;
 import ru.ming13.bustime.util.ViewDirector;
-import ru.ming13.bustime.view.TabLayout;
 
 public final class HomeActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -128,7 +128,7 @@ public final class HomeActivity extends AppCompatActivity implements View.OnClic
 
 	private void setUpTabs() {
 		tabPager.setAdapter(new TabPagerAdapter(this, getSupportFragmentManager()));
-		tabLayout.setTabPager(getSupportActionBar().getThemedContext(), tabPager);
+		tabLayout.setupWithViewPager(tabPager);
 	}
 
 	private void setUpTabsSelection() {
