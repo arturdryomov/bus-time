@@ -20,11 +20,13 @@
 
 	<string name="message_no_route">Route is not selected</string>
 	<string name="message_no_stop">Stop is not selected</string>
+	<string name="message_permission_location">Displaying your current location on the map requires location permission</string>
 	<string name="message_timetable_title">No trips</string>
 	<string name="message_timetable_summary">There are no trips today</string>
 	<string name="message_updates">Update is available</string>
 
 	<string name="button_download">Download</string>
+	<string name="button_ok" translatable="false">OK</string>
 
 	<string name="hint_search">Search stops</string>
 

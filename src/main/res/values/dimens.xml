@@ -19,4 +19,6 @@
 	
 	<dimen name="height_divider">0.5dp</dimen>
 
+	<integer name="design_snackbar_text_max_lines">5</integer>
+
 </resources>

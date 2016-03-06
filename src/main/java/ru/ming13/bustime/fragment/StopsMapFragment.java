@@ -37,6 +37,7 @@ import ru.ming13.bustime.model.Stop;
 import ru.ming13.bustime.provider.BusTimeContract;
 import ru.ming13.bustime.util.Bartender;
 import ru.ming13.bustime.util.Loaders;
+import ru.ming13.bustime.util.LocationGuardian;
 import ru.ming13.bustime.util.Maps;
 import ru.ming13.bustime.util.Strings;
 
@@ -44,7 +45,8 @@ public final class StopsMapFragment extends SupportMapFragment implements Loader
 	OnMapReadyCallback,
 	GoogleMap.OnInfoWindowClickListener,
 	GoogleApiClient.ConnectionCallbacks,
-	GoogleApiClient.OnConnectionFailedListener
+	GoogleApiClient.OnConnectionFailedListener,
+	Runnable
 {
 	private static final class Ui
 	{
@@ -74,6 +76,8 @@ public final class StopsMapFragment extends SupportMapFragment implements Loader
 	private GoogleApiClient locationClient;
 
 	private Map<String, Long> stopIds;
+
+	private LocationGuardian locationGuardian;
 
 	@State
 	CameraPosition cameraPosition;
@@ -113,10 +117,10 @@ public final class StopsMapFragment extends SupportMapFragment implements Loader
 		setUpUi();
 		setUpListeners();
 		setUpCamera();
+		setUpLocation();
 	}
 
 	private void setUpUi() {
-		map.setMyLocationEnabled(Ui.CURRENT_LOCATION_ENABLED);
 		map.getUiSettings().setMyLocationButtonEnabled(Ui.CURRENT_LOCATION_ENABLED);
 		map.getUiSettings().setMapToolbarEnabled(Ui.NAVIGATION_ENABLED);
 		map.getUiSettings().setZoomControlsEnabled(Ui.ZOOM_ENABLED);
@@ -158,11 +162,7 @@ public final class StopsMapFragment extends SupportMapFragment implements Loader
 		if (cameraPosition != null) {
 			setUpSavedLocation();
 		} else {
-			// Avoid default location flickering at a center of the planet
-
 			setUpDefaultLocation();
-
-			setUpLocationClient();
 		}
 	}
 
@@ -176,6 +176,28 @@ public final class StopsMapFragment extends SupportMapFragment implements Loader
 
 	private LatLng getDefaultLocation() {
 		return new LatLng(Defaults.LOCATION_LATITUDE, Defaults.LOCATION_LONGITUDE);
+	}
+
+	private void setUpLocation() {
+		locationGuardian = LocationGuardian.of(this, this);
+		locationGuardian.execute();
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int permissionCode, @NonNull String[] permissions, @NonNull int[] permissionGrants) {
+		super.onRequestPermissionsResult(permissionCode, permissions, permissionGrants);
+
+		locationGuardian.onRequestPermissionResult(permissionCode, permissionGrants);
+	}
+
+	@Override
+	public void run() {
+		setUpLocationUi();
+		setUpLocationClient();
+	}
+
+	private void setUpLocationUi() {
+		map.setMyLocationEnabled(Ui.CURRENT_LOCATION_ENABLED);
 	}
 
 	private void setUpLocationClient() {
