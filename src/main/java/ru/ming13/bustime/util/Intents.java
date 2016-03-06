@@ -35,6 +35,7 @@ public final class Intents
 		}
 
 		public static final String EMAIL = "mailto:%s?subject=%s";
+		public static final String PHONE = "tel:%s";
 
 		public static final String GOOGLE_PLAY_APP = "market://details?id=%s";
 		public static final String GOOGLE_PLAY_WEB = "https://play.google.com/store/apps/details?id=%s";
@@ -97,6 +98,13 @@ public final class Intents
 			intent.putExtra(Extras.STOP, stop);
 
 			return intent;
+		}
+
+		@NonNull
+		public Intent buildDispatcherIntent() {
+			String dispatcherUri = String.format(UriMasks.PHONE, context.getString(R.string.phone_dispatcher));
+
+			return new Intent(Intent.ACTION_DIAL, Uri.parse(dispatcherUri));
 		}
 
 		@NonNull

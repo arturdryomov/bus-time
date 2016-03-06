@@ -265,6 +265,10 @@ public final class HomeActivity extends AppCompatActivity implements View.OnClic
 				startFeedbackSending();
 				return true;
 
+			case R.id.menu_call_dispatcher:
+				startDispatcherCalling();
+				return true;
+
 			default:
 				return super.onOptionsItemSelected(menuItem);
 		}
@@ -297,6 +301,11 @@ public final class HomeActivity extends AppCompatActivity implements View.OnClic
 		} catch (ActivityNotFoundException e) {
 			startActivity(Intent.createChooser(intent, null));
 		}
+	}
+
+	private void startDispatcherCalling() {
+		Intent intent = Intents.Builder.with(this).buildDispatcherIntent();
+		startActivity(intent);
 	}
 
 	@Subscribe

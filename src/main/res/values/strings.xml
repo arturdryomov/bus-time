@@ -9,6 +9,7 @@
 	<string name="title_stops">Stops</string>
 	<string name="title_timetable">Timetable</string>
 
+	<string name="menu_call_dispatcher">Call a dispatcher</string>
 	<string name="menu_map">Map</string>
 	<string name="menu_rate_application">Rate the application</string>
 	<string name="menu_send_feedback">Send feedback</string>

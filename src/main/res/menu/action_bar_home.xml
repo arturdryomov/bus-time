@@ -25,4 +25,9 @@
 		android:title="@string/menu_send_feedback"
 		auto:showAsAction="never"/>
 
+	<item
+		android:id="@+id/menu_call_dispatcher"
+		android:title="@string/menu_call_dispatcher"
+		auto:showAsAction="never"/>
+
 </menu>

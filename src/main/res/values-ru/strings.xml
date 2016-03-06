@@ -7,6 +7,7 @@
 	<string name="title_stops">Остановки</string>
 	<string name="title_timetable">Расписание</string>
 
+	<string name="menu_call_dispatcher">Позвонить диспетчеру</string>
 	<string name="menu_map">Карта</string>
 	<string name="menu_rate_application">Оценить приложение</string>
 	<string name="menu_send_feedback">Написать разработчику</string>
