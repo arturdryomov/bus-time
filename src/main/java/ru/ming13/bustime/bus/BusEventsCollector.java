@@ -1,5 +1,7 @@
 package ru.ming13.bustime.bus;
 
+import android.support.annotation.NonNull;
+
 import com.squareup.otto.DeadEvent;
 import com.squareup.otto.Subscribe;
 
@@ -19,6 +21,7 @@ public final class BusEventsCollector
 		this.events = new HashSet<>();
 	}
 
+	@NonNull
 	public static BusEventsCollector getInstance() {
 		return CollectorHolder.COLLECTOR;
 	}

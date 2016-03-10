@@ -88,10 +88,10 @@ public final class StopsMapFragment extends SupportMapFragment implements Loader
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+	public void onActivityCreated(Bundle state) {
+		super.onActivityCreated(state);
 
-		setUpState(savedInstanceState);
+		setUpState(state);
 
 		setUpMap();
 	}
@@ -333,10 +333,10 @@ public final class StopsMapFragment extends SupportMapFragment implements Loader
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
+	public void onSaveInstanceState(Bundle state) {
+		super.onSaveInstanceState(state);
 
-		tearDownState(outState);
+		tearDownState(state);
 	}
 
 	private void tearDownState(Bundle state) {

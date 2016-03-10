@@ -56,8 +56,8 @@ public final class StopMapFragment extends SupportMapFragment implements OnMapRe
 	private GoogleMap map;
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+	public void onActivityCreated(Bundle state) {
+		super.onActivityCreated(state);
 
 		setUpMap();
 	}

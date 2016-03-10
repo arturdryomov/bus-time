@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,7 +56,7 @@ public final class Navigator
 
 			return parseDirectionPolylinePositions(directionsInformation);
 		} catch (RetrofitError e) {
-			return new ArrayList<>();
+			return Collections.emptyList();
 		}
 	}
 
@@ -79,7 +80,7 @@ public final class Navigator
 
 			return PolyUtil.decode(directionsInformation.getPolylinePositions(routePosition));
 		} else {
-			return new ArrayList<>();
+			return Collections.emptyList();
 		}
 	}
 }

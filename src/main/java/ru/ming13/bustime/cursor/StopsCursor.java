@@ -1,6 +1,7 @@
 package ru.ming13.bustime.cursor;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import com.venmo.cursor.IterableCursorWrapper;
 
@@ -9,7 +10,7 @@ import ru.ming13.bustime.provider.BusTimeContract;
 
 public final class StopsCursor extends IterableCursorWrapper<Stop>
 {
-	public StopsCursor(Cursor cursor) {
+	public StopsCursor(@NonNull Cursor cursor) {
 		super(cursor);
 	}
 

@@ -1,5 +1,7 @@
 package ru.ming13.bustime.bus;
 
+import android.support.annotation.NonNull;
+
 import com.squareup.otto.Bus;
 
 public final class BusProvider
@@ -12,6 +14,7 @@ public final class BusProvider
 	private BusProvider() {
 	}
 
+	@NonNull
 	public static Bus getBus() {
 		return BusHolder.BUS;
 	}

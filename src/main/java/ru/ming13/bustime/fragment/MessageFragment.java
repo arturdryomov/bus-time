@@ -37,13 +37,13 @@ public final class MessageFragment extends Fragment
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle state) {
 		return layoutInflater.inflate(R.layout.fragment_message, container, false);
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+	public void onActivityCreated(Bundle state) {
+		super.onActivityCreated(state);
 
 		setUpBindings();
 

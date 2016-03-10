@@ -77,17 +77,17 @@ public final class TimetableFragment extends ListFragment implements LoaderManag
 	private Timer timer;
 
 	@Override
-	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle state) {
 		return layoutInflater.inflate(R.layout.fragment_timetable, container, false);
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+	public void onActivityCreated(Bundle state) {
+		super.onActivityCreated(state);
 
 		setUpBindings();
 
-		setUpState(savedInstanceState);
+		setUpState(state);
 
 		setUpToolbar();
 
@@ -311,10 +311,10 @@ public final class TimetableFragment extends ListFragment implements LoaderManag
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
+	public void onSaveInstanceState(Bundle state) {
+		super.onSaveInstanceState(state);
 
-		tearDownState(outState);
+		tearDownState(state);
 	}
 
 	private void tearDownState(Bundle state) {

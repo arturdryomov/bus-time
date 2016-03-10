@@ -1,6 +1,7 @@
 package ru.ming13.bustime.cursor;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import com.venmo.cursor.IterableCursorWrapper;
 
@@ -10,7 +11,7 @@ import ru.ming13.bustime.util.Time;
 
 public final class TimetableCursor extends IterableCursorWrapper<TimetableTime>
 {
-	public TimetableCursor(Cursor cursor) {
+	public TimetableCursor(@NonNull Cursor cursor) {
 		super(cursor);
 	}
 

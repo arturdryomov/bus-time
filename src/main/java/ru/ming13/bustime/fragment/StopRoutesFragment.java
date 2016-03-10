@@ -51,13 +51,13 @@ public final class StopRoutesFragment extends ListFragment implements LoaderMana
 	private Timer timer;
 
 	@Override
-	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle state) {
 		return layoutInflater.inflate(R.layout.fragment_list, container, false);
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+	public void onActivityCreated(Bundle state) {
+		super.onActivityCreated(state);
 
 		setUpRoutes();
 	}

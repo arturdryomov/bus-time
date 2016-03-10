@@ -1,6 +1,7 @@
 package ru.ming13.bustime.cursor;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import com.venmo.cursor.IterableCursorWrapper;
 
@@ -11,7 +12,7 @@ import ru.ming13.bustime.util.Time;
 
 public final class StopRoutesCursor extends IterableCursorWrapper<StopRoute>
 {
-	public StopRoutesCursor(Cursor cursor) {
+	public StopRoutesCursor(@NonNull Cursor cursor) {
 		super(cursor);
 	}
 

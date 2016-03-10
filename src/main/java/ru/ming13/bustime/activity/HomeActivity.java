@@ -54,7 +54,6 @@ import ru.ming13.bustime.util.ViewDirector;
 public final class HomeActivity extends AppCompatActivity implements View.OnClickListener
 {
 	@Bind(R.id.toolbar)
-	@Nullable
 	Toolbar toolbar;
 
 	@Bind(R.id.layout_tabs)
@@ -72,13 +71,13 @@ public final class HomeActivity extends AppCompatActivity implements View.OnClic
 	boolean isProgressVisible;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onCreate(Bundle state) {
+		super.onCreate(state);
 		setContentView(R.layout.activity_home);
 
 		setUpBindings();
 
-		setUpState(savedInstanceState);
+		setUpState(state);
 
 		setUpUi();
 
@@ -352,10 +351,10 @@ public final class HomeActivity extends AppCompatActivity implements View.OnClic
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
+	protected void onSaveInstanceState(Bundle state) {
+		super.onSaveInstanceState(state);
 
-		tearDownState(outState);
+		tearDownState(state);
 	}
 
 	private void tearDownState(Bundle state) {

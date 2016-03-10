@@ -26,8 +26,8 @@ public final class StopsMapActivity extends AppCompatActivity
 	Toolbar toolbar;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onCreate(Bundle state) {
+		super.onCreate(state);
 		setContentView(R.layout.activity_container_map);
 
 		setUpBindings();

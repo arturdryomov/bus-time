@@ -32,8 +32,8 @@ public final class StopRoutesActivity extends AppCompatActivity
 	Toolbar toolbar;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onCreate(Bundle state) {
+		super.onCreate(state);
 		setContentView(R.layout.activity_container);
 
 		setUpBindings();

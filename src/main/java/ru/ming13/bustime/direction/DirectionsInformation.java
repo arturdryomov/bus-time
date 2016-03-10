@@ -1,5 +1,7 @@
 package ru.ming13.bustime.direction;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -33,6 +35,7 @@ public final class DirectionsInformation
 		return routes.isEmpty();
 	}
 
+	@NonNull
 	public String getPolylinePositions(int routePosition) {
 		return routes.get(routePosition).getPolyline().getPositions();
 	}
