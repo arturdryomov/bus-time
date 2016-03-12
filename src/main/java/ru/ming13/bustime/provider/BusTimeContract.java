@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 
 import ru.ming13.bustime.database.DatabaseSchema;
 import ru.ming13.bustime.util.Android;
@@ -14,6 +15,7 @@ public final class BusTimeContract
 	private BusTimeContract() {
 	}
 
+	@NonNull
 	public static final String AUTHORITY = Android.getApplicationId();
 
 	private interface RoutesColumns
@@ -27,18 +29,20 @@ public final class BusTimeContract
 		private Routes() {
 		}
 
+		@NonNull
 		public static Uri getRoutesUri() {
-			return buildContentUri(getPathsBuilder().buildRoutesPath());
+			return BusTimeContract.buildContentUri(getPathsBuilder().buildRoutesPath());
 		}
 
+		@NonNull
 		public static Uri getRoutesUri(long stopId) {
-			return buildContentUri(getPathsBuilder().buildStopRoutesPath(String.valueOf(stopId)));
+			return BusTimeContract.buildContentUri(getPathsBuilder().buildStopRoutesPath(String.valueOf(stopId)));
 		}
 
 		public static long getRouteId(Uri routeStopsUri) {
 			final int routeIdSegmentPosition = 1;
 
-			return parseId(routeStopsUri, routeIdSegmentPosition);
+			return BusTimeContract.parseId(routeStopsUri, routeIdSegmentPosition);
 		}
 	}
 
@@ -55,24 +59,27 @@ public final class BusTimeContract
 		private Stops() {
 		}
 
+		@NonNull
 		public static Uri getStopsUri() {
-			return buildContentUri(getPathsBuilder().buildStopsPath());
+			return BusTimeContract.buildContentUri(getPathsBuilder().buildStopsPath());
 		}
 
+		@NonNull
 		public static Uri getStopsUri(long routeId) {
-			return buildContentUri(getPathsBuilder().buildRouteStopsPath(String.valueOf(routeId)));
+			return BusTimeContract.buildContentUri(getPathsBuilder().buildRouteStopsPath(String.valueOf(routeId)));
 		}
 
 		public static long getStopId(Uri stopRoutesUri) {
 			final int stopIdSegmentPosition = 1;
 
-			return parseId(stopRoutesUri, stopIdSegmentPosition);
+			return BusTimeContract.parseId(stopRoutesUri, stopIdSegmentPosition);
 		}
 
 		public static long getStopsSearchId(Uri stopsSearchUri) {
-			return parseId(stopsSearchUri);
+			return BusTimeContract.parseId(stopsSearchUri);
 		}
 
+		@NonNull
 		public static String getStopsSearchQuery(Uri stopsSearchUri) {
 			return stopsSearchUri.getLastPathSegment();
 		}
@@ -111,28 +118,30 @@ public final class BusTimeContract
 			}
 		}
 
+		@NonNull
 		public static Uri getTimetableUri(long routeId, long stopId) {
-			return buildContentUri(getPathsBuilder().buildTimetablePath(String.valueOf(routeId), String.valueOf(stopId)));
+			return BusTimeContract.buildContentUri(getPathsBuilder().buildTimetablePath(String.valueOf(routeId), String.valueOf(stopId)));
 		}
 
+		@NonNull
 		public static Uri getTimetableUri(Uri timetableUri, long timetableTypeId) {
-			return buildContentUri(timetableUri, Timetable.TYPE, String.valueOf(timetableTypeId));
+			return BusTimeContract.buildContentUri(timetableUri, Timetable.TYPE, String.valueOf(timetableTypeId));
 		}
 
 		public static long getRouteId(Uri timetableUri) {
 			final int routeIdSegmentPosition = 1;
 
-			return parseId(timetableUri, routeIdSegmentPosition);
+			return BusTimeContract.parseId(timetableUri, routeIdSegmentPosition);
 		}
 
 		public static long getStopId(Uri timetableUri) {
 			final int stopIdSegmentPosition = 3;
 
-			return parseId(timetableUri, stopIdSegmentPosition);
+			return BusTimeContract.parseId(timetableUri, stopIdSegmentPosition);
 		}
 
 		public static int getTimetableType(Uri timetableUri) {
-			return parseParameter(timetableUri, Timetable.TYPE);
+			return BusTimeContract.parseParameter(timetableUri, Timetable.TYPE);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package ru.ming13.bustime.provider;
 
 import android.content.UriMatcher;
+import android.support.annotation.NonNull;
 
 final class BusTimeUriMatcher
 {
@@ -31,6 +32,7 @@ final class BusTimeUriMatcher
 
 	private final BusTimePathsBuilder pathsBuilder;
 
+	@NonNull
 	public static UriMatcher buildMatcher() {
 		return new BusTimeUriMatcher().buildUriMatcher();
 	}
