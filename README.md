@@ -10,14 +10,14 @@ Gradle, Android SDK and project dependencies will be downloaded in the process.
 1. Set keys.
 
   ```
-  $ cp src/main/res/xml/keys.template.xml src/main/res/values/keys.xml
+  $ cp src/main/res/xml/keys_template.xml src/main/res/values/keys.xml
   $ vi src/main/res/values/keys.xml
   ```
 
 2. Set URLs.
 
   ```
-  $ cp src/main/res/xml/urls.template.xml src/main/res/values/urls.xml
+  $ cp src/main/res/xml/urls_template.xml src/main/res/values/urls.xml
   $ vi src/main/res/values/urls.xml
   ```
 
